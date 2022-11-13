@@ -4,22 +4,20 @@
 
 use clap::Parser;
 
-/// Argument parser that only accepts one subcommand: this tool.
+/// Cargo entry point for `cargo-liner`.
 ///
-/// Adapted from the [Clap Cookbook].
-///
-/// [Clap Cookbook]: https://docs.rs/clap/latest/clap/_derive/_cookbook/cargo_example_derive/index.html
+/// This tool is meant to be called using `cargo liner`.
 #[derive(clap::Parser, Debug)]
 #[command(name = "cargo")]
 #[command(bin_name = "cargo")]
 enum Cargo {
-    /// The only variant: enables validating the input given by Cargo.
+    // The only variant: enables validating the input given by Cargo.
     Liner(Liner),
 }
 
-/// The actual entry point in this tool's argument parser.
+// The actual entry point in this tool's argument parser.
 #[derive(clap::Args, Debug)]
-#[command(author, version, about, long_about = None)]
+#[command(author, version, about, long_about)]
 pub struct Liner {}
 
 /// Parses the arguments from the environment and returns them.
