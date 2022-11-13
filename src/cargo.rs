@@ -15,7 +15,7 @@ fn install<'a>(name: &'a str, version: &'a str) -> Result<()> {
 pub fn install_all<'a>(config: &'a UserConfig) -> Result<()> {
     for (name, value) in config.packages.iter() {
         match value {
-            Package::Simple(version) => install(&name, &version)?,
+            Package::Simple(version) => install(&name, &version.to_string())?,
         }
     }
     Ok(())

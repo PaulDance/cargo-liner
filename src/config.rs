@@ -3,6 +3,7 @@ use std::fs;
 
 use anyhow::Result;
 use home::cargo_home;
+use semver::VersionReq;
 use serde::Deserialize;
 
 use crate::CONFIG_FILE_NAME;
@@ -16,7 +17,7 @@ pub struct UserConfig {
 #[derive(Deserialize, Debug)]
 #[serde(untagged)]
 pub enum Package {
-    Simple(String),
+    Simple(VersionReq),
 }
 
 pub fn parse_config() -> Result<UserConfig> {
