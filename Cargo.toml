@@ -2,6 +2,28 @@
 name = "cargo-liner"
 version = "0.1.0"
 edition = "2021"
+rust-version = "1.60"
+description = """
+Cargo subcommand to install and update binary packages listed in configuration.
+"""
+categories = ["command-line-utilities", "development-tools::cargo-plugins", "config"]
+keywords = ["cargo", "subcommand", "plugin", "install", "update"]
+license = "GPL-3.0-only"
+authors = ["Paul Mabileau <paulmabileau@hotmail.fr>"]
+repository = "https://github.com/PaulDance/cargo-liner"
+homepage = "https://github.com/PaulDance/cargo-liner"
+documentation = "https://docs.rs/cargo-liner"
+include = [
+    "/Cargo.toml",
+    "/Cargo.lock",
+    "/src/**/*",
+    "/examples/**/*",
+    "/benches/**/*",
+    "/tests/**/*",
+    "/README.md",
+    "/CHANGELOG.md",
+    "/LICENSE.txt",
+]
 
 [dependencies]
 clap = { version = "~4.0", features = ["derive"] }
