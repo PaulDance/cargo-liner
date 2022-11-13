@@ -3,7 +3,7 @@ use clap::Parser;
 #[derive(clap::Parser, Debug)]
 #[command(name = "cargo")]
 #[command(bin_name = "cargo")]
-pub enum Cargo {
+enum Cargo {
     Liner(Liner),
 }
 
