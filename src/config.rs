@@ -21,7 +21,7 @@ pub enum Package {
 }
 
 pub fn parse_config() -> Result<UserConfig> {
-    Ok(toml::from_str::<UserConfig>(&fs::read_to_string(
+    Ok(toml::from_str(&fs::read_to_string(
         cargo_home()?.join(CONFIG_FILE_NAME),
     )?)?)
 }
