@@ -14,7 +14,7 @@ use serde::Deserialize;
 use crate::CONFIG_FILE_NAME;
 
 /// Represents the user's configuration deserialized from its file.
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, PartialEq, Eq)]
 pub struct UserConfig {
     /// The name-to-setting map for the `packages` section of the config.
     pub packages: BTreeMap<String, Package>,
@@ -24,7 +24,7 @@ pub struct UserConfig {
 ///
 /// There is only one variant for now: a version requirement string.
 /// The enumeration is deserialized from an untagged form.
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, PartialEq, Eq)]
 #[serde(untagged)]
 pub enum Package {
     /// Simple form: only a SemVer requirement string.
@@ -39,4 +39,67 @@ pub fn parse_config() -> Result<UserConfig> {
     Ok(toml::from_str(&fs::read_to_string(
         cargo_home()?.join(CONFIG_FILE_NAME),
     )?)?)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_deser_userconfig_empty_iserr() {
+        assert!(toml::from_str::<UserConfig>("").is_err());
+    }
+
+    #[test]
+    fn test_deser_userconfig_no_packages() {
+        assert_eq!(
+            toml::from_str::<UserConfig>(
+                r#"
+                    [packages]
+                "#,
+            )
+            .unwrap(),
+            UserConfig {
+                packages: BTreeMap::new(),
+            },
+        );
+    }
+
+    #[test]
+    fn test_deser_userconfig_simple_versions() {
+        assert_eq!(
+            toml::from_str::<UserConfig>(
+                r#"
+                    [packages]
+                    a = "1.2.3"
+                    b = "1.2"
+                    c = "1"
+                    d = "*"
+                    e = "1.*"
+                    f = "1.2.*"
+                    g = "~1.2"
+                    h = "~1"
+                "#,
+            )
+            .unwrap(),
+            UserConfig {
+                packages: [
+                    ("a", "1.2.3"),
+                    ("b", "1.2"),
+                    ("c", "1"),
+                    ("d", "*"),
+                    ("e", "1.*"),
+                    ("f", "1.2.*"),
+                    ("g", "~1.2"),
+                    ("h", "~1")
+                ]
+                .into_iter()
+                .map(|(name, version)| (
+                    name.to_owned(),
+                    Package::Simple(VersionReq::parse(version).unwrap()),
+                ))
+                .collect::<BTreeMap<_, _>>(),
+            }
+        );
+    }
 }
