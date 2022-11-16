@@ -136,6 +136,15 @@ where:
 [Cargo style]: https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html
 
 
+## Contributing
+
+See the [contributing guidelines]. Please also take note of the [code of
+conduct].
+
+[contributing guidelines]: ./CONTRIBUTING.md
+[code of conduct]: ./CODE_OF_CONDUCT.md
+
+
 ## Copyright notice
 
 [Sergej Tucakov] for the animation used as this project's logo.
