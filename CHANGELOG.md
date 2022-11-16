@@ -1,4 +1,4 @@
-# Version 0.1.0
+# Version 0.1.0 (13/11/2022)
 ## Features
 
  * Most basic CLI.
