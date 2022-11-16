@@ -134,3 +134,10 @@ where:
 [package name]: https://doc.rust-lang.org/cargo/reference/manifest.html#the-name-field
 [SemVer]: https://semver.org/
 [Cargo style]: https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html
+
+
+## Copyright notice
+
+[Sergej Tucakov] for the animation used as this project's logo.
+
+[Sergej Tucakov]: https://dribbble.com/sergejtucakov
