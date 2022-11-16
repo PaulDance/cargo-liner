@@ -15,7 +15,6 @@ use crate::CONFIG_FILE_NAME;
 
 /// Represents the user's configuration deserialized from its file.
 #[derive(Deserialize, Debug)]
-#[serde(deny_unknown_fields)]
 pub struct UserConfig {
     /// The name-to-setting map for the `packages` section of the config.
     pub packages: BTreeMap<String, Package>,
