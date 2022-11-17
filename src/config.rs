@@ -48,6 +48,20 @@ pub struct CargoCratesToml {
     pub package_bins: BTreeMap<CargoCratesPackage, Vec<String>>,
 }
 
+impl CargoCratesToml {
+    /// Converts this toml document into a simple user config containing no
+    /// particular version requirement, only stars are used.
+    pub fn into_versionless_config(self) -> UserConfig {
+        UserConfig {
+            packages: self
+                .package_bins
+                .into_iter()
+                .map(|(pkg, _)| (pkg.name, Package::Simple(VersionReq::STAR)))
+                .collect(),
+        }
+    }
+}
+
 /// Representation of keys of the `v1` table parsed by [`CargoCratesToml`].
 #[derive(Deserialize, Debug, PartialEq, Eq, PartialOrd, Ord)]
 #[serde(try_from = "String")]
