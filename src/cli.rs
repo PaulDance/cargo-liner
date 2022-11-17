@@ -10,7 +10,7 @@ use clap::Parser;
 #[derive(clap::Parser, Debug, PartialEq, Eq)]
 #[command(name = "cargo")]
 #[command(bin_name = "cargo")]
-enum Cargo {
+enum CargoArgs {
     // The only variant: enables validating the input given by Cargo.
     Liner(LinerArgs),
 }
@@ -26,8 +26,8 @@ pub struct LinerArgs {}
 /// actually fallible: it will print an error to stderr and exit the current
 /// process on an error status code if a parsing error occurs.
 pub fn parse_args() -> LinerArgs {
-    match Cargo::parse() {
-        Cargo::Liner(args) => args,
+    match CargoArgs::parse() {
+        CargoArgs::Liner(args) => args,
     }
 }
 
@@ -37,19 +37,19 @@ mod tests {
 
     #[test]
     fn test_help_iserr() {
-        assert!(Cargo::try_parse_from(["cargo", "liner", "--help"].into_iter()).is_err());
+        assert!(CargoArgs::try_parse_from(["cargo", "liner", "--help"].into_iter()).is_err());
     }
 
     #[test]
     fn test_version_iserr() {
-        assert!(Cargo::try_parse_from(["cargo", "liner", "--version"].into_iter()).is_err());
+        assert!(CargoArgs::try_parse_from(["cargo", "liner", "--version"].into_iter()).is_err());
     }
 
     #[test]
     fn test_no_args() {
         assert_eq!(
-            Cargo::try_parse_from(["cargo", "liner"].into_iter()).unwrap(),
-            Cargo::Liner(LinerArgs {}),
+            CargoArgs::try_parse_from(["cargo", "liner"].into_iter()).unwrap(),
+            CargoArgs::Liner(LinerArgs {}),
         );
     }
 }
