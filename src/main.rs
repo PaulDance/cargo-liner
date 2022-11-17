@@ -5,6 +5,7 @@ use anyhow::Result;
 
 mod cargo;
 mod cli;
+use cli::LinerArgs;
 mod config;
 use config::UserConfig;
 
@@ -13,7 +14,7 @@ pub(crate) static CONFIG_FILE_NAME: &str = "liner.toml";
 
 fn main() -> Result<()> {
     // Output unused for now, just validates the input.
-    let _args = cli::parse_args();
+    let _args = LinerArgs::parse_env();
     let config = UserConfig::parse_file()?;
     cargo::install_all(&config)?;
     Ok(())

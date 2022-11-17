@@ -20,14 +20,16 @@ enum CargoArgs {
 #[command(author, version, about, long_about)]
 pub struct LinerArgs {}
 
-/// Parses the arguments from the environment and returns them.
-///
-/// Although it does not return `anyhow::Result<Liner>`, the function is
-/// actually fallible: it will print an error to stderr and exit the current
-/// process on an error status code if a parsing error occurs.
-pub fn parse_args() -> LinerArgs {
-    match CargoArgs::parse() {
-        CargoArgs::Liner(args) => args,
+impl LinerArgs {
+    /// Parses the arguments from the environment and returns them.
+    ///
+    /// Although it does not return `anyhow::Result<Self>`, the function is
+    /// actually fallible: it will print an error to stderr and exit the current
+    /// process on an error status code if a parsing error occurs.
+    pub fn parse_env() -> Self {
+        match CargoArgs::parse() {
+            CargoArgs::Liner(args) => args,
+        }
     }
 }
 
