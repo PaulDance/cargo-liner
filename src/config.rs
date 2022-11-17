@@ -5,13 +5,12 @@
 
 use std::collections::BTreeMap;
 use std::fs;
+use std::path::PathBuf;
 
 use anyhow::{anyhow, Result};
 use home::cargo_home;
 use semver::{Version, VersionReq};
 use serde::{Deserialize, Serialize};
-
-use crate::CONFIG_FILE_NAME;
 
 /// Represents the user's configuration deserialized from its file.
 #[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
@@ -21,14 +20,20 @@ pub struct UserConfig {
 }
 
 impl UserConfig {
+    /// The default name for the configuration file in Cargo's home.
+    pub const FILE_NAME: &str = "liner.toml";
+
+    /// Returns the [`PathBuf`] pointing to the associated configuration file.
+    pub fn file_path() -> Result<PathBuf> {
+        Ok(cargo_home()?.join(Self::FILE_NAME))
+    }
+
     /// Deserializes the user's configuration file and returns the result.
     ///
     /// It may fail on multiple occasions: if Cargo's home may not be found, if
     /// the file does not exist, if it cannot be read from or if it is malformed.
     pub fn parse_file() -> Result<Self> {
-        Ok(toml::from_str(&fs::read_to_string(
-            cargo_home()?.join(CONFIG_FILE_NAME),
-        )?)?)
+        Ok(toml::from_str(&fs::read_to_string(Self::file_path()?)?)?)
     }
 
     /// Serializes the configuration and saves it to the default file.
@@ -37,10 +42,7 @@ impl UserConfig {
     /// contents will be enterily overwritten. Just as [`Self::parse_file`], it
     /// may fail on several occasions.
     pub fn save_file(&self) -> Result<()> {
-        fs::write(
-            cargo_home()?.join(CONFIG_FILE_NAME),
-            toml::to_string_pretty(self)?,
-        )?;
+        fs::write(Self::file_path()?, toml::to_string_pretty(self)?)?;
         Ok(())
     }
 }
@@ -64,12 +66,18 @@ pub struct CargoCratesToml {
 }
 
 impl CargoCratesToml {
+    /// The default name for the configuration file in Cargo's home.
+    pub const FILE_NAME: &str = ".crates.toml";
+
+    /// Returns the [`PathBuf`] pointing to the associated configuration file.
+    pub fn file_path() -> Result<PathBuf> {
+        Ok(cargo_home()?.join(Self::FILE_NAME))
+    }
+
     /// Parse and return a representation of the `$CARGO_HOME/.crates.toml`
     /// Cargo-managed file.
     pub fn parse_file() -> Result<Self> {
-        Ok(toml::from_str(&fs::read_to_string(
-            cargo_home()?.join(".crates.toml"),
-        )?)?)
+        Ok(toml::from_str(&fs::read_to_string(Self::file_path()?)?)?)
     }
 
     /// Converts this toml document into a simple user config containing no
