@@ -2,7 +2,7 @@
 //!
 //! See [`parse_args`] in order to retrieve such arguments from the environment.
 
-use clap::Parser;
+use clap::{Parser, Subcommand};
 
 /// Cargo entry point for `cargo-liner`.
 ///
@@ -18,7 +18,10 @@ enum CargoArgs {
 // The actual entry point in this tool's argument parser.
 #[derive(clap::Args, Debug, PartialEq, Eq)]
 #[command(author, version, about, long_about)]
-pub struct LinerArgs {}
+pub struct LinerArgs {
+    #[command(subcommand)]
+    pub command: Option<LinerCommands>,
+}
 
 impl LinerArgs {
     /// Parses the arguments from the environment and returns them.
@@ -31,6 +34,14 @@ impl LinerArgs {
             CargoArgs::Liner(args) => args,
         }
     }
+}
+
+/// Subcommands for the main CLI.
+#[derive(Subcommand, Debug, PartialEq, Eq)]
+pub enum LinerCommands {
+    /// Import the `$CARGO_HOME/.crates.toml` Cargo-edited configuration file
+    /// as a new Liner configuration file.
+    Import,
 }
 
 #[cfg(test)]

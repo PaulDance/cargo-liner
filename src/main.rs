@@ -5,17 +5,25 @@ use anyhow::Result;
 
 mod cargo;
 mod cli;
-use cli::LinerArgs;
+use cli::{LinerArgs, LinerCommands};
 mod config;
-use config::UserConfig;
+use config::{CargoCratesToml, UserConfig};
 
 /// The default name for the configuration file in Cargo's home.
 pub(crate) static CONFIG_FILE_NAME: &str = "liner.toml";
 
 fn main() -> Result<()> {
-    // Output unused for now, just validates the input.
-    let _args = LinerArgs::parse_env();
-    let config = UserConfig::parse_file()?;
-    cargo::install_all(&config)?;
+    let args = LinerArgs::parse_env();
+
+    match &args.command {
+        Some(LinerCommands::Import) => CargoCratesToml::parse_file()?
+            .into_versionless_config()
+            .save_file()?,
+        _ => {
+            let config = UserConfig::parse_file()?;
+            cargo::install_all(&config)?;
+        }
+    }
+
     Ok(())
 }

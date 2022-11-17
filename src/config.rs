@@ -9,12 +9,12 @@ use std::fs;
 use anyhow::{anyhow, Result};
 use home::cargo_home;
 use semver::{Version, VersionReq};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use crate::CONFIG_FILE_NAME;
 
 /// Represents the user's configuration deserialized from its file.
-#[derive(Deserialize, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
 pub struct UserConfig {
     /// The name-to-setting map for the `packages` section of the config.
     pub packages: BTreeMap<String, Package>,
@@ -30,13 +30,26 @@ impl UserConfig {
             cargo_home()?.join(CONFIG_FILE_NAME),
         )?)?)
     }
+
+    /// Serializes the configuration and saves it to the default file.
+    ///
+    /// It creates the file if it does not already exist. If it already exists,
+    /// contents will be enterily overwritten. Just as [`Self::parse_file`], it
+    /// may fail on several occasions.
+    pub fn save_file(&self) -> Result<()> {
+        fs::write(
+            cargo_home()?.join(CONFIG_FILE_NAME),
+            toml::to_string_pretty(self)?,
+        )?;
+        Ok(())
+    }
 }
 
 /// Represents the requirement setting configured for a package.
 ///
 /// There is only one variant for now: a version requirement string.
 /// The enumeration is deserialized from an untagged form.
-#[derive(Deserialize, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
 #[serde(untagged)]
 pub enum Package {
     /// Simple form: only a SemVer requirement string.
