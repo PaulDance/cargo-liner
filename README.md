@@ -19,6 +19,11 @@
         alt="Crates.io version"
         src="https://img.shields.io/crates/v/cargo-liner?style=for-the-badge"
     />
+    <br/>
+    <img
+        alt="GitHub Workflow Status"
+        src="https://img.shields.io/github/workflow/status/PaulDance/cargo-liner/CI?style=for-the-badge"
+    />
     <img
         alt="Crates.io downloads"
         src="https://img.shields.io/crates/d/cargo-liner?style=for-the-badge"
