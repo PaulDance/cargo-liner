@@ -20,6 +20,18 @@ pub struct UserConfig {
     pub packages: BTreeMap<String, Package>,
 }
 
+impl UserConfig {
+    /// Deserializes the user's configuration file and returns the result.
+    ///
+    /// It may fail on multiple occasions: if Cargo's home may not be found, if
+    /// the file does not exist, if it cannot be read from or if it is malformed.
+    pub fn parse_file() -> Result<Self> {
+        Ok(toml::from_str(&fs::read_to_string(
+            cargo_home()?.join(CONFIG_FILE_NAME),
+        )?)?)
+    }
+}
+
 /// Represents the requirement setting configured for a package.
 ///
 /// There is only one variant for now: a version requirement string.
@@ -31,16 +43,6 @@ pub enum Package {
     Simple(VersionReq),
 }
 
-/// Deserializes the user's configuration file and returns the result.
-///
-/// It may fail on multiple occasions: if Cargo's home may not be found, if the
-/// file does not exist, if it cannot be read from or if it is malformed.
-pub fn parse_config() -> Result<UserConfig> {
-    Ok(toml::from_str(&fs::read_to_string(
-        cargo_home()?.join(CONFIG_FILE_NAME),
-    )?)?)
-}
-
 /// Representation of the `$CARGO_HOME/.crates/toml` Cargo-managed file.
 #[derive(Deserialize, Debug, PartialEq, Eq)]
 pub struct CargoCratesToml {
@@ -49,6 +51,14 @@ pub struct CargoCratesToml {
 }
 
 impl CargoCratesToml {
+    /// Parse and return a representation of the `$CARGO_HOME/.crates.toml`
+    /// Cargo-managed file.
+    pub fn parse_file() -> Result<Self> {
+        Ok(toml::from_str(&fs::read_to_string(
+            cargo_home()?.join(".crates.toml"),
+        )?)?)
+    }
+
     /// Converts this toml document into a simple user config containing no
     /// particular version requirement, only stars are used.
     pub fn into_versionless_config(self) -> UserConfig {
@@ -92,14 +102,6 @@ impl TryFrom<String> for CargoCratesPackage {
                 .to_owned(),
         })
     }
-}
-
-/// Parse and return a representation of the `$CARGO_HOME/.crates/toml`
-/// Cargo-managed file.
-pub fn parse_cargo_crates() -> Result<CargoCratesToml> {
-    Ok(toml::from_str(&fs::read_to_string(
-        cargo_home()?.join(".crates.toml"),
-    )?)?)
 }
 
 #[cfg(test)]
