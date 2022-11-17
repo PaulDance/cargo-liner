@@ -6,9 +6,9 @@
 use std::collections::BTreeMap;
 use std::fs;
 
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use home::cargo_home;
-use semver::VersionReq;
+use semver::{Version, VersionReq};
 use serde::Deserialize;
 
 use crate::CONFIG_FILE_NAME;
@@ -38,6 +38,53 @@ pub enum Package {
 pub fn parse_config() -> Result<UserConfig> {
     Ok(toml::from_str(&fs::read_to_string(
         cargo_home()?.join(CONFIG_FILE_NAME),
+    )?)?)
+}
+
+/// Representation of the `$CARGO_HOME/.crates/toml` Cargo-managed file.
+#[derive(Deserialize, Debug)]
+pub struct CargoCratesToml {
+    #[serde(rename = "v1")]
+    pub package_bins: BTreeMap<CargoCratesPackage, Vec<String>>,
+}
+
+/// Representation of keys of the `v1` table parsed by [`CargoCratesToml`].
+#[derive(Deserialize, Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[serde(try_from = "String")]
+pub struct CargoCratesPackage {
+    pub name: String,
+    pub version: Version,
+    pub source: String,
+}
+
+/// Deserialize by splitting by spaces, isolating the name, parsing the version
+/// and trimming the parentheses around the source.
+impl TryFrom<String> for CargoCratesPackage {
+    type Error = anyhow::Error;
+
+    fn try_from(s: String) -> Result<Self> {
+        let mut parts = s.splitn(3, ' ');
+        Ok(Self {
+            name: parts.next().ok_or(anyhow!("Missing name"))?.to_owned(),
+            version: parts
+                .next()
+                .ok_or(anyhow!("Missing version"))?
+                .parse::<Version>()?,
+            source: parts
+                .next()
+                .ok_or(anyhow!("Missing source"))?
+                .trim_start_matches('(')
+                .trim_end_matches(')')
+                .to_owned(),
+        })
+    }
+}
+
+/// Parse and return a representation of the `$CARGO_HOME/.crates/toml`
+/// Cargo-managed file.
+pub fn parse_cargo_crates() -> Result<CargoCratesToml> {
+    Ok(toml::from_str(&fs::read_to_string(
+        cargo_home()?.join(".crates.toml"),
     )?)?)
 }
 
