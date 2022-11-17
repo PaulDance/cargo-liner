@@ -60,13 +60,13 @@ However, some problems are still not solved like this: when configuring a new
 workstation, there is still the need to specify each package manually at least
 once; when adding a new package on one already-configured workstation, there is
 still the need to install it manually on all others. These tools lack *sharing*
-and *synchronisation*.
+and *synchronization*.
 
 The current project therefore inspires itself from tools such as [zplug] for
 Zsh and [vim-plug] for Vim by taking orders from a central configuration file.
 The tool then simply runs `cargo install` for all packages listed in that file.
 That enables one to install and maintain all packages up-to-date, but also to
-keep all of one's workstations synchronised by sharing the file between them in
+keep all of one's workstations synchronized by sharing the file between them in
 some way, using Git for example.
 
 [cargo-update]: https://github.com/nabijaczleweli/cargo-update
