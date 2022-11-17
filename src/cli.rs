@@ -62,7 +62,7 @@ mod tests {
     fn test_no_args() {
         assert_eq!(
             CargoArgs::try_parse_from(["cargo", "liner"].into_iter()).unwrap(),
-            CargoArgs::Liner(LinerArgs {}),
+            CargoArgs::Liner(LinerArgs { command: None }),
         );
     }
 }
