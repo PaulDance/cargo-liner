@@ -42,7 +42,7 @@ pub fn parse_config() -> Result<UserConfig> {
 }
 
 /// Representation of the `$CARGO_HOME/.crates/toml` Cargo-managed file.
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, PartialEq, Eq)]
 pub struct CargoCratesToml {
     #[serde(rename = "v1")]
     pub package_bins: BTreeMap<CargoCratesPackage, Vec<String>>,
@@ -144,6 +144,68 @@ mod tests {
                 .map(|(name, version)| (
                     name.to_owned(),
                     Package::Simple(VersionReq::parse(version).unwrap()),
+                ))
+                .collect::<BTreeMap<_, _>>(),
+            }
+        );
+    }
+
+    #[test]
+    fn test_deser_cargocrates_empty_iserr() {
+        assert!(toml::from_str::<CargoCratesToml>("").is_err());
+    }
+
+    #[test]
+    fn test_deser_cargocrates_no_packages() {
+        assert_eq!(
+            toml::from_str::<CargoCratesToml>(
+                r#"
+                    [v1]
+                "#,
+            )
+            .unwrap(),
+            CargoCratesToml {
+                package_bins: BTreeMap::new(),
+            },
+        );
+    }
+
+    #[test]
+    fn test_deser_cargocrates_full_versions() {
+        assert_eq!(
+            toml::from_str::<CargoCratesToml>(
+                r#"
+                    [v1]
+                    "a 1.2.3 (registry+https://github.com/rust-lang/crates.io-index)" = ["a"]
+                    "b 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)" = ["b1", "b2"]
+                    "c 0.0.0 (path+file:///a/b/c)" = ["c1", "c2", "c3"]
+                "#,
+            )
+            .unwrap(),
+            CargoCratesToml {
+                package_bins: [
+                    (
+                        "a",
+                        "1.2.3",
+                        "registry+https://github.com/rust-lang/crates.io-index",
+                        vec!["a"],
+                    ),
+                    (
+                        "b",
+                        "0.1.2",
+                        "registry+https://github.com/rust-lang/crates.io-index",
+                        vec!["b1", "b2"],
+                    ),
+                    ("c", "0.0.0", "path+file:///a/b/c", vec!["c1", "c2", "c3"]),
+                ]
+                .into_iter()
+                .map(|(name, version, source, bins)| (
+                    CargoCratesPackage {
+                        name: name.to_owned(),
+                        version: version.parse::<Version>().unwrap(),
+                        source: source.to_owned(),
+                    },
+                    bins.into_iter().map(str::to_owned).collect::<Vec<_>>(),
                 ))
                 .collect::<BTreeMap<_, _>>(),
             }
