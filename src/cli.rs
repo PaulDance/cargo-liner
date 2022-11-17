@@ -12,20 +12,20 @@ use clap::Parser;
 #[command(bin_name = "cargo")]
 enum Cargo {
     // The only variant: enables validating the input given by Cargo.
-    Liner(Liner),
+    Liner(LinerArgs),
 }
 
 // The actual entry point in this tool's argument parser.
 #[derive(clap::Args, Debug, PartialEq, Eq)]
 #[command(author, version, about, long_about)]
-pub struct Liner {}
+pub struct LinerArgs {}
 
 /// Parses the arguments from the environment and returns them.
 ///
 /// Although it does not return `anyhow::Result<Liner>`, the function is
 /// actually fallible: it will print an error to stderr and exit the current
 /// process on an error status code if a parsing error occurs.
-pub fn parse_args() -> Liner {
+pub fn parse_args() -> LinerArgs {
     match Cargo::parse() {
         Cargo::Liner(args) => args,
     }
@@ -49,7 +49,7 @@ mod tests {
     fn test_no_args() {
         assert_eq!(
             Cargo::try_parse_from(["cargo", "liner"].into_iter()).unwrap(),
-            Cargo::Liner(Liner {}),
+            Cargo::Liner(LinerArgs {}),
         );
     }
 }
