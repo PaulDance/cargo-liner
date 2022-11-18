@@ -41,10 +41,21 @@ impl LinerArgs {
 #[derive(clap::Subcommand, Debug, PartialEq, Eq)]
 pub enum LinerCommands {
     /// The default command if omitted: install and update configured packages.
-    Ship,
+    ///
+    /// Self-updating is enabled by default.
+    Ship(ShipArgs),
     /// Import the `$CARGO_HOME/.crates.toml` Cargo-edited save file as a new
     /// Liner configuration file.
     Import(ImportArgs),
+}
+
+/// Arguments for the `ship` subcommand.
+#[derive(clap::Args, Debug, PartialEq, Eq)]
+#[command(long_about = None)]
+pub struct ShipArgs {
+    /// Disable self-updating.
+    #[arg(long)]
+    pub no_self_update: bool,
 }
 
 #[derive(clap::Args, Debug, PartialEq, Eq)]
