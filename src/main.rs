@@ -20,7 +20,7 @@ fn main() -> Result<()> {
                 .into_versionless_config()
                 .save_file()?;
         }
-        _ => {
+        Some(LinerCommands::Ship) | None => {
             let config = UserConfig::parse_file()?;
             cargo::install_all(&config)?;
         }

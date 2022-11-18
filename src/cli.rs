@@ -39,6 +39,8 @@ impl LinerArgs {
 /// Subcommands for the main CLI.
 #[derive(clap::Subcommand, Debug, PartialEq, Eq)]
 pub enum LinerCommands {
+    /// The default command if omitted: install and update configured packages.
+    Ship,
     /// Import the `$CARGO_HOME/.crates.toml` Cargo-edited configuration file
     /// as a new Liner configuration file.
     Import(ImportArgs),
