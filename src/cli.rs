@@ -66,7 +66,14 @@ pub struct ImportArgs {
     /// Import the exact package versions instead of filling all version
     /// requirements with stars.
     #[arg(short, long)]
+    #[arg(conflicts_with_all(["compatible"]))]
     pub exact: bool,
+
+    /// Import package versions as "compatible versions", i.e. prepended with
+    /// a caret.
+    #[arg(short, long)]
+    #[arg(conflicts_with_all(["exact"]))]
+    pub compatible: bool,
 
     /// Overwrite the current configuration file if it already exists.
     #[arg(short, long)]

@@ -140,6 +140,12 @@ impl CargoCratesToml {
     pub fn into_exact_version_config(self) -> UserConfig {
         self.into_op_version_config(Op::Exact)
     }
+
+    /// Converts this toml document into a simple user config containing
+    /// compatible version requirements, i.e. with the caret operator.
+    pub fn into_comp_version_config(self) -> UserConfig {
+        self.into_op_version_config(Op::Caret)
+    }
 }
 
 /// Representation of keys of the `v1` table parsed by [`CargoCratesToml`].

@@ -18,6 +18,8 @@ fn main() -> Result<()> {
             }
             (if import_args.exact {
                 CargoCratesToml::into_exact_version_config
+            } else if import_args.compatible {
+                CargoCratesToml::into_comp_version_config
             } else {
                 CargoCratesToml::into_star_version_config
             })(CargoCratesToml::parse_file()?)
