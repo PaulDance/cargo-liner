@@ -48,7 +48,8 @@ pub enum LinerCommands {
     /// Import the `$CARGO_HOME/.crates.toml` Cargo-edited save file as a new
     /// Liner configuration file.
     ///
-    /// Star versions are used by default.
+    /// Star versions are used by default. The version transformation options
+    /// are mutually exclusive.
     Import(ImportArgs),
 }
 
@@ -63,20 +64,26 @@ pub struct ShipArgs {
 
 #[derive(clap::Args, Debug, PartialEq, Eq)]
 pub struct ImportArgs {
-    /// Import the exact package versions instead of filling all version
-    /// requirements with stars.
+    /// Import package versions as "exact versions", i.e. prepended with
+    /// an equal operator.
+    ///
+    /// Cannot be used in conjunction with either `--compatible` or `--patch`.
     #[arg(short, long)]
     #[arg(conflicts_with_all(["compatible", "patch"]))]
     pub exact: bool,
 
     /// Import package versions as "compatible versions", i.e. prepended with
-    /// a caret.
+    /// a caret operator.
+    ///
+    /// Cannot be used in conjunction with either `--exact` or `--patch`.
     #[arg(short, long)]
     #[arg(conflicts_with_all(["exact", "patch"]))]
     pub compatible: bool,
 
     /// Import package versions as "patch versions", i.e. prepended with
-    /// a tilde.
+    /// a tilde operator.
+    ///
+    /// Cannot be used in conjunction with either `--exact` or `--compatible`.
     #[arg(short, long)]
     #[arg(conflicts_with_all(["exact", "compatible"]))]
     pub patch: bool,
