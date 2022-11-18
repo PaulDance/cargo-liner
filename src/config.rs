@@ -33,7 +33,7 @@ impl UserConfig {
     /// It may fail on multiple occasions: if Cargo's home may not be found, if
     /// the file does not exist, if it cannot be read from or if it is malformed.
     pub fn parse_file() -> Result<Self> {
-        Ok(toml::from_str(&fs::read_to_string(Self::file_path()?)?)?)
+        Ok(toml::from_str::<Self>(&fs::read_to_string(Self::file_path()?)?)?.self_update(true))
     }
 
     /// Serializes the configuration and saves it to the default file.
@@ -51,6 +51,24 @@ impl UserConfig {
         let mut dst = String::new();
         self.serialize(toml::Serializer::pretty(&mut dst).pretty_string_literal(false))?;
         Ok(dst)
+    }
+
+    /// Enable or disable self-updating.
+    ///
+    /// If `sup` is `true` and the current crate is not already contained in
+    /// the configured packages, then it will add it, otherwise remove it.
+    pub fn self_update(mut self, sup: bool) -> Self {
+        if sup {
+            if !self.packages.contains_key(clap::crate_name!()) {
+                self.packages.insert(
+                    clap::crate_name!().to_owned(),
+                    Package::Simple(VersionReq::STAR),
+                );
+            }
+        } else {
+            self.packages.remove(clap::crate_name!());
+        }
+        self
     }
 }
 
