@@ -42,8 +42,15 @@ impl UserConfig {
     /// contents will be enterily overwritten. Just as [`Self::parse_file`], it
     /// may fail on several occasions.
     pub fn save_file(&self) -> Result<()> {
-        fs::write(Self::file_path()?, toml::to_string_pretty(self)?)?;
+        fs::write(Self::file_path()?, self.to_string_pretty()?)?;
         Ok(())
+    }
+
+    /// Converts the config to a pretty TOML string with literal strings disabled.
+    fn to_string_pretty(&self) -> Result<String> {
+        let mut dst = String::new();
+        self.serialize(toml::Serializer::pretty(&mut dst).pretty_string_literal(false))?;
+        Ok(dst)
     }
 }
 
