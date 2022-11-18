@@ -44,6 +44,7 @@ pub enum LinerCommands {
     ///
     /// Self-updating is enabled by default.
     Ship(ShipArgs),
+
     /// Import the `$CARGO_HOME/.crates.toml` Cargo-edited save file as a new
     /// Liner configuration file.
     ///
@@ -66,6 +67,7 @@ pub struct ImportArgs {
     /// requirements with stars.
     #[arg(short, long)]
     pub exact: bool,
+
     /// Overwrite the current configuration file if it already exists.
     #[arg(short, long)]
     pub force: bool,
