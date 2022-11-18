@@ -58,7 +58,7 @@ pub enum Package {
     Simple(VersionReq),
 }
 
-/// Representation of the `$CARGO_HOME/.crates/toml` Cargo-managed file.
+/// Representation of the `$CARGO_HOME/.crates.toml` Cargo-managed save file.
 #[derive(Deserialize, Debug, PartialEq, Eq)]
 pub struct CargoCratesToml {
     #[serde(rename = "v1")]
@@ -66,16 +66,16 @@ pub struct CargoCratesToml {
 }
 
 impl CargoCratesToml {
-    /// The default name for the configuration file in Cargo's home.
+    /// The default name for the save file in Cargo's home.
     pub const FILE_NAME: &str = ".crates.toml";
 
-    /// Returns the [`PathBuf`] pointing to the associated configuration file.
+    /// Returns the [`PathBuf`] pointing to the associated save file.
     pub fn file_path() -> Result<PathBuf> {
         Ok(cargo_home()?.join(Self::FILE_NAME))
     }
 
     /// Parse and return a representation of the `$CARGO_HOME/.crates.toml`
-    /// Cargo-managed file.
+    /// Cargo-managed save file.
     pub fn parse_file() -> Result<Self> {
         Ok(toml::from_str(&fs::read_to_string(Self::file_path()?)?)?)
     }

@@ -41,8 +41,8 @@ impl LinerArgs {
 pub enum LinerCommands {
     /// The default command if omitted: install and update configured packages.
     Ship,
-    /// Import the `$CARGO_HOME/.crates.toml` Cargo-edited configuration file
-    /// as a new Liner configuration file.
+    /// Import the `$CARGO_HOME/.crates.toml` Cargo-edited save file as a new
+    /// Liner configuration file.
     Import(ImportArgs),
 }
 
