@@ -60,7 +60,7 @@ pub struct ShipArgs {
 
 #[derive(clap::Args, Debug, PartialEq, Eq)]
 pub struct ImportArgs {
-    /// Overwrite the current configuration file if it exists.
+    /// Overwrite the current configuration file if it already exists.
     #[arg(short, long)]
     pub force: bool,
 }
