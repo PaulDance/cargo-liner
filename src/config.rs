@@ -60,10 +60,8 @@ impl UserConfig {
     pub fn self_update(mut self, sup: bool) -> Self {
         if sup {
             if !self.packages.contains_key(clap::crate_name!()) {
-                self.packages.insert(
-                    clap::crate_name!().to_owned(),
-                    Package::Simple(VersionReq::STAR),
-                );
+                self.packages
+                    .insert(clap::crate_name!().to_owned(), Package::SIMPLE_STAR);
             }
         } else {
             self.packages.remove(clap::crate_name!());
@@ -81,6 +79,11 @@ impl UserConfig {
 pub enum Package {
     /// Simple form: only a SemVer requirement string.
     Simple(VersionReq),
+}
+
+impl Package {
+    /// Convenience shortcut for simple and star version requirement package.
+    pub const SIMPLE_STAR: Self = Self::Simple(VersionReq::STAR);
 }
 
 /// Representation of the `$CARGO_HOME/.crates.toml` Cargo-managed save file.
@@ -112,7 +115,7 @@ impl CargoCratesToml {
             packages: self
                 .package_bins
                 .into_iter()
-                .map(|(pkg, _)| (pkg.name, Package::Simple(VersionReq::STAR)))
+                .map(|(pkg, _)| (pkg.name, Package::SIMPLE_STAR))
                 .collect(),
         }
     }
