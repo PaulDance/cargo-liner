@@ -108,16 +108,25 @@ impl CargoCratesToml {
         Ok(toml::from_str(&fs::read_to_string(Self::file_path()?)?)?)
     }
 
+    /// Converts this toml document into a custom user config by mapping
+    /// listed packages using the given `pkg_map` function.
+    ///
+    /// The function must take in by value the couple of [`CargoCratesPackage`]
+    /// to vector of binary names and return a couple of package name to
+    /// [`Package`] information.
+    pub fn into_config<F>(self, pkg_map: F) -> UserConfig
+    where
+        F: FnMut((CargoCratesPackage, Vec<String>)) -> (String, Package),
+    {
+        UserConfig {
+            packages: self.package_bins.into_iter().map(pkg_map).collect(),
+        }
+    }
+
     /// Converts this toml document into a simple user config containing no
     /// particular version requirement, only stars are used.
     pub fn into_versionless_config(self) -> UserConfig {
-        UserConfig {
-            packages: self
-                .package_bins
-                .into_iter()
-                .map(|(pkg, _)| (pkg.name, Package::SIMPLE_STAR))
-                .collect(),
-        }
+        self.into_config(|(pkg, _)| (pkg.name, Package::SIMPLE_STAR))
     }
 }
 
