@@ -110,14 +110,17 @@ impl TryFrom<String> for CargoCratesPackage {
     fn try_from(s: String) -> Result<Self> {
         let mut parts = s.splitn(3, ' ');
         Ok(Self {
-            name: parts.next().ok_or(anyhow!("Missing name"))?.to_owned(),
+            name: parts
+                .next()
+                .ok_or_else(|| anyhow!("Missing name"))?
+                .to_owned(),
             version: parts
                 .next()
-                .ok_or(anyhow!("Missing version"))?
+                .ok_or_else(|| anyhow!("Missing version"))?
                 .parse::<Version>()?,
             source: parts
                 .next()
-                .ok_or(anyhow!("Missing source"))?
+                .ok_or_else(|| anyhow!("Missing source"))?
                 .trim_start_matches('(')
                 .trim_end_matches(')')
                 .to_owned(),
