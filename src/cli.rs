@@ -1,6 +1,7 @@
 //! Module handling all the CLI arguments configuration and parsing.
 //!
-//! See [`parse_args`] in order to retrieve such arguments from the environment.
+//! See [`LinerArgs::parse_env`] in order to retrieve such arguments from the
+//! environment.
 
 use clap::Parser;
 
