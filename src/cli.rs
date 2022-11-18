@@ -60,6 +60,10 @@ pub struct ShipArgs {
 
 #[derive(clap::Args, Debug, PartialEq, Eq)]
 pub struct ImportArgs {
+    /// Import the exact package versions instead of filling all version
+    /// requirements with stars.
+    #[arg(short, long)]
+    pub exact: bool,
     /// Overwrite the current configuration file if it already exists.
     #[arg(short, long)]
     pub force: bool,

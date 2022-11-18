@@ -9,7 +9,7 @@ use std::path::PathBuf;
 
 use anyhow::{anyhow, Result};
 use home::cargo_home;
-use semver::{Version, VersionReq};
+use semver::{Op, Version, VersionReq};
 use serde::{Deserialize, Serialize};
 
 /// Represents the user's configuration deserialized from its file.
@@ -125,8 +125,20 @@ impl CargoCratesToml {
 
     /// Converts this toml document into a simple user config containing no
     /// particular version requirement, only stars are used.
-    pub fn into_versionless_config(self) -> UserConfig {
+    pub fn into_star_version_config(self) -> UserConfig {
         self.into_config(|(pkg, _)| (pkg.name, Package::SIMPLE_STAR))
+    }
+
+    /// Converts the config by turning versions to requirements using the given
+    /// comparison operator.
+    fn into_op_version_config(self, op: Op) -> UserConfig {
+        self.into_config(|(pkg, _)| (pkg.name, Package::Simple(ver_to_req(&pkg.version, op))))
+    }
+
+    /// Converts this toml document into a simple user config containing full
+    /// and exact version requirements.
+    pub fn into_exact_version_config(self) -> UserConfig {
+        self.into_op_version_config(Op::Exact)
     }
 }
 
@@ -163,6 +175,13 @@ impl TryFrom<String> for CargoCratesPackage {
                 .to_owned(),
         })
     }
+}
+
+/// Converts the given version to a version requirement with the given operator.
+fn ver_to_req(ver: &Version, op: Op) -> VersionReq {
+    let mut req = ver.to_string().parse::<VersionReq>().unwrap();
+    req.comparators[0].op = op;
+    req
 }
 
 #[cfg(test)]

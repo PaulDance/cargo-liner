@@ -16,9 +16,12 @@ fn main() -> Result<()> {
             if !import_args.force && UserConfig::file_path()?.try_exists()? {
                 bail!("Configuration file already exists, use -f/--force to overwrite.");
             }
-            CargoCratesToml::parse_file()?
-                .into_versionless_config()
-                .save_file()?;
+            (if import_args.exact {
+                CargoCratesToml::into_exact_version_config
+            } else {
+                CargoCratesToml::into_star_version_config
+            })(CargoCratesToml::parse_file()?)
+            .save_file()?;
         }
         Some(LinerCommands::Ship(ship_args)) => {
             let config = UserConfig::parse_file()?.self_update(!ship_args.no_self_update);
