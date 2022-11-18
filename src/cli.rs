@@ -46,6 +46,8 @@ pub enum LinerCommands {
     Ship(ShipArgs),
     /// Import the `$CARGO_HOME/.crates.toml` Cargo-edited save file as a new
     /// Liner configuration file.
+    ///
+    /// Star versions are used by default.
     Import(ImportArgs),
 }
 
