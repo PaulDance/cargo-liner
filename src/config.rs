@@ -13,7 +13,7 @@ use semver::{Op, Version, VersionReq};
 use serde::{Deserialize, Serialize};
 
 /// Represents the user's configuration deserialized from its file.
-#[derive(Serialize, Deserialize, Debug, Default, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Debug, Default, Clone, PartialEq, Eq)]
 pub struct UserConfig {
     /// The name-to-setting map for the `packages` section of the config.
     pub packages: BTreeMap<String, Package>,
@@ -74,7 +74,7 @@ impl UserConfig {
 ///
 /// There is only one variant for now: a version requirement string.
 /// The enumeration is deserialized from an untagged form.
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 #[serde(untagged)]
 pub enum Package {
     /// Simple form: only a SemVer requirement string.
@@ -87,7 +87,7 @@ impl Package {
 }
 
 /// Representation of the `$CARGO_HOME/.crates.toml` Cargo-managed save file.
-#[derive(Deserialize, Debug, PartialEq, Eq)]
+#[derive(Deserialize, Debug, Clone, PartialEq, Eq)]
 pub struct CargoCratesToml {
     #[serde(rename = "v1")]
     pub package_bins: BTreeMap<CargoCratesPackage, Vec<String>>,
@@ -155,7 +155,7 @@ impl CargoCratesToml {
 }
 
 /// Representation of keys of the `v1` table parsed by [`CargoCratesToml`].
-#[derive(Deserialize, Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 #[serde(try_from = "String")]
 pub struct CargoCratesPackage {
     pub name: String,
