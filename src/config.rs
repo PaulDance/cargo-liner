@@ -87,7 +87,7 @@ impl Package {
 }
 
 /// Representation of the `$CARGO_HOME/.crates.toml` Cargo-managed save file.
-#[derive(Deserialize, Debug, Clone, PartialEq, Eq)]
+#[derive(Deserialize, Debug, Default, Clone, PartialEq, Eq)]
 pub struct CargoCratesToml {
     #[serde(rename = "v1")]
     pub package_bins: BTreeMap<CargoCratesPackage, Vec<String>>,
@@ -369,18 +369,22 @@ mod tests {
         );
     }
 
+    fn cargocrates_example1() -> CargoCratesToml {
+        toml::from_str::<CargoCratesToml>(
+            r#"
+                [v1]
+                "a 1.2.3 (registry+https://example.com/index)" = ["a"]
+                "b 0.1.2 (registry+https://example.com/index)" = ["b1", "b2"]
+                "c 0.0.0 (path+file:///a/b/c)" = ["c1", "c2", "c3"]
+            "#,
+        )
+        .unwrap()
+    }
+
     #[test]
     fn test_deser_cargocrates_full_versions() {
         assert_eq!(
-            toml::from_str::<CargoCratesToml>(
-                r#"
-                    [v1]
-                    "a 1.2.3 (registry+https://example.com/index)" = ["a"]
-                    "b 0.1.2 (registry+https://example.com/index)" = ["b1", "b2"]
-                    "c 0.0.0 (path+file:///a/b/c)" = ["c1", "c2", "c3"]
-                "#,
-            )
-            .unwrap(),
+            cargocrates_example1(),
             CargoCratesToml {
                 package_bins: [
                     (
@@ -409,5 +413,77 @@ mod tests {
                 .collect::<BTreeMap<_, _>>(),
             }
         );
+    }
+
+    #[test]
+    fn test_cargocrates_intostarcfg_no_packages() {
+        assert_eq!(
+            CargoCratesToml::default().into_star_version_config(),
+            UserConfig::default(),
+        )
+    }
+
+    #[test]
+    fn test_cargocrates_intostarcfg_full_versions() {
+        assert_eq!(
+            cargocrates_example1().into_star_version_config(),
+            UserConfig {
+                packages: [("a", "*"), ("b", "*"), ("c", "*")]
+                    .into_iter()
+                    .map(|(name, version)| (
+                        name.to_owned(),
+                        Package::Simple(VersionReq::parse(version).unwrap()),
+                    ))
+                    .collect::<BTreeMap<_, _>>(),
+            },
+        )
+    }
+
+    #[test]
+    fn test_cargocrates_intoexactcfg_full_versions() {
+        assert_eq!(
+            cargocrates_example1().into_exact_version_config(),
+            UserConfig {
+                packages: [("a", "=1.2.3"), ("b", "=0.1.2"), ("c", "=0.0.0")]
+                    .into_iter()
+                    .map(|(name, version)| (
+                        name.to_owned(),
+                        Package::Simple(VersionReq::parse(version).unwrap()),
+                    ))
+                    .collect::<BTreeMap<_, _>>(),
+            },
+        )
+    }
+
+    #[test]
+    fn test_cargocrates_intocompcfg_full_versions() {
+        assert_eq!(
+            cargocrates_example1().into_comp_version_config(),
+            UserConfig {
+                packages: [("a", "^1.2.3"), ("b", "^0.1.2"), ("c", "^0.0.0")]
+                    .into_iter()
+                    .map(|(name, version)| (
+                        name.to_owned(),
+                        Package::Simple(VersionReq::parse(version).unwrap()),
+                    ))
+                    .collect::<BTreeMap<_, _>>(),
+            },
+        )
+    }
+
+    #[test]
+    fn test_cargocrates_intopatchcfg_full_versions() {
+        assert_eq!(
+            cargocrates_example1().into_patch_version_config(),
+            UserConfig {
+                packages: [("a", "~1.2.3"), ("b", "~0.1.2"), ("c", "~0.0.0")]
+                    .into_iter()
+                    .map(|(name, version)| (
+                        name.to_owned(),
+                        Package::Simple(VersionReq::parse(version).unwrap()),
+                    ))
+                    .collect::<BTreeMap<_, _>>(),
+            },
+        )
     }
 }
