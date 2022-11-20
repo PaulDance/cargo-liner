@@ -284,8 +284,8 @@ mod tests {
             toml::from_str::<CargoCratesToml>(
                 r#"
                     [v1]
-                    "a 1.2.3 (registry+https://github.com/rust-lang/crates.io-index)" = ["a"]
-                    "b 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)" = ["b1", "b2"]
+                    "a 1.2.3 (registry+https://example.com/index)" = ["a"]
+                    "b 0.1.2 (registry+https://example.com/index)" = ["b1", "b2"]
                     "c 0.0.0 (path+file:///a/b/c)" = ["c1", "c2", "c3"]
                 "#,
             )
@@ -295,13 +295,13 @@ mod tests {
                     (
                         "a",
                         "1.2.3",
-                        "registry+https://github.com/rust-lang/crates.io-index",
+                        "registry+https://example.com/index",
                         vec!["a"],
                     ),
                     (
                         "b",
                         "0.1.2",
-                        "registry+https://github.com/rust-lang/crates.io-index",
+                        "registry+https://example.com/index",
                         vec!["b1", "b2"],
                     ),
                     ("c", "0.0.0", "path+file:///a/b/c", vec!["c1", "c2", "c3"]),
