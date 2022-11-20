@@ -92,8 +92,11 @@ some way, using Git for example.
    [packages]
    cargo-expand = "*"
    cargo-tarpaulin = "~0.22"
-   nu = "0.71.0"
+   nu = "=0.71.0"
    ```
+
+   or use `cargo import` to do it automatically for you, see below for more
+   detailed explanations.
 
 [Cargo Home]: https://doc.rust-lang.org/cargo/guide/cargo-home.html
 
@@ -101,20 +104,137 @@ some way, using Git for example.
 ## Usage
 ### CLI
 
-As of now, the CLI is virtually non-existent:
+Some basic commands are now available:
 
 ```sh
 ❯ cargo help liner
-Usage: cargo liner
+Cargo subcommand to install and update binary packages listed in configuration.
+
+
+Usage: cargo liner [COMMAND]
+
+Commands:
+  ship    The default command if omitted: install and update configured packages
+  import  Import the `$CARGO_HOME/.crates.toml` Cargo-edited save file as a new Liner configuration file
+  help    Print this message or the help of the given subcommand(s)
 
 Options:
   -h, --help     Print help information
   -V, --version  Print version information
 ```
 
+
+#### Default command
+
+When the subcommand is omitted, it will use the `ship` subcommand with default
+options.
+
 Simply run `cargo liner` in order to:
  * Read packages from the configuration file.
  * Run `cargo install` for each of them.
+ * Self-update.
+
+
+#### `ship` subcommand
+
+The main command: do the installing and updating of packages.
+
+```sh
+❯ cargo liner help ship
+The default command if omitted: install and update configured packages.
+
+Self-updating is enabled by default.
+
+Usage: cargo liner ship [OPTIONS]
+
+Options:
+      --no-self-update
+          Disable self-updating
+
+  -h, --help
+          Print help information (use `-h` for a summary)
+```
+
+Simply run `cargo liner ship` in order to:
+ * Read packages from the configuration file.
+ * Run `cargo install` for each of them, respecting the version requirements.
+ * Self-update only if `--no-self-update` is not given.
+
+
+#### `import` subcommand
+
+This command is meant to be used upon installing the tool and using it for the
+first time: it populates the configuration file with currently-installed
+packages.
+
+```sh
+❯ cargo liner help import
+Import the `$CARGO_HOME/.crates.toml` Cargo-edited save file as a new Liner
+configuration file.
+
+Star versions are used by default. The version transformation options are
+mutually exclusive.
+
+Usage: cargo liner import [OPTIONS]
+
+Options:
+  -e, --exact
+          Import package versions as "exact versions", i.e. prepended with an
+          equal operator.
+
+          Cannot be used in conjunction with either `--compatible` or `--patch`.
+
+  -c, --compatible
+          Import package versions as "compatible versions", i.e. prepended with
+          a caret operator.
+
+          Cannot be used in conjunction with either `--exact` or `--patch`.
+
+  -p, --patch
+          Import package versions as "patch versions", i.e. prepended with a
+          tilde operator.
+
+          Cannot be used in conjunction with either `--exact` or `--compatible`.
+
+  -f, --force
+          Overwrite the current configuration file if it already exists
+
+  -h, --help
+          Print help information (use `-h` for a summary)
+```
+
+For example, if you had previously installed:
+ * `bat@0.22.1`
+ * `cargo-make@0.36.3`
+ * `cargo-outdated@0.11.1`
+
+Then running `cargo liner import` will result in the following configuration
+file, if it does not already exist:
+
+```toml
+[packages]
+bat = "*"
+cargo-make = "*"
+cargo-outdated = "*"
+```
+
+The command will by default import them with star version requirements. The
+`--exact`, `--compatible` and `--patch` options are provided in order to
+customize how the currently-installed versions are imported into version
+requirements: `--exact` will prepend them with `=`, `--compatible` with `^`,
+and `--patch` with `~`.
+
+For example, using the previous three packages already installed, running
+`cargo liner import --patch` would give:
+
+```toml
+[packages]
+bat = "~0.22.1"
+cargo-make = "~0.36.3"
+cargo-outdated = "~0.11.1"
+```
+
+The file can of course be edited manually afterwards, as intended.
 
 
 ### Configuration
