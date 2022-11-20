@@ -208,12 +208,7 @@ mod tests {
     #[test]
     fn test_deser_userconfig_no_packages() {
         assert_eq!(
-            toml::from_str::<UserConfig>(
-                r#"
-                    [packages]
-                "#,
-            )
-            .unwrap(),
+            toml::from_str::<UserConfig>("[packages]\n").unwrap(),
             UserConfig {
                 packages: BTreeMap::new(),
             },
@@ -266,12 +261,7 @@ mod tests {
     #[test]
     fn test_deser_cargocrates_no_packages() {
         assert_eq!(
-            toml::from_str::<CargoCratesToml>(
-                r#"
-                    [v1]
-                "#,
-            )
-            .unwrap(),
+            toml::from_str::<CargoCratesToml>("[v1]\n").unwrap(),
             CargoCratesToml {
                 package_bins: BTreeMap::new(),
             },
