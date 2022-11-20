@@ -13,7 +13,7 @@ use semver::{Op, Version, VersionReq};
 use serde::{Deserialize, Serialize};
 
 /// Represents the user's configuration deserialized from its file.
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Debug, Default, PartialEq, Eq)]
 pub struct UserConfig {
     /// The name-to-setting map for the `packages` section of the config.
     pub packages: BTreeMap<String, Package>,
@@ -209,9 +209,7 @@ mod tests {
     fn test_deser_userconfig_no_packages() {
         assert_eq!(
             toml::from_str::<UserConfig>("[packages]\n").unwrap(),
-            UserConfig {
-                packages: BTreeMap::new(),
-            },
+            UserConfig::default(),
         );
     }
 
