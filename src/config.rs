@@ -199,6 +199,8 @@ fn ver_to_req(ver: &Version, op: Op) -> VersionReq {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use indoc::indoc;
+    use std::iter;
 
     #[test]
     fn test_deser_userconfig_empty_iserr() {
@@ -248,6 +250,107 @@ mod tests {
                 ))
                 .collect::<BTreeMap<_, _>>(),
             }
+        );
+    }
+
+    #[test]
+    fn test_userconfig_tostringpretty_no_packages() {
+        assert_eq!(
+            UserConfig::default().to_string_pretty().unwrap(),
+            "[packages]\n",
+        );
+    }
+
+    #[test]
+    fn test_userconfig_tostringpretty_simple_versions() {
+        assert_eq!(
+            UserConfig {
+                packages: [
+                    ("a", "1.2.3"),
+                    ("b", "1.2"),
+                    ("c", "1"),
+                    ("d", "*"),
+                    ("e", "1.*"),
+                    ("f", "1.2.*"),
+                    ("g", "~1.2"),
+                    ("h", "~1"),
+                ]
+                .into_iter()
+                .map(|(name, version)| (
+                    name.to_owned(),
+                    Package::Simple(VersionReq::parse(version).unwrap()),
+                ))
+                .collect::<BTreeMap<_, _>>(),
+            }
+            .to_string_pretty()
+            .unwrap(),
+            indoc!(
+                r#"
+                    [packages]
+                    a = "^1.2.3"
+                    b = "^1.2"
+                    c = "^1"
+                    d = "*"
+                    e = "1.*"
+                    f = "1.2.*"
+                    g = "~1.2"
+                    h = "~1"
+                "#,
+            ),
+        );
+    }
+
+    #[test]
+    fn test_userconfig_selfupdate_enable() {
+        assert_eq!(
+            UserConfig::default().self_update(true).packages,
+            iter::once(("cargo-liner".to_owned(), Package::SIMPLE_STAR))
+                .collect::<BTreeMap<_, _>>(),
+        );
+    }
+
+    #[test]
+    fn test_userconfig_selfupdate_enable_noreplace() {
+        let pkgs = iter::once((
+            "cargo-liner".to_owned(),
+            Package::Simple(VersionReq::parse("1.2.3").unwrap()),
+        ))
+        .collect::<BTreeMap<_, _>>();
+
+        assert_eq!(
+            UserConfig {
+                packages: pkgs.clone(),
+            }
+            .self_update(true)
+            .packages,
+            pkgs,
+        );
+    }
+
+    #[test]
+    fn test_userconfig_selfupdate_disable_star() {
+        assert_eq!(
+            UserConfig::default()
+                .self_update(true)
+                .self_update(false)
+                .packages,
+            BTreeMap::new(),
+        );
+    }
+
+    #[test]
+    fn test_userconfig_selfupdate_disable_nostar() {
+        assert_eq!(
+            UserConfig {
+                packages: iter::once((
+                    "cargo-liner".to_owned(),
+                    Package::Simple(VersionReq::parse("1.2.3").unwrap()),
+                ))
+                .collect::<BTreeMap<_, _>>(),
+            }
+            .self_update(false)
+            .packages,
+            BTreeMap::new(),
         );
     }
 
