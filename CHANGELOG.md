@@ -1,3 +1,28 @@
+# Version 0.2.0 (20/11/2022)
+## Features
+
+ * Self-updating enabled by default.
+ * New `ship` subcommand to materialize the default behavior.
+   * New `--no-self-update` option to disable the by-default self-updating.
+ * New `import` subcommand to convert `$CARGO_HOME/.crates.toml` to
+   `$CARGO_HOME/liner.toml`.
+   * New `--force` option to overwrite the destination file.
+   * New `--exact`, `--patch`, and `--compatible` options to customize imported
+     version requirements.
+
+## Testing
+
+ * New tests for the new features.
+ * Some basic refactoring.
+
+## Documentation
+
+ * Some minor spelling mistakes have been fixed in `README.md`.
+ * CI results badge has been added to `README.md`.
+ * `CHANGELOG.md`'s format has been adjusted slightly.
+ * Documentation for new features.
+
+
 # Version 0.1.1 (16/11/2022)
 ## Fixes
 
