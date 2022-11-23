@@ -95,8 +95,8 @@ some way, using Git for example.
    nu = "=0.71.0"
    ```
 
-   or use `cargo import` to do it automatically for you, see below for more
-   detailed explanations.
+   or use `cargo liner import` to do it automatically for you, see below for
+   more detailed explanations.
 
 [Cargo Home]: https://doc.rust-lang.org/cargo/guide/cargo-home.html
 
