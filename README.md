@@ -105,7 +105,7 @@ some way, using Git for example.
  * Create the configuration file to be located at: `$CARGO_HOME/liner.toml`.
    * See the reference documentation about [Cargo Home] if you have trouble
      locating the directory.
- * Populate the file with packages you wish to be installed, for example :
+ * Populate the file with packages you wish to be installed, for example:
  
    ```toml
    [packages]
