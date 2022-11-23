@@ -48,6 +48,25 @@
 
 ## Summary
 
+Cargo Liner is a tool to help one who has packages currently installed or to be
+installed through the official `cargo install` command to install and maintain
+them up-to-date by editing a small and stable configuration file located at
+`$CARGO_HOME/liner.toml`.
+
+Goals:
+ * Simple and intuitive API.
+ * Stable configuration file: avoid editing it automatically.
+ * Actually use `cargo install` and not much else.
+
+Non-goals:
+ * Super-duper stability guarantees.
+ * Re-implementing half of Cargo for small functionalities.
+ * Being """pretty""" _above all else_.
+ * Handling the synchronization of the configuration file between various hosts.
+
+
+## Rationale
+
 `cargo install` works very well to download, compile and install a binary
 package. However, it does not offer means to update currently installed
 programs without having to specify them manually one by one on the CLI. That
