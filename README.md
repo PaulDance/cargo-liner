@@ -153,6 +153,26 @@ Simply run `cargo liner` in order to:
  * Run `cargo install` for each of them.
  * Self-update.
 
+Example output if only `git-journal` is required:
+
+```
+    Updating crates.io index
+  Downloaded git-journal v1.8.1
+  [...]
+  Downloaded 1 crate (424.2 KB) in 1.73s
+  Installing git-journal v1.8.1
+  Downloaded percent-encoding v1.0.1
+  [...]
+  Downloaded libgit2-sys v0.7.11
+  Downloaded 24 crates (2.4 MB) in 1.29s (largest was `libgit2-sys` at 1.2 MB)
+   Compiling autocfg v1.1.0
+   [...]
+   Compiling git-journal v1.8.1
+    Finished release [optimized] target(s) in 1m 06s
+  Installing /home/[...]/.cargo/bin/git-journal
+   Installed package `git-journal v1.8.1` (executable `git-journal`)
+```
+
 
 #### `ship` subcommand
 
