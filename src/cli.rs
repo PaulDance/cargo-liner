@@ -9,8 +9,7 @@ use clap::Parser;
 ///
 /// This tool is meant to be called using `cargo liner`.
 #[derive(clap::Parser, Debug, PartialEq, Eq)]
-#[command(name = "cargo")]
-#[command(bin_name = "cargo")]
+#[command(name = "cargo", bin_name = "cargo")]
 enum CargoArgs {
     // The only variant: enables validating the input given by Cargo.
     Liner(LinerArgs),
