@@ -1,4 +1,4 @@
-# Version 0.2.0 (20/11/2022)
+# [Version 0.2.0 (20/11/2022)](https://crates.io/crates/cargo-liner/0.2.0)
 ## Features
 
  * Self-updating enabled by default.
@@ -23,7 +23,7 @@
  * Documentation for new features.
 
 
-# Version 0.1.1 (16/11/2022)
+# [Version 0.1.1 (16/11/2022)](https://crates.io/crates/cargo-liner/0.1.1)
 ## Fixes
 
  * The `deny_unknown_fields` serde attribute on the config parser has been
@@ -41,7 +41,7 @@
  * The `CHANGELOG.md` has been tweaked a bit to include version dates.
 
 
-# Version 0.1.0 (13/11/2022)
+# [Version 0.1.0 (13/11/2022)](https://crates.io/crates/cargo-liner/0.1.0)
 ## Features
 
  * Most basic CLI.
