@@ -114,25 +114,38 @@ impl CargoCratesToml {
     /// The function must take in by value the couple of [`CargoCratesPackage`]
     /// to vector of binary names and return a couple of package name to
     /// [`Package`] information.
-    pub fn into_config<F>(self, pkg_map: F) -> UserConfig
+    ///
+    /// The current crate will be kept in the packages iff `keep_self` is
+    /// `true`, otherwise it will be filtered out.
+    fn into_config<F>(self, pkg_map: F, keep_self: bool) -> UserConfig
     where
         F: FnMut((CargoCratesPackage, Vec<String>)) -> (String, Package),
     {
         UserConfig {
-            packages: self.package_bins.into_iter().map(pkg_map).collect(),
+            packages: self
+                .package_bins
+                .into_iter()
+                .filter(|(pkg, _)| pkg.name != clap::crate_name!() || keep_self)
+                .map(pkg_map)
+                .collect(),
         }
     }
 
     /// Converts this toml document into a simple user config containing no
     /// particular version requirement, only stars are used.
     pub fn into_star_version_config(self) -> UserConfig {
-        self.into_config(|(pkg, _)| (pkg.name, Package::SIMPLE_STAR))
+        self.into_config(|(pkg, _)| (pkg.name, Package::SIMPLE_STAR), false)
     }
 
     /// Converts the config by turning versions to requirements using the given
     /// comparison operator.
+    ///
+    /// Filters the current crate out of the resulting configuration's packages.
     fn into_op_version_config(self, op: Op) -> UserConfig {
-        self.into_config(|(pkg, _)| (pkg.name, Package::Simple(ver_to_req(&pkg.version, op))))
+        self.into_config(
+            |(pkg, _)| (pkg.name, Package::Simple(ver_to_req(&pkg.version, op))),
+            false,
+        )
     }
 
     /// Converts this toml document into a simple user config containing full
