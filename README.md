@@ -7,36 +7,50 @@
     <br/>
     <h1>Cargo Liner</h1>
     <h3>Configuration-oriented wrapper around <code>cargo install</code></h3>
-    <img
-        alt="GitHub release (latest by date including pre-releases)"
-        src="https://img.shields.io/github/v/release/PaulDance/cargo-liner?include_prereleases&style=for-the-badge"
-    />
-    <img
-        alt="GitHub (Pre-)Release Date"
-        src="https://img.shields.io/github/release-date-pre/PaulDance/cargo-liner?style=for-the-badge&display_date=published_at"
-    />
-    <img
-        alt="Crates.io version"
-        src="https://img.shields.io/crates/v/cargo-liner?style=for-the-badge"
-    />
+    <a href="https://github.com/PaulDance/cargo-liner/releases/latest">
+        <img
+            alt="GitHub release (latest by date including pre-releases)"
+            src="https://img.shields.io/github/v/release/PaulDance/cargo-liner?include_prereleases&style=for-the-badge"
+        />
+    </a>
+    <a href="https://github.com/PaulDance/cargo-liner/releases/latest">
+        <img
+            alt="GitHub (Pre-)Release Date"
+            src="https://img.shields.io/github/release-date-pre/PaulDance/cargo-liner?style=for-the-badge&display_date=published_at"
+        />
+    </a>
+    <a href="https://crates.io/crates/cargo-liner">
+        <img
+            alt="Crates.io version"
+            src="https://img.shields.io/crates/v/cargo-liner?style=for-the-badge"
+        />
+    </a>
     <br/>
-    <img
-        alt="GitHub Workflow Status"
-        src="https://img.shields.io/github/workflow/status/PaulDance/cargo-liner/CI?style=for-the-badge"
-    />
-    <img
-        alt="Crates.io downloads"
-        src="https://img.shields.io/crates/d/cargo-liner?style=for-the-badge"
-    />
+    <a href="https://github.com/PaulDance/cargo-liner/actions">
+        <img
+            alt="GitHub Workflow Status"
+            src="https://img.shields.io/github/workflow/status/PaulDance/cargo-liner/CI?style=for-the-badge"
+        />
+    </a>
+    <a href="https://crates.io/crates/cargo-liner">
+        <img
+            alt="Crates.io downloads"
+            src="https://img.shields.io/crates/d/cargo-liner?style=for-the-badge"
+        />
+    </a>
     <br/>
-    <img
-        alt="Maintainance status: active"
-        src="https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg?style=for-the-badge"
-    />
-    <img
-        alt="License"
-        src="https://img.shields.io/github/license/PaulDance/cargo-liner?style=for-the-badge"
-    />
+    <a href="https://github.com/PaulDance/cargo-liner/pulse">
+        <img
+            alt="Maintainance status: active"
+            src="https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg?style=for-the-badge"
+        />
+    </a>
+    <a href="https://github.com/PaulDance/cargo-liner/blob/master/LICENSE.txt">
+        <img
+            alt="License"
+            src="https://img.shields.io/github/license/PaulDance/cargo-liner?style=for-the-badge"
+        />
+    </a>
 </div>
 
 
