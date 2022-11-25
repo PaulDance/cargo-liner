@@ -424,6 +424,24 @@ mod tests {
     }
 
     #[test]
+    fn test_cargocrates_intostarcfg_noself() {
+        assert!(!CargoCratesToml {
+            package_bins: iter::once((
+                CargoCratesPackage {
+                    name: clap::crate_name!().to_owned(),
+                    version: "1.2.3".parse().unwrap(),
+                    source: String::new()
+                },
+                vec![],
+            ))
+            .collect()
+        }
+        .into_star_version_config()
+        .packages
+        .contains_key(clap::crate_name!()));
+    }
+
+    #[test]
     fn test_cargocrates_intostarcfg_full_versions() {
         assert_eq!(
             cargocrates_example1().into_star_version_config(),
@@ -437,6 +455,24 @@ mod tests {
                     .collect::<BTreeMap<_, _>>(),
             },
         )
+    }
+
+    #[test]
+    fn test_cargocrates_intoexactcfg_noself() {
+        assert!(!CargoCratesToml {
+            package_bins: iter::once((
+                CargoCratesPackage {
+                    name: clap::crate_name!().to_owned(),
+                    version: "1.2.3".parse().unwrap(),
+                    source: String::new()
+                },
+                vec![],
+            ))
+            .collect()
+        }
+        .into_exact_version_config()
+        .packages
+        .contains_key(clap::crate_name!()));
     }
 
     #[test]
@@ -456,6 +492,24 @@ mod tests {
     }
 
     #[test]
+    fn test_cargocrates_intocompcfg_noself() {
+        assert!(!CargoCratesToml {
+            package_bins: iter::once((
+                CargoCratesPackage {
+                    name: clap::crate_name!().to_owned(),
+                    version: "1.2.3".parse().unwrap(),
+                    source: String::new()
+                },
+                vec![],
+            ))
+            .collect()
+        }
+        .into_comp_version_config()
+        .packages
+        .contains_key(clap::crate_name!()));
+    }
+
+    #[test]
     fn test_cargocrates_intocompcfg_full_versions() {
         assert_eq!(
             cargocrates_example1().into_comp_version_config(),
@@ -469,6 +523,24 @@ mod tests {
                     .collect::<BTreeMap<_, _>>(),
             },
         )
+    }
+
+    #[test]
+    fn test_cargocrates_intopatchcfg_noself() {
+        assert!(!CargoCratesToml {
+            package_bins: iter::once((
+                CargoCratesPackage {
+                    name: clap::crate_name!().to_owned(),
+                    version: "1.2.3".parse().unwrap(),
+                    source: String::new()
+                },
+                vec![],
+            ))
+            .collect()
+        }
+        .into_patch_version_config()
+        .packages
+        .contains_key(clap::crate_name!()));
     }
 
     #[test]
