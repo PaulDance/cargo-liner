@@ -1,17 +1,6 @@
 use semver::VersionReq;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize)]
-struct DetailedPackageReqSerdeHelper {
-    version: VersionReq,
-    #[serde(default)]
-    features: Vec<String>,
-    #[serde(default)]
-    all_features: bool,
-    #[serde(default)]
-    no_default_features: bool,
-}
-
 // small helper function that returns true to work around https://github.com/serde-rs/serde/issues/368
 fn serde_default_true() -> bool {
     true
