@@ -1,7 +1,7 @@
 use semver::VersionReq;
 use serde::{Deserialize, Serialize};
 
-// small helper function that returns true to work around https://github.com/serde-rs/serde/issues/368
+// Small helper function that returns true to work around https://github.com/serde-rs/serde/issues/368
 fn serde_default_true() -> bool {
     true
 }
