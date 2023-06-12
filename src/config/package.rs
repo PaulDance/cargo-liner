@@ -55,22 +55,23 @@ impl Package {
     }
 
     pub fn all_features(&self) -> bool {
-        match self {
+        matches!(
+            self,
             Package::Detailed(DetailedPackageReq {
-                all_features: true, ..
-            }) => true,
-            _ => false,
-        }
+                all_features: true,
+                ..
+            })
+        )
     }
 
     pub fn default_features(&self) -> bool {
-        match self {
+        matches!(
+            self,
             Package::Detailed(DetailedPackageReq {
-                default_features: false,
+                default_features: true,
                 ..
-            }) => false,
-            _ => true,
-        }
+            })
+        )
     }
 
     pub fn features(&self) -> &[String] {
