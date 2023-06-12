@@ -38,15 +38,15 @@ impl Package {
 
     pub fn version(&self) -> &VersionReq {
         match self {
-            Package::Simple(v) => v,
-            Package::Detailed(DetailedPackageReq { version, .. }) => version,
+            Self::Simple(v) => v,
+            Self::Detailed(DetailedPackageReq { version, .. }) => version,
         }
     }
 
     pub fn all_features(&self) -> bool {
         matches!(
             self,
-            Package::Detailed(DetailedPackageReq {
+            Self::Detailed(DetailedPackageReq {
                 all_features: true,
                 ..
             })
@@ -56,7 +56,7 @@ impl Package {
     pub fn default_features(&self) -> bool {
         matches!(
             self,
-            Package::Detailed(DetailedPackageReq {
+            Self::Detailed(DetailedPackageReq {
                 default_features: true,
                 ..
             })
@@ -65,8 +65,8 @@ impl Package {
 
     pub fn features(&self) -> &[String] {
         match self {
-            Package::Simple(_) => &[],
-            Package::Detailed(DetailedPackageReq { features, .. }) => features.as_slice(),
+            Self::Simple(_) => &[],
+            Self::Detailed(DetailedPackageReq { features, .. }) => features.as_slice(),
         }
     }
 }
