@@ -311,8 +311,9 @@ where:
  * `version-req-*` must be a valid [SemVer] requirement, [Cargo style]. In
    particular, the catch-all wildcard `*` can be used to require the latest
    version available.
- * `feature-*` must be the name of a [cargo feature] defined by the crate being installed
- * `boolean` is a [toml boolean], either `true` or `false`
+ * `feature-*` must be the name of a [cargo feature] defined by the crate being installed.
+ * `boolean` is a [toml boolean], either `true` or `false`.
+ 
 [package name]: https://doc.rust-lang.org/cargo/reference/manifest.html#the-name-field
 [SemVer]: https://semver.org/
 [Cargo style]: https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html
