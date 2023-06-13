@@ -55,10 +55,10 @@ impl Package {
     }
 
     pub fn default_features(&self) -> bool {
-        matches!(
+        !matches!(
             self,
             Self::Detailed(DetailedPackageReq {
-                default_features: true,
+                default_features: false,
                 ..
             })
         )
