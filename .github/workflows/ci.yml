@@ -44,3 +44,5 @@ jobs:
 
     - name: Build documentation
       run: cargo doc --verbose --all-features --no-deps --document-private-items
+      env: 
+        RUSTDOCFLAGS: "-Dwarnings"
