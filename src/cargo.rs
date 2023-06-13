@@ -10,7 +10,8 @@ use anyhow::Result;
 
 use crate::config::Package;
 
-/// Runs `cargo install` for a package from its given `name` and `version`.
+/// Installs a package, by running `cargo install` passing the `name`, `version` and requested
+/// features.
 ///
 /// The launched process' path is determined using the `$CARGO` environment
 /// variable as it is set by Cargo when it calls an external subcommand's
