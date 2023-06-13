@@ -1,3 +1,8 @@
+# Unreleased
+## Added
+ * Package definitions can now specify which feature flags should be installed,
+   in a similar format to the Cargo.toml `[features]` section.
+
 # [Version 0.2.1 (26/11/2022)](https://crates.io/crates/cargo-liner/0.2.1)
 ## Fixes
 

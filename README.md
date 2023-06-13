@@ -126,6 +126,8 @@ some way, using Git for example.
    cargo-expand = "*"
    cargo-tarpaulin = "~0.22"
    nu = "=0.71.0"
+   sqlx-cli = { version = "0.6.2", default-features = false, features = ["native-tls", "postgres"] }
+   ripgrep = { version = "13.0.0", all-features = true }
    ```
 
    or use `cargo liner import` to do it automatically for you, see below for
@@ -299,6 +301,7 @@ properly-formed TOML document respecting the following format:
 [packages]
 package-name-1 = "version-req-1"
 package-name-2 = "version-req-2"
+package-name-3 = { version = "version-req-3", all-features = boolean, default-features = boolean, features = [ "feature-1", "feature-2" ] }
 #...
 ```
 
@@ -308,10 +311,14 @@ where:
  * `version-req-*` must be a valid [SemVer] requirement, [Cargo style]. In
    particular, the catch-all wildcard `*` can be used to require the latest
    version available.
-
+ * `feature-*` must be the name of a [cargo feature] defined by the crate being installed.
+ * `boolean` is a [toml boolean], either `true` or `false`.
+ 
 [package name]: https://doc.rust-lang.org/cargo/reference/manifest.html#the-name-field
 [SemVer]: https://semver.org/
 [Cargo style]: https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html
+[cargo feature]: https://doc.rust-lang.org/cargo/reference/features.html
+[toml boolean]: https://toml.io/en/v1.0.0#boolean
 
 
 ## Contributing
