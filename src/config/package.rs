@@ -6,6 +6,9 @@ fn serde_default_true() -> bool {
     true
 }
 
+/// Package requirement with additional options set.
+///
+/// See https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html.
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 pub struct DetailedPackageReq {
     #[serde(rename = "default-features", default = "serde_default_true")]
