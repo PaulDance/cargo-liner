@@ -165,7 +165,8 @@ When the subcommand is omitted, it will use the `ship` subcommand with default
 options.
 
 Simply run `cargo liner` in order to:
- * Read packages from the configuration file. Run `cargo install` for each of them.
+ * Read packages from the configuration file.
+ * Run `cargo install` for each of them.
  * Self-update.
 
 Example output if only `git-journal` is required:
