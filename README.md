@@ -171,7 +171,7 @@ Simply run `cargo liner` in order to:
 
 Example output if only `git-journal` is required:
 
-```
+```sh
     Updating crates.io index
   Downloaded git-journal v1.8.1
   [...]
