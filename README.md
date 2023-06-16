@@ -29,7 +29,7 @@
     <a href="https://github.com/PaulDance/cargo-liner/actions">
         <img
             alt="GitHub Workflow Status"
-            src="https://img.shields.io/github/workflow/status/PaulDance/cargo-liner/CI?style=for-the-badge"
+            src="https://img.shields.io/github/actions/workflow/status/PaulDance/cargo-liner/ci.yml?branch=master&style=for-the-badge"
         />
     </a>
     <a href="https://crates.io/crates/cargo-liner">
