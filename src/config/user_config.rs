@@ -56,10 +56,9 @@ impl UserConfig {
     /// the configured packages, then it will add it, otherwise remove it.
     pub fn self_update(mut self, sup: bool) -> Self {
         if sup {
-            if !self.packages.contains_key(clap::crate_name!()) {
-                self.packages
-                    .insert(clap::crate_name!().to_owned(), Package::SIMPLE_STAR);
-            }
+            self.packages
+                .entry(clap::crate_name!().to_owned())
+                .or_insert(Package::SIMPLE_STAR);
         } else {
             self.packages.remove(clap::crate_name!());
         }
