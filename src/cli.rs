@@ -57,6 +57,8 @@ pub enum LinerCommands {
 #[command(long_about = None)]
 pub struct ShipArgs {
     /// Disable self-updating.
+    ///
+    /// Default: `false`, i.e. self-update.
     #[arg(long)]
     pub no_self: bool,
 }
@@ -67,6 +69,7 @@ pub struct ImportArgs {
     /// an equal operator.
     ///
     /// Cannot be used in conjunction with either `--compatible` or `--patch`.
+    /// Default: `false`, i.e. use a star requirement.
     #[arg(short, long)]
     #[arg(conflicts_with_all(["compatible", "patch"]))]
     pub exact: bool,
@@ -75,6 +78,7 @@ pub struct ImportArgs {
     /// a caret operator.
     ///
     /// Cannot be used in conjunction with either `--exact` or `--patch`.
+    /// Default: `false`, i.e. use a star requirement.
     #[arg(short, long)]
     #[arg(conflicts_with_all(["exact", "patch"]))]
     pub compatible: bool,
@@ -83,11 +87,14 @@ pub struct ImportArgs {
     /// a tilde operator.
     ///
     /// Cannot be used in conjunction with either `--exact` or `--compatible`.
+    /// Default: `false`, i.e. use a star requirement.
     #[arg(short, long)]
     #[arg(conflicts_with_all(["exact", "compatible"]))]
     pub patch: bool,
 
     /// Overwrite the current configuration file if it already exists.
+    ///
+    /// Default: `false`, i.e. return an error in case the file already exists.
     #[arg(short, long)]
     pub force: bool,
 }

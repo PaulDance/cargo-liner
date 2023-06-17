@@ -204,7 +204,9 @@ Usage: cargo liner ship [OPTIONS]
 
 Options:
       --no-self
-          Disable self-updating
+          Disable self-updating.
+
+          Default: `false`, i.e. self-update.
 
   -h, --help
           Print help information (use `-h` for a summary)
@@ -238,21 +240,26 @@ Options:
           equal operator.
 
           Cannot be used in conjunction with either `--compatible` or `--patch`.
+          Default: `false`, i.e. use a star requirement.
 
   -c, --compatible
           Import package versions as "compatible versions", i.e. prepended with
           a caret operator.
 
           Cannot be used in conjunction with either `--exact` or `--patch`.
+          Default: `false`, i.e. use a star requirement.
 
   -p, --patch
           Import package versions as "patch versions", i.e. prepended with a
           tilde operator.
 
           Cannot be used in conjunction with either `--exact` or `--compatible`.
+          Default: `false`, i.e. use a star requirement.
 
   -f, --force
-          Overwrite the current configuration file if it already exists
+          Overwrite the current configuration file if it already exists.
+
+          Default: `false`, i.e. return an error in case the file already exists.
 
   -h, --help
           Print help information (use `-h` for a summary)
