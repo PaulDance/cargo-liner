@@ -1,5 +1,6 @@
 use std::collections::BTreeMap;
 use std::fs;
+use std::iter;
 use std::path::PathBuf;
 
 use anyhow::Result;
@@ -61,6 +62,24 @@ impl UserConfig {
             }
         } else {
             self.packages.remove(clap::crate_name!());
+        }
+        self
+    }
+
+    /// Enable or disable updating other packages.
+    ///
+    /// If `upo` is `false`, then the list of packages is reset to only contain
+    /// the current crate: irreversible. Otherwise, nothing is done.
+    pub fn update_others(mut self, upo: bool) -> Self {
+        if !upo {
+            self.packages = iter::once((
+                clap::crate_name!().to_owned(),
+                self.packages
+                    .get(clap::crate_name!())
+                    .unwrap_or(&Package::SIMPLE_STAR)
+                    .clone(),
+            ))
+            .collect();
         }
         self
     }
@@ -268,6 +287,57 @@ mod tests {
             .self_update(false)
             .packages,
             BTreeMap::new(),
+        );
+    }
+
+    #[test]
+    fn test_userconfig_onlyselfupdate_enable_isdelete() {
+        assert_eq!(
+            toml::from_str::<UserConfig>("[packages]\na = \"1.2.3\"")
+                .unwrap()
+                .self_update(true)
+                .update_others(false)
+                .packages,
+            iter::once(("cargo-liner".to_owned(), Package::SIMPLE_STAR))
+                .collect::<BTreeMap<_, _>>(),
+        );
+    }
+
+    #[test]
+    fn test_userconfig_onlyselfupdate_disable_isnop() {
+        assert_eq!(
+            toml::from_str::<UserConfig>("[packages]\na = \"1.2.3\"")
+                .unwrap()
+                .self_update(true)
+                .update_others(true)
+                .packages,
+            [
+                ("cargo-liner".to_owned(), Package::SIMPLE_STAR),
+                (
+                    "a".to_owned(),
+                    Package::Simple(VersionReq::parse("1.2.3").unwrap())
+                )
+            ]
+            .into_iter()
+            .collect::<BTreeMap<_, _>>(),
+        );
+    }
+
+    #[test]
+    fn test_userconfig_onlyselfupdate_enable_isnoreplace() {
+        let pkgs = iter::once((
+            "cargo-liner".to_owned(),
+            Package::Simple(VersionReq::parse("1.2.3").unwrap()),
+        ))
+        .collect::<BTreeMap<_, _>>();
+
+        assert_eq!(
+            UserConfig {
+                packages: pkgs.clone(),
+            }
+            .update_others(false)
+            .packages,
+            pkgs,
         );
     }
 }

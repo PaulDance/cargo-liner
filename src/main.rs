@@ -29,7 +29,9 @@ fn main() -> Result<()> {
             .save_file()?;
         }
         Some(LinerCommands::Ship(ship_args)) => {
-            let config = UserConfig::parse_file()?.self_update(!ship_args.no_self);
+            let config = UserConfig::parse_file()?
+                .self_update(!ship_args.no_self)
+                .update_others(!ship_args.only_self);
             cargo::install_all(&config.packages)?;
         }
         None => cargo::install_all(&UserConfig::parse_file()?.packages)?,

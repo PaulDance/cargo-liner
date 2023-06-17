@@ -206,7 +206,14 @@ Options:
       --no-self
           Disable self-updating.
 
-          Default: `false`, i.e. self-update.
+          Cannot be used in conjunction with `--only-self`. Default: `false`,
+          i.e. self-update.
+
+      --only-self
+          Only self-update and do not install or update any other package.
+
+          Cannot be used in conjunction with `--no-self`. Default: `false`,
+          i.e. install or update other packages as well.
 
   -h, --help
           Print help information (use `-h` for a summary)

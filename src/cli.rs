@@ -58,9 +58,17 @@ pub enum LinerCommands {
 pub struct ShipArgs {
     /// Disable self-updating.
     ///
-    /// Default: `false`, i.e. self-update.
-    #[arg(long)]
+    /// Cannot be used in conjunction with `--only-self`. Default: `false`,
+    /// i.e. self-update.
+    #[arg(long, conflicts_with("only_self"))]
     pub no_self: bool,
+
+    /// Only self-update and do not install or update any other package.
+    ///
+    /// Cannot be used in conjunction with `--no-self`. Default: `false`, i.e.
+    /// install or update other packages as well.
+    #[arg(long, conflicts_with("no_self"))]
+    pub only_self: bool,
 }
 
 #[derive(clap::Args, Debug, PartialEq, Eq)]
@@ -126,7 +134,10 @@ mod tests {
         assert_eq!(
             CargoArgs::try_parse_from(["cargo", "liner", "ship"].into_iter()).unwrap(),
             CargoArgs::Liner(LinerArgs {
-                command: Some(LinerCommands::Ship(ShipArgs { no_self: false })),
+                command: Some(LinerCommands::Ship(ShipArgs {
+                    no_self: false,
+                    only_self: false
+                })),
             }),
         );
     }
@@ -136,9 +147,34 @@ mod tests {
         assert_eq!(
             CargoArgs::try_parse_from(["cargo", "liner", "ship", "--no-self"].into_iter()).unwrap(),
             CargoArgs::Liner(LinerArgs {
-                command: Some(LinerCommands::Ship(ShipArgs { no_self: true })),
+                command: Some(LinerCommands::Ship(ShipArgs {
+                    no_self: true,
+                    only_self: false
+                })),
             }),
         );
+    }
+
+    #[test]
+    fn test_ship_onlyselfupdate() {
+        assert_eq!(
+            CargoArgs::try_parse_from(["cargo", "liner", "ship", "--only-self"].into_iter())
+                .unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Ship(ShipArgs {
+                    no_self: false,
+                    only_self: true
+                })),
+            }),
+        );
+    }
+
+    #[test]
+    fn test_ship_noandonlyself_iserr() {
+        assert!(CargoArgs::try_parse_from(
+            ["cargo", "liner", "ship", "--no-self", "--only-self"].into_iter()
+        )
+        .is_err());
     }
 
     #[test]
