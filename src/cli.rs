@@ -58,7 +58,7 @@ pub enum LinerCommands {
 pub struct ShipArgs {
     /// Disable self-updating.
     #[arg(long)]
-    pub no_self_update: bool,
+    pub no_self: bool,
 }
 
 #[derive(clap::Args, Debug, PartialEq, Eq)]
@@ -119,9 +119,7 @@ mod tests {
         assert_eq!(
             CargoArgs::try_parse_from(["cargo", "liner", "ship"].into_iter()).unwrap(),
             CargoArgs::Liner(LinerArgs {
-                command: Some(LinerCommands::Ship(ShipArgs {
-                    no_self_update: false,
-                })),
+                command: Some(LinerCommands::Ship(ShipArgs { no_self: false })),
             }),
         );
     }
@@ -129,12 +127,9 @@ mod tests {
     #[test]
     fn test_ship_noselfupdate() {
         assert_eq!(
-            CargoArgs::try_parse_from(["cargo", "liner", "ship", "--no-self-update"].into_iter())
-                .unwrap(),
+            CargoArgs::try_parse_from(["cargo", "liner", "ship", "--no-self"].into_iter()).unwrap(),
             CargoArgs::Liner(LinerArgs {
-                command: Some(LinerCommands::Ship(ShipArgs {
-                    no_self_update: true,
-                })),
+                command: Some(LinerCommands::Ship(ShipArgs { no_self: true })),
             }),
         );
     }
