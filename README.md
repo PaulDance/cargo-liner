@@ -203,7 +203,7 @@ Self-updating is enabled by default.
 Usage: cargo liner ship [OPTIONS]
 
 Options:
-      --no-self-update
+      --no-self
           Disable self-updating
 
   -h, --help
@@ -213,7 +213,7 @@ Options:
 Simply run `cargo liner ship` in order to:
  * Read packages from the configuration file.
  * Run `cargo install` for each of them, respecting the version requirements.
- * Self-update only if `--no-self-update` is not given.
+ * Self-update only if `--no-self` is not given.
 
 
 #### `import` subcommand
