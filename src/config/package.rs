@@ -41,6 +41,7 @@ impl Package {
     /// Convenience shortcut for simple and star version requirement package.
     pub const SIMPLE_STAR: Self = Self::Simple(VersionReq::STAR);
 
+    /// Returns the version requirement of the package.
     pub fn version(&self) -> &VersionReq {
         match self {
             Self::Simple(v) => v,
@@ -48,6 +49,8 @@ impl Package {
         }
     }
 
+    /// Returns whether or not all features were required for the package,
+    /// defaulting to `false` when the package is simple.
     pub fn all_features(&self) -> bool {
         matches!(
             self,
@@ -58,6 +61,8 @@ impl Package {
         )
     }
 
+    /// Returns whether or not default features were required for the package,
+    /// defaulting to `true` when the package is simple.
     pub fn default_features(&self) -> bool {
         !matches!(
             self,
@@ -68,6 +73,8 @@ impl Package {
         )
     }
 
+    /// Returns a slice of the feature names required for the package,
+    /// defaulting to an empty one when the package is simple.
     pub fn features(&self) -> &[String] {
         match self {
             Self::Simple(_) => &[],
