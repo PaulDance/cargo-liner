@@ -1,7 +1,8 @@
 use semver::VersionReq;
 use serde::{Deserialize, Serialize};
 
-// Small helper function that returns true to work around https://github.com/serde-rs/serde/issues/368
+/// Small helper function that returns true to work around
+/// <https://github.com/serde-rs/serde/issues/368>.
 fn serde_default_true() -> bool {
     true
 }
@@ -32,7 +33,7 @@ pub struct DetailedPackageReq {
 pub enum Package {
     /// Simple form: only a SemVer requirement string.
     Simple(VersionReq),
-    /// Detailed form: all supported options made available
+    /// Detailed form: all supported options made available.
     Detailed(DetailedPackageReq),
 }
 
