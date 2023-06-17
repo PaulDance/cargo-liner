@@ -203,13 +203,13 @@ Self-updating is enabled by default.
 Usage: cargo liner ship [OPTIONS]
 
 Options:
-      --no-self
+  -n, --no-self
           Disable self-updating.
 
           Cannot be used in conjunction with `--only-self`. Default: `false`,
           i.e. self-update.
 
-      --only-self
+  -s, --only-self
           Only self-update and do not install or update any other package.
 
           Cannot be used in conjunction with `--no-self`. Default: `false`,

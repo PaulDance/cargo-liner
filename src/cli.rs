@@ -60,14 +60,14 @@ pub struct ShipArgs {
     ///
     /// Cannot be used in conjunction with `--only-self`. Default: `false`,
     /// i.e. self-update.
-    #[arg(long, conflicts_with("only_self"))]
+    #[arg(short, long, conflicts_with("only_self"))]
     pub no_self: bool,
 
     /// Only self-update and do not install or update any other package.
     ///
     /// Cannot be used in conjunction with `--no-self`. Default: `false`, i.e.
     /// install or update other packages as well.
-    #[arg(long, conflicts_with("no_self"))]
+    #[arg(short = 's', long, conflicts_with("no_self"))]
     pub only_self: bool,
 }
 
