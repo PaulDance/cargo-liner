@@ -22,6 +22,7 @@ impl UserConfig {
 
     /// Returns the [`PathBuf`] pointing to the associated configuration file.
     pub fn file_path() -> Result<PathBuf> {
+        debug!("Building file path...");
         Ok(cargo_home()?.join(Self::FILE_NAME))
     }
 
@@ -30,7 +31,15 @@ impl UserConfig {
     /// It may fail on multiple occasions: if Cargo's home may not be found, if
     /// the file does not exist, if it cannot be read from or if it is malformed.
     pub fn parse_file() -> Result<Self> {
-        Ok(toml::from_str::<Self>(&fs::read_to_string(Self::file_path()?)?)?.self_update(true))
+        let path = Self::file_path()?;
+        debug!("Reading configuration from {:?}...", &path);
+        let config_str = fs::read_to_string(path)?;
+        trace!("Read {} bytes.", config_str.len());
+        trace!("Got: {:?}.", &config_str);
+        debug!("Deserializing contents...");
+        let config = toml::from_str::<Self>(&config_str)?;
+        trace!("Got: {:?}.", &config);
+        Ok(config.self_update(true))
     }
 
     /// Serializes the configuration and saves it to the default file.
@@ -39,14 +48,19 @@ impl UserConfig {
     /// contents will be enterily overwritten. Just as [`Self::parse_file`], it
     /// may fail on several occasions.
     pub fn save_file(&self) -> Result<()> {
-        fs::write(Self::file_path()?, self.to_string_pretty()?)?;
+        let path = Self::file_path()?;
+        let config_str = self.to_string_pretty()?;
+        debug!("(Over)writing configuration to {:?}...", &path);
+        fs::write(path, config_str)?;
         Ok(())
     }
 
     /// Converts the config to a pretty TOML string with literal strings disabled.
     fn to_string_pretty(&self) -> Result<String> {
+        debug!("Serializing configuration...");
         let mut dst = String::new();
         self.serialize(toml::Serializer::pretty(&mut dst).pretty_string_literal(false))?;
+        trace!("Got: {:?}.", &dst);
         Ok(dst)
     }
 
@@ -59,8 +73,10 @@ impl UserConfig {
             self.packages
                 .entry(clap::crate_name!().to_owned())
                 .or_insert(Package::SIMPLE_STAR);
+            debug!("Self-updating enabled.");
         } else {
             self.packages.remove(clap::crate_name!());
+            debug!("Self-updating disabled.");
         }
         self
     }
@@ -79,6 +95,7 @@ impl UserConfig {
                     .clone(),
             ))
             .collect();
+            debug!("Updating of other packages disabled.");
         }
         self
     }

@@ -22,13 +22,22 @@ impl CargoCratesToml {
 
     /// Returns the [`PathBuf`] pointing to the associated save file.
     pub fn file_path() -> Result<PathBuf> {
+        debug!("Building file path...");
         Ok(cargo_home()?.join(Self::FILE_NAME))
     }
 
     /// Parse and return a representation of the `$CARGO_HOME/.crates.toml`
     /// Cargo-managed save file.
     pub fn parse_file() -> Result<Self> {
-        Ok(toml::from_str(&fs::read_to_string(Self::file_path()?)?)?)
+        let path = Self::file_path()?;
+        debug!("Reading Cargo-installed packages from {:?}...", &path);
+        let info_str = fs::read_to_string(path)?;
+        trace!("Read {} bytes.", info_str.len());
+        trace!("Got: {:?}.", &info_str);
+        debug!("Deserializing packages...");
+        let info = toml::from_str(&info_str)?;
+        trace!("Got: {:?}.", &info);
+        Ok(info)
     }
 
     /// Converts this toml document into a custom user config by mapping
@@ -57,6 +66,7 @@ impl CargoCratesToml {
     /// Converts this toml document into a simple user config containing no
     /// particular version requirement, only stars are used.
     pub fn into_star_version_config(self, keep_self: bool) -> UserConfig {
+        debug!("Converting packages to config with op: \"*\"...");
         self.into_config(|(pkg, _)| (pkg.name, Package::SIMPLE_STAR), keep_self)
     }
 
@@ -65,6 +75,7 @@ impl CargoCratesToml {
     ///
     /// Filters the current crate out of the resulting configuration's packages.
     fn into_op_version_config(self, op: Op, keep_self: bool) -> UserConfig {
+        debug!("Converting packages to config with op: {:?}...", &op);
         self.into_config(
             |(pkg, _)| (pkg.name, Package::Simple(ver_to_req(&pkg.version, op))),
             keep_self,

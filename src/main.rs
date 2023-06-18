@@ -33,9 +33,14 @@ fn wrapped_main() -> Result<()> {
 
     match &args.command {
         Some(LinerCommands::Import(import_args)) => {
-            if !import_args.force && UserConfig::file_path()?.try_exists()? {
-                bail!("Configuration file already exists, use -f/--force to overwrite.");
+            if UserConfig::file_path()?.try_exists()? {
+                if import_args.force {
+                    warn!("Configuration file will be overwritten.");
+                } else {
+                    bail!("Configuration file already exists, use -f/--force to overwrite.");
+                }
             }
+            info!("Importing Cargo installed crates as a new configuration file...");
             // Clap conflict settings ensure the options are mutually exclusive.
             (if import_args.exact {
                 CargoCratesToml::into_exact_version_config
@@ -57,5 +62,6 @@ fn wrapped_main() -> Result<()> {
         None => cargo::install_all(&UserConfig::parse_file()?.packages)?,
     }
 
+    info!("Done.");
     Ok(())
 }

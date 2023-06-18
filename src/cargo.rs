@@ -4,6 +4,7 @@
 
 use std::collections::BTreeMap;
 use std::env;
+use std::ffi::OsStr;
 use std::process::Command;
 
 use anyhow::Result;
@@ -30,16 +31,26 @@ fn install(
 
     if no_default_features {
         cmd.arg("--no-default-features");
+        trace!("`--no-default-features` arg added.");
     }
 
     if all_features {
         cmd.arg("--all-features");
+        trace!("`--all-features` arg added.");
     }
 
     if !features.is_empty() {
         cmd.arg("--features").arg(features.join(","));
+        trace!("`--features` arg added.");
     }
 
+    debug!(
+        "Running {:?} with arguments {:?}...",
+        cmd.get_program().to_string_lossy(),
+        cmd.get_args()
+            .map(OsStr::to_string_lossy)
+            .collect::<Vec<_>>(),
+    );
     cmd.status()?;
     Ok(())
 }
@@ -47,6 +58,7 @@ fn install(
 /// Runs `cargo install` for all packages listed in the given user configuration.
 pub fn install_all(packages: &BTreeMap<String, Package>) -> Result<()> {
     for (pkg_name, pkg) in packages {
+        info!("Installing or updating `{}`...", pkg_name);
         install(
             pkg_name,
             &pkg.version().to_string(),
