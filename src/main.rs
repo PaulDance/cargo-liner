@@ -25,7 +25,7 @@ fn main() -> Result<()> {
                 CargoCratesToml::into_patch_version_config
             } else {
                 CargoCratesToml::into_star_version_config
-            })(CargoCratesToml::parse_file()?)
+            })(CargoCratesToml::parse_file()?, import_args.keep_self)
             .save_file()?;
         }
         Some(LinerCommands::Ship(ship_args)) => {

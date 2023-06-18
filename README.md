@@ -268,6 +268,15 @@ Options:
 
           Default: `false`, i.e. return an error in case the file already exists.
 
+  -k, --keep-self
+          Also import this `cargo-liner` package into the configuration, for
+          example in order to specify a certain version requirement later on.
+
+          Default: `false`, i.e. exclude the current package from the list of
+          packages to install or update in the resulting configuration file.
+          Note however that the `ship` command will still self-update by
+          default.
+
   -h, --help
           Print help information (use `-h` for a summary)
 ```

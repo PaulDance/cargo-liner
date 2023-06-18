@@ -48,7 +48,7 @@ impl CargoCratesToml {
             packages: self
                 .package_bins
                 .into_iter()
-                .filter(|(pkg, _)| pkg.name != clap::crate_name!() || keep_self)
+                .filter(|(pkg, _)| keep_self || pkg.name != clap::crate_name!())
                 .map(pkg_map)
                 .collect(),
         }
@@ -56,37 +56,37 @@ impl CargoCratesToml {
 
     /// Converts this toml document into a simple user config containing no
     /// particular version requirement, only stars are used.
-    pub fn into_star_version_config(self) -> UserConfig {
-        self.into_config(|(pkg, _)| (pkg.name, Package::SIMPLE_STAR), false)
+    pub fn into_star_version_config(self, keep_self: bool) -> UserConfig {
+        self.into_config(|(pkg, _)| (pkg.name, Package::SIMPLE_STAR), keep_self)
     }
 
     /// Converts the config by turning versions to requirements using the given
     /// comparison operator.
     ///
     /// Filters the current crate out of the resulting configuration's packages.
-    fn into_op_version_config(self, op: Op) -> UserConfig {
+    fn into_op_version_config(self, op: Op, keep_self: bool) -> UserConfig {
         self.into_config(
             |(pkg, _)| (pkg.name, Package::Simple(ver_to_req(&pkg.version, op))),
-            false,
+            keep_self,
         )
     }
 
     /// Converts this toml document into a simple user config containing full
     /// and exact version requirements.
-    pub fn into_exact_version_config(self) -> UserConfig {
-        self.into_op_version_config(Op::Exact)
+    pub fn into_exact_version_config(self, keep_self: bool) -> UserConfig {
+        self.into_op_version_config(Op::Exact, keep_self)
     }
 
     /// Converts this toml document into a simple user config containing
     /// compatible version requirements, i.e. with the caret operator.
-    pub fn into_comp_version_config(self) -> UserConfig {
-        self.into_op_version_config(Op::Caret)
+    pub fn into_comp_version_config(self, keep_self: bool) -> UserConfig {
+        self.into_op_version_config(Op::Caret, keep_self)
     }
 
     /// Converts this toml document into a simple user config containing
     /// patch version requirements, i.e. with the tilde operator.
-    pub fn into_patch_version_config(self) -> UserConfig {
-        self.into_op_version_config(Op::Tilde)
+    pub fn into_patch_version_config(self, keep_self: bool) -> UserConfig {
+        self.into_op_version_config(Op::Tilde, keep_self)
     }
 }
 
@@ -159,6 +159,7 @@ mod tests {
                 "a 1.2.3 (registry+https://example.com/index)" = ["a"]
                 "b 0.1.2 (registry+https://example.com/index)" = ["b1", "b2"]
                 "c 0.0.0 (path+file:///a/b/c)" = ["c1", "c2", "c3"]
+                "cargo-liner 0.2.1 (registry+https://crates.io/index)" = ["cargo-liner"]
             "#,
         )
         .unwrap()
@@ -183,6 +184,12 @@ mod tests {
                         vec!["b1", "b2"],
                     ),
                     ("c", "0.0.0", "path+file:///a/b/c", vec!["c1", "c2", "c3"]),
+                    (
+                        "cargo-liner",
+                        "0.2.1",
+                        "registry+https://crates.io/index",
+                        vec!["cargo-liner"]
+                    ),
                 ]
                 .into_iter()
                 .map(|(name, version, source, bins)| (
@@ -201,7 +208,7 @@ mod tests {
     #[test]
     fn test_cargocrates_intostarcfg_no_packages() {
         assert_eq!(
-            CargoCratesToml::default().into_star_version_config(),
+            CargoCratesToml::default().into_star_version_config(false),
             UserConfig::default(),
         )
     }
@@ -219,7 +226,7 @@ mod tests {
             ))
             .collect()
         }
-        .into_star_version_config()
+        .into_star_version_config(false)
         .packages
         .contains_key(clap::crate_name!()));
     }
@@ -227,7 +234,7 @@ mod tests {
     #[test]
     fn test_cargocrates_intostarcfg_full_versions() {
         assert_eq!(
-            cargocrates_example1().into_star_version_config(),
+            cargocrates_example1().into_star_version_config(false),
             UserConfig {
                 packages: [("a", "*"), ("b", "*"), ("c", "*")]
                     .into_iter()
@@ -253,7 +260,7 @@ mod tests {
             ))
             .collect()
         }
-        .into_exact_version_config()
+        .into_exact_version_config(false)
         .packages
         .contains_key(clap::crate_name!()));
     }
@@ -261,7 +268,7 @@ mod tests {
     #[test]
     fn test_cargocrates_intoexactcfg_full_versions() {
         assert_eq!(
-            cargocrates_example1().into_exact_version_config(),
+            cargocrates_example1().into_exact_version_config(false),
             UserConfig {
                 packages: [("a", "=1.2.3"), ("b", "=0.1.2"), ("c", "=0.0.0")]
                     .into_iter()
@@ -287,7 +294,7 @@ mod tests {
             ))
             .collect()
         }
-        .into_comp_version_config()
+        .into_comp_version_config(false)
         .packages
         .contains_key(clap::crate_name!()));
     }
@@ -295,7 +302,7 @@ mod tests {
     #[test]
     fn test_cargocrates_intocompcfg_full_versions() {
         assert_eq!(
-            cargocrates_example1().into_comp_version_config(),
+            cargocrates_example1().into_comp_version_config(false),
             UserConfig {
                 packages: [("a", "^1.2.3"), ("b", "^0.1.2"), ("c", "^0.0.0")]
                     .into_iter()
@@ -321,7 +328,7 @@ mod tests {
             ))
             .collect()
         }
-        .into_patch_version_config()
+        .into_patch_version_config(false)
         .packages
         .contains_key(clap::crate_name!()));
     }
@@ -329,7 +336,7 @@ mod tests {
     #[test]
     fn test_cargocrates_intopatchcfg_full_versions() {
         assert_eq!(
-            cargocrates_example1().into_patch_version_config(),
+            cargocrates_example1().into_patch_version_config(false),
             UserConfig {
                 packages: [("a", "~1.2.3"), ("b", "~0.1.2"), ("c", "~0.0.0")]
                     .into_iter()
@@ -338,6 +345,170 @@ mod tests {
                         Package::Simple(VersionReq::parse(version).unwrap()),
                     ))
                     .collect::<BTreeMap<_, _>>(),
+            },
+        )
+    }
+
+    #[test]
+    fn test_cargocrates_intostarcfg_nopackages_keepself() {
+        assert_eq!(
+            CargoCratesToml::default().into_star_version_config(true),
+            UserConfig::default(),
+        )
+    }
+
+    #[test]
+    fn test_cargocrates_intostarcfg_keepself() {
+        assert!(CargoCratesToml {
+            package_bins: iter::once((
+                CargoCratesPackage {
+                    name: clap::crate_name!().to_owned(),
+                    version: "1.2.3".parse().unwrap(),
+                    source: String::new()
+                },
+                vec![],
+            ))
+            .collect()
+        }
+        .into_star_version_config(true)
+        .packages
+        .contains_key(clap::crate_name!()));
+    }
+
+    #[test]
+    fn test_cargocrates_intostarcfg_fullversions_keepself() {
+        assert_eq!(
+            cargocrates_example1().into_star_version_config(true),
+            UserConfig {
+                packages: [
+                    ("a", "*"),
+                    ("b", "*"),
+                    ("c", "*"),
+                    (clap::crate_name!(), "*")
+                ]
+                .into_iter()
+                .map(|(name, version)| (
+                    name.to_owned(),
+                    Package::Simple(VersionReq::parse(version).unwrap()),
+                ))
+                .collect::<BTreeMap<_, _>>(),
+            },
+        )
+    }
+
+    #[test]
+    fn test_cargocrates_intoexactcfg_keepself() {
+        assert!(CargoCratesToml {
+            package_bins: iter::once((
+                CargoCratesPackage {
+                    name: clap::crate_name!().to_owned(),
+                    version: "1.2.3".parse().unwrap(),
+                    source: String::new()
+                },
+                vec![],
+            ))
+            .collect()
+        }
+        .into_exact_version_config(true)
+        .packages
+        .contains_key(clap::crate_name!()));
+    }
+
+    #[test]
+    fn test_cargocrates_intoexactcfg_fullversions_keepself() {
+        assert_eq!(
+            cargocrates_example1().into_exact_version_config(true),
+            UserConfig {
+                packages: [
+                    ("a", "=1.2.3"),
+                    ("b", "=0.1.2"),
+                    ("c", "=0.0.0"),
+                    (clap::crate_name!(), "=0.2.1")
+                ]
+                .into_iter()
+                .map(|(name, version)| (
+                    name.to_owned(),
+                    Package::Simple(VersionReq::parse(version).unwrap()),
+                ))
+                .collect::<BTreeMap<_, _>>(),
+            },
+        )
+    }
+
+    #[test]
+    fn test_cargocrates_intocompcfg_keepself() {
+        assert!(CargoCratesToml {
+            package_bins: iter::once((
+                CargoCratesPackage {
+                    name: clap::crate_name!().to_owned(),
+                    version: "1.2.3".parse().unwrap(),
+                    source: String::new()
+                },
+                vec![],
+            ))
+            .collect()
+        }
+        .into_comp_version_config(true)
+        .packages
+        .contains_key(clap::crate_name!()));
+    }
+
+    #[test]
+    fn test_cargocrates_intocompcfg_fullversions_keepself() {
+        assert_eq!(
+            cargocrates_example1().into_comp_version_config(true),
+            UserConfig {
+                packages: [
+                    ("a", "^1.2.3"),
+                    ("b", "^0.1.2"),
+                    ("c", "^0.0.0"),
+                    (clap::crate_name!(), "^0.2.1")
+                ]
+                .into_iter()
+                .map(|(name, version)| (
+                    name.to_owned(),
+                    Package::Simple(VersionReq::parse(version).unwrap()),
+                ))
+                .collect::<BTreeMap<_, _>>(),
+            },
+        )
+    }
+
+    #[test]
+    fn test_cargocrates_intopatchcfg_keepself() {
+        assert!(CargoCratesToml {
+            package_bins: iter::once((
+                CargoCratesPackage {
+                    name: clap::crate_name!().to_owned(),
+                    version: "1.2.3".parse().unwrap(),
+                    source: String::new()
+                },
+                vec![],
+            ))
+            .collect()
+        }
+        .into_patch_version_config(true)
+        .packages
+        .contains_key(clap::crate_name!()));
+    }
+
+    #[test]
+    fn test_cargocrates_intopatchcfg_fullversions_keepself() {
+        assert_eq!(
+            cargocrates_example1().into_patch_version_config(true),
+            UserConfig {
+                packages: [
+                    ("a", "~1.2.3"),
+                    ("b", "~0.1.2"),
+                    ("c", "~0.0.0"),
+                    (clap::crate_name!(), "~0.2.1")
+                ]
+                .into_iter()
+                .map(|(name, version)| (
+                    name.to_owned(),
+                    Package::Simple(VersionReq::parse(version).unwrap()),
+                ))
+                .collect::<BTreeMap<_, _>>(),
             },
         )
     }

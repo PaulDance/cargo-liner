@@ -105,6 +105,15 @@ pub struct ImportArgs {
     /// Default: `false`, i.e. return an error in case the file already exists.
     #[arg(short, long)]
     pub force: bool,
+
+    /// Also import this `cargo-liner` package into the configuration, for
+    /// example in order to specify a certain version requirement later on.
+    ///
+    /// Default: `false`, i.e. exclude the current package from the list of
+    /// packages to install or update in the resulting configuration file. Note
+    /// however that the `ship` command will still self-update by default.
+    #[arg(short, long)]
+    pub keep_self: bool,
 }
 
 #[cfg(test)]
@@ -187,6 +196,7 @@ mod tests {
                     compatible: false,
                     patch: false,
                     force: false,
+                    keep_self: false,
                 })),
             }),
         );
@@ -202,6 +212,7 @@ mod tests {
                     compatible: false,
                     patch: false,
                     force: true,
+                    keep_self: false,
                 })),
             }),
         );
@@ -217,6 +228,7 @@ mod tests {
                     compatible: false,
                     patch: false,
                     force: false,
+                    keep_self: false,
                 })),
             }),
         );
@@ -235,6 +247,7 @@ mod tests {
                     compatible: false,
                     patch: false,
                     force: true,
+                    keep_self: false,
                 })),
             }),
         );
@@ -251,6 +264,7 @@ mod tests {
                     compatible: true,
                     patch: false,
                     force: false,
+                    keep_self: false,
                 })),
             }),
         );
@@ -266,10 +280,10 @@ mod tests {
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Import(ImportArgs {
                     exact: false,
-
                     compatible: true,
                     patch: false,
                     force: true,
+                    keep_self: false,
                 })),
             }),
         );
@@ -285,6 +299,7 @@ mod tests {
                     compatible: false,
                     patch: true,
                     force: false,
+                    keep_self: false,
                 })),
             }),
         );
@@ -303,6 +318,181 @@ mod tests {
                     compatible: false,
                     patch: true,
                     force: true,
+                    keep_self: false,
+                })),
+            }),
+        );
+    }
+
+    #[test]
+    fn test_import_keepself() {
+        assert_eq!(
+            CargoArgs::try_parse_from(["cargo", "liner", "import", "--keep-self"].into_iter())
+                .unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Import(ImportArgs {
+                    exact: false,
+                    compatible: false,
+                    patch: false,
+                    force: false,
+                    keep_self: true,
+                })),
+            }),
+        );
+    }
+
+    #[test]
+    fn test_import_force_keepself() {
+        assert_eq!(
+            CargoArgs::try_parse_from(
+                ["cargo", "liner", "import", "--force", "--keep-self"].into_iter()
+            )
+            .unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Import(ImportArgs {
+                    exact: false,
+                    compatible: false,
+                    patch: false,
+                    force: true,
+                    keep_self: true,
+                })),
+            }),
+        );
+    }
+
+    #[test]
+    fn test_import_exact_keepself() {
+        assert_eq!(
+            CargoArgs::try_parse_from(
+                ["cargo", "liner", "import", "--exact", "--keep-self"].into_iter()
+            )
+            .unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Import(ImportArgs {
+                    exact: true,
+                    compatible: false,
+                    patch: false,
+                    force: false,
+                    keep_self: true,
+                })),
+            }),
+        );
+    }
+
+    #[test]
+    fn test_import_exact_force_keepself() {
+        assert_eq!(
+            CargoArgs::try_parse_from(
+                [
+                    "cargo",
+                    "liner",
+                    "import",
+                    "--exact",
+                    "--force",
+                    "--keep-self"
+                ]
+                .into_iter()
+            )
+            .unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Import(ImportArgs {
+                    exact: true,
+                    compatible: false,
+                    patch: false,
+                    force: true,
+                    keep_self: true,
+                })),
+            }),
+        );
+    }
+
+    #[test]
+    fn test_import_comp_keepself() {
+        assert_eq!(
+            CargoArgs::try_parse_from(
+                ["cargo", "liner", "import", "--compatible", "--keep-self"].into_iter()
+            )
+            .unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Import(ImportArgs {
+                    exact: false,
+                    compatible: true,
+                    patch: false,
+                    force: false,
+                    keep_self: true,
+                })),
+            }),
+        );
+    }
+
+    #[test]
+    fn test_import_comp_force_keepself() {
+        assert_eq!(
+            CargoArgs::try_parse_from(
+                [
+                    "cargo",
+                    "liner",
+                    "import",
+                    "--compatible",
+                    "--force",
+                    "--keep-self"
+                ]
+                .into_iter()
+            )
+            .unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Import(ImportArgs {
+                    exact: false,
+                    compatible: true,
+                    patch: false,
+                    force: true,
+                    keep_self: true,
+                })),
+            }),
+        );
+    }
+
+    #[test]
+    fn test_import_patch_keepself() {
+        assert_eq!(
+            CargoArgs::try_parse_from(
+                ["cargo", "liner", "import", "--patch", "--keep-self"].into_iter()
+            )
+            .unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Import(ImportArgs {
+                    exact: false,
+                    compatible: false,
+                    patch: true,
+                    force: false,
+                    keep_self: true,
+                })),
+            }),
+        );
+    }
+
+    #[test]
+    fn test_import_patch_force_keepself() {
+        assert_eq!(
+            CargoArgs::try_parse_from(
+                [
+                    "cargo",
+                    "liner",
+                    "import",
+                    "--patch",
+                    "--force",
+                    "--keep-self"
+                ]
+                .into_iter()
+            )
+            .unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Import(ImportArgs {
+                    exact: false,
+                    compatible: false,
+                    patch: true,
+                    force: true,
+                    keep_self: true,
                 })),
             }),
         );
