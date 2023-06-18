@@ -3,7 +3,9 @@
 use std::env;
 
 use anyhow::{bail, Result};
-use log::error;
+#[macro_use]
+extern crate log;
+use log::LevelFilter;
 
 mod cargo;
 mod cli;
@@ -22,13 +24,12 @@ fn main() {
 /// Actual main operation.
 fn wrapped_main() -> Result<()> {
     let args = LinerArgs::parse_env();
-
-    // Use the INFO logging level only for this package as a default.
-    if env::var_os("RUST_LOG").is_none() {
-        env::set_var("RUST_LOG", format!("{}=info", env!("CARGO_CRATE_NAME")));
-    }
-
-    pretty_env_logger::try_init()?;
+    let mut bld = pretty_env_logger::formatted_builder();
+    // Use the INFO log level only for this crate by default.
+    bld.filter_module("::", LevelFilter::Error);
+    bld.filter_module(env!("CARGO_CRATE_NAME"), LevelFilter::Info);
+    bld.parse_default_env();
+    bld.try_init()?;
 
     match &args.command {
         Some(LinerCommands::Import(import_args)) => {
