@@ -46,13 +46,13 @@ fn install(
 
 /// Runs `cargo install` for all packages listed in the given user configuration.
 pub fn install_all(packages: &BTreeMap<String, Package>) -> Result<()> {
-    for (name, value) in packages {
+    for (pkg_name, pkg) in packages {
         install(
-            name,
-            &value.version().to_string(),
-            !value.default_features(),
-            value.all_features(),
-            value.features(),
+            pkg_name,
+            &pkg.version().to_string(),
+            !pkg.default_features(),
+            pkg.all_features(),
+            pkg.features(),
         )?;
     }
     Ok(())
