@@ -1,9 +1,8 @@
 //! Main module: regroups parsing CLI arguments, deserializing configuration,
 //! and execution of `cargo install` with the required settings.
 use std::env;
-use std::process;
 
-use anyhow::Result;
+use anyhow::{bail, Result};
 use log::error;
 
 mod cargo;
@@ -12,10 +11,19 @@ use cli::{LinerArgs, LinerCommands};
 mod config;
 use config::{CargoCratesToml, UserConfig};
 
-fn main() -> Result<()> {
+/// Wrap the desired main and display errors in a fashion consistent with the
+/// rest of the messages.
+fn main() {
+    if let Err(err) = wrapped_main() {
+        error!("{}", err);
+    }
+}
+
+/// Actual main operation.
+fn wrapped_main() -> Result<()> {
     let args = LinerArgs::parse_env();
 
-    // Use INFO as a default.
+    // Use the INFO logging level only for this package as a default.
     if env::var_os("RUST_LOG").is_none() {
         env::set_var("RUST_LOG", format!("{}=info", env!("CARGO_CRATE_NAME")));
     }
@@ -25,10 +33,7 @@ fn main() -> Result<()> {
     match &args.command {
         Some(LinerCommands::Import(import_args)) => {
             if !import_args.force && UserConfig::file_path()?.try_exists()? {
-                error!("Configuration file already exists, use -f/--force to overwrite.");
-                // HACK: consider wrapping a function that `main` would call
-                // and filter for errors itself, instead of doing this.
-                process::exit(1);
+                bail!("Configuration file already exists, use -f/--force to overwrite.");
             }
             // Clap conflict settings ensure the options are mutually exclusive.
             (if import_args.exact {
