@@ -29,8 +29,17 @@ pub struct LinerArgs {
     /// When used twice, DEBUG and above messages of all crates are logged.
     /// When used three times or more, TRACE and above messages of all crates
     /// are logged.
-    #[arg(short, long, global = true, action = ArgAction::Count)]
+    #[arg(short, long, global = true, action = ArgAction::Count, conflicts_with = "quiet")]
     pub verbose: u8,
+
+    /// Be quieter. Use multiple times to be more and more so each time.
+    ///
+    /// When omitted, INFO and above messages of only this crate are logged.
+    /// When used once, WARN and above messages of only this crate are logged.
+    /// When used twice, ERROR messages of all crates are logged.
+    /// When used three times or more, no message will be logged.
+    #[arg(short, long, global = true, action = ArgAction::Count, conflicts_with = "verbose")]
+    pub quiet: u8,
 }
 
 impl LinerArgs {
@@ -147,7 +156,8 @@ mod tests {
             CargoArgs::try_parse_from(["cargo", "liner"].into_iter()).unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: None,
-                verbose: 0
+                verbose: 0,
+                quiet: 0,
             }),
         );
     }
@@ -168,9 +178,37 @@ mod tests {
                 CargoArgs::Liner(LinerArgs {
                     command: None,
                     verbose: i as u8,
+                    quiet: 0,
                 }),
             );
         }
+    }
+
+    #[test]
+    fn test_quiet() {
+        for i in 1..=5 {
+            assert_eq!(
+                CargoArgs::try_parse_from(
+                    [
+                        "cargo",
+                        "liner",
+                        &("-".to_owned() + &iter::repeat('q').take(i).collect::<String>())
+                    ]
+                    .into_iter()
+                )
+                .unwrap(),
+                CargoArgs::Liner(LinerArgs {
+                    command: None,
+                    verbose: 0,
+                    quiet: i as u8,
+                }),
+            );
+        }
+    }
+
+    #[test]
+    fn test_quiet_verbose_iserr() {
+        assert!(CargoArgs::try_parse_from(["cargo", "liner", "-qv"].into_iter()).is_err());
     }
 
     #[test]
@@ -183,6 +221,7 @@ mod tests {
                     only_self: false
                 })),
                 verbose: 0,
+                quiet: 0,
             }),
         );
     }
@@ -197,6 +236,7 @@ mod tests {
                     only_self: false
                 })),
                 verbose: 0,
+                quiet: 0,
             }),
         );
     }
@@ -212,6 +252,7 @@ mod tests {
                     only_self: true
                 })),
                 verbose: 0,
+                quiet: 0,
             }),
         );
     }
@@ -237,6 +278,7 @@ mod tests {
                     keep_self: false,
                 })),
                 verbose: 0,
+                quiet: 0,
             }),
         );
     }
@@ -254,6 +296,7 @@ mod tests {
                     keep_self: false,
                 })),
                 verbose: 0,
+                quiet: 0,
             }),
         );
     }
@@ -271,6 +314,7 @@ mod tests {
                     keep_self: false,
                 })),
                 verbose: 0,
+                quiet: 0,
             }),
         );
     }
@@ -291,6 +335,7 @@ mod tests {
                     keep_self: false,
                 })),
                 verbose: 0,
+                quiet: 0,
             }),
         );
     }
@@ -309,6 +354,7 @@ mod tests {
                     keep_self: false,
                 })),
                 verbose: 0,
+                quiet: 0,
             }),
         );
     }
@@ -329,6 +375,7 @@ mod tests {
                     keep_self: false,
                 })),
                 verbose: 0,
+                quiet: 0,
             }),
         );
     }
@@ -346,6 +393,7 @@ mod tests {
                     keep_self: false,
                 })),
                 verbose: 0,
+                quiet: 0,
             }),
         );
     }
@@ -366,6 +414,7 @@ mod tests {
                     keep_self: false,
                 })),
                 verbose: 0,
+                quiet: 0,
             }),
         );
     }
@@ -384,6 +433,7 @@ mod tests {
                     keep_self: true,
                 })),
                 verbose: 0,
+                quiet: 0,
             }),
         );
     }
@@ -404,6 +454,7 @@ mod tests {
                     keep_self: true,
                 })),
                 verbose: 0,
+                quiet: 0,
             }),
         );
     }
@@ -424,6 +475,7 @@ mod tests {
                     keep_self: true,
                 })),
                 verbose: 0,
+                quiet: 0,
             }),
         );
     }
@@ -452,6 +504,7 @@ mod tests {
                     keep_self: true,
                 })),
                 verbose: 0,
+                quiet: 0,
             }),
         );
     }
@@ -472,6 +525,7 @@ mod tests {
                     keep_self: true,
                 })),
                 verbose: 0,
+                quiet: 0,
             }),
         );
     }
@@ -500,6 +554,7 @@ mod tests {
                     keep_self: true,
                 })),
                 verbose: 0,
+                quiet: 0,
             }),
         );
     }
@@ -520,6 +575,7 @@ mod tests {
                     keep_self: true,
                 })),
                 verbose: 0,
+                quiet: 0,
             }),
         );
     }
@@ -548,6 +604,7 @@ mod tests {
                     keep_self: true,
                 })),
                 verbose: 0,
+                quiet: 0,
             }),
         );
     }
