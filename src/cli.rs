@@ -152,7 +152,6 @@ pub struct ImportArgs {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::iter;
 
     #[test]
     fn test_help_iserr() {
@@ -181,16 +180,12 @@ mod tests {
         for i in 1..=5 {
             assert_eq!(
                 CargoArgs::try_parse_from(
-                    [
-                        "cargo",
-                        "liner",
-                        &("-".to_owned() + &iter::repeat('v').take(i).collect::<String>())
-                    ]
-                    .into_iter()
+                    ["cargo", "liner", &("-".to_owned() + &str::repeat("v", i)),].into_iter()
                 )
                 .unwrap(),
                 CargoArgs::Liner(LinerArgs {
                     command: None,
+                    #[allow(clippy::cast_possible_truncation)]
                     verbose: i as u8,
                     quiet: 0,
                 }),
@@ -203,17 +198,13 @@ mod tests {
         for i in 1..=5 {
             assert_eq!(
                 CargoArgs::try_parse_from(
-                    [
-                        "cargo",
-                        "liner",
-                        &("-".to_owned() + &iter::repeat('q').take(i).collect::<String>())
-                    ]
-                    .into_iter()
+                    ["cargo", "liner", &("-".to_owned() + &str::repeat("q", i)),].into_iter()
                 )
                 .unwrap(),
                 CargoArgs::Liner(LinerArgs {
                     command: None,
                     verbose: 0,
+                    #[allow(clippy::cast_possible_truncation)]
                     quiet: i as u8,
                 }),
             );

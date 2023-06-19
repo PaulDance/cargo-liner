@@ -221,7 +221,7 @@ mod tests {
         assert_eq!(
             CargoCratesToml::default().into_star_version_config(false),
             UserConfig::default(),
-        )
+        );
     }
 
     #[test]
@@ -255,7 +255,7 @@ mod tests {
                     ))
                     .collect::<BTreeMap<_, _>>(),
             },
-        )
+        );
     }
 
     #[test]
@@ -289,7 +289,7 @@ mod tests {
                     ))
                     .collect::<BTreeMap<_, _>>(),
             },
-        )
+        );
     }
 
     #[test]
@@ -323,7 +323,7 @@ mod tests {
                     ))
                     .collect::<BTreeMap<_, _>>(),
             },
-        )
+        );
     }
 
     #[test]
@@ -357,7 +357,7 @@ mod tests {
                     ))
                     .collect::<BTreeMap<_, _>>(),
             },
-        )
+        );
     }
 
     #[test]
@@ -365,7 +365,7 @@ mod tests {
         assert_eq!(
             CargoCratesToml::default().into_star_version_config(true),
             UserConfig::default(),
-        )
+        );
     }
 
     #[test]
@@ -404,7 +404,7 @@ mod tests {
                 ))
                 .collect::<BTreeMap<_, _>>(),
             },
-        )
+        );
     }
 
     #[test]
@@ -443,7 +443,7 @@ mod tests {
                 ))
                 .collect::<BTreeMap<_, _>>(),
             },
-        )
+        );
     }
 
     #[test]
@@ -482,7 +482,7 @@ mod tests {
                 ))
                 .collect::<BTreeMap<_, _>>(),
             },
-        )
+        );
     }
 
     #[test]
@@ -521,6 +521,6 @@ mod tests {
                 ))
                 .collect::<BTreeMap<_, _>>(),
             },
-        )
+        );
     }
 }
