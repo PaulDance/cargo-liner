@@ -23,9 +23,11 @@ fn main() {
 
 /// Actual main operation.
 fn wrapped_main() -> Result<()> {
+    // Logging is controlled by args, so they must be parsed first.
     let args = LinerArgs::parse_env();
     let mut bld = pretty_env_logger::formatted_builder();
 
+    // Logging setup parameterized by CLI args.
     if args.verbose < 2 && args.quiet < 2 {
         bld.filter_module("::", LevelFilter::Error);
         bld.filter_module(
@@ -51,6 +53,7 @@ fn wrapped_main() -> Result<()> {
     bld.parse_default_env();
     bld.try_init()?;
 
+    // CLI command dispatch.
     match &args.command {
         Some(LinerCommands::Import(import_args)) => {
             if UserConfig::file_path()?.try_exists()? {
