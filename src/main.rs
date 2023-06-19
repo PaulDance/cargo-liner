@@ -65,7 +65,11 @@ fn wrapped_main() -> Result<()> {
             }
             info!("Importing Cargo installed crates as a new configuration file...");
             // Clap conflict settings ensure the options are mutually exclusive.
-            (if import_args.exact {
+            (if import_args.force {
+                UserConfig::overwrite_file
+            } else {
+                UserConfig::save_file
+            })(&(if import_args.exact {
                 CargoCratesToml::into_exact_version_config
             } else if import_args.compatible {
                 CargoCratesToml::into_comp_version_config
@@ -73,8 +77,9 @@ fn wrapped_main() -> Result<()> {
                 CargoCratesToml::into_patch_version_config
             } else {
                 CargoCratesToml::into_star_version_config
-            })(CargoCratesToml::parse_file()?, import_args.keep_self)
-            .save_file()?;
+            })(
+                CargoCratesToml::parse_file()?, import_args.keep_self
+            ))?;
         }
         Some(LinerCommands::Ship(ship_args)) => {
             let config = UserConfig::parse_file()?

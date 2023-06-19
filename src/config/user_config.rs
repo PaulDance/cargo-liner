@@ -1,5 +1,6 @@
 use std::collections::BTreeMap;
-use std::fs;
+use std::fs::{self, File};
+use std::io::Write;
 use std::iter;
 use std::path::PathBuf;
 
@@ -47,11 +48,30 @@ impl UserConfig {
     /// It creates the file if it does not already exist. If it already exists,
     /// contents will be enterily overwritten. Just as [`Self::parse_file`], it
     /// may fail on several occasions.
+    pub fn overwrite_file(&self) -> Result<()> {
+        let path = Self::file_path()?;
+        let config_str = self.to_string_pretty()?;
+        debug!("Overwriting configuration to {:?}...", &path);
+        fs::write(path, config_str)?;
+        Ok(())
+    }
+
+    /// Serializes the configuration and saves it to the default file without
+    /// overwriting it.
+    ///
+    /// It creates the file if it does not already exist. If it already exists,
+    /// it will fail on an appropriate error. Just as [`Self::overwrite_file`],
+    /// it may fail on several occasions.
     pub fn save_file(&self) -> Result<()> {
         let path = Self::file_path()?;
         let config_str = self.to_string_pretty()?;
-        debug!("(Over)writing configuration to {:?}...", &path);
-        fs::write(path, config_str)?;
+        debug!("Writing configuration to {:?}...", &path);
+        File::options()
+            .read(true)
+            .write(true)
+            .create_new(true)
+            .open(path)?
+            .write_all(config_str.as_bytes())?;
         Ok(())
     }
 
