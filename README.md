@@ -157,7 +157,7 @@ Commands:
           Print this message or the help of the given subcommand(s)
 
 Options:
-  -v, --verbose...V
+  -v, --verbose...
           Be more verbose. Use multiple times to be more and more so each time.
 
           When omitted, INFO and above messages of only this crate are logged.
