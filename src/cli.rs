@@ -29,7 +29,14 @@ pub struct LinerArgs {
     /// When used twice, DEBUG and above messages of all crates are logged.
     /// When used three times or more, TRACE and above messages of all crates
     /// are logged.
-    #[arg(short, long, global = true, action = ArgAction::Count, conflicts_with = "quiet")]
+    #[arg(
+        short,
+        long,
+        global = true,
+        action = ArgAction::Count,
+        conflicts_with = "quiet",
+        display_order = 989,
+    )]
     pub verbose: u8,
 
     /// Be quieter. Use multiple times to be more and more so each time.
@@ -38,7 +45,14 @@ pub struct LinerArgs {
     /// When used once, WARN and above messages of only this crate are logged.
     /// When used twice, ERROR messages of all crates are logged.
     /// When used three times or more, no message will be logged.
-    #[arg(short, long, global = true, action = ArgAction::Count, conflicts_with = "verbose")]
+    #[arg(
+        short,
+        long,
+        global = true,
+        action = ArgAction::Count,
+        conflicts_with = "verbose",
+        display_order = 990,
+    )]
     pub quiet: u8,
 }
 

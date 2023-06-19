@@ -303,27 +303,10 @@ Options:
           Cannot be used in conjunction with either `--exact` or `--compatible`.
           Default: `false`, i.e. use a star requirement.
 
-  -v, --verbose...
-          Be more verbose. Use multiple times to be more and more so each time.
-
-          When omitted, INFO and above messages of only this crate are logged.
-          When used once, DEBUG and above messages of only this crate are logged.
-          When used twice, DEBUG and above messages of all crates are logged.
-          When used three times or more, TRACE and above messages of all crates
-          are logged.
-
   -f, --force
           Overwrite the current configuration file if it already exists.
 
           Default: `false`, i.e. return an error in case the file already exists.
-
-  -q, --quiet...
-          Be quieter. Use multiple times to be more and more so each time.
-
-          When omitted, INFO and above messages of only this crate are logged.
-          When used once, WARN and above messages of only this crate are logged.
-          When used twice, ERROR messages of all crates are logged.
-          When used three times or more, no message will be logged.
 
   -k, --keep-self
           Also import this `cargo-liner` package into the configuration, for
@@ -333,6 +316,23 @@ Options:
           packages to install or update in the resulting configuration file.
           Note however that the `ship` command will still self-update by
           default.
+
+  -v, --verbose...
+          Be more verbose. Use multiple times to be more and more so each time.
+
+          When omitted, INFO and above messages of only this crate are logged.
+          When used once, DEBUG and above messages of only this crate are logged.
+          When used twice, DEBUG and above messages of all crates are logged.
+          When used three times or more, TRACE and above messages of all crates
+          are logged.
+
+  -q, --quiet...
+          Be quieter. Use multiple times to be more and more so each time.
+
+          When omitted, INFO and above messages of only this crate are logged.
+          When used once, WARN and above messages of only this crate are logged.
+          When used twice, ERROR messages of all crates are logged.
+          When used three times or more, no message will be logged.
 
   -h, --help
           Print help information (use `-h` for a summary)
