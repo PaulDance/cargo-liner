@@ -145,17 +145,23 @@ Some basic commands are now available:
 ❯ cargo help liner
 Cargo subcommand to install and update binary packages listed in configuration.
 
-
-Usage: cargo liner [COMMAND]
+Usage: cargo liner [OPTIONS] [COMMAND]
 
 Commands:
-  ship    The default command if omitted: install and update configured packages
-  import  Import the `$CARGO_HOME/.crates.toml` Cargo-edited save file as a new Liner configuration file
-  help    Print this message or the help of the given subcommand(s)
+  ship
+          The default command if omitted: install and update configured packages
+  import
+          Import the `$CARGO_HOME/.crates.toml` Cargo-edited save file as a new
+          Liner configuration file
+  help
+          Print this message or the help of the given subcommand(s)
 
 Options:
-  -h, --help     Print help information
-  -V, --version  Print version information
+  -h, --help
+          Print help information (use `-h` for a summary)
+
+  -V, --version
+          Print version information
 ```
 
 
