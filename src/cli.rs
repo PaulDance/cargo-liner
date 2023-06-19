@@ -3,7 +3,7 @@
 //! See [`LinerArgs::parse_env`] in order to retrieve such arguments from the
 //! environment.
 
-use clap::Parser;
+use clap::{ArgAction, Parser};
 
 /// Cargo entry point for `cargo-liner`.
 ///
@@ -21,6 +21,16 @@ enum CargoArgs {
 pub struct LinerArgs {
     #[command(subcommand)]
     pub command: Option<LinerCommands>,
+
+    /// Be more verbose. Use multiple times to be more and more so each time.
+    ///
+    /// When omitted, INFO and above messages of only this crate are logged.
+    /// When used once, DEBUG and above messages of only this crate are logged.
+    /// When used twice, DEBUG and above messages of all crates are logged.
+    /// When used three times or more, TRACE and above messages of all crates
+    /// are logged.
+    #[arg(short, long, global = true, action = ArgAction::Count)]
+    pub verbose: u8,
 }
 
 impl LinerArgs {
@@ -119,6 +129,7 @@ pub struct ImportArgs {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::iter;
 
     #[test]
     fn test_help_iserr() {
@@ -134,8 +145,32 @@ mod tests {
     fn test_no_args() {
         assert_eq!(
             CargoArgs::try_parse_from(["cargo", "liner"].into_iter()).unwrap(),
-            CargoArgs::Liner(LinerArgs { command: None }),
+            CargoArgs::Liner(LinerArgs {
+                command: None,
+                verbose: 0
+            }),
         );
+    }
+
+    #[test]
+    fn test_verbose() {
+        for i in 1..=5 {
+            assert_eq!(
+                CargoArgs::try_parse_from(
+                    [
+                        "cargo",
+                        "liner",
+                        &("-".to_owned() + &iter::repeat('v').take(i).collect::<String>())
+                    ]
+                    .into_iter()
+                )
+                .unwrap(),
+                CargoArgs::Liner(LinerArgs {
+                    command: None,
+                    verbose: i as u8,
+                }),
+            );
+        }
     }
 
     #[test]
@@ -147,6 +182,7 @@ mod tests {
                     no_self: false,
                     only_self: false
                 })),
+                verbose: 0,
             }),
         );
     }
@@ -160,6 +196,7 @@ mod tests {
                     no_self: true,
                     only_self: false
                 })),
+                verbose: 0,
             }),
         );
     }
@@ -174,6 +211,7 @@ mod tests {
                     no_self: false,
                     only_self: true
                 })),
+                verbose: 0,
             }),
         );
     }
@@ -198,6 +236,7 @@ mod tests {
                     force: false,
                     keep_self: false,
                 })),
+                verbose: 0,
             }),
         );
     }
@@ -214,6 +253,7 @@ mod tests {
                     force: true,
                     keep_self: false,
                 })),
+                verbose: 0,
             }),
         );
     }
@@ -230,6 +270,7 @@ mod tests {
                     force: false,
                     keep_self: false,
                 })),
+                verbose: 0,
             }),
         );
     }
@@ -249,6 +290,7 @@ mod tests {
                     force: true,
                     keep_self: false,
                 })),
+                verbose: 0,
             }),
         );
     }
@@ -266,6 +308,7 @@ mod tests {
                     force: false,
                     keep_self: false,
                 })),
+                verbose: 0,
             }),
         );
     }
@@ -285,6 +328,7 @@ mod tests {
                     force: true,
                     keep_self: false,
                 })),
+                verbose: 0,
             }),
         );
     }
@@ -301,6 +345,7 @@ mod tests {
                     force: false,
                     keep_self: false,
                 })),
+                verbose: 0,
             }),
         );
     }
@@ -320,6 +365,7 @@ mod tests {
                     force: true,
                     keep_self: false,
                 })),
+                verbose: 0,
             }),
         );
     }
@@ -337,6 +383,7 @@ mod tests {
                     force: false,
                     keep_self: true,
                 })),
+                verbose: 0,
             }),
         );
     }
@@ -356,6 +403,7 @@ mod tests {
                     force: true,
                     keep_self: true,
                 })),
+                verbose: 0,
             }),
         );
     }
@@ -375,6 +423,7 @@ mod tests {
                     force: false,
                     keep_self: true,
                 })),
+                verbose: 0,
             }),
         );
     }
@@ -402,6 +451,7 @@ mod tests {
                     force: true,
                     keep_self: true,
                 })),
+                verbose: 0,
             }),
         );
     }
@@ -421,6 +471,7 @@ mod tests {
                     force: false,
                     keep_self: true,
                 })),
+                verbose: 0,
             }),
         );
     }
@@ -448,6 +499,7 @@ mod tests {
                     force: true,
                     keep_self: true,
                 })),
+                verbose: 0,
             }),
         );
     }
@@ -467,6 +519,7 @@ mod tests {
                     force: false,
                     keep_self: true,
                 })),
+                verbose: 0,
             }),
         );
     }
@@ -494,6 +547,7 @@ mod tests {
                     force: true,
                     keep_self: true,
                 })),
+                verbose: 0,
             }),
         );
     }

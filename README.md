@@ -157,6 +157,15 @@ Commands:
           Print this message or the help of the given subcommand(s)
 
 Options:
+  -v, --verbose...V
+          Be more verbose. Use multiple times to be more and more so each time.
+
+          When omitted, INFO and above messages of only this crate are logged.
+          When used once, DEBUG and above messages of only this crate are logged.
+          When used twice, DEBUG and above messages of all crates are logged.
+          When used three times or more, TRACE and above messages of all crates
+          are logged.
+
   -h, --help
           Print help information (use `-h` for a summary)
 
@@ -221,6 +230,15 @@ Options:
           Cannot be used in conjunction with `--no-self`. Default: `false`,
           i.e. install or update other packages as well.
 
+  -v, --verbose...
+          Be more verbose. Use multiple times to be more and more so each time.
+
+          When omitted, INFO and above messages of only this crate are logged.
+          When used once, DEBUG and above messages of only this crate are logged.
+          When used twice, DEBUG and above messages of all crates are logged.
+          When used three times or more, TRACE and above messages of all crates
+          are logged.
+
   -h, --help
           Print help information (use `-h` for a summary)
 ```
@@ -268,6 +286,15 @@ Options:
 
           Cannot be used in conjunction with either `--exact` or `--compatible`.
           Default: `false`, i.e. use a star requirement.
+
+  -v, --verbose...
+          Be more verbose. Use multiple times to be more and more so each time.
+
+          When omitted, INFO and above messages of only this crate are logged.
+          When used once, DEBUG and above messages of only this crate are logged.
+          When used twice, DEBUG and above messages of all crates are logged.
+          When used three times or more, TRACE and above messages of all crates
+          are logged.
 
   -f, --force
           Overwrite the current configuration file if it already exists.

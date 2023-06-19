@@ -25,9 +25,25 @@ fn main() {
 fn wrapped_main() -> Result<()> {
     let args = LinerArgs::parse_env();
     let mut bld = pretty_env_logger::formatted_builder();
+
     // Use the INFO log level only for this crate by default.
-    bld.filter_module("::", LevelFilter::Error);
-    bld.filter_module(env!("CARGO_CRATE_NAME"), LevelFilter::Info);
+    if args.verbose == 0 || args.verbose == 1 {
+        bld.filter_module("::", LevelFilter::Error);
+        bld.filter_module(
+            env!("CARGO_CRATE_NAME"),
+            if args.verbose == 0 {
+                LevelFilter::Info
+            } else {
+                LevelFilter::Debug
+            },
+        );
+    } else {
+        bld.filter_level(match args.verbose {
+            2 => LevelFilter::Debug,
+            // 3 or more here.
+            _ => LevelFilter::Trace,
+        });
+    }
     bld.parse_default_env();
     bld.try_init()?;
 
