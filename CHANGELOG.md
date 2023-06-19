@@ -1,7 +1,61 @@
-# Unreleased
-## Added
- * Package definitions can now specify which feature flags should be installed,
-   in a similar format to the Cargo.toml `[features]` section.
+# [Version 0.3.0 (19/06/2023)](https://crates.io/crates/cargo-liner/0.3.0)
+## Features
+
+ * Package definitions now have a detailed variant available, mimicking the
+   `Cargo.toml` format. This has been implemented in order to enable one to
+   specify which features should be compiled in the installed packages, by
+   configuring a list of feature flags in a similar format to the Cargo
+   manifest's `[features]` section. Many thanks to @MaeIsBad: #2.
+ * A new `--only-self` option has been added to the `ship` command: it enables
+   one to only update `cargo-liner` and nothing else. It is incompatible with
+   `--no-self`.
+ * Short variants of the options flags of the `ship` command are now enabled.
+ * A new `--keep-self` option has been added to the `import` command: it
+   ensures the `cargo-liner` package is kept in the package list and thus
+   written to the created configuration file. It is compatible with the version
+   operator selection options.
+ * Basic logging has been implemented. Messages will therefore now be displayed
+   in order to inform the user about the currently performed action and its
+   results. Errors bubbling up are manually caught in the global main function
+   and logged using the same format as the rest of the emitted messages.
+ * New `--verbose` and `--quiet` option flags have been implemented. They
+   control the global verbosity of the program by changing the logging
+   configuration at runtime. They are both available globally, i.e. with or
+   without a command and before or after the command name. They can both be
+   repeated up to three times in order to adjust how much the verbosity is
+   changed. They are incompatible with each other. It is made sure they arrive
+   last in the CLI help messages, but still just before `--help` and
+   `--version`.
+
+## Fixes
+
+ * The `--no-self-update` option of the `ship` command has been renamed to
+   `--no-self`. This makes it more consistent with other new option flags.
+ * The TOCTOU bug for the configuration file import has been fixed: between
+   checking for the existence of the file and then possibly overwriting it, a
+   new file could appear. The `--force` option flag now controls which
+   operation is used: when present, the previously always used overwriting is
+   called; when absent, an appropriate system call is made to ensure only
+   creating a new file is possible atomically.
+ * Fixed some Clippy warnings triggered on the test suite.
+
+## Documentation
+
+ * `README.md`:
+   * Fixed the CI status badge.
+   * Added missing shell syntax highlighting for the code block showing the
+     output example.
+   * Clarified CLI option defaults.
+   * Updated outputs.
+   * Various other small adjustments.
+ * New features.
+
+## Testing
+
+ * The GitHub CI workflow now denies `rustdoc` warnings by default. Thanks
+   to @MaeIsBad: #3.
+ * Appropriate tests have been added alongside the new functionalities.
+
 
 # [Version 0.2.1 (26/11/2022)](https://crates.io/crates/cargo-liner/0.2.1)
 ## Fixes
