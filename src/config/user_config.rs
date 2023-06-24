@@ -78,10 +78,9 @@ impl UserConfig {
     /// Converts the config to a pretty TOML string with literal strings disabled.
     fn to_string_pretty(&self) -> Result<String> {
         debug!("Serializing configuration...");
-        let mut dst = String::new();
-        self.serialize(toml::Serializer::pretty(&mut dst).pretty_string_literal(false))?;
-        trace!("Got: {:?}.", &dst);
-        Ok(dst)
+        let res = toml::to_string_pretty(self)?;
+        trace!("Got: {:?}.", &res);
+        Ok(res)
     }
 
     /// Enable or disable self-updating.
