@@ -192,24 +192,35 @@ Simply run `cargo liner` in order to:
  * Run `cargo install` for each of them.
  * Self-update.
 
-Example output if only `git-journal` is required:
+Example output if `bat` and `cargo-expand` are required:
 
 ```sh
+❯ cargo liner
+ INFO  cargo_liner::cargo > Installing or updating `bat`...
     Updating crates.io index
-  Downloaded git-journal v1.8.1
+     Ignored package `bat v0.23.0` is already installed, use --force to override
+ INFO  cargo_liner::cargo > Installing or updating `cargo-expand`...
+    Updating crates.io index
+  Downloaded cargo-expand v1.0.54
+  Downloaded 1 crate (26.4 KB) in 0.44s
+  Installing cargo-expand v1.0.54
+    Updating crates.io index
+  Downloaded anstyle-parse v0.2.1
   [...]
-  Downloaded 1 crate (424.2 KB) in 1.73s
-  Installing git-journal v1.8.1
-  Downloaded percent-encoding v1.0.1
-  [...]
-  Downloaded libgit2-sys v0.7.11
-  Downloaded 24 crates (2.4 MB) in 1.29s (largest was `libgit2-sys` at 1.2 MB)
-   Compiling autocfg v1.1.0
+  Downloaded clap_builder v4.3.5
+  Downloaded 5 crates (311.7 KB) in 0.45s
+   Compiling proc-macro2 v1.0.60
    [...]
-   Compiling git-journal v1.8.1
-    Finished release [optimized] target(s) in 1m 06s
-  Installing /home/[...]/.cargo/bin/git-journal
-   Installed package `git-journal v1.8.1` (executable `git-journal`)
+   Compiling cargo-expand v1.0.54
+   [...]
+   Compiling cargo-subcommand-metadata v0.1.0
+    Finished release [optimized] target(s) in 52.97s
+   Replacing /home/pauldance/.cargo/bin/cargo-expand
+    Replaced package `cargo-expand v1.0.53` with `cargo-expand v1.0.54` (executable `cargo-expand`)
+ INFO  cargo_liner::cargo > Installing or updating `cargo-liner`...
+    Updating crates.io index
+     Ignored package `cargo-liner v0.3.0` is already installed, use --force to override
+ INFO  cargo_liner        > Done.
 ```
 
 
