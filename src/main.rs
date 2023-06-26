@@ -1,5 +1,6 @@
 //! Main module: regroups parsing CLI arguments, deserializing configuration,
 //! and execution of `cargo install` with the required settings.
+use std::collections::BTreeMap;
 use std::env;
 
 use anyhow::{bail, Result};
@@ -11,7 +12,7 @@ mod cargo;
 mod cli;
 use cli::{LinerArgs, LinerCommands};
 mod config;
-use config::{CargoCratesToml, UserConfig};
+use config::{CargoCratesToml, Package, UserConfig};
 
 /// Wrap the desired main and display errors in a fashion consistent with the
 /// rest of the messages.
@@ -85,11 +86,32 @@ fn wrapped_main() -> Result<()> {
             let config = UserConfig::parse_file()?
                 .self_update(!ship_args.no_self)
                 .update_others(!ship_args.only_self);
-            cargo::install_all(&config.packages)?;
+            cargo::install_all(&needing_install(&config.packages)?)?;
         }
-        None => cargo::install_all(&UserConfig::parse_file()?.packages)?,
+        None => cargo::install_all(&needing_install(&UserConfig::parse_file()?.packages)?)?,
     }
 
     info!("Done.");
     Ok(())
+}
+
+/// Returns the packages that do indeed need an install or update.
+fn needing_install(pkgs: &BTreeMap<String, Package>) -> Result<BTreeMap<String, Package>> {
+    let installed = CargoCratesToml::parse_file()?.into_name_versions();
+    let mut to_install = BTreeMap::new();
+    debug!("Filtering packages by versions...");
+
+    for (pkg_name, pkg) in pkgs {
+        if !installed.contains_key(pkg_name)
+            || installed.get(pkg_name).unwrap() < &cargo::search_exact(pkg_name)?
+        {
+            to_install.insert(pkg_name.clone(), pkg.clone());
+            trace!("{:?} is selected to be installed or updated.", pkg_name);
+        } else {
+            trace!("{:?} is not selected: already up-to-date.", pkg_name);
+        }
+    }
+
+    trace!("Filtered packages: {:?}.", &to_install);
+    Ok(to_install)
 }

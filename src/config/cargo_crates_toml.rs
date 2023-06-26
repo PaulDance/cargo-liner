@@ -45,6 +45,15 @@ impl CargoCratesToml {
         self.package_bins.into_keys().map(|pkg| pkg.name).collect()
     }
 
+    /// Consumes the document and returns the set of installed package names
+    /// to versions.
+    pub fn into_name_versions(self) -> BTreeMap<String, Version> {
+        self.package_bins
+            .into_keys()
+            .map(|pkg| (pkg.name, pkg.version))
+            .collect()
+    }
+
     /// Converts this toml document into a custom user config by mapping
     /// listed packages using the given `pkg_map` function.
     ///
