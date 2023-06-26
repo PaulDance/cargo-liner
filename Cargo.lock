@@ -82,6 +82,7 @@ dependencies = [
  "indoc",
  "log",
  "pretty_env_logger",
+ "regex",
  "semver",
  "serde",
  "toml",

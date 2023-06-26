@@ -42,10 +42,7 @@ impl CargoCratesToml {
 
     /// Consumes the document and returns the set of installed package names.
     pub fn into_names(self) -> BTreeSet<String> {
-        self.package_bins
-            .into_iter()
-            .map(|(pkg, _bins)| pkg.name)
-            .collect()
+        self.package_bins.into_keys().map(|pkg| pkg.name).collect()
     }
 
     /// Converts this toml document into a custom user config by mapping

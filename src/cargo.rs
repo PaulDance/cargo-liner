@@ -6,8 +6,11 @@ use std::collections::BTreeMap;
 use std::env;
 use std::ffi::OsStr;
 use std::process::Command;
+use std::str;
 
-use anyhow::Result;
+use anyhow::{anyhow, Result};
+use regex::Regex;
+use semver::Version;
 
 use crate::config::CargoCratesToml;
 use crate::config::Package;
@@ -45,13 +48,7 @@ fn install(
         trace!("`--features` arg added.");
     }
 
-    debug!(
-        "Running {:?} with arguments {:?}...",
-        cmd.get_program().to_string_lossy(),
-        cmd.get_args()
-            .map(OsStr::to_string_lossy)
-            .collect::<Vec<_>>(),
-    );
+    log_cmd(&cmd);
     cmd.status()?;
     Ok(())
 }
@@ -77,4 +74,40 @@ pub fn install_all(packages: &BTreeMap<String, Package>) -> Result<()> {
     }
 
     Ok(())
+}
+
+/// Runs `cargo search` for the given package and returns its latest version.
+pub fn search_exact(pkg: &str) -> Result<Version> {
+    let mut cmd = Command::new(env::var("CARGO")?);
+    cmd.args(["search", "--limit=1", pkg]);
+    log_cmd(&cmd);
+
+    let out = str::from_utf8(cmd.output()?.stdout.as_slice())?.to_owned();
+    trace!("Got: {:?}", out);
+
+    let ver = Regex::new(&format!(r#"{pkg}\s=\s"([0-9.abrc]+)"\s+#.*"#))?
+        .captures(
+            out.lines()
+                .next()
+                .ok_or_else(|| anyhow!("Not at least one line in search output."))?,
+        )
+        .ok_or_else(|| anyhow!("No regex capture while parsing search output."))?
+        .get(1)
+        .ok_or_else(|| anyhow!("Version not captured by regex matching search output."))?
+        .as_str()
+        .parse::<Version>()?;
+    trace!("Parsed version is: {:?}.", ver);
+
+    Ok(ver)
+}
+
+/// Logs the program and arguments of the given command to DEBUG.
+fn log_cmd(cmd: &Command) {
+    debug!(
+        "Running {:?} with arguments {:?}...",
+        cmd.get_program().to_string_lossy(),
+        cmd.get_args()
+            .map(OsStr::to_string_lossy)
+            .collect::<Vec<_>>(),
+    );
 }
