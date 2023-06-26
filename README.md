@@ -196,10 +196,10 @@ Example output if `bat` and `cargo-expand` are required:
 
 ```sh
 ❯ cargo liner
- INFO  cargo_liner::cargo > Installing or updating `bat`...
+ INFO  cargo_liner::cargo > Updating `bat`...
     Updating crates.io index
      Ignored package `bat v0.23.0` is already installed, use --force to override
- INFO  cargo_liner::cargo > Installing or updating `cargo-expand`...
+ INFO  cargo_liner::cargo > Installing `cargo-expand`...
     Updating crates.io index
   Downloaded cargo-expand v1.0.54
   Downloaded 1 crate (26.4 KB) in 0.44s
@@ -217,7 +217,7 @@ Example output if `bat` and `cargo-expand` are required:
     Finished release [optimized] target(s) in 52.97s
    Replacing /home/pauldance/.cargo/bin/cargo-expand
     Replaced package `cargo-expand v1.0.53` with `cargo-expand v1.0.54` (executable `cargo-expand`)
- INFO  cargo_liner::cargo > Installing or updating `cargo-liner`...
+ INFO  cargo_liner::cargo > Updating `cargo-liner`...
     Updating crates.io index
      Ignored package `cargo-liner v0.3.0` is already installed, use --force to override
  INFO  cargo_liner        > Done.

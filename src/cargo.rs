@@ -9,6 +9,7 @@ use std::process::Command;
 
 use anyhow::Result;
 
+use crate::config::CargoCratesToml;
 use crate::config::Package;
 
 /// Installs a package, by running `cargo install` passing the `name`, `version` and requested
@@ -57,8 +58,15 @@ fn install(
 
 /// Runs `cargo install` for all packages listed in the given user configuration.
 pub fn install_all(packages: &BTreeMap<String, Package>) -> Result<()> {
+    let installed = CargoCratesToml::parse_file()?.into_names();
+
     for (pkg_name, pkg) in packages {
-        info!("Installing or updating `{}`...", pkg_name);
+        if installed.contains(pkg_name) {
+            info!("Updating `{}`...", pkg_name);
+        } else {
+            info!("Installing `{}`...", pkg_name);
+        }
+
         install(
             pkg_name,
             &pkg.version().to_string(),
@@ -67,5 +75,6 @@ pub fn install_all(packages: &BTreeMap<String, Package>) -> Result<()> {
             pkg.features(),
         )?;
     }
+
     Ok(())
 }

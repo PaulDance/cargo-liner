@@ -1,4 +1,4 @@
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::PathBuf;
 
@@ -38,6 +38,14 @@ impl CargoCratesToml {
         let info = toml::from_str(&info_str)?;
         trace!("Got: {:?}.", &info);
         Ok(info)
+    }
+
+    /// Consumes the document and returns the set of installed package names.
+    pub fn into_names(self) -> BTreeSet<String> {
+        self.package_bins
+            .into_iter()
+            .map(|(pkg, _bins)| pkg.name)
+            .collect()
     }
 
     /// Converts this toml document into a custom user config by mapping
