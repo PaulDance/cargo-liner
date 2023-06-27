@@ -82,13 +82,17 @@ fn wrapped_main() -> Result<()> {
                 CargoCratesToml::parse_file()?, import_args.keep_self
             ))?;
         }
-        Some(LinerCommands::Ship(ship_args)) => {
-            let config = UserConfig::parse_file()?
-                .self_update(!ship_args.no_self)
-                .update_others(!ship_args.only_self);
+        cmd => {
+            let mut config = UserConfig::parse_file()?;
+
+            if let Some(LinerCommands::Ship(ship_args)) = cmd {
+                config = config
+                    .self_update(!ship_args.no_self)
+                    .update_others(!ship_args.only_self);
+            }
+
             cargo::install_all(&needing_install(&config.packages)?)?;
         }
-        None => cargo::install_all(&needing_install(&UserConfig::parse_file()?.packages)?)?,
     }
 
     info!("Done.");
