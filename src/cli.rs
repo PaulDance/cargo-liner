@@ -2,7 +2,7 @@
 //!
 //! See [`LinerArgs::parse_env`] in order to retrieve such arguments from the
 //! environment.
-
+#![allow(clippy::struct_excessive_bools)]
 use clap::{ArgAction, Parser};
 
 /// Cargo entry point for `cargo-liner`.

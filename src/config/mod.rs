@@ -2,6 +2,7 @@
 //!
 //! See [`UserConfig::parse_file`] in order to retrieve such configuration
 //! settings from the default file.
+#![allow(clippy::module_name_repetitions)]
 
 mod cargo_crates_toml;
 mod package;
