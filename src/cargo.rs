@@ -2,7 +2,7 @@
 //!
 //! See [`install_all`] in order to install configured packages.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::env;
 use std::ffi::OsStr;
 use std::process::Command;
@@ -12,7 +12,6 @@ use anyhow::{anyhow, Result};
 use regex::Regex;
 use semver::Version;
 
-use crate::config::CargoCratesToml;
 use crate::config::Package;
 
 /// Installs a package, by running `cargo install` passing the `name`, `version` and requested
@@ -54,9 +53,10 @@ fn install(
 }
 
 /// Runs `cargo install` for all packages listed in the given user configuration.
-pub fn install_all(packages: &BTreeMap<String, Package>) -> Result<()> {
-    let installed = CargoCratesToml::parse_file()?.into_names();
-
+pub fn install_all(
+    packages: &BTreeMap<String, Package>,
+    installed: &BTreeSet<String>,
+) -> Result<()> {
     for (pkg_name, pkg) in packages {
         if installed.contains(pkg_name) {
             info!("Updating `{}`...", pkg_name);

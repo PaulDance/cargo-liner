@@ -92,9 +92,13 @@ fn wrapped_main() -> Result<()> {
                     .update_others(!ship_args.only_self);
             }
 
+            let cct = CargoCratesToml::parse_file()?;
             let vers = cargo::search_exact_all(&config.packages)?;
-            log_summary(&config.packages, &vers)?;
-            cargo::install_all(&needing_install(&config.packages, &vers)?)?;
+            log_summary(&config.packages, &vers, &cct.clone().into_name_versions());
+            cargo::install_all(
+                &needing_install(&config.packages, &vers, &cct.clone().into_name_versions()),
+                &cct.into_names(),
+            )?;
         }
     }
 
@@ -103,17 +107,20 @@ fn wrapped_main() -> Result<()> {
 }
 
 /// Displays whether each package needs an update or not.
-fn log_summary(pkgs: &BTreeMap<String, Package>, vers: &BTreeMap<String, Version>) -> Result<()> {
+fn log_summary(
+    pkgs: &BTreeMap<String, Package>,
+    new_vers: &BTreeMap<String, Version>,
+    old_vers: &BTreeMap<String, Version>,
+) {
     if let Some(max_len) = pkgs.keys().map(String::len).max() {
-        let installed = CargoCratesToml::parse_file()?.into_name_versions();
         info!("Results:");
 
         for pkg in pkgs.keys() {
-            let new_ver = vers.get(pkg).unwrap();
+            let new_ver = new_vers.get(pkg).unwrap();
             info!(
                 "    {:<max_len$}  {}",
                 pkg,
-                installed.get(pkg).map_or_else(
+                old_vers.get(pkg).map_or_else(
                     || format!("ø -> {new_ver}"),
                     |old_ver| if old_ver < new_ver {
                         format!("{old_ver} -> {new_ver}")
@@ -124,22 +131,21 @@ fn log_summary(pkgs: &BTreeMap<String, Package>, vers: &BTreeMap<String, Version
             );
         }
     }
-    Ok(())
 }
 
 /// Returns the packages that do indeed need an install or update.
 fn needing_install(
     pkgs: &BTreeMap<String, Package>,
-    vers: &BTreeMap<String, Version>,
-) -> Result<BTreeMap<String, Package>> {
-    let installed = CargoCratesToml::parse_file()?.into_name_versions();
+    new_vers: &BTreeMap<String, Version>,
+    old_vers: &BTreeMap<String, Version>,
+) -> BTreeMap<String, Package> {
     let mut to_install = BTreeMap::new();
     debug!("Filtering packages by versions...");
 
     for (pkg_name, pkg) in pkgs {
-        if installed
+        if old_vers
             .get(pkg_name)
-            .map_or(true, |ver| ver < vers.get(pkg_name).unwrap())
+            .map_or(true, |ver| ver < new_vers.get(pkg_name).unwrap())
         {
             to_install.insert(pkg_name.clone(), pkg.clone());
             trace!("{:?} is selected to be installed or updated.", pkg_name);
@@ -149,5 +155,5 @@ fn needing_install(
     }
 
     trace!("Filtered packages: {:?}.", &to_install);
-    Ok(to_install)
+    to_install
 }
