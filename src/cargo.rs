@@ -89,11 +89,13 @@ pub fn search_exact(pkg: &str) -> Result<Version> {
         .captures(
             out.lines()
                 .next()
-                .ok_or_else(|| anyhow!("Not at least one line in search output."))?,
+                .ok_or_else(|| anyhow!("Not at least one line in search output for {pkg:?}."))?,
         )
-        .ok_or_else(|| anyhow!("No regex capture while parsing search output."))?
+        .ok_or_else(|| anyhow!("No regex capture while parsing search output for {pkg:?}."))?
         .get(1)
-        .ok_or_else(|| anyhow!("Version not captured by regex matching search output."))?
+        .ok_or_else(|| {
+            anyhow!("Version not captured by regex matching search output for {pkg:?}.")
+        })?
         .as_str()
         .parse::<Version>()?;
     trace!("Parsed version is: {:?}.", ver);
