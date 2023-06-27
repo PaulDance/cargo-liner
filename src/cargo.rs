@@ -103,6 +103,19 @@ pub fn search_exact(pkg: &str) -> Result<Version> {
     Ok(ver)
 }
 
+/// Runs [`search_exact`] for all packages in the given map and returns the
+/// thus fetched versions in the collected map.
+pub fn search_exact_all(pkgs: &BTreeMap<String, Package>) -> Result<BTreeMap<String, Version>> {
+    info!("Fetching latest package versions...");
+    let mut vers = BTreeMap::new();
+
+    for pkg in pkgs.keys() {
+        vers.insert(pkg.clone(), search_exact(pkg)?);
+    }
+
+    Ok(vers)
+}
+
 /// Logs the program and arguments of the given command to DEBUG.
 fn log_cmd(cmd: &Command) {
     debug!(

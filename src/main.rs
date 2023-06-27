@@ -7,6 +7,7 @@ use anyhow::{bail, Result};
 #[macro_use]
 extern crate log;
 use log::LevelFilter;
+use semver::Version;
 
 mod cargo;
 mod cli;
@@ -91,7 +92,8 @@ fn wrapped_main() -> Result<()> {
                     .update_others(!ship_args.only_self);
             }
 
-            cargo::install_all(&needing_install(&config.packages)?)?;
+            let vers = cargo::search_exact_all(&config.packages)?;
+            cargo::install_all(&needing_install(&config.packages, &vers)?)?;
         }
     }
 
@@ -100,14 +102,18 @@ fn wrapped_main() -> Result<()> {
 }
 
 /// Returns the packages that do indeed need an install or update.
-fn needing_install(pkgs: &BTreeMap<String, Package>) -> Result<BTreeMap<String, Package>> {
+fn needing_install(
+    pkgs: &BTreeMap<String, Package>,
+    vers: &BTreeMap<String, Version>,
+) -> Result<BTreeMap<String, Package>> {
     let installed = CargoCratesToml::parse_file()?.into_name_versions();
     let mut to_install = BTreeMap::new();
     debug!("Filtering packages by versions...");
 
     for (pkg_name, pkg) in pkgs {
-        if !installed.contains_key(pkg_name)
-            || installed.get(pkg_name).unwrap() < &cargo::search_exact(pkg_name)?
+        if installed
+            .get(pkg_name)
+            .map_or(true, |ver| ver < vers.get(pkg_name).unwrap())
         {
             to_install.insert(pkg_name.clone(), pkg.clone());
             trace!("{:?} is selected to be installed or updated.", pkg_name);
