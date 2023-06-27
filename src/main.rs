@@ -93,11 +93,37 @@ fn wrapped_main() -> Result<()> {
             }
 
             let vers = cargo::search_exact_all(&config.packages)?;
+            log_summary(&config.packages, &vers)?;
             cargo::install_all(&needing_install(&config.packages, &vers)?)?;
         }
     }
 
     info!("Done.");
+    Ok(())
+}
+
+/// Displays whether each package needs an update or not.
+fn log_summary(pkgs: &BTreeMap<String, Package>, vers: &BTreeMap<String, Version>) -> Result<()> {
+    if let Some(max_len) = pkgs.keys().map(String::len).max() {
+        let installed = CargoCratesToml::parse_file()?.into_name_versions();
+        info!("Results:");
+
+        for pkg in pkgs.keys() {
+            let new_ver = vers.get(pkg).unwrap();
+            info!(
+                "    {:<max_len$}  {}",
+                pkg,
+                installed.get(pkg).map_or_else(
+                    || format!("ø -> {new_ver}"),
+                    |old_ver| if old_ver < new_ver {
+                        format!("{old_ver} -> {new_ver}")
+                    } else {
+                        "✔".to_owned()
+                    }
+                ),
+            );
+        }
+    }
     Ok(())
 }
 
