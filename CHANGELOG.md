@@ -1,3 +1,52 @@
+# [Version 0.4.0 (28/06/2023)](https://crates.io/crates/cargo-liner/0.4.0)
+## Features
+
+ * The log messages will now display whether a package is already installed
+   upon running the `ship` command when it is configured: either `Installing`
+   when it was not previously installed or `Updating` on the contrary will be
+   mentionned in the messages.
+ * The `ship` command now uses `cargo search` in order to fetch the latest
+   available version for each configured package before calling `cargo install`
+   only for each of them that do indeed need an install or update when either
+   not installed or installed with a version strictly older than the latest.
+   The calls to `cargo search` are done in parallel, making this version check
+   quite fast, therefore saving a lot of time by avoiding calling `cargo
+   install` sequentially for each already-up-to-date package.
+ * The `ship` command now displays a summarized update plan before running the
+   actually necessary calls to `cargo install`. That makes the overall
+   operation a bit more transparent and readable.
+ * A new `--skip-check` option flag has been added to the `ship` command. As
+   its name suggests, it enables one to skip the version check entirely. That
+   means it will restore the previous simple behavior: run `cargo install` for
+   each configured package, whether it needs an install or update or not. Most
+   of the time, when updating already-installed packages for example, it will
+   not prove very useful. However, it can be a bit quicker to use it when only
+   very few packages are configured or if all or almost all are not alredy
+   installed. It overall enables one to have a bit more control over the global
+   operation of the tool, in case of an unexpected bug for example.
+ * The new `--force` option flag has been implemented for the `ship` command.
+   It simply passes it onto each call to `cargo install`: see its documentation
+   for more information about it. When used in conjunction with `--skip-check`
+   for example, it will redownload, recompile and reinstall each of the
+   configured packages: use it only when truly necessary.
+
+## Documentation
+
+ * `README.md`:
+   * Updated the example output to reflect the changes from the previous
+     release but from this one as well.
+   * Removed some useless trailing spaces.
+   * New features.
+
+## Testing
+
+ * New tests have been added for the new CLI features, but also for the new
+   functions wrapping calls to `cargo search`.
+ * The GitHub Actions CI is now configured to skip the tests for these new
+   search functions: the corresponding network calls seem to be filtered
+   somehow.
+
+
 # [Version 0.3.0 (19/06/2023)](https://crates.io/crates/cargo-liner/0.3.0)
 ## Features
 
