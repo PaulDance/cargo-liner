@@ -109,7 +109,10 @@ pub struct ShipArgs {
     /// The version check is relatively quick and enables skipping calls to
     /// `cargo install` when no update is required, which saves quite a bit of
     /// time. However, if you wish, this option is still available in order not
-    /// to run the check: it will probably take more time in the end.
+    /// to run the check: doing so will probably take more time in the end most
+    /// of the time, except if you have a very small amount of packages
+    /// configured (e.g. one or two) or if all or almost all packages are not
+    /// already installed.
     #[arg(short = 'c', long)]
     pub skip_check: bool,
 
