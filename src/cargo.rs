@@ -144,3 +144,95 @@ fn log_cmd(cmd: &Command) {
             .collect::<Vec<_>>(),
     );
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use anyhow::bail;
+
+    const SELF: &str = clap::crate_name!();
+    const NONE: &str = "azertyuiop-qsdfghjklm_wxcvbn";
+
+    #[test]
+    fn test_spawn_search_self_isok() -> Result<()> {
+        let proc = spawn_search_exact(SELF)?;
+        assert_ne!(proc.id(), 0);
+        assert!(proc.stdin.is_none());
+        assert!(proc.stderr.is_none());
+        assert!(proc.stdout.is_some());
+
+        let res = proc.wait_with_output()?;
+        assert!(res.status.success());
+        assert!(str::from_utf8(res.stdout.as_slice())?.lines().count() > 0);
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_finish_search_self_isok() -> Result<()> {
+        assert!(
+            finish_search_exact(SELF, spawn_search_exact(SELF)?)?
+                <= clap::crate_version!().parse()?
+        );
+        Ok(())
+    }
+
+    #[test]
+    fn test_spawn_search_none_isok() -> Result<()> {
+        let proc = spawn_search_exact(NONE)?;
+        assert_ne!(proc.id(), 0);
+        assert!(proc.stdin.is_none());
+        assert!(proc.stderr.is_none());
+        assert!(proc.stdout.is_some());
+
+        let res = proc.wait_with_output()?;
+        assert!(res.status.success());
+        assert_eq!(str::from_utf8(res.stdout.as_slice())?.lines().count(), 0);
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_finish_search_none_iserr() -> Result<()> {
+        assert!(finish_search_exact(NONE, spawn_search_exact(NONE)?).is_err());
+        Ok(())
+    }
+
+    #[test]
+    fn test_searchall_selfandothers_isok() -> Result<()> {
+        for (pkg, ver) in search_exact_all(
+            &[SELF, "cargo-expand", "cargo-tarpaulin", "bat"]
+                .into_iter()
+                .map(|pkg| (pkg.to_owned(), Package::SIMPLE_STAR))
+                .collect(),
+        )? {
+            match (&*pkg, ver) {
+                (SELF, v) if v > clap::crate_version!().parse()? => {
+                    bail!("Unexpected version found")
+                }
+                ("cargo-expand", v) if v < "1.0.56".parse()? => {
+                    bail!("Unexpected version found")
+                }
+                ("cargo-tarpaulin", v) if v < "0.26.0".parse()? => {
+                    bail!("Unexpected version found")
+                }
+                ("bat", v) if v < "0.23.0".parse()? => {
+                    bail!("Unexpected version found")
+                }
+                (SELF | "cargo-expand" | "cargo-tarpaulin" | "bat", _) => continue,
+                _ => bail!("Unexpected crate found"),
+            }
+        }
+        Ok(())
+    }
+
+    #[test]
+    fn test_searchall_none_iserr() {
+        assert!(search_exact_all(
+            &[(NONE.to_owned(), Package::SIMPLE_STAR)]
+                .into_iter()
+                .collect()
+        )
+        .is_err());
+    }
+}
