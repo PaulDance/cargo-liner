@@ -122,7 +122,7 @@ them in some way, using Git for example.
    * See the reference documentation about [Cargo Home] if you have trouble
      locating the directory.
  * Populate the file with packages you wish to be installed, for example:
- 
+
    ```toml
    [packages]
    cargo-expand = "*"
@@ -409,7 +409,7 @@ where:
    version available.
  * `feature-*` must be the name of a [cargo feature] defined by the crate being installed.
  * `boolean` is a [toml boolean], either `true` or `false`.
- 
+
 [package name]: https://doc.rust-lang.org/cargo/reference/manifest.html#the-name-field
 [SemVer]: https://semver.org/
 [Cargo style]: https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html
