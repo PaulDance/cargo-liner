@@ -252,6 +252,16 @@ Options:
           Cannot be used in conjunction with `--no-self`. Default: `false`,
           i.e. install or update other packages as well.
 
+  -c, --skip-check
+          Skip the summary version check and directly call `cargo install` on
+          each configured package.
+
+          The version check is relatively quick and enables skipping calls to
+          `cargo install` when no update is required, which saves quite a bit
+          of time. However, if you wish, this option is still available in
+          order not to run the check: it will probably take more time in the
+          end.
+
   -v, --verbose...
           Be more verbose. Use multiple times to be more and more so each time.
 

@@ -102,6 +102,16 @@ pub struct ShipArgs {
     /// install or update other packages as well.
     #[arg(short = 's', long, conflicts_with("no_self"))]
     pub only_self: bool,
+
+    /// Skip the summary version check and directly call `cargo install` on
+    /// each configured package.
+    ///
+    /// The version check is relatively quick and enables skipping calls to
+    /// `cargo install` when no update is required, which saves quite a bit of
+    /// time. However, if you wish, this option is still available in order not
+    /// to run the check: it will probably take more time in the end.
+    #[arg(short = 'c', long)]
+    pub skip_check: bool,
 }
 
 #[derive(clap::Args, Debug, PartialEq, Eq)]
@@ -223,7 +233,8 @@ mod tests {
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Ship(ShipArgs {
                     no_self: false,
-                    only_self: false
+                    only_self: false,
+                    skip_check: false,
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -238,7 +249,8 @@ mod tests {
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Ship(ShipArgs {
                     no_self: true,
-                    only_self: false
+                    only_self: false,
+                    skip_check: false,
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -254,7 +266,25 @@ mod tests {
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Ship(ShipArgs {
                     no_self: false,
-                    only_self: true
+                    only_self: true,
+                    skip_check: false,
+                })),
+                verbose: 0,
+                quiet: 0,
+            }),
+        );
+    }
+
+    #[test]
+    fn test_ship_skipcheck() {
+        assert_eq!(
+            CargoArgs::try_parse_from(["cargo", "liner", "ship", "--skip-check"].into_iter())
+                .unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Ship(ShipArgs {
+                    no_self: false,
+                    only_self: false,
+                    skip_check: true,
                 })),
                 verbose: 0,
                 quiet: 0,

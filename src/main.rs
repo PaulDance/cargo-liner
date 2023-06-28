@@ -84,21 +84,27 @@ fn wrapped_main() -> Result<()> {
             ))?;
         }
         cmd => {
+            let mut skip_check = false;
             let mut config = UserConfig::parse_file()?;
+            let cct = CargoCratesToml::parse_file()?;
 
             if let Some(LinerCommands::Ship(ship_args)) = cmd {
+                skip_check = ship_args.skip_check;
                 config = config
                     .self_update(!ship_args.no_self)
                     .update_others(!ship_args.only_self);
             }
 
-            let cct = CargoCratesToml::parse_file()?;
-            let vers = cargo::search_exact_all(&config.packages)?;
-            log_summary(&config.packages, &vers, &cct.clone().into_name_versions());
-            cargo::install_all(
-                &needing_install(&config.packages, &vers, &cct.clone().into_name_versions()),
-                &cct.into_names(),
-            )?;
+            if skip_check {
+                cargo::install_all(&config.packages, &cct.into_names())?;
+            } else {
+                let vers = cargo::search_exact_all(&config.packages)?;
+                log_summary(&config.packages, &vers, &cct.clone().into_name_versions());
+                cargo::install_all(
+                    &needing_install(&config.packages, &vers, &cct.clone().into_name_versions()),
+                    &cct.into_names(),
+                )?;
+            }
         }
     }
 
