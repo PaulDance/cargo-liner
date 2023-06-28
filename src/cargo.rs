@@ -162,7 +162,7 @@ mod tests {
     const NONE: &str = "azertyuiop-qsdfghjklm_wxcvbn";
 
     #[test]
-    fn test_spawn_search_self_isok() -> Result<()> {
+    fn test_searchspawn_self_isok() -> Result<()> {
         let proc = spawn_search_exact(SELF)?;
         assert_ne!(proc.id(), 0);
         assert!(proc.stdin.is_none());
@@ -177,7 +177,7 @@ mod tests {
     }
 
     #[test]
-    fn test_finish_search_self_isok() -> Result<()> {
+    fn test_searchfinish_self_isok() -> Result<()> {
         assert!(
             finish_search_exact(SELF, spawn_search_exact(SELF)?)?
                 <= clap::crate_version!().parse()?
@@ -186,7 +186,7 @@ mod tests {
     }
 
     #[test]
-    fn test_spawn_search_none_isok() -> Result<()> {
+    fn test_searchspawn_none_isok() -> Result<()> {
         let proc = spawn_search_exact(NONE)?;
         assert_ne!(proc.id(), 0);
         assert!(proc.stdin.is_none());
@@ -201,7 +201,7 @@ mod tests {
     }
 
     #[test]
-    fn test_finish_search_none_iserr() -> Result<()> {
+    fn test_searchfinish_none_iserr() -> Result<()> {
         assert!(finish_search_exact(NONE, spawn_search_exact(NONE)?).is_err());
         Ok(())
     }

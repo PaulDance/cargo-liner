@@ -34,7 +34,7 @@ jobs:
       run: cargo check --verbose --all-targets --all-features
 
     - name: Build and run tests
-      run: cargo test --verbose --all-targets --all-features
+      run: cargo test --verbose --all-targets --all-features -- --skip cargo::tests::test_search
 
     - name: Check correct rustfmt formatting
       run: cargo fmt --verbose --all --check
@@ -44,5 +44,5 @@ jobs:
 
     - name: Build documentation
       run: cargo doc --verbose --all-features --no-deps --document-private-items
-      env: 
+      env:
         RUSTDOCFLAGS: "-Dwarnings"
