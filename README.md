@@ -262,6 +262,13 @@ Options:
           order not to run the check: it will probably take more time in the
           end.
 
+  -f, --force
+          Force overwriting existing crates or binaries.
+
+          Passes the option flag onto each call of `cargo install`. It will,
+          for example, redownload, recompile and reinstall every configured
+          package when used in conjunction with `--skip-check`.
+
   -v, --verbose...
           Be more verbose. Use multiple times to be more and more so each time.
 

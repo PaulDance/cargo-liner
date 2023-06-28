@@ -28,6 +28,7 @@ fn install(
     no_default_features: bool,
     all_features: bool,
     features: &[String],
+    force: bool,
 ) -> Result<()> {
     let mut cmd = Command::new(env::var("CARGO")?);
     cmd.args(["install", "--version", version, name]);
@@ -47,6 +48,11 @@ fn install(
         trace!("`--features` arg added.");
     }
 
+    if force {
+        cmd.arg("--force");
+        trace!("`--force` arg added.");
+    }
+
     log_cmd(&cmd);
     cmd.status()?;
     Ok(())
@@ -56,6 +62,7 @@ fn install(
 pub fn install_all(
     packages: &BTreeMap<String, Package>,
     installed: &BTreeSet<String>,
+    force: bool,
 ) -> Result<()> {
     for (pkg_name, pkg) in packages {
         if installed.contains(pkg_name) {
@@ -70,6 +77,7 @@ pub fn install_all(
             !pkg.default_features(),
             pkg.all_features(),
             pkg.features(),
+            force,
         )?;
     }
 

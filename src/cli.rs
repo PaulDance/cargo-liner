@@ -112,6 +112,14 @@ pub struct ShipArgs {
     /// to run the check: it will probably take more time in the end.
     #[arg(short = 'c', long)]
     pub skip_check: bool,
+
+    /// Force overwriting existing crates or binaries.
+    ///
+    /// Passes the option flag onto each call of `cargo install`. It will, for
+    /// example, redownload, recompile and reinstall every configured package
+    /// when used in conjunction with `--skip-check`.
+    #[arg(short, long)]
+    pub force: bool,
 }
 
 #[derive(clap::Args, Debug, PartialEq, Eq)]
@@ -235,6 +243,7 @@ mod tests {
                     no_self: false,
                     only_self: false,
                     skip_check: false,
+                    force: false,
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -251,6 +260,7 @@ mod tests {
                     no_self: true,
                     only_self: false,
                     skip_check: false,
+                    force: false,
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -268,6 +278,7 @@ mod tests {
                     no_self: false,
                     only_self: true,
                     skip_check: false,
+                    force: false,
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -285,6 +296,24 @@ mod tests {
                     no_self: false,
                     only_self: false,
                     skip_check: true,
+                    force: false,
+                })),
+                verbose: 0,
+                quiet: 0,
+            }),
+        );
+    }
+
+    #[test]
+    fn test_ship_force() {
+        assert_eq!(
+            CargoArgs::try_parse_from(["cargo", "liner", "ship", "--force"].into_iter()).unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Ship(ShipArgs {
+                    no_self: false,
+                    only_self: false,
+                    skip_check: false,
+                    force: true,
                 })),
                 verbose: 0,
                 quiet: 0,
