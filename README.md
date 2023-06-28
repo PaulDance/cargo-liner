@@ -70,7 +70,7 @@ them up-to-date by editing a small and stable configuration file located at
 Goals:
  * Simple and intuitive API.
  * Stable configuration file: avoid editing it automatically.
- * Actually use `cargo install` and not much else.
+ * Actually use `cargo install` or `cargo search` and not much else.
 
 Non-goals:
  * Super-duper stability guarantees.
@@ -102,10 +102,12 @@ and *synchronization*.
 
 The current project therefore inspires itself from tools such as [zplug] for
 Zsh and [vim-plug] for Vim by taking orders from a central configuration file.
-The tool then simply runs `cargo install` for all packages listed in that file.
-That enables one to install and maintain all packages up-to-date, but also to
-keep all of one's workstations synchronized by sharing the file between them in
-some way, using Git for example.
+The tool then simply runs `cargo search` for all packages listed in that file
+in order to retrieve their latest versions available and then `cargo install`
+for those that do indeed need an install or update using the results from the
+search. That enables one to install and maintain all packages up-to-date, but
+also to keep all of one's workstations synchronized by sharing the file between
+them in some way, using Git for example.
 
 [cargo-update]: https://github.com/nabijaczleweli/cargo-update
 [cargo-updater]: https://github.com/pombadev/cargo-updater
@@ -189,17 +191,21 @@ options.
 
 Simply run `cargo liner` in order to:
  * Read packages from the configuration file.
- * Run `cargo install` for each of them.
+ * Check the latest available version for each of them using `cargo search`.
+ * Run `cargo install` for each that needs an install or update, respecting
+   the version requirements.
  * Self-update.
 
 Example output if `bat` and `cargo-expand` are required:
 
 ```sh
 ❯ cargo liner
- INFO  cargo_liner::cargo > Updating `bat`...
-    Updating crates.io index
-     Ignored package `bat v0.23.0` is already installed, use --force to override
- INFO  cargo_liner::cargo > Installing `cargo-expand`...
+ INFO  cargo_liner::cargo > Fetching latest package versions...
+ INFO  cargo_liner        > Results:
+ INFO  cargo_liner        >     bat           ✔
+ INFO  cargo_liner        >     cargo-expand  1.0.53 -> 1.0.54
+ INFO  cargo_liner        >     cargo-liner   ✔
+ INFO  cargo_liner::cargo > Updating `cargo-expand`...
     Updating crates.io index
   Downloaded cargo-expand v1.0.54
   Downloaded 1 crate (26.4 KB) in 0.44s
@@ -217,9 +223,6 @@ Example output if `bat` and `cargo-expand` are required:
     Finished release [optimized] target(s) in 52.97s
    Replacing /home/pauldance/.cargo/bin/cargo-expand
     Replaced package `cargo-expand v1.0.53` with `cargo-expand v1.0.54` (executable `cargo-expand`)
- INFO  cargo_liner::cargo > Updating `cargo-liner`...
-    Updating crates.io index
-     Ignored package `cargo-liner v0.3.0` is already installed, use --force to override
  INFO  cargo_liner        > Done.
 ```
 
@@ -272,7 +275,9 @@ Options:
 
 Simply run `cargo liner ship` in order to:
  * Read packages from the configuration file.
- * Run `cargo install` for each of them, respecting the version requirements.
+ * Check the latest available version for each of them using `cargo search`.
+ * Run `cargo install` for each that needs an install or update, respecting
+   the version requirements.
  * Self-update only if `--no-self` is not given.
 
 
