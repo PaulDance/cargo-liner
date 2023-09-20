@@ -113,6 +113,11 @@ pub struct ShipArgs {
     /// of the time, except if you have a very small amount of packages
     /// configured (e.g. one or two) or if all or almost all packages are not
     /// already installed.
+    ///
+    /// It can also be used as a workaround in case a certain operation fails
+    /// in your particular environment, for example: reading from `.crates.toml`
+    /// under the `$CARGO_HOME` directory or making requests to the registry.
+    /// These operations will thus be entirely skipped.
     #[arg(short = 'c', long)]
     pub skip_check: bool,
 

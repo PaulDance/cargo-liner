@@ -1,6 +1,6 @@
 //! Main module: regroups parsing CLI arguments, deserializing configuration,
 //! and execution of `cargo install` with the required settings.
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::env;
 
 use anyhow::{bail, Result};
@@ -87,7 +87,6 @@ fn wrapped_main() -> Result<()> {
             let mut skip_check = false;
             let mut force = false;
             let mut config = UserConfig::parse_file()?;
-            let cct = CargoCratesToml::parse_file()?;
 
             if let Some(LinerCommands::Ship(ship_args)) = cmd {
                 skip_check = ship_args.skip_check;
@@ -98,10 +97,13 @@ fn wrapped_main() -> Result<()> {
             }
 
             if skip_check {
-                cargo::install_all(&config.packages, &cct.into_names(), force)?;
+                // Don't parse `.crates.toml` here: can be used as a workaround.
+                cargo::install_all(&config.packages, &BTreeSet::new(), force)?;
             } else {
+                let cct = CargoCratesToml::parse_file()?;
                 let vers = cargo::search_exact_all(&config.packages)?;
                 log_summary(&config.packages, &vers, &cct.clone().into_name_versions());
+
                 cargo::install_all(
                     &needing_install(&config.packages, &vers, &cct.clone().into_name_versions()),
                     &cct.into_names(),
