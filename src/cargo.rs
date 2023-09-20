@@ -101,22 +101,22 @@ fn spawn_search_exact(pkg: &str) -> Result<Child> {
 /// finish and extract the received package version from the output.
 fn finish_search_exact(pkg: &str, proc: Child) -> Result<Version> {
     let out = str::from_utf8(proc.wait_with_output()?.stdout.as_slice())?.to_owned();
-    trace!("Search for {:?} got: {:?}", pkg, out);
+    trace!("Search for {:#?} got: {:#?}", pkg, out);
 
     let ver = Regex::new(&format!(r#"{pkg}\s=\s"([0-9.abrc]+)"\s+#.*"#))?
         .captures(
             out.lines()
                 .next()
-                .ok_or_else(|| anyhow!("Not at least one line in search output for {pkg:?}."))?,
+                .ok_or_else(|| anyhow!("Not at least one line in search output for {pkg:#?}."))?,
         )
-        .ok_or_else(|| anyhow!("No regex capture while parsing search output for {pkg:?}."))?
+        .ok_or_else(|| anyhow!("No regex capture while parsing search output for {pkg:#?}."))?
         .get(1)
         .ok_or_else(|| {
-            anyhow!("Version not captured by regex matching search output for {pkg:?}.")
+            anyhow!("Version not captured by regex matching search output for {pkg:#?}.")
         })?
         .as_str()
         .parse::<Version>()?;
-    trace!("Parsed version is: {:?}.", ver);
+    trace!("Parsed version is: {:#?}.", ver);
 
     Ok(ver)
 }
@@ -145,7 +145,7 @@ pub fn search_exact_all(pkgs: &BTreeMap<String, Package>) -> Result<BTreeMap<Str
 /// Logs the program and arguments of the given command to DEBUG.
 fn log_cmd(cmd: &Command) {
     debug!(
-        "Running {:?} with arguments {:?}...",
+        "Running {:#?} with arguments {:#?}...",
         cmd.get_program().to_string_lossy(),
         cmd.get_args()
             .map(OsStr::to_string_lossy)

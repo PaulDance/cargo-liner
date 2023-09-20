@@ -33,13 +33,13 @@ impl UserConfig {
     /// the file does not exist, if it cannot be read from or if it is malformed.
     pub fn parse_file() -> Result<Self> {
         let path = Self::file_path()?;
-        debug!("Reading configuration from {:?}...", &path);
+        debug!("Reading configuration from {:#?}...", &path);
         let config_str = fs::read_to_string(path)?;
         trace!("Read {} bytes.", config_str.len());
-        trace!("Got: {:?}.", &config_str);
+        trace!("Got: {:#?}.", &config_str);
         debug!("Deserializing contents...");
         let config = toml::from_str::<Self>(&config_str)?;
-        trace!("Got: {:?}.", &config);
+        trace!("Got: {:#?}.", &config);
         Ok(config.self_update(true))
     }
 
@@ -51,7 +51,7 @@ impl UserConfig {
     pub fn overwrite_file(&self) -> Result<()> {
         let path = Self::file_path()?;
         let config_str = self.to_string_pretty()?;
-        debug!("Overwriting configuration to {:?}...", &path);
+        debug!("Overwriting configuration to {:#?}...", &path);
         fs::write(path, config_str)?;
         Ok(())
     }
@@ -65,7 +65,7 @@ impl UserConfig {
     pub fn save_file(&self) -> Result<()> {
         let path = Self::file_path()?;
         let config_str = self.to_string_pretty()?;
-        debug!("Writing configuration to {:?}...", &path);
+        debug!("Writing configuration to {:#?}...", &path);
         File::options()
             .read(true)
             .write(true)
@@ -79,7 +79,7 @@ impl UserConfig {
     fn to_string_pretty(&self) -> Result<String> {
         debug!("Serializing configuration...");
         let res = toml::to_string_pretty(self)?;
-        trace!("Got: {:?}.", &res);
+        trace!("Got: {:#?}.", &res);
         Ok(res)
     }
 

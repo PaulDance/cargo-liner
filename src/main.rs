@@ -159,12 +159,12 @@ fn needing_install(
             .map_or(true, |ver| ver < new_vers.get(pkg_name).unwrap())
         {
             to_install.insert(pkg_name.clone(), pkg.clone());
-            trace!("{:?} is selected to be installed or updated.", pkg_name);
+            trace!("{:#?} is selected to be installed or updated.", pkg_name);
         } else {
-            trace!("{:?} is not selected: already up-to-date.", pkg_name);
+            trace!("{:#?} is not selected: already up-to-date.", pkg_name);
         }
     }
 
-    trace!("Filtered packages: {:?}.", &to_install);
+    trace!("Filtered packages: {:#?}.", &to_install);
     to_install
 }

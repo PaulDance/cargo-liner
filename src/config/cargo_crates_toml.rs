@@ -30,13 +30,13 @@ impl CargoCratesToml {
     /// Cargo-managed save file.
     pub fn parse_file() -> Result<Self> {
         let path = Self::file_path()?;
-        debug!("Reading Cargo-installed packages from {:?}...", &path);
+        debug!("Reading Cargo-installed packages from {:#?}...", &path);
         let info_str = fs::read_to_string(path)?;
         trace!("Read {} bytes.", info_str.len());
-        trace!("Got: {:?}.", &info_str);
+        trace!("Got: {:#?}.", &info_str);
         debug!("Deserializing packages...");
         let info = toml::from_str(&info_str)?;
-        trace!("Got: {:?}.", &info);
+        trace!("Got: {:#?}.", &info);
         Ok(info)
     }
 
@@ -89,7 +89,7 @@ impl CargoCratesToml {
     ///
     /// Filters the current crate out of the resulting configuration's packages.
     fn into_op_version_config(self, op: Op, keep_self: bool) -> UserConfig {
-        debug!("Converting packages to config with op: {:?}...", &op);
+        debug!("Converting packages to config with op: {:#?}...", &op);
         self.into_config(
             |(pkg, _)| (pkg.name, Package::Simple(ver_to_req(&pkg.version, op))),
             keep_self,
