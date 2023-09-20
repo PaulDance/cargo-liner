@@ -5,6 +5,7 @@
 use std::collections::{BTreeMap, BTreeSet};
 use std::env;
 use std::ffi::OsStr;
+use std::os::unix::prelude::OsStrExt;
 use std::process::{Child, Command, Stdio};
 use std::str;
 
@@ -142,6 +143,42 @@ pub fn search_exact_all(pkgs: &BTreeMap<String, Package>) -> Result<BTreeMap<Str
     Ok(vers)
 }
 
+/// Runs `cargo config get` with the given configuration key and returns the
+/// collected string value.
+pub fn config_get(key: &str) -> Result<String> {
+    let mut cmd = Command::new(env::var("CARGO")?);
+    // HACK: get access to nightly features.
+    // FIXME: remove when `config` gets stabilized.
+    cmd.env("RUSTC_BOOTSTRAP", "1");
+    cmd.args([
+        "-Z",
+        "unstable-options",
+        "config",
+        "get",
+        "--format",
+        "json-value",
+        key,
+    ]);
+
+    log_cmd(&cmd);
+    let out = cmd.output()?;
+    out.status.success().then_some(()).ok_or_else(|| {
+        anyhow!(
+            "Command failed with status: {:#?} and stderr: {:#?}.",
+            out.status,
+            OsStr::from_bytes(&out.stderr),
+        )
+    })?;
+
+    let out_str = OsStr::from_bytes(&out.stdout);
+    trace!("Got: {out_str:#?}.");
+    Ok(out_str
+        .to_string_lossy()
+        .trim_end()
+        .trim_matches('"')
+        .to_owned())
+}
+
 /// Logs the program and arguments of the given command to DEBUG.
 fn log_cmd(cmd: &Command) {
     debug!(
@@ -242,5 +279,13 @@ mod tests {
                 .collect()
         )
         .is_err());
+    }
+
+    #[test]
+    fn test_configget_withenv_installroot() -> Result<()> {
+        env::set_var("CARGO_INSTALL_ROOT", "/tmp");
+        assert_eq!(config_get("install.root")?, "/tmp");
+        env::remove_var("CARGO_INSTALL_ROOT");
+        Ok(())
     }
 }
