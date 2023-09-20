@@ -8,6 +8,7 @@ use semver::{Op, Version, VersionReq};
 use serde::Deserialize;
 
 use super::{Package, UserConfig};
+use crate::cargo;
 
 /// Representation of the `$CARGO_HOME/.crates.toml` Cargo-managed save file.
 #[derive(Deserialize, Debug, Default, Clone, PartialEq, Eq)]
@@ -21,9 +22,28 @@ impl CargoCratesToml {
     pub const FILE_NAME: &str = ".crates.toml";
 
     /// Returns the [`PathBuf`] pointing to the associated save file.
+    ///
+    /// In order to determine which exact file to get, it will first try to use
+    /// `$CARGO_INSTALL_ROOT` if available, or then fall back to `$CARGO_HOME`
+    /// otherwise.
     pub fn file_path() -> Result<PathBuf> {
+        const INSTALL_ROOT_CONFIG_KEY: &str = "install.root";
         debug!("Building file path...");
-        Ok(cargo_home()?.join(Self::FILE_NAME))
+
+        // Don't particularly filter: default to `$CARGO_HOME` on any error.
+        match cargo::config_get(INSTALL_ROOT_CONFIG_KEY) {
+            Ok(install_root_path) => {
+                Ok(install_root_path.parse::<PathBuf>()?.join(Self::FILE_NAME))
+            }
+            Err(err) => {
+                debug!(
+                    "Failed to retrieve `{}` from Cargo's configuration on error: {:#?}.",
+                    INSTALL_ROOT_CONFIG_KEY, err,
+                );
+                debug!("Defaulting to Cargo's home directory...");
+                Ok(cargo_home()?.join(Self::FILE_NAME))
+            }
+        }
     }
 
     /// Parse and return a representation of the `$CARGO_HOME/.crates.toml`
