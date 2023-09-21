@@ -153,7 +153,7 @@ them in some way, using Git for example.
 ## Usage
 ### CLI
 
-Some basic commands are now available:
+A few commands are available:
 
 ```sh
 ❯ cargo help liner
