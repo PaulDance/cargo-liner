@@ -187,13 +187,12 @@ Options:
 #### Default command
 
 When the subcommand is omitted, it will use the `ship` subcommand with default
-options.
+options. See its specific documentation for more details.
 
 Simply run `cargo liner` in order to:
  * Read packages from the configuration file.
- * Check the latest available version for each of them using `cargo search`.
- * Run `cargo install` for each that needs an install or update, respecting
-   the version requirements.
+ * Check the latest available version for each of them.
+ * Install or update the ones that need to, respecting the version requirements.
  * Self-update.
 
 Example output if `bat` and `cargo-expand` are required:
