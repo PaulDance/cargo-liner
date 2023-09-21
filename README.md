@@ -70,7 +70,8 @@ them up-to-date by editing a small and stable configuration file located at
 Goals:
  * Simple and intuitive API.
  * Stable configuration file: avoid editing it automatically.
- * Actually use `cargo install` or `cargo search` and not much else.
+ * Actually use `cargo install`, `cargo search` or `cargo config get` and not
+   much else.
 
 Non-goals:
  * Super-duper stability guarantees.
@@ -121,6 +122,12 @@ them in some way, using Git for example.
  * Create the configuration file to be located at: `$CARGO_HOME/liner.toml`.
    * See the reference documentation about [Cargo Home] if you have trouble
      locating the directory.
+ * If you are using a different Cargo installation root than `$CARGO_HOME`,
+   please make sure it is properly configured in the `$CARGO_INSTALL_ROOT`
+   environment variable or the `install.root` key of the
+   `$CARGO_HOME/config.toml` file so that the current tool may be able to
+   detect that on itself. See the [`cargo install` documentation](cargo-install)
+   for more details about this.
  * Populate the file with packages you wish to be installed, for example:
 
    ```toml
@@ -136,6 +143,7 @@ them in some way, using Git for example.
    more detailed explanations.
 
 [Cargo Home]: https://doc.rust-lang.org/cargo/guide/cargo-home.html
+[cargo-install](https://doc.rust-lang.org/cargo/commands/cargo-install.html)
 
 
 ## Usage
@@ -191,6 +199,7 @@ options. See its specific documentation for more details.
 
 Simply run `cargo liner` in order to:
  * Read packages from the configuration file.
+ * Detect currently-installed packages from Cargo's installation.
  * Check the latest available version for each of them.
  * Install or update the ones that need to, respecting the version requirements.
  * Self-update.
@@ -299,10 +308,22 @@ Options:
 
 Simply run `cargo liner ship` in order to:
  * Read packages from the configuration file.
+ * Read currently installed packages from the Cargo-managed `.crates.toml` file
+   under the `$CARGO_INSTALL_ROOT` directory if `cargo config get` is able to
+   retrieve its value from either the environment variable or the `install.root`
+   configuration item in `$CARGO_HOME/config.toml`, or fall back to searching
+   the file under the default `$CARGO_HOME` directory if the first attempt
+   fails for any reason, the simple absence of the setting being one of them.
+   See the [`cargo install` documentation](cargo-install) for more details
+   about this. Whenever the first attempt fails, it is logged as a `DEBUG`
+   message before attempting the default, so use `-vv` to investiguate if your
+   configuration seems not to be taken into account.
  * Check the latest available version for each of them using `cargo search`.
  * Run `cargo install` for each that needs an install or update, respecting
    the version requirements.
  * Self-update only if `--no-self` is not given.
+
+[cargo-install](https://doc.rust-lang.org/cargo/commands/cargo-install.html)
 
 
 #### `import` subcommand
