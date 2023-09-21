@@ -1,3 +1,41 @@
+# [Version 0.4.1 (21/09/2023)](https://crates.io/crates/cargo-liner/0.4.1)
+## Fixes
+
+ * Fixed #5: before, the Cargo `.crates.toml` file would be read even if
+   `--skip-check` was specified although it only used its contents in order to
+   adjust a small part of the logging display that was somewhat useless; the
+   option now also ensures reading from this file is avoided as well, which
+   makes it even more able to work around some potential future bugs.
+ * Fixed #4: the `$CARGO_INSTALL_ROOT` configuration possibility was previously
+   not supported by the `.crates.toml`-reading operations, making the tool thus
+   completely fail whenever used in such an environment; it now supports it
+   entirely by wrapping calls to `cargo config get` in order to retrieve its
+   value from either the environment or the `install.root` configuration key of
+   the `$CARGO_HOME/config.toml` file, and falling back to the default
+   `$CARGO_HOME/.crates.toml` if that fails for any reason, the simple absence
+   of the setting being one of them. Whenever the first fails, it is logged as
+   a `DEBUG` message before attempting the default, so use `-vv` to investiguate
+   if your configuration seems not to be taken into account.
+
+## Documentation
+
+ * `README.md`:
+   * Updated the verbatim help message of the `ship` command.
+   * Simplified the description of the default command's operation to be a bit
+     more summarized and then redirect to the more in-depth description found
+     in the `ship` command's specific documentation section.
+   * Mention the new `$CARGO_INSTALL_ROOT` support in various places.
+   * Reformat the configuration examples to wrap long lines: better readability.
+   * Some small rewordings.
+
+## Miscellaneous
+
+ * The dependencies have been updated.
+ * Logging now uses pretty debug formatting, which splits arrays and structures
+   onto multiple lines, therefore making reading long messages more comfortable.
+ * The MSRV has been bumped to `1.70.0`.
+
+
 # [Version 0.4.0 (28/06/2023)](https://crates.io/crates/cargo-liner/0.4.0)
 ## Features
 
