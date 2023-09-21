@@ -1,6 +1,6 @@
 [package]
 name = "cargo-liner"
-version = "0.4.0"
+version = "0.4.1"
 edition = "2021"
 rust-version = "1.70"
 description = """
