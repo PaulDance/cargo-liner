@@ -32,7 +32,7 @@ fn install(
     force: bool,
 ) -> Result<()> {
     let mut cmd = Command::new(env::var("CARGO")?);
-    cmd.args(["install", "--version", version, name]);
+    cmd.args(["install", "--version", version]);
 
     if no_default_features {
         cmd.arg("--no-default-features");
@@ -54,6 +54,7 @@ fn install(
         trace!("`--force` arg added.");
     }
 
+    cmd.args(["--", name]);
     log_cmd(&cmd);
     cmd.status()?;
     Ok(())
@@ -93,7 +94,7 @@ fn spawn_search_exact(pkg: &str) -> Result<Child> {
     cmd.stdin(Stdio::null());
     cmd.stderr(Stdio::null());
     cmd.stdout(Stdio::piped());
-    cmd.args(["search", "--limit=1", pkg]);
+    cmd.args(["search", "--limit=1", "--", pkg]);
     log_cmd(&cmd);
     Ok(cmd.spawn()?)
 }
@@ -157,6 +158,7 @@ pub fn config_get(key: &str) -> Result<String> {
         "get",
         "--format",
         "json-value",
+        "--",
         key,
     ]);
 
