@@ -56,6 +56,7 @@ fn install(
 
     cmd.args(["--", name]);
     log_cmd(&cmd);
+
     cmd.status()?;
     Ok(())
 }
@@ -91,10 +92,12 @@ pub fn install_all(
 /// [`finish_search_exact`].
 fn spawn_search_exact(pkg: &str) -> Result<Child> {
     let mut cmd = Command::new(env::var("CARGO")?);
+
     cmd.stdin(Stdio::null());
     cmd.stderr(Stdio::null());
     cmd.stdout(Stdio::piped());
     cmd.args(["search", "--limit=1", "--", pkg]);
+
     log_cmd(&cmd);
     Ok(cmd.spawn()?)
 }
