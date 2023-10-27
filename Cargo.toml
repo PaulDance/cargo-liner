@@ -6,7 +6,11 @@ rust-version = "1.70"
 description = """
 Cargo subcommand to install and update binary packages listed in configuration.
 """
-categories = ["command-line-utilities", "development-tools::cargo-plugins", "config"]
+categories = [
+    "command-line-utilities",
+    "development-tools::cargo-plugins",
+    "config",
+]
 keywords = ["cargo", "subcommand", "plugin", "install", "update"]
 license = "GPL-3.0-only"
 authors = ["Paul Mabileau <paulmabileau@hotmail.fr>"]
