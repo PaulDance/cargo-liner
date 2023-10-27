@@ -109,12 +109,14 @@ fn finish_search_exact(pkg: &str, proc: Child) -> Result<Version> {
     trace!("Search for {:#?} got: {:#?}", pkg, out);
 
     let ver = Regex::new(&format!(r#"{pkg}\s=\s"([0-9.abrc]+)"\s+#.*"#))?
-        .captures(
-            out.lines()
-                .next()
-                .ok_or_else(|| anyhow!("Not at least one line in search output for {pkg:#?}."))?,
-        )
-        .ok_or_else(|| anyhow!("No regex capture while parsing search output for {pkg:#?}."))?
+        .captures(out.lines().next().ok_or_else(|| {
+            anyhow!("Not at least one line in search output for {pkg:#?}: does the package exist?")
+        })?)
+        .ok_or_else(|| {
+            anyhow!(
+                "No regex capture while parsing search output for {pkg:#?}: does the package exist?"
+            )
+        })?
         .get(1)
         .ok_or_else(|| {
             anyhow!("Version not captured by regex matching search output for {pkg:#?}.")
