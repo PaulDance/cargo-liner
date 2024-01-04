@@ -20,6 +20,7 @@ use config::{CargoCratesToml, Package, UserConfig};
 fn main() {
     if let Err(err) = wrapped_main() {
         error!("{}", err);
+        std::process::exit(1);
     }
 }
 
