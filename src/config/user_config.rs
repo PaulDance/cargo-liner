@@ -19,7 +19,7 @@ pub struct UserConfig {
 
 impl UserConfig {
     /// The default name for the configuration file in Cargo's home.
-    pub const FILE_NAME: &str = "liner.toml";
+    pub const FILE_NAME: &'static str = "liner.toml";
 
     /// Returns the [`PathBuf`] pointing to the associated configuration file.
     pub fn file_path() -> Result<PathBuf> {
