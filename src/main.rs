@@ -17,10 +17,13 @@ use config::{CargoCratesToml, Package, UserConfig};
 
 /// Wrap the desired main and display errors in a fashion consistent with the
 /// rest of the messages.
-fn main() {
-    if let Err(err) = wrapped_main() {
-        error!("{}", err);
-        std::process::exit(1);
+fn main() -> std::process::ExitCode {
+    match wrapped_main() {
+        Ok(_) => std::process::ExitCode::SUCCESS,
+        Err(err) => {
+            error!("{}", err);
+            std::process::ExitCode::FAILURE
+        }
     }
 }
 
