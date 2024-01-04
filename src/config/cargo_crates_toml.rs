@@ -19,7 +19,7 @@ pub struct CargoCratesToml {
 
 impl CargoCratesToml {
     /// The default name for the save file in Cargo's home.
-    pub const FILE_NAME: &str = ".crates.toml";
+    pub const FILE_NAME: &'static str = ".crates.toml";
 
     /// Returns the [`PathBuf`] pointing to the associated save file.
     ///
