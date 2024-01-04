@@ -2,6 +2,7 @@
 //! and execution of `cargo install` with the required settings.
 use std::collections::{BTreeMap, BTreeSet};
 use std::env;
+use std::process::ExitCode;
 
 use anyhow::{bail, Result};
 #[macro_use]
@@ -17,12 +18,12 @@ use config::{CargoCratesToml, Package, UserConfig};
 
 /// Wrap the desired main and display errors in a fashion consistent with the
 /// rest of the messages.
-fn main() -> std::process::ExitCode {
+fn main() -> ExitCode {
     match wrapped_main() {
-        Ok(_) => std::process::ExitCode::SUCCESS,
+        Ok(_) => ExitCode::SUCCESS,
         Err(err) => {
             error!("{}", err);
-            std::process::ExitCode::FAILURE
+            ExitCode::FAILURE
         }
     }
 }
