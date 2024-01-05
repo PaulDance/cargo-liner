@@ -19,7 +19,7 @@ use config::{CargoCratesToml, Package, UserConfig};
 /// Wrap the desired main and display errors in a fashion consistent with the
 /// rest of the messages.
 fn main() -> ExitCode {
-    match wrapped_main() {
+    match try_main() {
         Ok(_) => ExitCode::SUCCESS,
         Err(err) => {
             error!("{}", err);
@@ -29,7 +29,7 @@ fn main() -> ExitCode {
 }
 
 /// Actual main operation.
-fn wrapped_main() -> Result<()> {
+fn try_main() -> Result<()> {
     // Logging is controlled by args, so they must be parsed first.
     let args = LinerArgs::parse_env();
     let mut bld = pretty_env_logger::formatted_builder();
