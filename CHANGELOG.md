@@ -1,3 +1,42 @@
+# [Version 0.4.2 (05/01/2024)](https://crates.io/crates/cargo-liner/0.4.2)
+## Fixes
+
+ * Fixed #7: previously, if a configured package name started with a `-`, then
+   the underlying call to Cargo would fail as expected since there is no
+   package starting with such a character, however not on a search failure, but
+   on a CLI parsing error: the name would be interpreted as a CLI option
+   because there was no sanitization of package names. In order to fix it,
+   rather than to implement actual parameter sanitization or validation, the
+   missing `--` CLI option-argument separator was added to corresponding calls
+   to `cargo install`. This way, any package name may be used and does not
+   change the overall behavior. The registry is the one that does the
+   validation, which is the most desirable.
+
+ * Fixed #6: before, the version parsing logic used to extract the latest
+   version from the results of the call to `cargo search` would be too strict
+   and reject potential metadata suffixes, such as `v0.9.62-a.2` or
+   `v13.0.0-alpha.0`. In order to fix this, the initial extraction was relaxed
+   to accept a larger set of strings, but still piped into
+   `semver::Version::parse`, which means the overall parsing is still strict,
+   but more correct.
+
+ * Merged #9: previously, the global process would always exit on a success
+   status code, whether an error was encountered or not, which meant users
+   could not detect such cases in an automated environment. This was fixed by
+   returning [the standard failure exit code] of the current platform in case
+   an error is encountered and a success otherwise. Thanks to @Johnabell.
+
+[the standard failure exit code]: https://doc.rust-lang.org/stable/std/process/struct.ExitCode.html#associatedconstant.FAILURE
+
+## Miscellaneous
+
+ * The error messages related to a `cargo search` have been extended a bit in
+   order to give a little bit more help to the user about the potential source
+   of the true underlying issue: does the package actually exist?
+ * The dependencies have been updated.
+ * The MSRV has been bumped to `1.75.0`.
+
+
 # [Version 0.4.1 (21/09/2023)](https://crates.io/crates/cargo-liner/0.4.1)
 ## Fixes
 
