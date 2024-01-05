@@ -20,7 +20,7 @@ use config::{CargoCratesToml, Package, UserConfig};
 /// rest of the messages.
 fn main() -> ExitCode {
     match try_main() {
-        Ok(_) => ExitCode::SUCCESS,
+        Ok(()) => ExitCode::SUCCESS,
         Err(err) => {
             error!("{}", err);
             ExitCode::FAILURE
