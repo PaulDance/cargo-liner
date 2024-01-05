@@ -6,6 +6,7 @@
    adjust a small part of the logging display that was somewhat useless; the
    option now also ensures reading from this file is avoided as well, which
    makes it even more able to work around some potential future bugs.
+
  * Fixed #4: the `$CARGO_INSTALL_ROOT` configuration possibility was previously
    not supported by the `.crates.toml`-reading operations, making the tool thus
    completely fail whenever used in such an environment; it now supports it
@@ -43,6 +44,7 @@
    upon running the `ship` command when it is configured: either `Installing`
    when it was not previously installed or `Updating` on the contrary will be
    mentionned in the messages.
+
  * The `ship` command now uses `cargo search` in order to fetch the latest
    available version for each configured package before calling `cargo install`
    only for each of them that do indeed need an install or update when either
@@ -50,9 +52,11 @@
    The calls to `cargo search` are done in parallel, making this version check
    quite fast, therefore saving a lot of time by avoiding calling `cargo
    install` sequentially for each already-up-to-date package.
+
  * The `ship` command now displays a summarized update plan before running the
    actually necessary calls to `cargo install`. That makes the overall
    operation a bit more transparent and readable.
+
  * A new `--skip-check` option flag has been added to the `ship` command. As
    its name suggests, it enables one to skip the version check entirely. That
    means it will restore the previous simple behavior: run `cargo install` for
@@ -62,6 +66,7 @@
    very few packages are configured or if all or almost all are not alredy
    installed. It overall enables one to have a bit more control over the global
    operation of the tool, in case of an unexpected bug for example.
+
  * The new `--force` option flag has been implemented for the `ship` command.
    It simply passes it onto each call to `cargo install`: see its documentation
    for more information about it. When used in conjunction with `--skip-check`
@@ -80,6 +85,7 @@
 
  * New tests have been added for the new CLI features, but also for the new
    functions wrapping calls to `cargo search`.
+
  * The GitHub Actions CI is now configured to skip the tests for these new
    search functions: the corresponding network calls seem to be filtered
    somehow.
@@ -93,18 +99,23 @@
    specify which features should be compiled in the installed packages, by
    configuring a list of feature flags in a similar format to the Cargo
    manifest's `[features]` section. Many thanks to @MaeIsBad: #2.
+
  * A new `--only-self` option has been added to the `ship` command: it enables
    one to only update `cargo-liner` and nothing else. It is incompatible with
    `--no-self`.
+
  * Short variants of the options flags of the `ship` command are now enabled.
+
  * A new `--keep-self` option has been added to the `import` command: it
    ensures the `cargo-liner` package is kept in the package list and thus
    written to the created configuration file. It is compatible with the version
    operator selection options.
+
  * Basic logging has been implemented. Messages will therefore now be displayed
    in order to inform the user about the currently performed action and its
    results. Errors bubbling up are manually caught in the global main function
    and logged using the same format as the rest of the emitted messages.
+
  * New `--verbose` and `--quiet` option flags have been implemented. They
    control the global verbosity of the program by changing the logging
    configuration at runtime. They are both available globally, i.e. with or
@@ -118,12 +129,14 @@
 
  * The `--no-self-update` option of the `ship` command has been renamed to
    `--no-self`. This makes it more consistent with other new option flags.
+
  * The TOCTOU bug for the configuration file import has been fixed: between
    checking for the existence of the file and then possibly overwriting it, a
    new file could appear. The `--force` option flag now controls which
    operation is used: when present, the previously always used overwriting is
    called; when absent, an appropriate system call is made to ensure only
    creating a new file is possible atomically.
+
  * Fixed some Clippy warnings triggered on the test suite.
 
 ## Documentation
@@ -141,6 +154,7 @@
 
  * The GitHub CI workflow now denies `rustdoc` warnings by default. Thanks
    to @MaeIsBad: #3.
+
  * Appropriate tests have been added alongside the new functionalities.
 
 
@@ -151,6 +165,7 @@
    packages when importing. Avoids fixing to a version needlessly or adding a
    useless line considering the already-implemented self-update feature. Tests
    now also check for this bug.
+
  * Added the missing `wrap_help` feature to Clap in order to have prettier help
    and usage messages: they now adapt themselves to the current terminal size.
 
