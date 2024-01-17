@@ -96,7 +96,7 @@ fn spawn_search_exact(pkg: &str) -> Result<Child> {
     cmd.stdin(Stdio::null());
     cmd.stderr(Stdio::null());
     cmd.stdout(Stdio::piped());
-    cmd.args(["search", "--color=never", "--limit=1", "--", pkg]);
+    cmd.args(["--color=never", "search", "--limit=1", "--", pkg]);
 
     log_cmd(&cmd);
     Ok(cmd.spawn()?)
