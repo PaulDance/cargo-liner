@@ -1,3 +1,21 @@
+# [Version 0.4.3 (17/01/2024)](https://crates.io/crates/cargo-liner/0.4.3)
+## Fixes
+
+ * Merged #14: previously, if the `CARGO_TERM_COLOR` environment variable was
+   set to `always`, then the calls to `cargo search` and `cargo config` would
+   fail as their respective output contained unexpected control sequences; the
+   fix was therefore to always disable colors for every such call by adding the
+   `--color=never` argument to each invoked Cargo process. `cargo install` was
+   left untouched in this regard, however. Thanks to @pavel-procopiuc.
+
+## Miscellaneous
+
+ * The dependencies have been updated.
+ * The MSRV has been downgraded to `1.70.0`. This is effectively a revert of
+   the previous version's change. The bump has been reported in #14 to be too
+   restrictive and the previous MSRV to work just fine.
+
+
 # [Version 0.4.2 (05/01/2024)](https://crates.io/crates/cargo-liner/0.4.2)
 ## Fixes
 
