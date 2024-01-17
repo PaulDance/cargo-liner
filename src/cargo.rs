@@ -96,7 +96,7 @@ fn spawn_search_exact(pkg: &str) -> Result<Child> {
     cmd.stdin(Stdio::null());
     cmd.stderr(Stdio::null());
     cmd.stdout(Stdio::piped());
-    cmd.args(["search", "--color", "never", "--limit=1", "--", pkg]);
+    cmd.args(["search", "--color=never", "--limit=1", "--", pkg]);
 
     log_cmd(&cmd);
     Ok(cmd.spawn()?)
@@ -158,14 +158,11 @@ pub fn config_get(key: &str) -> Result<String> {
     // FIXME: remove when `config` gets stabilized.
     cmd.env("RUSTC_BOOTSTRAP", "1");
     cmd.args([
-        "--color",
-        "never",
-        "-Z",
-        "unstable-options",
+        "--color=never",
+        "-Zunstable-options",
         "config",
         "get",
-        "--format",
-        "json-value",
+        "--format=json-value",
         "--",
         key,
     ]);
