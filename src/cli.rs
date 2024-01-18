@@ -256,6 +256,25 @@ mod tests {
     }
 
     #[test]
+    fn test_color() {
+        for (val, val_str) in [
+            (ColorChoice::Always, "always"),
+            (ColorChoice::Auto, "auto"),
+            (ColorChoice::Never, "never"),
+        ] {
+            assert_eq!(
+                CargoArgs::try_parse_from(["cargo", "liner", "--color", val_str]).unwrap(),
+                CargoArgs::Liner(LinerArgs {
+                    command: None,
+                    verbose: 0,
+                    quiet: 0,
+                    color: val,
+                }),
+            );
+        }
+    }
+
+    #[test]
     fn test_quiet_verbose_iserr() {
         assert!(CargoArgs::try_parse_from(["cargo", "liner", "-qv"].into_iter()).is_err());
     }
