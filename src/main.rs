@@ -110,7 +110,7 @@ fn try_main() -> Result<()> {
 
             if skip_check {
                 // Don't parse `.crates.toml` here: can be used as a workaround.
-                cargo::install_all(&config.packages, &BTreeSet::new(), force)?;
+                cargo::install_all(&config.packages, &BTreeSet::new(), force, args.color)?;
             } else {
                 let cct = CargoCratesToml::parse_file()?;
                 let vers = cargo::search_exact_all(&config.packages)?;
@@ -120,6 +120,7 @@ fn try_main() -> Result<()> {
                     &needing_install(&config.packages, &vers, &cct.clone().into_name_versions()),
                     &cct.into_names(),
                     force,
+                    args.color,
                 )?;
             }
         }
