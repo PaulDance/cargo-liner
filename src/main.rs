@@ -7,7 +7,9 @@ use std::process::ExitCode;
 use anyhow::{bail, Result};
 #[macro_use]
 extern crate log;
+use clap::ColorChoice;
 use log::LevelFilter;
+use pretty_env_logger::env_logger::WriteStyle;
 use semver::Version;
 
 mod cargo;
@@ -57,6 +59,11 @@ fn try_main() -> Result<()> {
             _ => LevelFilter::Off,
         });
     }
+    bld.write_style(match args.color {
+        ColorChoice::Always => WriteStyle::Always,
+        ColorChoice::Auto => WriteStyle::Auto,
+        ColorChoice::Never => WriteStyle::Never,
+    });
     bld.parse_default_env();
     bld.try_init()?;
 
