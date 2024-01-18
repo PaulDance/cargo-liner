@@ -3,7 +3,7 @@
 //! See [`LinerArgs::parse_env`] in order to retrieve such arguments from the
 //! environment.
 #![allow(clippy::struct_excessive_bools)]
-use clap::{ArgAction, Parser};
+use clap::{ArgAction, ColorChoice, Parser};
 
 /// Cargo entry point for `cargo-liner`.
 ///
@@ -54,6 +54,21 @@ pub struct LinerArgs {
         display_order = 990,
     )]
     pub quiet: u8,
+
+    /// Control the coloring of the logging output.
+    ///
+    /// This enables one to manually specify when should the logs be colored or
+    /// not, for example if the automatic detection is either not wished or not
+    /// functional.
+    #[arg(
+        long,
+        global = true,
+        required = false,
+        default_value = "auto",
+        value_name = "WHEN",
+        display_order = 991
+    )]
+    pub color: ColorChoice,
 }
 
 impl LinerArgs {
@@ -197,6 +212,7 @@ mod tests {
                 command: None,
                 verbose: 0,
                 quiet: 0,
+                color: ColorChoice::Auto,
             }),
         );
     }
@@ -214,6 +230,7 @@ mod tests {
                     #[allow(clippy::cast_possible_truncation)]
                     verbose: i as u8,
                     quiet: 0,
+                    color: ColorChoice::Auto,
                 }),
             );
         }
@@ -232,6 +249,7 @@ mod tests {
                     verbose: 0,
                     #[allow(clippy::cast_possible_truncation)]
                     quiet: i as u8,
+                    color: ColorChoice::Auto,
                 }),
             );
         }
@@ -255,6 +273,7 @@ mod tests {
                 })),
                 verbose: 0,
                 quiet: 0,
+                color: ColorChoice::Auto,
             }),
         );
     }
@@ -272,6 +291,7 @@ mod tests {
                 })),
                 verbose: 0,
                 quiet: 0,
+                color: ColorChoice::Auto,
             }),
         );
     }
@@ -290,6 +310,7 @@ mod tests {
                 })),
                 verbose: 0,
                 quiet: 0,
+                color: ColorChoice::Auto,
             }),
         );
     }
@@ -308,6 +329,7 @@ mod tests {
                 })),
                 verbose: 0,
                 quiet: 0,
+                color: ColorChoice::Auto,
             }),
         );
     }
@@ -325,6 +347,7 @@ mod tests {
                 })),
                 verbose: 0,
                 quiet: 0,
+                color: ColorChoice::Auto,
             }),
         );
     }
@@ -351,6 +374,7 @@ mod tests {
                 })),
                 verbose: 0,
                 quiet: 0,
+                color: ColorChoice::Auto,
             }),
         );
     }
@@ -369,6 +393,7 @@ mod tests {
                 })),
                 verbose: 0,
                 quiet: 0,
+                color: ColorChoice::Auto,
             }),
         );
     }
@@ -387,6 +412,7 @@ mod tests {
                 })),
                 verbose: 0,
                 quiet: 0,
+                color: ColorChoice::Auto,
             }),
         );
     }
@@ -408,6 +434,7 @@ mod tests {
                 })),
                 verbose: 0,
                 quiet: 0,
+                color: ColorChoice::Auto,
             }),
         );
     }
@@ -427,6 +454,7 @@ mod tests {
                 })),
                 verbose: 0,
                 quiet: 0,
+                color: ColorChoice::Auto,
             }),
         );
     }
@@ -448,6 +476,7 @@ mod tests {
                 })),
                 verbose: 0,
                 quiet: 0,
+                color: ColorChoice::Auto,
             }),
         );
     }
@@ -466,6 +495,7 @@ mod tests {
                 })),
                 verbose: 0,
                 quiet: 0,
+                color: ColorChoice::Auto,
             }),
         );
     }
@@ -487,6 +517,7 @@ mod tests {
                 })),
                 verbose: 0,
                 quiet: 0,
+                color: ColorChoice::Auto,
             }),
         );
     }
@@ -506,6 +537,7 @@ mod tests {
                 })),
                 verbose: 0,
                 quiet: 0,
+                color: ColorChoice::Auto,
             }),
         );
     }
@@ -527,6 +559,7 @@ mod tests {
                 })),
                 verbose: 0,
                 quiet: 0,
+                color: ColorChoice::Auto,
             }),
         );
     }
@@ -548,6 +581,7 @@ mod tests {
                 })),
                 verbose: 0,
                 quiet: 0,
+                color: ColorChoice::Auto,
             }),
         );
     }
@@ -577,6 +611,7 @@ mod tests {
                 })),
                 verbose: 0,
                 quiet: 0,
+                color: ColorChoice::Auto,
             }),
         );
     }
@@ -598,6 +633,7 @@ mod tests {
                 })),
                 verbose: 0,
                 quiet: 0,
+                color: ColorChoice::Auto,
             }),
         );
     }
@@ -627,6 +663,7 @@ mod tests {
                 })),
                 verbose: 0,
                 quiet: 0,
+                color: ColorChoice::Auto,
             }),
         );
     }
@@ -648,6 +685,7 @@ mod tests {
                 })),
                 verbose: 0,
                 quiet: 0,
+                color: ColorChoice::Auto,
             }),
         );
     }
@@ -677,6 +715,7 @@ mod tests {
                 })),
                 verbose: 0,
                 quiet: 0,
+                color: ColorChoice::Auto,
             }),
         );
     }
