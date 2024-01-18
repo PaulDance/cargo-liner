@@ -10,6 +10,7 @@ use std::process::{Child, Command, Stdio};
 use std::str;
 
 use anyhow::{anyhow, Result};
+use clap::ColorChoice;
 use regex::Regex;
 use semver::Version;
 
@@ -30,9 +31,16 @@ fn install(
     all_features: bool,
     features: &[String],
     force: bool,
+    color: ColorChoice,
 ) -> Result<()> {
     let mut cmd = Command::new(env::var("CARGO")?);
-    cmd.args(["install", "--version", version]);
+    cmd.args([
+        "--color",
+        &color.to_string(),
+        "install",
+        "--version",
+        version,
+    ]);
 
     if no_default_features {
         cmd.arg("--no-default-features");
@@ -66,6 +74,7 @@ pub fn install_all(
     packages: &BTreeMap<String, Package>,
     installed: &BTreeSet<String>,
     force: bool,
+    color: ColorChoice,
 ) -> Result<()> {
     for (pkg_name, pkg) in packages {
         if installed.contains(pkg_name) {
@@ -81,6 +90,7 @@ pub fn install_all(
             pkg.all_features(),
             pkg.features(),
             force,
+            color,
         )?;
     }
 
