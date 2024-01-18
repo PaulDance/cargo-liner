@@ -30,7 +30,12 @@ include = [
 ]
 
 [dependencies]
-clap = { version = "~4.4", features = ["derive", "cargo", "wrap_help"] }
+clap = { version = "~4.4", features = [
+    "derive",
+    "cargo",
+    "wrap_help",
+    "color",
+] }
 serde = { version = "~1.0", features = ["derive"] }
 toml = "~0.8"
 anyhow = "~1.0"
