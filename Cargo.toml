@@ -47,3 +47,4 @@ regex = "~1.10"
 
 [dev-dependencies]
 indoc = "~2.0"
+trycmd = "~0.14"
