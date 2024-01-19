@@ -155,8 +155,8 @@ them in some way, using Git for example.
 
 A few commands are available:
 
-```sh
-❯ cargo help liner
+```console
+$ cargo help liner
 Cargo subcommand to install and update binary packages listed in configuration.
 
 Usage: cargo liner [OPTIONS] [COMMAND]
@@ -243,8 +243,8 @@ Example output if `bat` and `cargo-expand` are required:
 
 The main command: do the installing and updating of packages.
 
-```sh
-❯ cargo liner help ship
+```console
+$ cargo liner help ship
 The default command if omitted: install and update configured packages.
 
 Self-updating is enabled by default.
@@ -336,8 +336,8 @@ This command is meant to be used upon installing the tool and using it for the
 first time: it populates the configuration file with currently-installed
 packages.
 
-```sh
-❯ cargo liner help import
+```console
+$ cargo liner help import
 Import the `$CARGO_HOME/.crates.toml` Cargo-edited save file as a new Liner
 configuration file.
 
