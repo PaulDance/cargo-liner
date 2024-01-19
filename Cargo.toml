@@ -48,5 +48,6 @@ regex = "~1.10"
 [dev-dependencies]
 indoc = "~2.0"
 trycmd = "~0.14"
+snapbox = "~0.4"
 cargo-test-macro = { git = "https://github.com/rust-lang/cargo.git", branch = "master" }
 cargo-test-support = { git = "https://github.com/rust-lang/cargo.git", branch = "master" }

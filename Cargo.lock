@@ -135,6 +135,7 @@ dependencies = [
  "regex",
  "semver",
  "serde",
+ "snapbox",
  "toml",
  "trycmd",
 ]
