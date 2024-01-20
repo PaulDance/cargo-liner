@@ -157,42 +157,56 @@ A few commands are available:
 
 ```console
 $ cargo help liner
-Cargo subcommand to install and update binary packages listed in configuration.
+Cargo subcommand to install and update binary packages listed in
+configuration.
 
 Usage: cargo liner [OPTIONS] [COMMAND]
 
 Commands:
-  ship
-          The default command if omitted: install and update configured packages
-  import
-          Import the `$CARGO_HOME/.crates.toml` Cargo-edited save file as a new
-          Liner configuration file
-  help
-          Print this message or the help of the given subcommand(s)
+  ship    The default command if omitted: install and update
+              configured packages
+  import  Import the `$CARGO_HOME/.crates.toml` Cargo-edited save
+              file as a new Liner configuration file
+  help    Print this message or the help of the given
+              subcommand(s)
 
 Options:
   -v, --verbose...
-          Be more verbose. Use multiple times to be more and more so each time.
-
-          When omitted, INFO and above messages of only this crate are logged.
-          When used once, DEBUG and above messages of only this crate are logged.
-          When used twice, DEBUG and above messages of all crates are logged.
-          When used three times or more, TRACE and above messages of all crates
-          are logged.
+          Be more verbose. Use multiple times to be more and more so
+          each time.
+          
+          When omitted, INFO and above messages of only this crate are
+          logged. When used once, DEBUG and above messages of only
+          this crate are logged. When used twice, DEBUG and above
+          messages of all crates are logged. When used three times or
+          more, TRACE and above messages of all crates are logged.
 
   -q, --quiet...
-          Be quieter. Use multiple times to be more and more so each time.
+          Be quieter. Use multiple times to be more and more so each
+          time.
+          
+          When omitted, INFO and above messages of only this crate are
+          logged. When used once, WARN and above messages of only this
+          crate are logged. When used twice, ERROR messages of all
+          crates are logged. When used three times or more, no message
+          will be logged.
 
-          When omitted, INFO and above messages of only this crate are logged.
-          When used once, WARN and above messages of only this crate are logged.
-          When used twice, ERROR messages of all crates are logged.
-          When used three times or more, no message will be logged.
+      --color <WHEN>
+          Control the coloring of the logging output.
+          
+          This enables one to manually specify when should the logs be
+          colored or not, for example if the automatic detection is
+          either not wished or not functional.
+          
+          [default: auto]
+          [possible values: auto, always, never]
 
   -h, --help
-          Print help information (use `-h` for a summary)
+          Print help (see a summary with '-h')
 
   -V, --version
-          Print version information
+          Print version
+
 ```
 
 
@@ -245,7 +259,8 @@ The main command: do the installing and updating of packages.
 
 ```console
 $ cargo liner help ship
-The default command if omitted: install and update configured packages.
+The default command if omitted: install and update configured
+packages.
 
 Self-updating is enabled by default.
 
@@ -254,60 +269,77 @@ Usage: cargo liner ship [OPTIONS]
 Options:
   -n, --no-self
           Disable self-updating.
-
-          Cannot be used in conjunction with `--only-self`. Default: `false`,
-          i.e. self-update.
+          
+          Cannot be used in conjunction with `--only-self`. Default:
+          `false`, i.e. self-update.
 
   -s, --only-self
-          Only self-update and do not install or update any other package.
-
-          Cannot be used in conjunction with `--no-self`. Default: `false`,
-          i.e. install or update other packages as well.
+          Only self-update and do not install or update any other
+          package.
+          
+          Cannot be used in conjunction with `--no-self`. Default:
+          `false`, i.e. install or update other packages as well.
 
   -c, --skip-check
-          Skip the summary version check and directly call `cargo install` on
-          each configured package.
-
-          The version check is relatively quick and enables skipping calls to
-          `cargo install` when no update is required, which saves quite a bit
-          of time. However, if you wish, this option is still available in
-          order not to run the check: doing so will probably take more time in
-          the end most of the time, except if you have a very small amount of
-          packages configured (e.g. one or two) or if all or almost all
+          Skip the summary version check and directly call `cargo
+          install` on each configured package.
+          
+          The version check is relatively quick and enables skipping
+          calls to `cargo install` when no update is required, which
+          saves quite a bit of time. However, if you wish, this option
+          is still available in order not to run the check: doing so
+          will probably take more time in the end most of the time,
+          except if you have a very small amount of packages
+          configured (e.g. one or two) or if all or almost all
           packages are not already installed.
-
-          It can also be used as a workaround in case a certain operation fails
-          in your particular environment, for example: reading from `.crates.toml`
-          under the `$CARGO_HOME` or `$CARGO_INSTALL_ROOT` directory or making
-          requests to the registry. These operations will thus be entirely skipped.
-
+          
+          It can also be used as a workaround in case a certain
+          operation fails in your particular environment, for example:
+          reading from `.crates.toml` under the `$CARGO_HOME` or
+          `$CARGO_INSTALL_ROOT` directory or making requests to the
+          registry. These operations will thus be entirely skipped.
 
   -f, --force
           Force overwriting existing crates or binaries.
-
-          Passes the option flag onto each call of `cargo install`. It will,
-          for example, redownload, recompile and reinstall every configured
-          package when used in conjunction with `--skip-check`.
+          
+          Passes the option flag onto each call of `cargo install`. It
+          will, for example, redownload, recompile and reinstall every
+          configured package when used in conjunction with
+          `--skip-check`.
 
   -v, --verbose...
-          Be more verbose. Use multiple times to be more and more so each time.
-
-          When omitted, INFO and above messages of only this crate are logged.
-          When used once, DEBUG and above messages of only this crate are logged.
-          When used twice, DEBUG and above messages of all crates are logged.
-          When used three times or more, TRACE and above messages of all crates
-          are logged.
+          Be more verbose. Use multiple times to be more and more so
+          each time.
+          
+          When omitted, INFO and above messages of only this crate are
+          logged. When used once, DEBUG and above messages of only
+          this crate are logged. When used twice, DEBUG and above
+          messages of all crates are logged. When used three times or
+          more, TRACE and above messages of all crates are logged.
 
   -q, --quiet...
-          Be quieter. Use multiple times to be more and more so each time.
+          Be quieter. Use multiple times to be more and more so each
+          time.
+          
+          When omitted, INFO and above messages of only this crate are
+          logged. When used once, WARN and above messages of only this
+          crate are logged. When used twice, ERROR messages of all
+          crates are logged. When used three times or more, no message
+          will be logged.
 
-          When omitted, INFO and above messages of only this crate are logged.
-          When used once, WARN and above messages of only this crate are logged.
-          When used twice, ERROR messages of all crates are logged.
-          When used three times or more, no message will be logged.
+      --color <WHEN>
+          Control the coloring of the logging output.
+          
+          This enables one to manually specify when should the logs be
+          colored or not, for example if the automatic detection is
+          either not wished or not functional.
+          
+          [default: auto]
+          [possible values: auto, always, never]
 
   -h, --help
-          Print help information (use `-h` for a summary)
+          Print help (see a summary with '-h')
+
 ```
 
 Simply run `cargo liner ship` in order to:
@@ -338,69 +370,87 @@ packages.
 
 ```console
 $ cargo liner help import
-Import the `$CARGO_HOME/.crates.toml` Cargo-edited save file as a new Liner
-configuration file.
+Import the `$CARGO_HOME/.crates.toml` Cargo-edited save file as a new
+Liner configuration file.
 
-Star versions are used by default. The version transformation options are
-mutually exclusive.
+Star versions are used by default. The version transformation options
+are mutually exclusive.
 
 Usage: cargo liner import [OPTIONS]
 
 Options:
   -e, --exact
-          Import package versions as "exact versions", i.e. prepended with an
-          equal operator.
-
-          Cannot be used in conjunction with either `--compatible` or `--patch`.
-          Default: `false`, i.e. use a star requirement.
+          Import package versions as "exact versions", i.e. prepended
+          with an equal operator.
+          
+          Cannot be used in conjunction with either `--compatible` or
+          `--patch`. Default: `false`, i.e. use a star requirement.
 
   -c, --compatible
-          Import package versions as "compatible versions", i.e. prepended with
-          a caret operator.
-
-          Cannot be used in conjunction with either `--exact` or `--patch`.
-          Default: `false`, i.e. use a star requirement.
+          Import package versions as "compatible versions", i.e.
+          prepended with a caret operator.
+          
+          Cannot be used in conjunction with either `--exact` or
+          `--patch`. Default: `false`, i.e. use a star requirement.
 
   -p, --patch
-          Import package versions as "patch versions", i.e. prepended with a
-          tilde operator.
-
-          Cannot be used in conjunction with either `--exact` or `--compatible`.
-          Default: `false`, i.e. use a star requirement.
+          Import package versions as "patch versions", i.e. prepended
+          with a tilde operator.
+          
+          Cannot be used in conjunction with either `--exact` or
+          `--compatible`. Default: `false`, i.e. use a star
+          requirement.
 
   -f, --force
-          Overwrite the current configuration file if it already exists.
-
-          Default: `false`, i.e. return an error in case the file already exists.
+          Overwrite the current configuration file if it already
+          exists.
+          
+          Default: `false`, i.e. return an error in case the file
+          already exists.
 
   -k, --keep-self
-          Also import this `cargo-liner` package into the configuration, for
-          example in order to specify a certain version requirement later on.
-
-          Default: `false`, i.e. exclude the current package from the list of
-          packages to install or update in the resulting configuration file.
-          Note however that the `ship` command will still self-update by
-          default.
+          Also import this `cargo-liner` package into the
+          configuration, for example in order to specify a certain
+          version requirement later on.
+          
+          Default: `false`, i.e. exclude the current package from the
+          list of packages to install or update in the resulting
+          configuration file. Note however that the `ship` command
+          will still self-update by default.
 
   -v, --verbose...
-          Be more verbose. Use multiple times to be more and more so each time.
-
-          When omitted, INFO and above messages of only this crate are logged.
-          When used once, DEBUG and above messages of only this crate are logged.
-          When used twice, DEBUG and above messages of all crates are logged.
-          When used three times or more, TRACE and above messages of all crates
-          are logged.
+          Be more verbose. Use multiple times to be more and more so
+          each time.
+          
+          When omitted, INFO and above messages of only this crate are
+          logged. When used once, DEBUG and above messages of only
+          this crate are logged. When used twice, DEBUG and above
+          messages of all crates are logged. When used three times or
+          more, TRACE and above messages of all crates are logged.
 
   -q, --quiet...
-          Be quieter. Use multiple times to be more and more so each time.
+          Be quieter. Use multiple times to be more and more so each
+          time.
+          
+          When omitted, INFO and above messages of only this crate are
+          logged. When used once, WARN and above messages of only this
+          crate are logged. When used twice, ERROR messages of all
+          crates are logged. When used three times or more, no message
+          will be logged.
 
-          When omitted, INFO and above messages of only this crate are logged.
-          When used once, WARN and above messages of only this crate are logged.
-          When used twice, ERROR messages of all crates are logged.
-          When used three times or more, no message will be logged.
+      --color <WHEN>
+          Control the coloring of the logging output.
+          
+          This enables one to manually specify when should the logs be
+          colored or not, for example if the automatic detection is
+          either not wished or not functional.
+          
+          [default: auto]
+          [possible values: auto, always, never]
 
   -h, --help
-          Print help information (use `-h` for a summary)
+          Print help (see a summary with '-h')
+
 ```
 
 For example, if you had previously installed:
