@@ -106,7 +106,14 @@ fn spawn_search_exact(pkg: &str) -> Result<Child> {
     cmd.stdin(Stdio::null());
     cmd.stderr(Stdio::null());
     cmd.stdout(Stdio::piped());
-    cmd.args(["--color=never", "search", "--limit=1", "--", pkg]);
+    cmd.args(["--color=never", "search"]);
+
+    // HACK: detect test environment using some environment variable.
+    if env::var_os("__CARGO_TEST_ROOT").is_some() {
+        cmd.arg("--registry=dummy-registry");
+    }
+
+    cmd.args(["--limit=1", "--", pkg]);
 
     log_cmd(&cmd);
     Ok(cmd.spawn()?)
