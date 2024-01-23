@@ -224,32 +224,39 @@ Simply run `cargo liner` in order to:
 
 Example output if `bat` and `cargo-expand` are required:
 
-```sh
-❯ cargo liner
+```console
+$ cargo liner
  INFO  cargo_liner::cargo > Fetching latest package versions...
  INFO  cargo_liner        > Results:
- INFO  cargo_liner        >     bat           ✔
- INFO  cargo_liner        >     cargo-expand  1.0.53 -> 1.0.54
+ INFO  cargo_liner        >     bat           ø -> 0.24.0
+ INFO  cargo_liner        >     cargo-expand  1.0.78 -> 1.0.79
  INFO  cargo_liner        >     cargo-liner   ✔
+ INFO  cargo_liner::cargo > Installing `bat`...
+    Updating [..] index
+ Downloading crates ...
+  Downloaded bat v0.24.0 (registry [..])
+  Installing bat v0.24.0
+    Updating [..] index
+...
+   Compiling bat v0.24.0
+    Finished release [optimized] target(s) in [..]s
+  Installing [..]/.cargo/bin/bat
+   Installed package `bat v0.24.0` (executable `bat`)
+...
  INFO  cargo_liner::cargo > Updating `cargo-expand`...
-    Updating crates.io index
-  Downloaded cargo-expand v1.0.54
-  Downloaded 1 crate (26.4 KB) in 0.44s
-  Installing cargo-expand v1.0.54
-    Updating crates.io index
-  Downloaded anstyle-parse v0.2.1
-  [...]
-  Downloaded clap_builder v4.3.5
-  Downloaded 5 crates (311.7 KB) in 0.45s
-   Compiling proc-macro2 v1.0.60
-   [...]
-   Compiling cargo-expand v1.0.54
-   [...]
-   Compiling cargo-subcommand-metadata v0.1.0
-    Finished release [optimized] target(s) in 52.97s
-   Replacing /home/pauldance/.cargo/bin/cargo-expand
-    Replaced package `cargo-expand v1.0.53` with `cargo-expand v1.0.54` (executable `cargo-expand`)
+    Updating [..] index
+ Downloading crates ...
+  Downloaded cargo-expand v1.0.79 (registry [..])
+  Installing cargo-expand v1.0.79
+    Updating [..] index
+...
+   Compiling cargo-expand v1.0.79
+    Finished release [optimized] target(s) in [..]s
+   Replacing [..]/.cargo/bin/cargo-expand
+    Replaced package `cargo-expand v1.0.78` with `cargo-expand v1.0.79` (executable `cargo-expand`)
+...
  INFO  cargo_liner        > Done.
+
 ```
 
 
