@@ -49,8 +49,10 @@ pub fn init_registry() -> TestRegistry {
             // Use the `dl` directory instead of the `registry` one in order to
             // easily test whether a packaged has previously been published or
             // not: test if a sub-directory of the package's name exists.
-            match dl_path.join(req_pkg).read_dir() {
-                Ok(mut dir) => {
+            let pkg_res = dl_path
+                .join(req_pkg)
+                .read_dir()
+                .map_or(String::new(), |mut dir| {
                     let pkg_ver = dir
                         .next()
                         .unwrap()
@@ -58,37 +60,36 @@ pub fn init_registry() -> TestRegistry {
                         .file_name()
                         .into_string()
                         .unwrap();
-                    Response {
-                        code: 200,
-                        headers: Vec::new(),
-                        body: format!(
-                            // Return only the information actually required by
-                            // the `cargo search` command. Might need to be
-                            // extended in the future if more gets required.
-                            r#"{{
-                                "crates": [{{
-                                    "name": "{req_pkg}",
-                                    "description": "whatever",
-                                    "newest_version": "{pkg_ver}",
-                                    "max_version": "{pkg_ver}"
-                                }}],
-                                "meta": {{
-                                    "next_page": "?q={}&page=2",
-                                    "prev_page": null,
-                                    "total": 1
-                                }}
-                            }}"#,
-                            req.url.query().unwrap(),
-                        )
-                        .as_bytes()
-                        .to_vec(),
-                    }
-                }
-                Err(err) => Response {
-                    code: 404,
-                    headers: Vec::new(),
-                    body: format!("{err:?}").as_bytes().to_vec(),
-                },
+                    format!(
+                        r#"{{
+                            "name": "{req_pkg}",
+                            "description": "whatever",
+                            "newest_version": "{pkg_ver}",
+                            "max_version": "{pkg_ver}"
+                        }}"#,
+                    )
+                });
+
+            // Return only the information actually required by the `cargo
+            // search` command. Might need to be extended in the future if more
+            // gets required.
+            Response {
+                code: 200,
+                headers: Vec::new(),
+                body: format!(
+                    r#"{{
+                        "crates": [{}],
+                        "meta": {{
+                            "next_page": "?q={}&page=2",
+                            "prev_page": null,
+                            "total": 1
+                        }}
+                    }}"#,
+                    pkg_res,
+                    req.url.query().unwrap(),
+                )
+                .as_bytes()
+                .to_vec(),
             }
         })
         .build()
