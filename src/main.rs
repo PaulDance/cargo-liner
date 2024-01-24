@@ -17,6 +17,8 @@ mod cli;
 use cli::{LinerArgs, LinerCommands};
 mod config;
 use config::{CargoCratesToml, Package, UserConfig};
+#[cfg(test)]
+mod testing;
 
 /// Wrap the desired main and display errors in a fashion consistent with the
 /// rest of the messages.
