@@ -34,7 +34,7 @@ jobs:
       run: cargo check --verbose --all-targets --all-features
 
     - name: Build and run tests
-      run: cargo test --verbose --all-targets --all-features -- --skip cargo::tests::test_search
+      run: cargo test --verbose --all-targets --all-features
 
     - name: Check correct rustfmt formatting
       run: cargo fmt --verbose --all --check
