@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::env;
 
 use cargo_test_support::{
     compare,
@@ -93,4 +94,18 @@ pub fn init_registry() -> TestRegistry {
             }
         })
         .build()
+}
+
+/// Sets various environment variables to mimic Cargo's testing framework.
+#[allow(unused)]
+#[allow(clippy::missing_panics_doc)]
+pub fn set_env() {
+    let tmp_home = cargo_test_support::paths::home();
+    env::set_var("HOME", tmp_home.to_str().unwrap());
+    env::set_var("CARGO_HOME", tmp_home.join(".cargo").to_str().unwrap());
+    env::set_var(
+        "__CARGO_TEST_ROOT",
+        cargo_test_support::paths::global_root().to_str().unwrap(),
+    );
+    env::set_var("CARGO_INCREMENTAL", "0");
 }
