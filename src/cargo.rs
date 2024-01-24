@@ -216,14 +216,24 @@ fn log_cmd(cmd: &Command) {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use anyhow::bail;
+    use cargo_test_macro::cargo_test;
+    use cargo_test_support::registry;
+
+    use super::*;
+    use crate::testing;
 
     const SELF: &str = clap::crate_name!();
     const NONE: &str = "azertyuiop-qsdfghjklm_wxcvbn";
 
-    #[test]
+    #[cargo_test]
     fn test_searchspawn_self_isok() -> Result<()> {
+        let _reg = testing::init_registry();
+        registry::Package::new(SELF, "0.0.0")
+            .file("src/main.rs", "fn main() {}")
+            .publish();
+        testing::set_env();
+
         let proc = spawn_search_exact(SELF)?;
         assert_ne!(proc.id(), 0);
         assert!(proc.stdin.is_none());
@@ -237,8 +247,14 @@ mod tests {
         Ok(())
     }
 
-    #[test]
+    #[cargo_test]
     fn test_searchfinish_self_isok() -> Result<()> {
+        let _reg = testing::init_registry();
+        registry::Package::new(SELF, "0.0.0")
+            .file("src/main.rs", "fn main() {}")
+            .publish();
+        testing::set_env();
+
         assert!(
             finish_search_exact(SELF, spawn_search_exact(SELF)?)?
                 <= clap::crate_version!().parse()?
@@ -246,8 +262,11 @@ mod tests {
         Ok(())
     }
 
-    #[test]
+    #[cargo_test]
     fn test_searchspawn_none_isok() -> Result<()> {
+        let _reg = testing::init_registry();
+        testing::set_env();
+
         let proc = spawn_search_exact(NONE)?;
         assert_ne!(proc.id(), 0);
         assert!(proc.stdin.is_none());
@@ -261,42 +280,56 @@ mod tests {
         Ok(())
     }
 
-    #[test]
+    #[cargo_test]
     fn test_searchfinish_none_iserr() -> Result<()> {
+        let _reg = testing::init_registry();
+        testing::set_env();
+
         assert!(finish_search_exact(NONE, spawn_search_exact(NONE)?).is_err());
         Ok(())
     }
 
-    #[test]
+    #[cargo_test]
     fn test_searchall_selfandothers_isok() -> Result<()> {
+        let _reg = testing::init_registry();
+        for (pkg, ver) in [
+            (SELF, clap::crate_version!()),
+            ("cargo-expand", "1.0.79"),
+            ("cargo-tarpaulin", "0.27.3"),
+            ("bat", "0.24.0"),
+        ] {
+            registry::Package::new(pkg, ver)
+                .file("src/main.rs", "fn main() {}")
+                .publish();
+        }
+        testing::set_env();
+
         for (pkg, ver) in search_exact_all(
             &[SELF, "cargo-expand", "cargo-tarpaulin", "bat"]
                 .into_iter()
                 .map(|pkg| (pkg.to_owned(), Package::SIMPLE_STAR))
                 .collect(),
         )? {
-            match (&*pkg, ver) {
-                (SELF, v) if v > clap::crate_version!().parse()? => {
-                    bail!("Unexpected version found")
+            assert_eq!(
+                ver,
+                match &*pkg {
+                    SELF => clap::crate_version!(),
+                    "cargo-expand" => "1.0.79",
+                    "cargo-tarpaulin" => "0.27.3",
+                    "bat" => "0.24.0",
+                    pkg => bail!("Unexpected package: {pkg:?}"),
                 }
-                ("cargo-expand", v) if v < "1.0.56".parse()? => {
-                    bail!("Unexpected version found")
-                }
-                ("cargo-tarpaulin", v) if v < "0.26.0".parse()? => {
-                    bail!("Unexpected version found")
-                }
-                ("bat", v) if v < "0.23.0".parse()? => {
-                    bail!("Unexpected version found")
-                }
-                (SELF | "cargo-expand" | "cargo-tarpaulin" | "bat", _) => continue,
-                _ => bail!("Unexpected crate found"),
-            }
+                .parse()?,
+            );
         }
         Ok(())
     }
 
-    #[test]
+    #[cargo_test]
     fn test_searchall_none_iserr() {
+        let _reg = testing::init_registry();
+        testing::set_env();
+
         assert!(search_exact_all(
             &[(NONE.to_owned(), Package::SIMPLE_STAR)]
                 .into_iter()
