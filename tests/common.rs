@@ -59,6 +59,12 @@ pub fn init_registry() -> TestRegistry {
             let pkg_res = dl_path
                 .join(req_pkg)
                 .read_dir()
+                .map_err(|err| {
+                    eprintln!(
+                        "Error when reading directory `{req_pkg}` under `{dl_path:?}`: {err:#?}"
+                    );
+                    err
+                })
                 // Sub-directories have versions as names: take the max.
                 .map(|mut dir_itr| {
                     dir_itr
