@@ -218,7 +218,6 @@ fn log_cmd(cmd: &Command) {
 mod tests {
     use anyhow::bail;
     use cargo_test_macro::cargo_test;
-    use cargo_test_support::registry;
 
     use super::*;
     use crate::testing;
@@ -229,9 +228,7 @@ mod tests {
     #[cargo_test]
     fn test_searchspawn_self_isok() -> Result<()> {
         let _reg = testing::init_registry();
-        registry::Package::new(SELF, "0.0.0")
-            .file("src/main.rs", "fn main() {}")
-            .publish();
+        testing::fake_publish(SELF, "0.0.0");
         testing::set_env();
 
         let proc = spawn_search_exact(SELF)?;
@@ -250,9 +247,7 @@ mod tests {
     #[cargo_test]
     fn test_searchfinish_self_isok() -> Result<()> {
         let _reg = testing::init_registry();
-        registry::Package::new(SELF, "0.0.0")
-            .file("src/main.rs", "fn main() {}")
-            .publish();
+        testing::fake_publish(SELF, "0.0.0");
         testing::set_env();
 
         assert!(
@@ -292,16 +287,12 @@ mod tests {
     #[cargo_test]
     fn test_searchall_selfandothers_isok() -> Result<()> {
         let _reg = testing::init_registry();
-        for (pkg, ver) in [
+        testing::fake_publish_all([
             (SELF, clap::crate_version!()),
             ("cargo-expand", "1.0.79"),
             ("cargo-tarpaulin", "0.27.3"),
             ("bat", "0.24.0"),
-        ] {
-            registry::Package::new(pkg, ver)
-                .file("src/main.rs", "fn main() {}")
-                .publish();
-        }
+        ]);
         testing::set_env();
 
         for (pkg, ver) in search_exact_all(

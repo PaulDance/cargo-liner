@@ -6,6 +6,7 @@ use std::env;
 use std::fs::{self, File};
 use std::io::Write;
 
+use cargo_test_support::registry::Package;
 use cargo_test_support::{
     compare,
     registry::{HttpServer, RegistryBuilder, Request, Response, TestRegistry},
@@ -166,5 +167,21 @@ pub fn fake_install(pkg: &str, ver: &str) {
 pub fn fake_install_all<'p, 'v>(pkg_vers: impl IntoIterator<Item = (&'p str, &'v str)>) {
     for (pkg, ver) in pkg_vers {
         fake_install(pkg, ver);
+    }
+}
+
+/// Publishes the given package name and version to the local fake registry
+/// with minimal contents.
+pub fn fake_publish(pkg: &str, ver: &str) {
+    Package::new(pkg, ver)
+        .file("src/main.rs", "fn main() {}")
+        .publish();
+}
+
+/// Runs [`fake_publish`] for each package name and version pair yielded by the
+/// given iterator.
+pub fn fake_publish_all<'p, 'v>(pkg_vers: impl IntoIterator<Item = (&'p str, &'v str)>) {
+    for (pkg, ver) in pkg_vers {
+        fake_publish(pkg, ver);
     }
 }

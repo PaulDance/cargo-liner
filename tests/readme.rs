@@ -1,9 +1,8 @@
 use cargo_test_macro::cargo_test;
-use cargo_test_support::registry::Package;
 use trycmd::TestCases;
 
 mod common;
-use common::{fake_install_all, init_registry, write_user_config};
+use common::*;
 
 /// Verify that all `console` code blocks included in this project's
 /// `README.md` file are properly kept in-sync with the actual outputs.
@@ -14,15 +13,11 @@ use common::{fake_install_all, init_registry, write_user_config};
 fn validate_readme() {
     // Add example packages to registry.
     let _reg = init_registry();
-    Package::new("cargo-liner", "0.0.0")
-        .file("src/main.rs", "fn main() {}")
-        .publish();
-    Package::new("bat", "0.24.0")
-        .file("src/main.rs", "fn main() {}")
-        .publish();
-    Package::new("cargo-expand", "1.0.79")
-        .file("src/main.rs", "fn main() {}")
-        .publish();
+    fake_publish_all([
+        ("cargo-liner", "0.0.0"),
+        ("bat", "0.24.0"),
+        ("cargo-expand", "1.0.79"),
+    ]);
 
     // Retrieve some test paths.
     let tmp_home = cargo_test_support::paths::home();
