@@ -5,7 +5,7 @@ use cargo_test_support::registry::Package;
 use trycmd::TestCases;
 
 mod common;
-use common::init_registry;
+use common::{fake_install_all, init_registry};
 
 /// Verify that all `console` code blocks included in this project's
 /// `README.md` file are properly kept in-sync with the actual outputs.
@@ -29,22 +29,9 @@ fn validate_readme() {
     // Retrieve some test paths.
     let tmp_home = cargo_test_support::paths::home();
     let tmp_cargo_home = tmp_home.join(".cargo");
-    let tmp_cargo_home_bin = tmp_cargo_home.join("bin");
 
     // Mimic previous `cargo install` runs.
-    fs::create_dir(tmp_cargo_home_bin.clone()).unwrap();
-    fs::write(tmp_cargo_home_bin.join("cargo-liner"), "").unwrap();
-    fs::write(tmp_cargo_home_bin.join("cargo-expand"), "").unwrap();
-    fs::write(
-        tmp_cargo_home.join(".crates.toml"),
-        [
-            "[v1]",
-            "\"cargo-liner 0.0.0 (registry+https://github.com/rust-lang/crates.io-index)\" = [\"cargo-liner\"]",
-            "\"cargo-expand 1.0.78 (registry+https://github.com/rust-lang/crates.io-index)\" = [\"cargo-expand\"]",
-        ]
-        .join("\n"),
-    )
-    .unwrap();
+    fake_install_all([("cargo-liner", "0.0.0"), ("cargo-expand", "1.0.78")]);
     // Add our example configuration.
     fs::write(
         tmp_cargo_home.join("liner.toml"),

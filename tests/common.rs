@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 use std::env;
+use std::fs::{self, File};
+use std::io::Write;
 
 use cargo_test_support::{
     compare,
@@ -108,4 +110,56 @@ pub fn set_env() {
         cargo_test_support::paths::global_root().to_str().unwrap(),
     );
     env::set_var("CARGO_INCREMENTAL", "0");
+}
+
+/// Fakes the result of a `cargo install` run for the given package name and
+/// version.
+///
+/// Creates the `$CARGO_HOME/bin` directory if it does not exist; adds an empty
+/// file of the package's name in it; adds the package's name and version to
+/// the `$CARGO_HOME/.crates.toml` file, creating it if it does not exist.
+#[allow(unused)]
+#[allow(clippy::missing_panics_doc)]
+pub fn fake_install(pkg: &str, ver: &str) {
+    let tmp_home = cargo_test_support::paths::home();
+    let tmp_cargo_home = tmp_home.join(".cargo");
+    let tmp_cargo_home_bin = tmp_cargo_home.join("bin");
+    let tmp_cargo_home_crates = tmp_cargo_home.join(".crates.toml");
+
+    // bin directory things.
+    fs::create_dir_all(tmp_cargo_home_bin.clone()).unwrap();
+    File::options()
+        .write(true)
+        .create_new(true)
+        .open(tmp_cargo_home_bin.join(pkg))
+        .unwrap();
+
+    // Initialize .crates.toml if not exist.
+    if let Ok(mut crates_toml) = File::options()
+        .write(true)
+        .create_new(true)
+        .open(tmp_cargo_home_crates.clone())
+    {
+        writeln!(&mut crates_toml, "[v1]").unwrap();
+    }
+
+    // Append new package to it.
+    writeln!(
+        &mut File::options()
+            .append(true)
+            .open(tmp_cargo_home_crates)
+            .unwrap(),
+        "\"{pkg} {ver} (registry+https://github.com/rust-lang/crates.io-index)\" = [\"{pkg}\"]",
+    )
+    .unwrap();
+}
+
+/// Runs [`fake_install`] for each package name and version pair yielded by the
+/// given iterator.
+#[allow(unused)]
+#[allow(clippy::missing_panics_doc)]
+pub fn fake_install_all<'p, 'v>(pkg_vers: impl IntoIterator<Item = (&'p str, &'v str)>) {
+    for (pkg, ver) in pkg_vers {
+        fake_install(pkg, ver);
+    }
 }
