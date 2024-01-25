@@ -1,11 +1,9 @@
-use std::{env, fs};
-
 use cargo_test_macro::cargo_test;
 use cargo_test_support::registry::Package;
 use trycmd::TestCases;
 
 mod common;
-use common::{fake_install_all, init_registry};
+use common::{fake_install_all, init_registry, write_user_config};
 
 /// Verify that all `console` code blocks included in this project's
 /// `README.md` file are properly kept in-sync with the actual outputs.
@@ -33,11 +31,7 @@ fn validate_readme() {
     // Mimic previous `cargo install` runs.
     fake_install_all([("cargo-liner", "0.0.0"), ("cargo-expand", "1.0.78")]);
     // Add our example configuration.
-    fs::write(
-        tmp_cargo_home.join("liner.toml"),
-        ["[packages]", "bat = \"*\"", "cargo-expand = \"*\""].join("\n"),
-    )
-    .unwrap();
+    write_user_config(&["[packages]", "bat = '*'", "cargo-expand = '*'"]);
 
     // Run the test.
     TestCases::new()

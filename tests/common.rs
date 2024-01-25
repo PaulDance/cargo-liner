@@ -111,6 +111,16 @@ pub fn set_env() {
     env::set_var("CARGO_INCREMENTAL", "0");
 }
 
+/// Writes the given lines of content to the `$CARGO_HOME/liner.toml` user
+/// configuration.
+pub fn write_user_config(content_lines: &[&str]) {
+    fs::write(
+        cargo_test_support::paths::home().join(".cargo/liner.toml"),
+        content_lines.join("\n"),
+    )
+    .unwrap();
+}
+
 /// Fakes the result of a `cargo install` run for the given package name and
 /// version.
 ///
