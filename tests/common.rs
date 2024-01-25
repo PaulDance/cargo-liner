@@ -13,6 +13,7 @@ use cargo_test_support::{
     registry::{HttpServer, RegistryBuilder, Request, Response, TestRegistry},
     TestEnv,
 };
+use semver::Version;
 use snapbox::cmd::Command;
 
 /// Invoke `cargo-liner liner` with the test environment.
@@ -58,14 +59,22 @@ pub fn init_registry() -> TestRegistry {
             let pkg_res = dl_path
                 .join(req_pkg)
                 .read_dir()
-                .map_or(String::new(), |mut dir| {
-                    let pkg_ver = dir
-                        .next()
+                // Sub-directories have versions as names: take the max.
+                .map(|mut dir_itr| {
+                    dir_itr
+                        .map(|subdir| {
+                            subdir
+                                .unwrap()
+                                .file_name()
+                                .into_string()
+                                .unwrap()
+                                .parse::<Version>()
+                                .unwrap()
+                        })
+                        .max()
                         .unwrap()
-                        .unwrap()
-                        .file_name()
-                        .into_string()
-                        .unwrap();
+                })
+                .map_or(String::new(), |pkg_ver| {
                     format!(
                         r#"{{
                             "name": "{req_pkg}",
