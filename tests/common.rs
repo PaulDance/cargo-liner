@@ -5,6 +5,7 @@ use std::collections::HashMap;
 use std::env;
 use std::fs::{self, File};
 use std::io::Write;
+use std::path::Path;
 
 use cargo_test_support::registry::Package;
 use cargo_test_support::{
@@ -112,6 +113,12 @@ pub fn set_env() {
     env::set_var("CARGO_INCREMENTAL", "0");
 }
 
+/// Reads the user configuration file to a string.
+#[must_use]
+pub fn read_user_config() -> String {
+    fs::read_to_string(cargo_test_support::paths::home().join(".cargo/liner.toml")).unwrap()
+}
+
 /// Writes the given lines of content to the `$CARGO_HOME/liner.toml` user
 /// configuration.
 pub fn write_user_config(content_lines: &[&str]) {
@@ -120,6 +127,18 @@ pub fn write_user_config(content_lines: &[&str]) {
         content_lines.join("\n"),
     )
     .unwrap();
+}
+
+/// Asserts the user configuration file's contents are exactly equal to the
+/// given string.
+pub fn assert_user_config_eq(test_str: &str) {
+    assert_eq!(read_user_config(), test_str);
+}
+
+/// Asserts the user configuration file's contents are exactly equal to the
+/// given one's.
+pub fn assert_user_config_eq_path(test_path: impl AsRef<Path>) {
+    assert_user_config_eq(&fs::read_to_string(test_path).unwrap());
 }
 
 /// Fakes the result of a `cargo install` run for the given package name and
