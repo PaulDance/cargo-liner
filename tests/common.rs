@@ -1,3 +1,6 @@
+#![allow(unused)]
+#![allow(clippy::missing_panics_doc)]
+
 use std::collections::HashMap;
 use std::env;
 use std::fs::{self, File};
@@ -11,7 +14,6 @@ use cargo_test_support::{
 use snapbox::cmd::Command;
 
 /// Invoke `cargo-liner liner` with the test environment.
-#[allow(unused)]
 #[must_use]
 pub fn cargo_liner() -> Command {
     Command::new(snapbox::cmd::cargo_bin(clap::crate_name!()))
@@ -26,7 +28,6 @@ pub fn cargo_liner() -> Command {
 ///
 /// Returns a test registry handle that must be saved in order for the test
 /// server to be kept alive.
-#[allow(clippy::missing_panics_doc)]
 #[must_use]
 pub fn init_registry() -> TestRegistry {
     // Must be fetched ahead of time, otherwise the underlying global state is
@@ -99,8 +100,6 @@ pub fn init_registry() -> TestRegistry {
 }
 
 /// Sets various environment variables to mimic Cargo's testing framework.
-#[allow(unused)]
-#[allow(clippy::missing_panics_doc)]
 pub fn set_env() {
     let tmp_home = cargo_test_support::paths::home();
     env::set_var("HOME", tmp_home.to_str().unwrap());
@@ -118,8 +117,6 @@ pub fn set_env() {
 /// Creates the `$CARGO_HOME/bin` directory if it does not exist; adds an empty
 /// file of the package's name in it; adds the package's name and version to
 /// the `$CARGO_HOME/.crates.toml` file, creating it if it does not exist.
-#[allow(unused)]
-#[allow(clippy::missing_panics_doc)]
 pub fn fake_install(pkg: &str, ver: &str) {
     let tmp_home = cargo_test_support::paths::home();
     let tmp_cargo_home = tmp_home.join(".cargo");
@@ -156,8 +153,6 @@ pub fn fake_install(pkg: &str, ver: &str) {
 
 /// Runs [`fake_install`] for each package name and version pair yielded by the
 /// given iterator.
-#[allow(unused)]
-#[allow(clippy::missing_panics_doc)]
 pub fn fake_install_all<'p, 'v>(pkg_vers: impl IntoIterator<Item = (&'p str, &'v str)>) {
     for (pkg, ver) in pkg_vers {
         fake_install(pkg, ver);
