@@ -11,6 +11,7 @@ use std::str;
 
 use anyhow::{anyhow, Result};
 use clap::ColorChoice;
+use log::Level;
 use regex::Regex;
 use semver::Version;
 
@@ -101,15 +102,20 @@ pub fn install_all(
 /// returns the corresponding child process handle to be used with
 /// [`finish_search_exact`].
 fn spawn_search_exact(pkg: &str) -> Result<Child> {
+    // HACK: detect test environment using some environment variable.
+    let is_test = env::var_os("__CARGO_TEST_ROOT").is_some();
     let mut cmd = Command::new(env::var("CARGO")?);
 
     cmd.stdin(Stdio::null());
-    cmd.stderr(Stdio::null());
+    cmd.stderr(if is_test || log_enabled!(Level::Debug) {
+        Stdio::inherit()
+    } else {
+        Stdio::null()
+    });
     cmd.stdout(Stdio::piped());
     cmd.args(["--color=never", "search"]);
 
-    // HACK: detect test environment using some environment variable.
-    if env::var_os("__CARGO_TEST_ROOT").is_some() {
+    if is_test {
         cmd.arg("--registry=dummy-registry");
     }
 
