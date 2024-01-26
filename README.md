@@ -227,6 +227,7 @@ Example output if `bat` and `cargo-expand` are required:
 ```console
 $ cargo liner
  INFO  cargo_liner::cargo > Fetching latest package versions...
+...
  INFO  cargo_liner        > Results:
  INFO  cargo_liner        >     bat           ø -> 0.24.0
  INFO  cargo_liner        >     cargo-expand  1.0.78 -> 1.0.79
