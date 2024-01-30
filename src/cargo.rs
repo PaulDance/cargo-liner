@@ -222,17 +222,22 @@ fn log_cmd(cmd: &Command) {
 
 #[cfg(test)]
 mod tests {
+    use std::sync::Mutex;
+
     use anyhow::bail;
     use cargo_test_macro::cargo_test;
+    use once_cell::sync::Lazy;
 
     use super::*;
     use crate::testing;
 
     const SELF: &str = clap::crate_name!();
     const NONE: &str = "azertyuiop-qsdfghjklm_wxcvbn";
+    static LOCK: Lazy<Mutex<()>> = Lazy::new(|| Mutex::new(()));
 
     #[cargo_test]
-    fn test_searchspawn_self_isok() -> Result<()> {
+    fn test_singlethreaded_searchspawn_self_isok() -> Result<()> {
+        let _lk = LOCK.lock();
         let _reg = testing::init_registry();
         testing::fake_publish(SELF, "0.0.0");
         testing::set_env();
@@ -251,7 +256,8 @@ mod tests {
     }
 
     #[cargo_test]
-    fn test_searchfinish_self_isok() -> Result<()> {
+    fn test_singlethreaded_searchfinish_self_isok() -> Result<()> {
+        let _lk = LOCK.lock();
         let _reg = testing::init_registry();
         testing::fake_publish(SELF, "0.0.0");
         testing::set_env();
@@ -264,7 +270,8 @@ mod tests {
     }
 
     #[cargo_test]
-    fn test_searchspawn_none_isok() -> Result<()> {
+    fn test_singlethreaded_searchspawn_none_isok() -> Result<()> {
+        let _lk = LOCK.lock();
         let _reg = testing::init_registry();
         testing::set_env();
 
@@ -282,7 +289,8 @@ mod tests {
     }
 
     #[cargo_test]
-    fn test_searchfinish_none_iserr() -> Result<()> {
+    fn test_singlethreaded_searchfinish_none_iserr() -> Result<()> {
+        let _lk = LOCK.lock();
         let _reg = testing::init_registry();
         testing::set_env();
 
@@ -291,7 +299,8 @@ mod tests {
     }
 
     #[cargo_test]
-    fn test_searchall_selfandothers_isok() -> Result<()> {
+    fn test_singlethreaded_searchall_selfandothers_isok() -> Result<()> {
+        let _lk = LOCK.lock();
         let _reg = testing::init_registry();
         testing::fake_publish_all([
             (SELF, clap::crate_version!()),
@@ -323,7 +332,8 @@ mod tests {
     }
 
     #[cargo_test]
-    fn test_searchall_none_iserr() {
+    fn test_singlethreaded_searchall_none_iserr() {
+        let _lk = LOCK.lock();
         let _reg = testing::init_registry();
         testing::set_env();
 
