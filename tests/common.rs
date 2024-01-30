@@ -56,7 +56,7 @@ pub fn init_registry() -> TestRegistry {
             // Use the `dl` directory instead of the `registry` one in order to
             // easily test whether a packaged has previously been published or
             // not: test if a sub-directory of the package's name exists.
-            let pkg_res = dl_path
+            let (res_len, pkg_res) = dl_path
                 .join(req_pkg)
                 .read_dir()
                 .map_err(|err| {
@@ -80,14 +80,17 @@ pub fn init_registry() -> TestRegistry {
                         .max()
                         .unwrap()
                 })
-                .map_or(String::new(), |pkg_ver| {
-                    format!(
-                        r#"{{
-                            "name": "{req_pkg}",
-                            "description": "whatever",
-                            "newest_version": "{pkg_ver}",
-                            "max_version": "{pkg_ver}"
-                        }}"#,
+                .map_or((0, String::new()), |pkg_ver| {
+                    (
+                        1,
+                        format!(
+                            r#"{{
+                                "name": "{req_pkg}",
+                                "description": "whatever",
+                                "newest_version": "{pkg_ver}",
+                                "max_version": "{pkg_ver}"
+                            }}"#,
+                        ),
                     )
                 });
 
@@ -99,14 +102,13 @@ pub fn init_registry() -> TestRegistry {
                 headers: Vec::new(),
                 body: format!(
                     r#"{{
-                        "crates": [{}],
+                        "crates": [{pkg_res}],
                         "meta": {{
                             "next_page": "?q={}&page=2",
                             "prev_page": null,
-                            "total": 1
+                            "total": {res_len}
                         }}
                     }}"#,
-                    pkg_res,
                     req.url.query().unwrap(),
                 )
                 .as_bytes()
