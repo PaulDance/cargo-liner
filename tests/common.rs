@@ -3,6 +3,7 @@
 
 use std::collections::HashMap;
 use std::env;
+use std::ffi::OsStr;
 use std::fs::{self, File};
 use std::io::Write;
 use std::path::Path;
@@ -118,16 +119,24 @@ pub fn init_registry() -> TestRegistry {
         .build()
 }
 
-/// Sets various environment variables to mimic Cargo's testing framework.
+/// Applies Cargo's testing environment to the current process.
 pub fn set_env() {
-    let tmp_home = cargo_test_support::paths::home();
-    env::set_var("HOME", tmp_home.to_str().unwrap());
-    env::set_var("CARGO_HOME", tmp_home.join(".cargo").to_str().unwrap());
-    env::set_var(
-        "__CARGO_TEST_ROOT",
-        cargo_test_support::paths::global_root().to_str().unwrap(),
-    );
-    env::set_var("CARGO_INCREMENTAL", "0");
+    struct CurrentEnv;
+    impl TestEnv for CurrentEnv {
+        fn current_dir<S: AsRef<Path>>(self, path: S) -> Self {
+            env::set_current_dir(path).unwrap();
+            self
+        }
+        fn env<S: AsRef<OsStr>>(self, key: &str, value: S) -> Self {
+            env::set_var(key, value);
+            self
+        }
+        fn env_remove(self, key: &str) -> Self {
+            env::remove_var(key);
+            self
+        }
+    }
+    CurrentEnv {}.test_env();
 }
 
 /// Reads the user configuration file to a string.
