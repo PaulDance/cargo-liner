@@ -2,11 +2,11 @@
 #![allow(clippy::missing_panics_doc)]
 
 use std::collections::HashMap;
-use std::env;
 use std::ffi::OsStr;
 use std::fs::{self, File};
 use std::io::Write;
 use std::path::Path;
+use std::{env, io};
 
 use cargo_test_support::registry::Package;
 use cargo_test_support::{
@@ -148,11 +148,10 @@ pub fn read_user_config() -> String {
 /// Writes the given lines of content to the `$CARGO_HOME/liner.toml` user
 /// configuration.
 pub fn write_user_config(content_lines: &[&str]) {
-    fs::write(
-        cargo_test_support::paths::home().join(".cargo/liner.toml"),
-        content_lines.join("\n"),
-    )
-    .unwrap();
+    let cargo_home = cargo_test_support::install::cargo_home();
+    let _ = fs::create_dir(cargo_home.as_path())
+        .map_err(|err| assert_eq!(err.kind(), io::ErrorKind::AlreadyExists));
+    fs::write(cargo_home.join("liner.toml"), content_lines.join("\n")).unwrap();
 }
 
 /// Asserts the user configuration file's contents are exactly equal to the
