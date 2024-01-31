@@ -14,8 +14,8 @@ fn validate_import() {
         .arg("import")
         .assert()
         .success()
-        .stderr_eq("")
-        .stdout_eq_path("tests/fixtures/import/validate_import.stdout");
+        .stdout_eq("")
+        .stderr_eq_path("tests/fixtures/import/validate_import.stderr");
     assert_user_config_eq_path("tests/fixtures/import/validate_import.outconfig");
 }
 
@@ -26,8 +26,8 @@ fn validate_import_keepself() {
         .args(["import", "--keep-self"])
         .assert()
         .success()
-        .stderr_eq("")
-        .stdout_eq_path("tests/fixtures/import/validate_import.stdout");
+        .stdout_eq("")
+        .stderr_eq_path("tests/fixtures/import/validate_import.stderr");
     assert_user_config_eq_path("tests/fixtures/import/validate_import_keepself.outconfig");
 }
 
@@ -38,8 +38,8 @@ fn validate_import_exact() {
         .args(["import", "--exact"])
         .assert()
         .success()
-        .stderr_eq("")
-        .stdout_eq_path("tests/fixtures/import/validate_import.stdout");
+        .stdout_eq("")
+        .stderr_eq_path("tests/fixtures/import/validate_import.stderr");
     assert_user_config_eq_path("tests/fixtures/import/validate_import_exact.outconfig");
 }
 
@@ -50,8 +50,8 @@ fn validate_import_exact_keepself() {
         .args(["import", "--exact", "--keep-self"])
         .assert()
         .success()
-        .stderr_eq("")
-        .stdout_eq_path("tests/fixtures/import/validate_import.stdout");
+        .stdout_eq("")
+        .stderr_eq_path("tests/fixtures/import/validate_import.stderr");
     assert_user_config_eq_path("tests/fixtures/import/validate_import_exact_keepself.outconfig");
 }
 
@@ -62,8 +62,8 @@ fn validate_import_compatible() {
         .args(["import", "--compatible"])
         .assert()
         .success()
-        .stderr_eq("")
-        .stdout_eq_path("tests/fixtures/import/validate_import.stdout");
+        .stdout_eq("")
+        .stderr_eq_path("tests/fixtures/import/validate_import.stderr");
     assert_user_config_eq_path("tests/fixtures/import/validate_import_compatible.outconfig");
 }
 
@@ -74,8 +74,8 @@ fn validate_import_compatible_keepself() {
         .args(["import", "--compatible", "--keep-self"])
         .assert()
         .success()
-        .stderr_eq("")
-        .stdout_eq_path("tests/fixtures/import/validate_import.stdout");
+        .stdout_eq("")
+        .stderr_eq_path("tests/fixtures/import/validate_import.stderr");
     assert_user_config_eq_path(
         "tests/fixtures/import/validate_import_compatible_keepself.outconfig",
     );
@@ -88,8 +88,8 @@ fn validate_import_patch() {
         .args(["import", "--patch"])
         .assert()
         .success()
-        .stderr_eq("")
-        .stdout_eq_path("tests/fixtures/import/validate_import.stdout");
+        .stdout_eq("")
+        .stderr_eq_path("tests/fixtures/import/validate_import.stderr");
     assert_user_config_eq_path("tests/fixtures/import/validate_import_patch.outconfig");
 }
 
@@ -100,8 +100,8 @@ fn validate_import_patch_keepself() {
         .args(["import", "--patch", "--keep-self"])
         .assert()
         .success()
-        .stderr_eq("")
-        .stdout_eq_path("tests/fixtures/import/validate_import.stdout");
+        .stdout_eq("")
+        .stderr_eq_path("tests/fixtures/import/validate_import.stderr");
     assert_user_config_eq_path("tests/fixtures/import/validate_import_patch_keepself.outconfig");
 }
 
@@ -112,8 +112,8 @@ fn validate_import_force_nofile_isok() {
         .args(["import", "--force"])
         .assert()
         .success()
-        .stderr_eq("")
-        .stdout_eq_path("tests/fixtures/import/validate_import.stdout");
+        .stdout_eq("")
+        .stderr_eq_path("tests/fixtures/import/validate_import.stderr");
     assert_user_config_eq_path("tests/fixtures/import/validate_import.outconfig");
 }
 
@@ -126,8 +126,8 @@ fn validate_import_force_withfile_iswarn() {
         .args(["import", "--force"])
         .assert()
         .success()
-        .stderr_eq("")
-        .stdout_eq_path("tests/fixtures/import/validate_import_force_warn.stdout");
+        .stdout_eq("")
+        .stderr_eq_path("tests/fixtures/import/validate_import_force_warn.stderr");
     assert_user_config_eq_path("tests/fixtures/import/validate_import.outconfig");
 }
 
@@ -140,7 +140,7 @@ fn validate_import_noforce_withfile_iserr() {
         .arg("import")
         .assert()
         .failure()
-        .stderr_eq("")
-        .stdout_eq_path("tests/fixtures/import/validate_import_force_err.stdout");
+        .stdout_eq("")
+        .stderr_eq_path("tests/fixtures/import/validate_import_force_err.stderr");
     assert_user_config_eq("[packages]");
 }

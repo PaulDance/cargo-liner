@@ -9,7 +9,7 @@ use anyhow::{bail, Result};
 extern crate log;
 use clap::ColorChoice;
 use log::LevelFilter;
-use pretty_env_logger::env_logger::{Target, WriteStyle};
+use pretty_env_logger::env_logger::WriteStyle;
 use semver::Version;
 
 mod cargo;
@@ -67,7 +67,6 @@ fn try_main() -> Result<()> {
         ColorChoice::Auto => WriteStyle::Auto,
         ColorChoice::Never => WriteStyle::Never,
     });
-    bld.target(Target::Stdout);
     bld.parse_default_env();
     bld.try_init()?;
 
