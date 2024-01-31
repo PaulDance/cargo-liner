@@ -214,6 +214,22 @@ pub fn fake_install_all<'p, 'v>(pkg_vers: impl IntoIterator<Item = (&'p str, &'v
     }
 }
 
+/// Asserts that the given package is installed in the testing environment.
+pub fn assert_installed(pkg: &'static str) {
+    cargo_test_support::install::assert_has_installed_exe(
+        cargo_test_support::install::cargo_home(),
+        pkg,
+    );
+}
+
+/// Asserts that the given package is not installed in the testing environment.
+pub fn assert_not_installed(pkg: &'static str) {
+    cargo_test_support::install::assert_has_not_installed_exe(
+        cargo_test_support::install::cargo_home(),
+        pkg,
+    );
+}
+
 /// Publishes the given package name and version to the local fake registry
 /// with minimal contents.
 pub fn fake_publish(pkg: &str, ver: &str) {
