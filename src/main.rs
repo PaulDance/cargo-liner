@@ -18,7 +18,7 @@ use cli::{LinerArgs, LinerCommands};
 mod config;
 use config::{CargoCratesToml, Package, UserConfig};
 #[cfg(test)]
-#[path = "../tests/common.rs"]
+#[path = "../tests/common/mod.rs"]
 mod testing;
 
 /// Wrap the desired main and display errors in a fashion consistent with the
