@@ -266,3 +266,29 @@ pub fn fake_publish_all<'p, 'v>(pkg_vers: impl IntoIterator<Item = (&'p str, &'v
         fake_publish(pkg, ver);
     }
 }
+
+/// Runs [`fake_publish_all`] on some example packages, self included.
+pub fn fixture_fake_publish() {
+    fake_publish_all(FIXTURE_PACKAGES);
+}
+
+/// Runs [`fake_publish_all`] on some example packages, self included, but with
+/// other packages' version bumped by one patch.
+pub fn fixture_fake_publish_newer_others() {
+    let pkgs = FIXTURE_PACKAGES
+        .into_iter()
+        .map(|(pkg, ver)| {
+            (
+                pkg,
+                if pkg == clap::crate_name!() {
+                    ver.to_owned()
+                } else {
+                    let mut ver = Version::parse(ver).unwrap();
+                    ver.patch += 1;
+                    ver.to_string()
+                },
+            )
+        })
+        .collect::<Vec<_>>();
+    fake_publish_all(pkgs.iter().map(|(pkg, ver)| (*pkg, ver.as_str())));
+}
