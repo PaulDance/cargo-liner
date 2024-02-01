@@ -3,10 +3,6 @@ use cargo_test_macro::cargo_test;
 mod common;
 use common::*;
 
-fn fixture_fake_install() {
-    fake_install_all([("abc", "0.0.1"), ("def", "0.0.2"), ("cargo-liner", "0.0.3")]);
-}
-
 #[cargo_test]
 fn validate_import() {
     fixture_fake_install();

@@ -214,6 +214,11 @@ pub fn fake_install_all<'p, 'v>(pkg_vers: impl IntoIterator<Item = (&'p str, &'v
     }
 }
 
+/// Runs [`fake_install_all`] on some example packages, including self.
+pub fn fixture_fake_install() {
+    fake_install_all([("abc", "0.0.1"), ("def", "0.0.2"), ("cargo-liner", "0.0.3")]);
+}
+
 /// Asserts that the given package is installed in the testing environment.
 pub fn assert_installed(pkg: &'static str) {
     cargo_test_support::install::assert_has_installed_exe(
