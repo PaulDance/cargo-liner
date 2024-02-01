@@ -1,0 +1,29 @@
+ INFO  cargo_liner::cargo > Fetching latest package versions...
+...
+ INFO  cargo_liner        > Results:
+ INFO  cargo_liner        >     abc          ø -> 0.0.1
+ INFO  cargo_liner        >     cargo-liner  ✔
+ INFO  cargo_liner        >     def          ø -> 0.0.2
+ INFO  cargo_liner::cargo > Installing `abc`...
+    Updating `dummy-registry` index
+ Downloading crates ...
+  Downloaded abc v0.0.1 (registry `dummy-registry`)
+  Installing abc v0.0.1
+    Updating `dummy-registry` index
+   Compiling abc v0.0.1
+    Finished release [optimized] target(s) in [..]s
+  Installing [..]/.cargo/bin/abc
+   Installed package `abc v0.0.1` (executable `abc`)
+warning: be sure to add `[..]/.cargo/bin` to your PATH to be able to run the installed binaries
+ INFO  cargo_liner::cargo > Installing `def`...
+    Updating `dummy-registry` index
+ Downloading crates ...
+  Downloaded def v0.0.2 (registry `dummy-registry`)
+  Installing def v0.0.2
+    Updating `dummy-registry` index
+   Compiling def v0.0.2
+    Finished release [optimized] target(s) in [..]s
+  Installing [..]/.cargo/bin/def
+   Installed package `def v0.0.2` (executable `def`)
+warning: be sure to add `[..]/.cargo/bin` to your PATH to be able to run the installed binaries
+ INFO  cargo_liner        > Done.

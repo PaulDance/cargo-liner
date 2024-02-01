@@ -1,0 +1,7 @@
+ INFO  cargo_liner::cargo > Fetching latest package versions...
+...
+ INFO  cargo_liner        > Results:
+ INFO  cargo_liner        >     abc          ✔
+ INFO  cargo_liner        >     cargo-liner  ✔
+ INFO  cargo_liner        >     def          ✔
+ INFO  cargo_liner        > Done.
