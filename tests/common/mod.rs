@@ -17,6 +17,10 @@ use cargo_test_support::{
 use semver::Version;
 use snapbox::cmd::Command;
 
+/// List of example packages and their respective versions, including self.
+pub const FIXTURE_PACKAGES: [(&str, &str); 3] =
+    [("abc", "0.0.1"), ("def", "0.0.2"), ("cargo-liner", "0.0.3")];
+
 /// Invoke `cargo-liner liner` with the test environment.
 #[must_use]
 pub fn cargo_liner() -> Command {
@@ -216,7 +220,7 @@ pub fn fake_install_all<'p, 'v>(pkg_vers: impl IntoIterator<Item = (&'p str, &'v
 
 /// Runs [`fake_install_all`] on some example packages, including self.
 pub fn fixture_fake_install() {
-    fake_install_all([("abc", "0.0.1"), ("def", "0.0.2"), ("cargo-liner", "0.0.3")]);
+    fake_install_all(FIXTURE_PACKAGES);
 }
 
 /// Asserts that the given package is installed in the testing environment.
@@ -225,6 +229,18 @@ pub fn assert_installed(pkg: &'static str) {
         cargo_test_support::install::cargo_home(),
         pkg,
     );
+}
+
+/// Runs [`assert_installed`] on all the packages yielded by the given iterator.
+pub fn assert_installed_all(pkgs: impl IntoIterator<Item = &'static str>) {
+    for pkg in pkgs {
+        assert_installed(pkg);
+    }
+}
+
+/// Runs [`assert_installed_all`] on some example packages, self included.
+pub fn fixture_assert_installed() {
+    assert_installed_all(FIXTURE_PACKAGES.into_iter().map(|(pkg, _)| pkg));
 }
 
 /// Asserts that the given package is not installed in the testing environment.
