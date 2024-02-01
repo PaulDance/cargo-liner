@@ -6,7 +6,7 @@ use std::ffi::OsStr;
 use std::fs::{self, File};
 use std::io::Write;
 use std::path::Path;
-use std::{env, io};
+use std::{env, io, iter};
 
 use cargo_test_support::registry::Package;
 use cargo_test_support::{
@@ -156,6 +156,19 @@ pub fn write_user_config(content_lines: &[&str]) {
     let _ = fs::create_dir(cargo_home.as_path())
         .map_err(|err| assert_eq!(err.kind(), io::ErrorKind::AlreadyExists));
     fs::write(cargo_home.join("liner.toml"), content_lines.join("\n")).unwrap();
+}
+
+/// Runs [`write_user_config`] with an example configuration excluding self.
+pub fn fixture_write_user_config() {
+    let cfg_pkg_lines = FIXTURE_PACKAGES
+        .into_iter()
+        .filter(|(pkg, _)| *pkg != clap::crate_name!())
+        .map(|(pkg, _)| format!("{pkg} = '*'"))
+        .collect::<Vec<_>>();
+    let cfg_lines = iter::once("[packages]")
+        .chain(cfg_pkg_lines.iter().map(String::as_str))
+        .collect::<Vec<_>>();
+    write_user_config(&cfg_lines);
 }
 
 /// Asserts the user configuration file's contents are exactly equal to the
