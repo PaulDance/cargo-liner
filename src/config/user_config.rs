@@ -133,6 +133,19 @@ mod tests {
     }
 
     #[test]
+    fn test_deser_userconfig_unknownfields_isok() {
+        assert!(toml::from_str::<UserConfig>(
+            r#"
+                [packages]
+                abc = "1.2.3"
+                [unknown-section]
+                unknown-field = "unknown-value"
+            "#
+        )
+        .is_ok());
+    }
+
+    #[test]
     fn test_deser_userconfig_no_packages() {
         assert_eq!(
             toml::from_str::<UserConfig>("[packages]\n").unwrap(),
