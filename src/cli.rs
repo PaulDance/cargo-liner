@@ -231,8 +231,9 @@ mod tests {
 
     #[test]
     fn test_no_args() {
+        let args = CargoArgs::try_parse_from(["cargo", "liner"]).unwrap();
         assert_eq!(
-            CargoArgs::try_parse_from(["cargo", "liner"]).unwrap(),
+            args,
             CargoArgs::Liner(LinerArgs {
                 command: None,
                 verbose: 0,
@@ -240,43 +241,52 @@ mod tests {
                 color: ColorChoice::Auto,
             }),
         );
+        assert_eq!(args.liner().verbosity(), 0);
     }
 
+    #[allow(clippy::cast_possible_truncation)]
     #[test]
     fn test_verbose() {
         for i in 1..=5 {
+            let args = CargoArgs::try_parse_from([
+                "cargo",
+                "liner",
+                &("-".to_owned() + &str::repeat("v", i)),
+            ])
+            .unwrap();
             assert_eq!(
-                CargoArgs::try_parse_from(
-                    ["cargo", "liner", &("-".to_owned() + &str::repeat("v", i))]
-                )
-                .unwrap(),
+                args,
                 CargoArgs::Liner(LinerArgs {
                     command: None,
-                    #[allow(clippy::cast_possible_truncation)]
                     verbose: i as u8,
                     quiet: 0,
                     color: ColorChoice::Auto,
                 }),
             );
+            assert_eq!(args.liner().verbosity(), i as i8);
         }
     }
 
+    #[allow(clippy::cast_possible_truncation)]
     #[test]
     fn test_quiet() {
         for i in 1..=5 {
+            let args = CargoArgs::try_parse_from([
+                "cargo",
+                "liner",
+                &("-".to_owned() + &str::repeat("q", i)),
+            ])
+            .unwrap();
             assert_eq!(
-                CargoArgs::try_parse_from(
-                    ["cargo", "liner", &("-".to_owned() + &str::repeat("q", i))]
-                )
-                .unwrap(),
+                args,
                 CargoArgs::Liner(LinerArgs {
                     command: None,
                     verbose: 0,
-                    #[allow(clippy::cast_possible_truncation)]
                     quiet: i as u8,
                     color: ColorChoice::Auto,
                 }),
             );
+            assert_eq!(args.liner().verbosity(), -(i as i8));
         }
     }
 
