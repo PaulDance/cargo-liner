@@ -100,6 +100,12 @@ fn try_main() -> Result<()> {
             let mut skip_check = false;
             let mut force = false;
             let mut config = UserConfig::parse_file()?;
+            let cargo_verbosity = match args.verbosity() {
+                -2..=1 => 0,
+                v if v > 1 => v - 1,
+                q if q < -2 => q + 2,
+                _ => unreachable!(),
+            };
 
             if let Some(LinerCommands::Ship(ship_args)) = cmd {
                 skip_check = ship_args.skip_check;
@@ -111,7 +117,13 @@ fn try_main() -> Result<()> {
 
             if skip_check {
                 // Don't parse `.crates.toml` here: can be used as a workaround.
-                cargo::install_all(&config.packages, &BTreeSet::new(), force, args.color)?;
+                cargo::install_all(
+                    &config.packages,
+                    &BTreeSet::new(),
+                    force,
+                    args.color,
+                    cargo_verbosity,
+                )?;
             } else {
                 let cct = CargoCratesToml::parse_file()?;
                 let vers = cargo::search_exact_all(&config.packages)?;
@@ -122,6 +134,7 @@ fn try_main() -> Result<()> {
                     &cct.into_names(),
                     force,
                     args.color,
+                    cargo_verbosity,
                 )?;
             }
         }

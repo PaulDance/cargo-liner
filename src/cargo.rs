@@ -2,12 +2,13 @@
 //!
 //! See [`install_all`] in order to install configured packages.
 
+use std::cmp::Ordering;
 use std::collections::{BTreeMap, BTreeSet};
-use std::env;
 use std::ffi::OsStr;
 use std::os::unix::prelude::OsStrExt;
 use std::process::{Child, Command, Stdio};
 use std::str;
+use std::{env, iter};
 
 use anyhow::{anyhow, Result};
 use clap::ColorChoice;
@@ -25,6 +26,7 @@ use crate::config::Package;
 /// corresponding program. See the [Cargo reference] for more details.
 ///
 /// [Cargo reference]: https://doc.rust-lang.org/cargo/reference/external-tools.html#custom-subcommands
+#[allow(clippy::too_many_arguments)]
 fn install(
     name: &str,
     version: &str,
@@ -33,15 +35,27 @@ fn install(
     features: &[String],
     force: bool,
     color: ColorChoice,
+    verbosity: i8,
 ) -> Result<()> {
     let mut cmd = Command::new(env::var("CARGO")?);
-    cmd.args([
-        "--color",
-        &color.to_string(),
-        "install",
-        "--version",
-        version,
-    ]);
+    cmd.args(["--color", &color.to_string()]);
+
+    match verbosity.cmp(&0) {
+        Ordering::Greater => {
+            let opt = iter::once('-')
+                .chain(iter::repeat('v').take(verbosity.try_into().unwrap()))
+                .collect::<String>();
+            cmd.arg(&opt);
+            trace!("`{opt}` arg added.");
+        }
+        Ordering::Less => {
+            cmd.arg("-q");
+            trace!("`-q` arg added.");
+        }
+        Ordering::Equal => {}
+    }
+
+    cmd.args(["install", "--version", version]);
 
     if no_default_features {
         cmd.arg("--no-default-features");
@@ -76,6 +90,7 @@ pub fn install_all(
     installed: &BTreeSet<String>,
     force: bool,
     color: ColorChoice,
+    verbosity: i8,
 ) -> Result<()> {
     for (pkg_name, pkg) in packages {
         if installed.contains(pkg_name) {
@@ -92,6 +107,7 @@ pub fn install_all(
             pkg.features(),
             force,
             color,
+            verbosity,
         )?;
     }
 
