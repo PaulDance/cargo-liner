@@ -817,3 +817,20 @@ fn validate_ship_cargoinstallroot_supported() {
         .stderr_matches_path("tests/fixtures/ship/validate_ship_cargoinstallroot_supported.stderr");
     assert!(tmp_dir.path().join("bin/pkg").is_file());
 }
+
+/// See #6
+#[cargo_test]
+fn validate_ship_weirdversions_supported() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish("pkg", "1.0.0+meta123");
+    write_user_config(&["[packages]", "pkg = '*'"]);
+
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path("tests/fixtures/ship/validate_ship_weirdversions_supported.stderr");
+    assert_installed("pkg");
+}

@@ -1,0 +1,16 @@
+ INFO  cargo_liner::cargo > Fetching latest package versions...
+    Updating `dummy-registry` index
+ INFO  cargo_liner        > Results:
+ INFO  cargo_liner        >     pkg  ø -> 1.0.0+meta123
+ INFO  cargo_liner::cargo > Installing `pkg`...
+    Updating `dummy-registry` index
+ Downloading crates ...
+  Downloaded pkg v1.0.0+meta123 (registry `dummy-registry`)
+  Installing pkg v1.0.0+meta123
+    Updating `dummy-registry` index
+   Compiling pkg v1.0.0+meta123
+    Finished release [optimized] target(s) in [..]s
+  Installing [..]/.cargo/bin/pkg
+   Installed package `pkg v1.0.0+meta123` (executable `pkg`)
+warning: be sure to add `[..]/.cargo/bin` to your PATH to be able to run the installed binaries
+ INFO  cargo_liner        > Done.
