@@ -756,3 +756,44 @@ fn validate_ship_features_detailed_all_nodefault_one() {
         .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
     assert_installed("pkg");
 }
+
+#[cargo_test]
+fn validate_ship_noconfig_iserr() {
+    let _reg = init_registry();
+    fake_install_self();
+
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .failure()
+        .stdout_eq("")
+        .stderr_eq_path("tests/fixtures/ship/validate_ship_file_err.stderr");
+}
+
+/// See #5.
+#[cargo_test]
+fn validate_ship_nocratestoml_iserr() {
+    let _reg = init_registry();
+    write_user_config(&["[packages]"]);
+
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .failure()
+        .stdout_eq("")
+        .stderr_eq_path("tests/fixtures/ship/validate_ship_file_err.stderr");
+}
+
+/// See #5.
+#[cargo_test]
+fn validate_ship_nocratestoml_skipcheck_isok() {
+    let _reg = init_registry();
+    write_user_config(&["[packages]"]);
+
+    cargo_liner()
+        .args(["ship", "--no-self", "--skip-check"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_eq_path("tests/fixtures/ship/validate_ship_skipcheck_noself_nothing.stderr");
+}
