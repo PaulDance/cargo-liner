@@ -38,6 +38,7 @@ fn try_main() -> Result<()> {
     // Logging is controlled by args, so they must be parsed first.
     let args = LinerArgs::parse_env();
     let mut bld = pretty_env_logger::formatted_builder();
+    bld.parse_default_env();
 
     // Logging setup parameterized by CLI args.
     if args.verbosity().abs() < 2 {
@@ -65,7 +66,6 @@ fn try_main() -> Result<()> {
         ColorChoice::Auto => WriteStyle::Auto,
         ColorChoice::Never => WriteStyle::Never,
     });
-    bld.parse_default_env();
     bld.try_init()?;
 
     // CLI command dispatch.
