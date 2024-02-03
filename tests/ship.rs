@@ -1,5 +1,6 @@
 use cargo_test_macro::cargo_test;
 use cargo_test_support::registry::Package;
+use tempfile::TempDir;
 
 mod common;
 use common::*;
@@ -796,4 +797,23 @@ fn validate_ship_nocratestoml_skipcheck_isok() {
         .success()
         .stdout_eq("")
         .stderr_eq_path("tests/fixtures/ship/validate_ship_skipcheck_noself_nothing.stderr");
+}
+
+/// See #4.
+#[cargo_test]
+fn validate_ship_cargoinstallroot_supported() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish("pkg", "0.0.0");
+    write_user_config(&["[packages]", "pkg = '*'"]);
+
+    let tmp_dir = TempDir::new().unwrap();
+    cargo_liner()
+        .env("CARGO_INSTALL_ROOT", tmp_dir.path())
+        .args(["ship", "--no-self", "--force"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path("tests/fixtures/ship/validate_ship_cargoinstallroot_supported.stderr");
+    assert!(tmp_dir.path().join("bin/pkg").is_file());
 }
