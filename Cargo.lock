@@ -137,6 +137,7 @@ dependencies = [
  "semver",
  "serde",
  "snapbox",
+ "tempfile",
  "toml",
  "trycmd",
 ]
