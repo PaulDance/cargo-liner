@@ -40,26 +40,24 @@ fn try_main() -> Result<()> {
     let mut bld = pretty_env_logger::formatted_builder();
 
     // Logging setup parameterized by CLI args.
-    if args.verbose < 2 && args.quiet < 2 {
+    if args.verbosity().abs() < 2 {
         bld.filter_module("::", LevelFilter::Error);
         bld.filter_module(
             env!("CARGO_CRATE_NAME"),
-            if args.verbose == 0 && args.quiet == 0 {
-                LevelFilter::Info
-            } else if args.verbose == 1 {
-                LevelFilter::Debug
-            } else {
-                LevelFilter::Warn
+            match args.verbosity() {
+                0 => LevelFilter::Info,
+                1 => LevelFilter::Debug,
+                -1 => LevelFilter::Warn,
+                _ => unreachable!(),
             },
         );
     } else {
-        bld.filter_level(match (args.verbose, args.quiet) {
-            (2, 0) => LevelFilter::Debug,
-            // Three -v or more.
-            (_, 0) => LevelFilter::Trace,
-            (0, 2) => LevelFilter::Error,
-            // Three -q or more.
-            _ => LevelFilter::Off,
+        bld.filter_level(match args.verbosity() {
+            2 => LevelFilter::Debug,
+            v if v > 2 => LevelFilter::Trace,
+            -2 => LevelFilter::Error,
+            q if q < -2 => LevelFilter::Off,
+            _ => unreachable!(),
         });
     }
     bld.write_style(match args.color {
