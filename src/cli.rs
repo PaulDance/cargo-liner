@@ -291,6 +291,11 @@ mod tests {
     }
 
     #[test]
+    fn test_quiet_verbose_iserr() {
+        assert!(CargoArgs::try_parse_from(["cargo", "liner", "-qv"]).is_err());
+    }
+
+    #[test]
     fn test_color() {
         for (val, val_str) in [
             (ColorChoice::Always, "always"),
@@ -307,11 +312,6 @@ mod tests {
                 }),
             );
         }
-    }
-
-    #[test]
-    fn test_quiet_verbose_iserr() {
-        assert!(CargoArgs::try_parse_from(["cargo", "liner", "-qv"]).is_err());
     }
 
     #[test]
