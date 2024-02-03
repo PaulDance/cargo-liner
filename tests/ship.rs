@@ -853,3 +853,21 @@ fn validate_ship_weirdpackagenames_supported() {
         );
     assert_not_installed("--pkg");
 }
+
+/// See #14.
+#[cargo_test]
+fn validate_ship_cargotermcolor_supported() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish("pkg", "0.0.0");
+    write_user_config(&["[packages]", "pkg = '*'"]);
+
+    cargo_liner()
+        .env("CARGO_TERM_COLOR", "always")
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+    assert_installed("pkg");
+}
