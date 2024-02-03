@@ -178,8 +178,10 @@ Options:
           When omitted, INFO and above messages of only this crate are
           logged. When used once, DEBUG and above messages of only
           this crate are logged. When used twice, DEBUG and above
-          messages of all crates are logged. When used three times or
-          more, TRACE and above messages of all crates are logged.
+          messages of all crates are logged, and `-v` is given to
+          Cargo calls (details ran commands). When used three times or
+          more, TRACE and above messages of all crates are logged, and
+          `-vv` is given to Cargo calls (includes build output).
 
   -q, --quiet...
           Be quieter. Use multiple times to be more and more so each
@@ -189,7 +191,7 @@ Options:
           logged. When used once, WARN and above messages of only this
           crate are logged. When used twice, ERROR messages of all
           crates are logged. When used three times or more, no message
-          will be logged.
+          will be logged, including Cargo's by passing `-q` to it.
 
       --color <WHEN>
           Control the coloring of the logging output.
@@ -322,8 +324,10 @@ Options:
           When omitted, INFO and above messages of only this crate are
           logged. When used once, DEBUG and above messages of only
           this crate are logged. When used twice, DEBUG and above
-          messages of all crates are logged. When used three times or
-          more, TRACE and above messages of all crates are logged.
+          messages of all crates are logged, and `-v` is given to
+          Cargo calls (details ran commands). When used three times or
+          more, TRACE and above messages of all crates are logged, and
+          `-vv` is given to Cargo calls (includes build output).
 
   -q, --quiet...
           Be quieter. Use multiple times to be more and more so each
@@ -333,7 +337,7 @@ Options:
           logged. When used once, WARN and above messages of only this
           crate are logged. When used twice, ERROR messages of all
           crates are logged. When used three times or more, no message
-          will be logged.
+          will be logged, including Cargo's by passing `-q` to it.
 
       --color <WHEN>
           Control the coloring of the logging output.
@@ -433,8 +437,10 @@ Options:
           When omitted, INFO and above messages of only this crate are
           logged. When used once, DEBUG and above messages of only
           this crate are logged. When used twice, DEBUG and above
-          messages of all crates are logged. When used three times or
-          more, TRACE and above messages of all crates are logged.
+          messages of all crates are logged, and `-v` is given to
+          Cargo calls (details ran commands). When used three times or
+          more, TRACE and above messages of all crates are logged, and
+          `-vv` is given to Cargo calls (includes build output).
 
   -q, --quiet...
           Be quieter. Use multiple times to be more and more so each
@@ -444,7 +450,7 @@ Options:
           logged. When used once, WARN and above messages of only this
           crate are logged. When used twice, ERROR messages of all
           crates are logged. When used three times or more, no message
-          will be logged.
+          will be logged, including Cargo's by passing `-q` to it.
 
       --color <WHEN>
           Control the coloring of the logging output.

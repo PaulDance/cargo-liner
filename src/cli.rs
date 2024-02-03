@@ -35,9 +35,10 @@ pub struct LinerArgs {
     ///
     /// When omitted, INFO and above messages of only this crate are logged.
     /// When used once, DEBUG and above messages of only this crate are logged.
-    /// When used twice, DEBUG and above messages of all crates are logged.
+    /// When used twice, DEBUG and above messages of all crates are logged, and
+    /// `-v` is given to Cargo calls (details ran commands).
     /// When used three times or more, TRACE and above messages of all crates
-    /// are logged.
+    /// are logged, and `-vv` is given to Cargo calls (includes build output).
     #[arg(
         short,
         long,
@@ -53,7 +54,8 @@ pub struct LinerArgs {
     /// When omitted, INFO and above messages of only this crate are logged.
     /// When used once, WARN and above messages of only this crate are logged.
     /// When used twice, ERROR messages of all crates are logged.
-    /// When used three times or more, no message will be logged.
+    /// When used three times or more, no message will be logged, including
+    /// Cargo's by passing `-q` to it.
     #[arg(
         short,
         long,
