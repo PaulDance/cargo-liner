@@ -1,3 +1,74 @@
+# [Version 0.5.0 (03/02/2024)](https://crates.io/crates/cargo-liner/0.5.0)
+## Features
+
+ * Added a new global CLI option: `--color`. As its name indicates, it controls
+   the output coloring of logs and calls to Cargo. It takes precedence over any
+   kind of environment variables.
+
+ * When using one `--verbose` or more, the `ship` command now allows calls to
+   the internal `cargo search` to inherit its standard error stream. This helps
+   in debugging. During normal operation, it displays messages related to index
+   and lock files management.
+
+ * The verbosity controls now also control Cargo's own verbosity:
+   * When `--verbose` is used twice, then `-v` is passed to it.
+   * When `--verbose` is used three times or more, then `-vv` is passed to it.
+   * When `--quiet` is used three times or more, then `-q` is passed to it.
+
+## Fixes
+
+ * Made sure the CLI verbosity controls has precedence over the environment:
+   its variables were previously parsed after the CLI options were applied on
+   the logging configuration, which was incorrect; the two have therefore been
+   switched in order to fix the issue.
+
+## Testing
+
+ * Implemented integration tests to ensure the output of `--help` usage
+   messages and other example outputs in the `README.md` were correct and could
+   be automatically updated, thanks to `trycmd`.
+
+ * Completed #10: using `snapbox` and Cargo's own testing framework, many
+   integration tests have been implemented to cover the various features this
+   project offers:
+   * The fact that `cargo search` is used in order to check if new versions are
+     available and that it works. Previously, these tests were disabled in CI
+     because the external connections were blocked. Thanks to the new testing
+     framework however, they were refactored to be offline and therefore set to
+     run again in CI. They were also made single-threaded in order to avoid
+     some observed flakiness since the framework does not seem to fit unit
+     tests the best.
+   * The `import` subcommand: ensure all combinations of CLI options produce
+     correct and expected configurations.
+   * The `ship` subcommand:
+     * Test CLI options combinations.
+     * Test install, update and no action.
+     * Test that the feature control of the configuration is correctly passed
+       onto the installation process.
+   * The CLI verbosity control: ensure log messages and Cargo verbosity are
+     controlled correctly.
+   * The bugs previously fixed: regression tests.
+
+## Documentation
+
+ * Updated `README.md` multiple times when the above integration tests were
+   added. This included wrapping to 70 columns instead of 80 in order to make
+   the blocks present better on crates.io.
+ * Removed a useless newline in the code of conduct.
+ * Updated the contributing guidelines in order to mention the new tests.
+ * Documented the new features in the CLI help messages.
+ * The precedence of the verbosity CLI options over the environment has been
+   clarified.
+
+## Miscellaneous
+
+ * The dependencies have been updated.
+ * The new Git dev-dependencies introduce Cargo warnings that cannot be
+   disabled. However, it is purely restricted to local usages and will not
+   affect normal installations whatsoever. The issue is to be fixed in Cargo.
+ * The `actions/checkout` GitHub Action has been updated.
+
+
 # [Version 0.4.3 (17/01/2024)](https://crates.io/crates/cargo-liner/0.4.3)
 ## Fixes
 
