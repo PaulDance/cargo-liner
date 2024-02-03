@@ -223,6 +223,13 @@ pub fn fake_install(pkg: &str, ver: &str) {
     .unwrap();
 }
 
+/// Runs [`fake_install`] and [`assert_installed`] with the current crate as
+/// the package and a default version.
+pub fn fake_install_self() {
+    fake_install(clap::crate_name!(), "0.0.0");
+    assert_installed(clap::crate_name!());
+}
+
 /// Runs [`fake_install`] for each package name and version pair yielded by the
 /// given iterator.
 pub fn fake_install_all<'p, 'v>(pkg_vers: impl IntoIterator<Item = (&'p str, &'v str)>) {
