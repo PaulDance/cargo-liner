@@ -198,7 +198,8 @@ Options:
           
           This enables one to manually specify when should the logs be
           colored or not, for example if the automatic detection is
-          either not wished or not functional.
+          either not wished or not functional. The value is also
+          passed onto calls to Cargo.
           
           [default: auto]
           [possible values: auto, always, never]
@@ -344,7 +345,8 @@ Options:
           
           This enables one to manually specify when should the logs be
           colored or not, for example if the automatic detection is
-          either not wished or not functional.
+          either not wished or not functional. The value is also
+          passed onto calls to Cargo.
           
           [default: auto]
           [possible values: auto, always, never]
@@ -457,7 +459,8 @@ Options:
           
           This enables one to manually specify when should the logs be
           colored or not, for example if the automatic detection is
-          either not wished or not functional.
+          either not wished or not functional. The value is also
+          passed onto calls to Cargo.
           
           [default: auto]
           [possible values: auto, always, never]

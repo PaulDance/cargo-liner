@@ -70,7 +70,7 @@ pub struct LinerArgs {
     ///
     /// This enables one to manually specify when should the logs be colored or
     /// not, for example if the automatic detection is either not wished or not
-    /// functional.
+    /// functional. The value is also passed onto calls to Cargo.
     #[arg(
         long,
         global = true,
