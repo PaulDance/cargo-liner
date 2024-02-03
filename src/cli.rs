@@ -15,6 +15,15 @@ enum CargoArgs {
     Liner(LinerArgs),
 }
 
+impl CargoArgs {
+    /// Unwraps the contained [`LinerArgs`] in an infallible way.
+    pub fn liner(self) -> LinerArgs {
+        match self {
+            Self::Liner(args) => args,
+        }
+    }
+}
+
 // The actual entry point in this tool's argument parser.
 #[derive(clap::Args, Debug, PartialEq, Eq)]
 #[command(author, version, about, long_about)]
@@ -78,9 +87,7 @@ impl LinerArgs {
     /// actually fallible: it will print an error to stderr and exit the current
     /// process on an error status code if a parsing error occurs.
     pub fn parse_env() -> Self {
-        match CargoArgs::parse() {
-            CargoArgs::Liner(args) => args,
-        }
+        CargoArgs::parse().liner()
     }
 }
 
