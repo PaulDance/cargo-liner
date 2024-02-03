@@ -759,6 +759,102 @@ fn validate_ship_features_detailed_all_nodefault_one() {
 }
 
 #[cargo_test]
+fn validate_ship_verbosity_v() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish("pkg", "0.0.0");
+    write_user_config(&["[packages]", "pkg = '*'"]);
+
+    cargo_liner()
+        .args(["-v", "ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path("tests/fixtures/ship/validate_ship_verbosity_v.stderr");
+    assert_installed("pkg");
+}
+
+#[cargo_test]
+fn validate_ship_verbosity_vv() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish("pkg", "0.0.0");
+    write_user_config(&["[packages]", "pkg = '*'"]);
+
+    cargo_liner()
+        .args(["-vv", "ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path("tests/fixtures/ship/validate_ship_verbosity_vv.stderr");
+    assert_installed("pkg");
+}
+
+#[cargo_test]
+fn validate_ship_verbosity_vvv() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish("pkg", "0.0.0");
+    write_user_config(&["[packages]", "pkg = '*'"]);
+
+    cargo_liner()
+        .args(["-vvv", "ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path("tests/fixtures/ship/validate_ship_verbosity_vvv.stderr");
+    assert_installed("pkg");
+}
+
+#[cargo_test]
+fn validate_ship_verbosity_q() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish("pkg", "0.0.0");
+    write_user_config(&["[packages]", "pkg = '*'"]);
+
+    cargo_liner()
+        .args(["-q", "ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path("tests/fixtures/ship/validate_ship_verbosity_q.stderr");
+    assert_installed("pkg");
+}
+
+#[cargo_test]
+fn validate_ship_verbosity_qq() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish("pkg", "0.0.0");
+    write_user_config(&["[packages]", "pkg = '*'"]);
+
+    cargo_liner()
+        .args(["-qq", "ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path("tests/fixtures/ship/validate_ship_verbosity_q.stderr");
+    assert_installed("pkg");
+}
+
+#[cargo_test]
+fn validate_ship_verbosity_qqq() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish("pkg", "0.0.0");
+    write_user_config(&["[packages]", "pkg = '*'"]);
+
+    cargo_liner()
+        .args(["-qqq", "ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_eq("    Updating `dummy-registry` index\n");
+    assert_installed("pkg");
+}
+
+#[cargo_test]
 fn validate_ship_noconfig_iserr() {
     let _reg = init_registry();
     fake_install_self();
