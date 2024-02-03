@@ -140,3 +140,98 @@ fn validate_import_noforce_withfile_iserr() {
         .stderr_eq_path("tests/fixtures/import/validate_import_force_err.stderr");
     assert_user_config_eq("[packages]");
 }
+
+#[cargo_test]
+fn validate_import_verbosity_v() {
+    fixture_fake_install();
+
+    cargo_liner()
+        .args(["-v", "import"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path("tests/fixtures/import/validate_import_verbosity_v.stderr");
+    assert_user_config_eq_path("tests/fixtures/import/validate_import.outconfig");
+}
+
+#[cargo_test]
+fn validate_import_verbosity_vv() {
+    fixture_fake_install();
+
+    cargo_liner()
+        .args(["-vv", "import"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path("tests/fixtures/import/validate_import_verbosity_v.stderr");
+    assert_user_config_eq_path("tests/fixtures/import/validate_import.outconfig");
+}
+
+#[cargo_test]
+fn validate_import_verbosity_vvv() {
+    fixture_fake_install();
+
+    cargo_liner()
+        .args(["-vvv", "import"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path("tests/fixtures/import/validate_import_verbosity_vvv.stderr");
+    assert_user_config_eq_path("tests/fixtures/import/validate_import.outconfig");
+}
+
+#[cargo_test]
+fn validate_import_verbosity_q_force() {
+    fixture_fake_install();
+    write_user_config(&["[packages]"]);
+
+    cargo_liner()
+        .args(["-q", "import", "--force"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_eq_path("tests/fixtures/import/validate_import_verbosity_q_force.stderr");
+    assert_user_config_eq_path("tests/fixtures/import/validate_import.outconfig");
+}
+
+#[cargo_test]
+fn validate_import_verbosity_qq_force() {
+    fixture_fake_install();
+    write_user_config(&["[packages]"]);
+
+    cargo_liner()
+        .args(["-qq", "import", "--force"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_eq("");
+    assert_user_config_eq_path("tests/fixtures/import/validate_import.outconfig");
+}
+
+#[cargo_test]
+fn validate_import_verbosity_qq_noforce() {
+    fixture_fake_install();
+    write_user_config(&["[packages]"]);
+
+    cargo_liner()
+        .args(["-qq", "import"])
+        .assert()
+        .failure()
+        .stdout_eq("")
+        .stderr_eq_path("tests/fixtures/import/validate_import_force_err.stderr");
+    assert_user_config_eq("[packages]");
+}
+
+#[cargo_test]
+fn validate_import_verbosity_qqq_noforce() {
+    fixture_fake_install();
+    write_user_config(&["[packages]"]);
+
+    cargo_liner()
+        .args(["-qqq", "import"])
+        .assert()
+        .failure()
+        .stdout_eq("")
+        .stderr_eq("");
+    assert_user_config_eq("[packages]");
+}
