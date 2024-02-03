@@ -181,7 +181,8 @@ Options:
           messages of all crates are logged, and `-v` is given to
           Cargo calls (details ran commands). When used three times or
           more, TRACE and above messages of all crates are logged, and
-          `-vv` is given to Cargo calls (includes build output).
+          `-vv` is given to Cargo calls (includes build output). This
+          takes precedence over the environment.
 
   -q, --quiet...
           Be quieter. Use multiple times to be more and more so each
@@ -192,6 +193,7 @@ Options:
           crate are logged. When used twice, ERROR messages of all
           crates are logged. When used three times or more, no message
           will be logged, including Cargo's by passing `-q` to it.
+          This takes precedence over the environment.
 
       --color <WHEN>
           Control the coloring of the logging output.
@@ -328,7 +330,8 @@ Options:
           messages of all crates are logged, and `-v` is given to
           Cargo calls (details ran commands). When used three times or
           more, TRACE and above messages of all crates are logged, and
-          `-vv` is given to Cargo calls (includes build output).
+          `-vv` is given to Cargo calls (includes build output). This
+          takes precedence over the environment.
 
   -q, --quiet...
           Be quieter. Use multiple times to be more and more so each
@@ -339,6 +342,7 @@ Options:
           crate are logged. When used twice, ERROR messages of all
           crates are logged. When used three times or more, no message
           will be logged, including Cargo's by passing `-q` to it.
+          This takes precedence over the environment.
 
       --color <WHEN>
           Control the coloring of the logging output.
@@ -442,7 +446,8 @@ Options:
           messages of all crates are logged, and `-v` is given to
           Cargo calls (details ran commands). When used three times or
           more, TRACE and above messages of all crates are logged, and
-          `-vv` is given to Cargo calls (includes build output).
+          `-vv` is given to Cargo calls (includes build output). This
+          takes precedence over the environment.
 
   -q, --quiet...
           Be quieter. Use multiple times to be more and more so each
@@ -453,6 +458,7 @@ Options:
           crate are logged. When used twice, ERROR messages of all
           crates are logged. When used three times or more, no message
           will be logged, including Cargo's by passing `-q` to it.
+          This takes precedence over the environment.
 
       --color <WHEN>
           Control the coloring of the logging output.

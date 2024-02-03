@@ -39,6 +39,7 @@ pub struct LinerArgs {
     /// `-v` is given to Cargo calls (details ran commands).
     /// When used three times or more, TRACE and above messages of all crates
     /// are logged, and `-vv` is given to Cargo calls (includes build output).
+    /// This takes precedence over the environment.
     #[arg(
         short,
         long,
@@ -56,6 +57,7 @@ pub struct LinerArgs {
     /// When used twice, ERROR messages of all crates are logged.
     /// When used three times or more, no message will be logged, including
     /// Cargo's by passing `-q` to it.
+    /// This takes precedence over the environment.
     #[arg(
         short,
         long,
