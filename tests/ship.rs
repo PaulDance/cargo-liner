@@ -834,3 +834,22 @@ fn validate_ship_weirdversions_supported() {
         .stderr_matches_path("tests/fixtures/ship/validate_ship_weirdversions_supported.stderr");
     assert_installed("pkg");
 }
+
+/// See #7
+#[cargo_test]
+fn validate_ship_weirdpackagenames_supported() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish("--pkg", "0.0.0");
+    write_user_config(&["[packages]", "--pkg = '*'"]);
+
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path(
+            "tests/fixtures/ship/validate_ship_weirdpackagenames_supported.stderr",
+        );
+    assert_not_installed("--pkg");
+}

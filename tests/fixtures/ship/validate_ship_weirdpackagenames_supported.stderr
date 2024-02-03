@@ -1,0 +1,16 @@
+ INFO  cargo_liner::cargo > Fetching latest package versions...
+    Updating `dummy-registry` index
+ INFO  cargo_liner        > Results:
+ INFO  cargo_liner        >     --pkg  ø -> 0.0.0
+ INFO  cargo_liner::cargo > Installing `--pkg`...
+    Updating `dummy-registry` index
+ Downloading crates ...
+  Downloaded --pkg v0.0.0 (registry `dummy-registry`)
+error: failed to download replaced source registry `crates-io`
+
+Caused by:
+  failed to parse manifest at `[..]/--pkg-0.0.0/Cargo.toml`
+
+Caused by:
+  invalid character `-` in package name: `--pkg`, the first character must be a Unicode XID start character (most letters or `_`)
+ INFO  cargo_liner        > Done.
