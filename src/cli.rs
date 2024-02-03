@@ -203,18 +203,18 @@ mod tests {
 
     #[test]
     fn test_help_iserr() {
-        assert!(CargoArgs::try_parse_from(["cargo", "liner", "--help"].into_iter()).is_err());
+        assert!(CargoArgs::try_parse_from(["cargo", "liner", "--help"]).is_err());
     }
 
     #[test]
     fn test_version_iserr() {
-        assert!(CargoArgs::try_parse_from(["cargo", "liner", "--version"].into_iter()).is_err());
+        assert!(CargoArgs::try_parse_from(["cargo", "liner", "--version"]).is_err());
     }
 
     #[test]
     fn test_no_args() {
         assert_eq!(
-            CargoArgs::try_parse_from(["cargo", "liner"].into_iter()).unwrap(),
+            CargoArgs::try_parse_from(["cargo", "liner"]).unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: None,
                 verbose: 0,
@@ -229,7 +229,7 @@ mod tests {
         for i in 1..=5 {
             assert_eq!(
                 CargoArgs::try_parse_from(
-                    ["cargo", "liner", &("-".to_owned() + &str::repeat("v", i)),].into_iter()
+                    ["cargo", "liner", &("-".to_owned() + &str::repeat("v", i))]
                 )
                 .unwrap(),
                 CargoArgs::Liner(LinerArgs {
@@ -248,7 +248,7 @@ mod tests {
         for i in 1..=5 {
             assert_eq!(
                 CargoArgs::try_parse_from(
-                    ["cargo", "liner", &("-".to_owned() + &str::repeat("q", i)),].into_iter()
+                    ["cargo", "liner", &("-".to_owned() + &str::repeat("q", i))]
                 )
                 .unwrap(),
                 CargoArgs::Liner(LinerArgs {
@@ -283,13 +283,13 @@ mod tests {
 
     #[test]
     fn test_quiet_verbose_iserr() {
-        assert!(CargoArgs::try_parse_from(["cargo", "liner", "-qv"].into_iter()).is_err());
+        assert!(CargoArgs::try_parse_from(["cargo", "liner", "-qv"]).is_err());
     }
 
     #[test]
     fn test_ship() {
         assert_eq!(
-            CargoArgs::try_parse_from(["cargo", "liner", "ship"].into_iter()).unwrap(),
+            CargoArgs::try_parse_from(["cargo", "liner", "ship"]).unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Ship(ShipArgs {
                     no_self: false,
@@ -307,7 +307,7 @@ mod tests {
     #[test]
     fn test_ship_noselfupdate() {
         assert_eq!(
-            CargoArgs::try_parse_from(["cargo", "liner", "ship", "--no-self"].into_iter()).unwrap(),
+            CargoArgs::try_parse_from(["cargo", "liner", "ship", "--no-self"]).unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Ship(ShipArgs {
                     no_self: true,
@@ -325,8 +325,7 @@ mod tests {
     #[test]
     fn test_ship_onlyselfupdate() {
         assert_eq!(
-            CargoArgs::try_parse_from(["cargo", "liner", "ship", "--only-self"].into_iter())
-                .unwrap(),
+            CargoArgs::try_parse_from(["cargo", "liner", "ship", "--only-self"]).unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Ship(ShipArgs {
                     no_self: false,
@@ -344,8 +343,7 @@ mod tests {
     #[test]
     fn test_ship_skipcheck() {
         assert_eq!(
-            CargoArgs::try_parse_from(["cargo", "liner", "ship", "--skip-check"].into_iter())
-                .unwrap(),
+            CargoArgs::try_parse_from(["cargo", "liner", "ship", "--skip-check"]).unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Ship(ShipArgs {
                     no_self: false,
@@ -363,7 +361,7 @@ mod tests {
     #[test]
     fn test_ship_force() {
         assert_eq!(
-            CargoArgs::try_parse_from(["cargo", "liner", "ship", "--force"].into_iter()).unwrap(),
+            CargoArgs::try_parse_from(["cargo", "liner", "ship", "--force"]).unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Ship(ShipArgs {
                     no_self: false,
@@ -380,16 +378,16 @@ mod tests {
 
     #[test]
     fn test_ship_noandonlyself_iserr() {
-        assert!(CargoArgs::try_parse_from(
-            ["cargo", "liner", "ship", "--no-self", "--only-self"].into_iter()
-        )
-        .is_err());
+        assert!(
+            CargoArgs::try_parse_from(["cargo", "liner", "ship", "--no-self", "--only-self"])
+                .is_err()
+        );
     }
 
     #[test]
     fn test_import() {
         assert_eq!(
-            CargoArgs::try_parse_from(["cargo", "liner", "import"].into_iter()).unwrap(),
+            CargoArgs::try_parse_from(["cargo", "liner", "import"]).unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Import(ImportArgs {
                     exact: false,
@@ -408,7 +406,7 @@ mod tests {
     #[test]
     fn test_import_force() {
         assert_eq!(
-            CargoArgs::try_parse_from(["cargo", "liner", "import", "--force"].into_iter()).unwrap(),
+            CargoArgs::try_parse_from(["cargo", "liner", "import", "--force"]).unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Import(ImportArgs {
                     exact: false,
@@ -427,7 +425,7 @@ mod tests {
     #[test]
     fn test_import_exact() {
         assert_eq!(
-            CargoArgs::try_parse_from(["cargo", "liner", "import", "--exact"].into_iter()).unwrap(),
+            CargoArgs::try_parse_from(["cargo", "liner", "import", "--exact"]).unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Import(ImportArgs {
                     exact: true,
@@ -446,10 +444,7 @@ mod tests {
     #[test]
     fn test_import_exact_force() {
         assert_eq!(
-            CargoArgs::try_parse_from(
-                ["cargo", "liner", "import", "--exact", "--force"].into_iter()
-            )
-            .unwrap(),
+            CargoArgs::try_parse_from(["cargo", "liner", "import", "--exact", "--force"]).unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Import(ImportArgs {
                     exact: true,
@@ -468,8 +463,7 @@ mod tests {
     #[test]
     fn test_import_comp() {
         assert_eq!(
-            CargoArgs::try_parse_from(["cargo", "liner", "import", "--compatible"].into_iter())
-                .unwrap(),
+            CargoArgs::try_parse_from(["cargo", "liner", "import", "--compatible"]).unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Import(ImportArgs {
                     exact: false,
@@ -488,10 +482,8 @@ mod tests {
     #[test]
     fn test_import_comp_force() {
         assert_eq!(
-            CargoArgs::try_parse_from(
-                ["cargo", "liner", "import", "--compatible", "--force"].into_iter()
-            )
-            .unwrap(),
+            CargoArgs::try_parse_from(["cargo", "liner", "import", "--compatible", "--force"])
+                .unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Import(ImportArgs {
                     exact: false,
@@ -510,7 +502,7 @@ mod tests {
     #[test]
     fn test_import_patch() {
         assert_eq!(
-            CargoArgs::try_parse_from(["cargo", "liner", "import", "--patch"].into_iter()).unwrap(),
+            CargoArgs::try_parse_from(["cargo", "liner", "import", "--patch"]).unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Import(ImportArgs {
                     exact: false,
@@ -529,10 +521,7 @@ mod tests {
     #[test]
     fn test_import_patch_force() {
         assert_eq!(
-            CargoArgs::try_parse_from(
-                ["cargo", "liner", "import", "--patch", "--force"].into_iter()
-            )
-            .unwrap(),
+            CargoArgs::try_parse_from(["cargo", "liner", "import", "--patch", "--force"]).unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Import(ImportArgs {
                     exact: false,
@@ -551,8 +540,7 @@ mod tests {
     #[test]
     fn test_import_keepself() {
         assert_eq!(
-            CargoArgs::try_parse_from(["cargo", "liner", "import", "--keep-self"].into_iter())
-                .unwrap(),
+            CargoArgs::try_parse_from(["cargo", "liner", "import", "--keep-self"]).unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Import(ImportArgs {
                     exact: false,
@@ -571,10 +559,8 @@ mod tests {
     #[test]
     fn test_import_force_keepself() {
         assert_eq!(
-            CargoArgs::try_parse_from(
-                ["cargo", "liner", "import", "--force", "--keep-self"].into_iter()
-            )
-            .unwrap(),
+            CargoArgs::try_parse_from(["cargo", "liner", "import", "--force", "--keep-self"])
+                .unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Import(ImportArgs {
                     exact: false,
@@ -593,10 +579,8 @@ mod tests {
     #[test]
     fn test_import_exact_keepself() {
         assert_eq!(
-            CargoArgs::try_parse_from(
-                ["cargo", "liner", "import", "--exact", "--keep-self"].into_iter()
-            )
-            .unwrap(),
+            CargoArgs::try_parse_from(["cargo", "liner", "import", "--exact", "--keep-self"])
+                .unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Import(ImportArgs {
                     exact: true,
@@ -615,17 +599,14 @@ mod tests {
     #[test]
     fn test_import_exact_force_keepself() {
         assert_eq!(
-            CargoArgs::try_parse_from(
-                [
-                    "cargo",
-                    "liner",
-                    "import",
-                    "--exact",
-                    "--force",
-                    "--keep-self"
-                ]
-                .into_iter()
-            )
+            CargoArgs::try_parse_from([
+                "cargo",
+                "liner",
+                "import",
+                "--exact",
+                "--force",
+                "--keep-self"
+            ])
             .unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Import(ImportArgs {
@@ -645,10 +626,8 @@ mod tests {
     #[test]
     fn test_import_comp_keepself() {
         assert_eq!(
-            CargoArgs::try_parse_from(
-                ["cargo", "liner", "import", "--compatible", "--keep-self"].into_iter()
-            )
-            .unwrap(),
+            CargoArgs::try_parse_from(["cargo", "liner", "import", "--compatible", "--keep-self"])
+                .unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Import(ImportArgs {
                     exact: false,
@@ -667,17 +646,14 @@ mod tests {
     #[test]
     fn test_import_comp_force_keepself() {
         assert_eq!(
-            CargoArgs::try_parse_from(
-                [
-                    "cargo",
-                    "liner",
-                    "import",
-                    "--compatible",
-                    "--force",
-                    "--keep-self"
-                ]
-                .into_iter()
-            )
+            CargoArgs::try_parse_from([
+                "cargo",
+                "liner",
+                "import",
+                "--compatible",
+                "--force",
+                "--keep-self"
+            ])
             .unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Import(ImportArgs {
@@ -697,10 +673,8 @@ mod tests {
     #[test]
     fn test_import_patch_keepself() {
         assert_eq!(
-            CargoArgs::try_parse_from(
-                ["cargo", "liner", "import", "--patch", "--keep-self"].into_iter()
-            )
-            .unwrap(),
+            CargoArgs::try_parse_from(["cargo", "liner", "import", "--patch", "--keep-self"])
+                .unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Import(ImportArgs {
                     exact: false,
@@ -719,17 +693,14 @@ mod tests {
     #[test]
     fn test_import_patch_force_keepself() {
         assert_eq!(
-            CargoArgs::try_parse_from(
-                [
-                    "cargo",
-                    "liner",
-                    "import",
-                    "--patch",
-                    "--force",
-                    "--keep-self"
-                ]
-                .into_iter()
-            )
+            CargoArgs::try_parse_from([
+                "cargo",
+                "liner",
+                "import",
+                "--patch",
+                "--force",
+                "--keep-self"
+            ])
             .unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Import(ImportArgs {
@@ -748,25 +719,24 @@ mod tests {
 
     #[test]
     fn test_import_exact_comp_iserr() {
-        assert!(CargoArgs::try_parse_from(
-            ["cargo", "liner", "import", "--exact", "--compatible"].into_iter()
-        )
-        .is_err());
+        assert!(
+            CargoArgs::try_parse_from(["cargo", "liner", "import", "--exact", "--compatible"])
+                .is_err()
+        );
     }
 
     #[test]
     fn test_import_exact_patch_iserr() {
-        assert!(CargoArgs::try_parse_from(
-            ["cargo", "liner", "import", "--exact", "--patch"].into_iter()
-        )
-        .is_err());
+        assert!(
+            CargoArgs::try_parse_from(["cargo", "liner", "import", "--exact", "--patch"]).is_err()
+        );
     }
 
     #[test]
     fn test_import_comp_patch_iserr() {
-        assert!(CargoArgs::try_parse_from(
-            ["cargo", "liner", "import", "--exact", "--compatible"].into_iter()
-        )
-        .is_err());
+        assert!(
+            CargoArgs::try_parse_from(["cargo", "liner", "import", "--exact", "--compatible"])
+                .is_err()
+        );
     }
 }
