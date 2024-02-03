@@ -1,5 +1,7 @@
-mod common;
 use cargo_test_macro::cargo_test;
+use cargo_test_support::registry::Package;
+
+mod common;
 use common::*;
 
 #[cargo_test]
@@ -354,4 +356,403 @@ fn validate_ship_manynewer_update() {
         .stdout_eq("")
         .stderr_matches_path("tests/fixtures/ship/validate_ship_manynewer_update.stderr");
     fixture_assert_installed();
+}
+
+#[cargo_test]
+fn validate_ship_features_simple_none() {
+    let _reg = init_registry();
+    fake_install_self();
+    Package::new("pkg", "0.0.0")
+        .feature("feat", &[])
+        .file(
+            "src/main.rs",
+            r#"
+                #[cfg(feature = "feat")]
+                compile_error!("");
+                fn main() {}
+            "#,
+        )
+        .publish();
+    write_user_config(&["[packages]", "pkg = '*'"]);
+
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+    assert_installed("pkg");
+}
+
+#[cargo_test]
+fn validate_ship_features_simple_default() {
+    let _reg = init_registry();
+    fake_install_self();
+    Package::new("pkg", "0.0.0")
+        .feature("default", &["feat"])
+        .feature("feat", &[])
+        .file(
+            "src/main.rs",
+            r#"
+                #[cfg(not(feature = "feat"))]
+                compile_error!("");
+                fn main() {}
+            "#,
+        )
+        .publish();
+    write_user_config(&["[packages]", "pkg = '*'"]);
+
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+    assert_installed("pkg");
+}
+
+#[cargo_test]
+fn validate_ship_features_detailed_none() {
+    let _reg = init_registry();
+    fake_install_self();
+    Package::new("pkg", "0.0.0")
+        .feature("feat", &[])
+        .file(
+            "src/main.rs",
+            r#"
+                #[cfg(feature = "feat")]
+                compile_error!("");
+                fn main() {}
+            "#,
+        )
+        .publish();
+    write_user_config(&["[packages]", "pkg = { version = '*' }"]);
+
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+    assert_installed("pkg");
+}
+
+#[cargo_test]
+fn validate_ship_features_detailed_one() {
+    let _reg = init_registry();
+    fake_install_self();
+    Package::new("pkg", "0.0.0")
+        .feature("feat", &[])
+        .file(
+            "src/main.rs",
+            r#"
+                #[cfg(not(feature = "feat"))]
+                compile_error!("");
+                fn main() {}
+            "#,
+        )
+        .publish();
+    write_user_config(&["[packages]", "pkg = { version = '*', features = ['feat'] }"]);
+
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+    assert_installed("pkg");
+}
+
+#[cargo_test]
+fn validate_ship_features_detailed_default() {
+    let _reg = init_registry();
+    fake_install_self();
+    Package::new("pkg", "0.0.0")
+        .feature("default", &["feat"])
+        .feature("feat", &[])
+        .file(
+            "src/main.rs",
+            r#"
+                #[cfg(not(feature = "feat"))]
+                compile_error!("");
+                fn main() {}
+            "#,
+        )
+        .publish();
+    write_user_config(&["[packages]", "pkg = { version = '*' }"]);
+
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+    assert_installed("pkg");
+}
+
+#[cargo_test]
+fn validate_ship_features_detailed_nodefault() {
+    let _reg = init_registry();
+    fake_install_self();
+    Package::new("pkg", "0.0.0")
+        .feature("default", &["feat"])
+        .feature("feat", &[])
+        .file(
+            "src/main.rs",
+            r#"
+                #[cfg(feature = "feat")]
+                compile_error!("");
+                fn main() {}
+            "#,
+        )
+        .publish();
+    write_user_config(&[
+        "[packages]",
+        "pkg = { version = '*', default-features = false }",
+    ]);
+
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+    assert_installed("pkg");
+}
+
+#[cargo_test]
+fn validate_ship_features_detailed_nodefault_one() {
+    let _reg = init_registry();
+    fake_install_self();
+    Package::new("pkg", "0.0.0")
+        .feature("default", &["feat1"])
+        .feature("feat1", &[])
+        .feature("feat2", &[])
+        .file(
+            "src/main.rs",
+            r#"
+                #[cfg(any(
+                    feature = "feat1",
+                    not(feature = "feat2"),
+                ))]
+                compile_error!("");
+                fn main() {}
+            "#,
+        )
+        .publish();
+    write_user_config(&[
+        "[packages]",
+        "pkg = { version = '*', default-features = false, features = ['feat2'] }",
+    ]);
+
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+    assert_installed("pkg");
+}
+
+#[cargo_test]
+fn validate_ship_features_detailed_all() {
+    let _reg = init_registry();
+    fake_install_self();
+    Package::new("pkg", "0.0.0")
+        .feature("feat1", &[])
+        .feature("feat2", &[])
+        .file(
+            "src/main.rs",
+            r#"
+                #[cfg(any(
+                    not(feature = "feat1"),
+                    not(feature = "feat2"),
+                ))]
+                compile_error!("");
+                fn main() {}
+            "#,
+        )
+        .publish();
+    write_user_config(&["[packages]", "pkg = { version = '*', all-features = true }"]);
+
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+    assert_installed("pkg");
+}
+
+#[cargo_test]
+fn validate_ship_features_detailed_all_one() {
+    let _reg = init_registry();
+    fake_install_self();
+    Package::new("pkg", "0.0.0")
+        .feature("feat1", &[])
+        .feature("feat2", &[])
+        .file(
+            "src/main.rs",
+            r#"
+                #[cfg(any(
+                    not(feature = "feat1"),
+                    not(feature = "feat2"),
+                ))]
+                compile_error!("");
+                fn main() {}
+            "#,
+        )
+        .publish();
+    write_user_config(&[
+        "[packages]",
+        "pkg = { version = '*', all-features = true, features = ['feat1'] }",
+    ]);
+
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+    assert_installed("pkg");
+}
+
+#[cargo_test]
+fn validate_ship_features_detailed_all_default() {
+    let _reg = init_registry();
+    fake_install_self();
+    Package::new("pkg", "0.0.0")
+        .feature("default", &["feat1"])
+        .feature("feat1", &[])
+        .feature("feat2", &[])
+        .file(
+            "src/main.rs",
+            r#"
+                #[cfg(any(
+                    not(feature = "feat1"),
+                    not(feature = "feat2"),
+                ))]
+                compile_error!("");
+                fn main() {}
+            "#,
+        )
+        .publish();
+    write_user_config(&[
+        "[packages]",
+        "pkg = { version = '*', all-features = true, default-features = true }",
+    ]);
+
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+    assert_installed("pkg");
+}
+
+#[cargo_test]
+fn validate_ship_features_detailed_all_nodefault() {
+    let _reg = init_registry();
+    fake_install_self();
+    Package::new("pkg", "0.0.0")
+        .feature("default", &["feat1"])
+        .feature("feat1", &[])
+        .feature("feat2", &[])
+        .file(
+            "src/main.rs",
+            r#"
+                #[cfg(any(
+                    not(feature = "feat1"),
+                    not(feature = "feat2"),
+                ))]
+                compile_error!("");
+                fn main() {}
+            "#,
+        )
+        .publish();
+    write_user_config(&[
+        "[packages]",
+        "pkg = { version = '*', all-features = true, default-features = false }",
+    ]);
+
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+    assert_installed("pkg");
+}
+
+#[cargo_test]
+fn validate_ship_features_detailed_all_default_one() {
+    let _reg = init_registry();
+    fake_install_self();
+    Package::new("pkg", "0.0.0")
+        .feature("default", &["feat1"])
+        .feature("feat1", &[])
+        .feature("feat2", &[])
+        .file(
+            "src/main.rs",
+            r#"
+                #[cfg(any(
+                    not(feature = "feat1"),
+                    not(feature = "feat2"),
+                ))]
+                compile_error!("");
+                fn main() {}
+            "#,
+        )
+        .publish();
+    write_user_config(&[
+        "[packages.pkg]",
+        "version = '*'",
+        "all-features = true",
+        "default-features = true",
+        "features = ['feat2']",
+    ]);
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+    assert_installed("pkg");
+}
+
+#[cargo_test]
+fn validate_ship_features_detailed_all_nodefault_one() {
+    let _reg = init_registry();
+    fake_install_self();
+    Package::new("pkg", "0.0.0")
+        .feature("default", &["feat1"])
+        .feature("feat1", &[])
+        .feature("feat2", &[])
+        .file(
+            "src/main.rs",
+            r#"
+                #[cfg(any(
+                    not(feature = "feat1"),
+                    not(feature = "feat2"),
+                ))]
+                compile_error!("");
+                fn main() {}
+            "#,
+        )
+        .publish();
+    write_user_config(&[
+        "[packages.pkg]",
+        "version = '*'",
+        "all-features = true",
+        "default-features = false",
+        "features = ['feat2']",
+    ]);
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+    assert_installed("pkg");
 }
