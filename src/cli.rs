@@ -89,6 +89,24 @@ impl LinerArgs {
     pub fn parse_env() -> Self {
         CargoArgs::parse().liner()
     }
+
+    /// Returns the requested verbosity level as a number.
+    ///
+    ///  * Zero means no option was provided: use the default.
+    ///  * Positive numbers mean increased verbosity: `-vvv...`.
+    ///  * Negative numbers mean decreased verbosity: `-qqq...`.
+    pub fn verbosity(&self) -> i8 {
+        if self.verbose > 0 {
+            Self::u8_to_i8_saturating(self.verbose)
+        } else {
+            -Self::u8_to_i8_saturating(self.quiet)
+        }
+    }
+
+    /// Converts the given `u8` to an `i8` by capping it to the max first.
+    fn u8_to_i8_saturating(x: u8) -> i8 {
+        x.min(i8::MAX as _).try_into().unwrap()
+    }
 }
 
 /// Subcommands for the main CLI.
