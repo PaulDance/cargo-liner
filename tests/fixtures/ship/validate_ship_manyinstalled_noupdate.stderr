@@ -1,7 +1,11 @@
  INFO  cargo_liner::cargo > Fetching latest package versions...
 ...
  INFO  cargo_liner        > Results:
- INFO  cargo_liner        >     abc          ✔
- INFO  cargo_liner        >     cargo-liner  ✔
- INFO  cargo_liner        >     def          ✔
+┌─────────────┬─────────┐
+│ Name        │ Status  │
+├─────────────┼─────────┤
+│ abc         │ ✔ 0.0.1 │
+│ cargo-liner │ ✔ 0.0.3 │
+│ def         │ ✔ 0.0.2 │
+└─────────────┴─────────┘
  INFO  cargo_liner        > Done.

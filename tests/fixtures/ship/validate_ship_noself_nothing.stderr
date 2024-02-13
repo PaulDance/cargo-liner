@@ -1,2 +1,3 @@
  INFO  cargo_liner::cargo > Fetching latest package versions...
+ INFO  cargo_liner        > No packages installed.
  INFO  cargo_liner        > Done.

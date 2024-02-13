@@ -1,22 +1,23 @@
 //! Main module: regroups parsing CLI arguments, deserializing configuration,
 //! and execution of `cargo install` with the required settings.
+use anyhow::{bail, Result};
 use std::collections::{BTreeMap, BTreeSet};
 use std::env;
 use std::process::ExitCode;
-
-use anyhow::{bail, Result};
 #[macro_use]
 extern crate log;
 use clap::ColorChoice;
 use log::LevelFilter;
 use pretty_env_logger::env_logger::WriteStyle;
 use semver::Version;
-
+use tabled::settings::Style;
+use tabled::{Table, Tabled};
 mod cargo;
 mod cli;
 use cli::{LinerArgs, LinerCommands};
 mod config;
 use config::{CargoCratesToml, Package, UserConfig};
+
 #[cfg(test)]
 #[path = "../tests/common/mod.rs"]
 mod testing;
@@ -127,7 +128,7 @@ fn try_main() -> Result<()> {
             } else {
                 let cct = CargoCratesToml::parse_file()?;
                 let vers = cargo::search_exact_all(&config.packages)?;
-                log_summary(&config.packages, &vers, &cct.clone().into_name_versions());
+                log_summary(&vers, &cct.clone().into_name_versions());
 
                 cargo::install_all(
                     &needing_install(&config.packages, &vers, &cct.clone().into_name_versions()),
@@ -144,31 +145,36 @@ fn try_main() -> Result<()> {
     Ok(())
 }
 
-/// Displays whether each package needs an update or not.
-fn log_summary(
-    pkgs: &BTreeMap<String, Package>,
-    new_vers: &BTreeMap<String, Version>,
-    old_vers: &BTreeMap<String, Version>,
-) {
-    if let Some(max_len) = pkgs.keys().map(String::len).max() {
-        info!("Results:");
+#[derive(Tabled)]
+struct PackageStatus {
+    #[tabled(rename = "Name")]
+    name: String,
+    #[tabled(rename = "Status")]
+    status: String,
+}
 
-        for pkg in pkgs.keys() {
-            let new_ver = new_vers.get(pkg).unwrap();
-            info!(
-                "    {:<max_len$}  {}",
-                pkg,
-                old_vers.get(pkg).map_or_else(
-                    || format!("ø -> {new_ver}"),
-                    |old_ver| if old_ver < new_ver {
-                        format!("{old_ver} -> {new_ver}")
-                    } else {
-                        "✔".to_owned()
-                    }
-                ),
-            );
-        }
+/// Displays whether each package needs an update or not.
+fn log_summary(new_vers: &BTreeMap<String, Version>, old_vers: &BTreeMap<String, Version>) {
+    if new_vers.is_empty() {
+        info!("No packages installed.");
+        return;
     }
+
+    let pkgs = new_vers.iter().map(|(name, new_ver)| PackageStatus {
+        name: name.to_string(),
+        status: old_vers.get(name).map_or_else(
+            || format!("ø -> {new_ver}"),
+            |old_ver| {
+                if old_ver < new_ver {
+                    format!("{old_ver} -> {new_ver}")
+                } else {
+                    format!("✔ {new_ver}")
+                }
+            },
+        ),
+    });
+
+    info!("Results:\n{}", Table::new(pkgs).with(Style::sharp()));
 }
 
 /// Returns the packages that do indeed need an install or update.
