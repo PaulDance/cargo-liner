@@ -1,9 +1,13 @@
  INFO  cargo_liner::cargo > Fetching latest package versions...
 ...
  INFO  cargo_liner        > Results:
- INFO  cargo_liner        >     abc          ø -> 0.0.1
- INFO  cargo_liner        >     cargo-liner  ✔
- INFO  cargo_liner        >     def          ø -> 0.0.2
+┌─────────────┬────────────┐
+│ Name        │ Status     │
+├─────────────┼────────────┤
+│ abc         │ ø -> 0.0.1 │
+│ cargo-liner │ ✔ 0.0.3    │
+│ def         │ ø -> 0.0.2 │
+└─────────────┴────────────┘
  INFO  cargo_liner::cargo > Installing `abc`...
     Updating `dummy-registry` index
  Downloading crates ...

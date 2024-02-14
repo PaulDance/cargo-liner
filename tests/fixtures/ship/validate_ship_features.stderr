@@ -1,7 +1,11 @@
  INFO  cargo_liner::cargo > Fetching latest package versions...
     Updating `dummy-registry` index
  INFO  cargo_liner        > Results:
- INFO  cargo_liner        >     pkg  ø -> 0.0.0
+┌──────┬────────────┐
+│ Name │ Status     │
+├──────┼────────────┤
+│ pkg  │ ø -> 0.0.0 │
+└──────┴────────────┘
  INFO  cargo_liner::cargo > Installing `pkg`...
     Updating `dummy-registry` index
  Downloading crates ...
