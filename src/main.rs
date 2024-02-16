@@ -96,7 +96,7 @@ fn try_main() -> Result<()> {
             })(
                 CargoCratesToml::parse_file()?,
                 import_args.keep_self,
-                import_args.with_local,
+                import_args.keep_local,
             ))?;
         }
         cmd => {

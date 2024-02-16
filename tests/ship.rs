@@ -9,7 +9,7 @@ use common::*;
 fn validate_ship_noupdate() {
     let _reg = init_registry();
     fake_publish("cargo-liner", "0.0.3");
-    fake_install("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
@@ -26,7 +26,7 @@ fn validate_ship_noupdate() {
 fn validate_ship_onlyself_noupdate() {
     let _reg = init_registry();
     fake_publish("cargo-liner", "0.0.3");
-    fake_install("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
@@ -42,7 +42,7 @@ fn validate_ship_onlyself_noupdate() {
 #[cargo_test]
 fn validate_ship_noself_nothing() {
     let _reg = init_registry();
-    fake_install("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
@@ -59,7 +59,7 @@ fn validate_ship_noself_nothing() {
 fn validate_ship_skipcheck_noupdate() {
     let _reg = init_registry();
     fake_publish("cargo-liner", "0.0.3");
-    fake_install("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
@@ -76,7 +76,7 @@ fn validate_ship_skipcheck_noupdate() {
 fn validate_ship_skipcheck_onlyself_noupdate() {
     let _reg = init_registry();
     fake_publish("cargo-liner", "0.0.3");
-    fake_install("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
@@ -92,7 +92,7 @@ fn validate_ship_skipcheck_onlyself_noupdate() {
 #[cargo_test]
 fn validate_ship_skipcheck_noself_nothing() {
     let _reg = init_registry();
-    fake_install("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
@@ -109,7 +109,7 @@ fn validate_ship_skipcheck_noself_nothing() {
 fn validate_ship_force_noupdate() {
     let _reg = init_registry();
     fake_publish("cargo-liner", "0.0.3");
-    fake_install("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
@@ -126,7 +126,7 @@ fn validate_ship_force_noupdate() {
 fn validate_ship_onlyself_force_noupdate() {
     let _reg = init_registry();
     fake_publish("cargo-liner", "0.0.3");
-    fake_install("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
@@ -142,7 +142,7 @@ fn validate_ship_onlyself_force_noupdate() {
 #[cargo_test]
 fn validate_ship_noself_force_nothing() {
     let _reg = init_registry();
-    fake_install("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
@@ -159,7 +159,7 @@ fn validate_ship_noself_force_nothing() {
 fn validate_ship_skipcheck_force_update() {
     let _reg = init_registry();
     fake_publish("cargo-liner", "0.0.3");
-    fake_install("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
@@ -176,7 +176,7 @@ fn validate_ship_skipcheck_force_update() {
 fn validate_ship_skipcheck_onlyself_force_update() {
     let _reg = init_registry();
     fake_publish("cargo-liner", "0.0.3");
-    fake_install("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
@@ -192,7 +192,7 @@ fn validate_ship_skipcheck_onlyself_force_update() {
 #[cargo_test]
 fn validate_ship_skipcheck_noself_force_nothing() {
     let _reg = init_registry();
-    fake_install("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
@@ -209,7 +209,7 @@ fn validate_ship_skipcheck_noself_force_nothing() {
 fn validate_ship_newerself_update() {
     let _reg = init_registry();
     fake_publish("cargo-liner", "0.0.4");
-    fake_install("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
@@ -226,7 +226,7 @@ fn validate_ship_newerself_update() {
 fn validate_ship_newerself_onlyself_update() {
     let _reg = init_registry();
     fake_publish("cargo-liner", "0.0.4");
-    fake_install("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
@@ -243,7 +243,7 @@ fn validate_ship_newerself_onlyself_update() {
 fn validate_ship_newerself_noself_nothing() {
     let _reg = init_registry();
     fake_publish("cargo-liner", "0.0.4");
-    fake_install("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
@@ -260,7 +260,7 @@ fn validate_ship_newerself_noself_nothing() {
 fn validate_ship_newerself_skipcheck_update() {
     let _reg = init_registry();
     fake_publish("cargo-liner", "0.0.4");
-    fake_install("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
@@ -277,7 +277,7 @@ fn validate_ship_newerself_skipcheck_update() {
 fn validate_ship_newerself_skipcheck_onlyself_update() {
     let _reg = init_registry();
     fake_publish("cargo-liner", "0.0.4");
-    fake_install("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
@@ -294,7 +294,7 @@ fn validate_ship_newerself_skipcheck_onlyself_update() {
 fn validate_ship_newerself_skipcheck_noself_nothing() {
     let _reg = init_registry();
     fake_publish("cargo-liner", "0.0.4");
-    fake_install("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
@@ -311,7 +311,7 @@ fn validate_ship_newerself_skipcheck_noself_nothing() {
 fn validate_ship_manynotinstalled_install() {
     let _reg = init_registry();
     fixture_fake_publish();
-    fake_install("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
     assert_installed("cargo-liner");
     fixture_write_user_config();
 

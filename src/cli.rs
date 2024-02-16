@@ -215,17 +215,17 @@ pub struct ImportArgs {
     /// Default: `false`, i.e. exclude the current package from the list of
     /// packages to install or update in the resulting configuration file. Note
     /// however that the `ship` command will still self-update by default.
-    #[arg(short, long)]
+    #[arg(short = 's', long)]
     pub keep_self: bool,
 
-    /// Also import all locally installed packages into the configuration. This
+    /// Also import all locally-installed packages into the configuration. This
     /// means packages installed via `cargo install --path <path>` will be present
     /// in the configuration.
     ///
     /// Default: `false`, i.e. exclude all packages installed via `cargo install --path <path>`
     /// from the list of packages to install or update in the resulting configuration file.
     #[arg(short = 'l', long)]
-    pub with_local: bool,
+    pub keep_local: bool,
 }
 
 #[cfg(test)]
@@ -436,7 +436,7 @@ mod tests {
                     patch: false,
                     force: false,
                     keep_self: false,
-                    with_local: false
+                    keep_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -456,7 +456,7 @@ mod tests {
                     patch: false,
                     force: true,
                     keep_self: false,
-                    with_local: false
+                    keep_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -476,7 +476,7 @@ mod tests {
                     patch: false,
                     force: false,
                     keep_self: false,
-                    with_local: false
+                    keep_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -496,7 +496,7 @@ mod tests {
                     patch: false,
                     force: true,
                     keep_self: false,
-                    with_local: false
+                    keep_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -516,7 +516,7 @@ mod tests {
                     patch: false,
                     force: false,
                     keep_self: false,
-                    with_local: false
+                    keep_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -537,7 +537,7 @@ mod tests {
                     patch: false,
                     force: true,
                     keep_self: false,
-                    with_local: false
+                    keep_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -557,7 +557,7 @@ mod tests {
                     patch: true,
                     force: false,
                     keep_self: false,
-                    with_local: false
+                    keep_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -577,7 +577,7 @@ mod tests {
                     patch: true,
                     force: true,
                     keep_self: false,
-                    with_local: false
+                    keep_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -597,7 +597,7 @@ mod tests {
                     patch: false,
                     force: false,
                     keep_self: true,
-                    with_local: false
+                    keep_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -609,7 +609,7 @@ mod tests {
     #[test]
     fn test_import_local() {
         assert_eq!(
-            CargoArgs::try_parse_from(["cargo", "liner", "import", "--with-local"]).unwrap(),
+            CargoArgs::try_parse_from(["cargo", "liner", "import", "--keep-local"]).unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Import(ImportArgs {
                     exact: false,
@@ -617,7 +617,7 @@ mod tests {
                     patch: false,
                     force: false,
                     keep_self: false,
-                    with_local: true
+                    keep_local: true
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -638,7 +638,7 @@ mod tests {
                     patch: false,
                     force: true,
                     keep_self: true,
-                    with_local: false
+                    keep_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -659,7 +659,7 @@ mod tests {
                     patch: false,
                     force: false,
                     keep_self: true,
-                    with_local: false
+                    keep_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -687,7 +687,7 @@ mod tests {
                     patch: false,
                     force: true,
                     keep_self: true,
-                    with_local: false
+                    keep_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -708,7 +708,7 @@ mod tests {
                     patch: false,
                     force: false,
                     keep_self: true,
-                    with_local: false
+                    keep_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -736,7 +736,7 @@ mod tests {
                     patch: false,
                     force: true,
                     keep_self: true,
-                    with_local: false
+                    keep_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -757,7 +757,7 @@ mod tests {
                     patch: true,
                     force: false,
                     keep_self: true,
-                    with_local: false
+                    keep_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -785,7 +785,7 @@ mod tests {
                     patch: true,
                     force: true,
                     keep_self: true,
-                    with_local: false
+                    keep_local: false
                 })),
                 verbose: 0,
                 quiet: 0,

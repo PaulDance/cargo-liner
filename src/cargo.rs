@@ -314,10 +314,10 @@ mod tests {
         let _lk = LOCK.lock();
         let _reg = testing::init_registry();
         testing::fake_publish_all([
-            (SELF, clap::crate_version!()),
-            ("cargo-expand", "1.0.79"),
-            ("cargo-tarpaulin", "0.27.3"),
-            ("bat", "0.24.0"),
+            (SELF, clap::crate_version!(), false),
+            ("cargo-expand", "1.0.79", false),
+            ("cargo-tarpaulin", "0.27.3", false),
+            ("bat", "0.24.0", false),
         ]);
         testing::set_env();
 

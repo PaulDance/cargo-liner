@@ -1,6 +1,7 @@
 use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::PathBuf;
+use std::str::FromStr;
 
 use anyhow::{anyhow, Result};
 use home::cargo_home;
@@ -84,9 +85,9 @@ impl CargoCratesToml {
     /// The current crate will be kept in the packages if `keep_self` is
     /// `true`, otherwise it will be filtered out.
     ///
-    /// All locally installed packages are kept if `with_local` is
+    /// All locally-installed packages are kept if `keep_local` is
     /// `true`, otherwise they will be filtered out.
-    fn into_config<F>(self, pkg_map: F, keep_self: bool, with_local: bool) -> UserConfig
+    fn into_config<F>(self, pkg_map: F, keep_self: bool, keep_local: bool) -> UserConfig
     where
         F: FnMut((CargoCratesPackage, Vec<String>)) -> (String, Package),
     {
@@ -94,8 +95,10 @@ impl CargoCratesToml {
             packages: self
                 .package_bins
                 .into_iter()
-                .filter(|(pkg, _)| with_local || pkg.source.origin != "path")
-                .filter(|(pkg, _)| keep_self || pkg.name != clap::crate_name!())
+                .filter(|(pkg, _)| {
+                    (keep_local || pkg.source.origin != "path")
+                        && (keep_self || pkg.name != clap::crate_name!())
+                })
                 .map(pkg_map)
                 .collect(),
         }
@@ -103,12 +106,12 @@ impl CargoCratesToml {
 
     /// Converts this toml document into a simple user config containing no
     /// particular version requirement, only stars are used.
-    pub fn into_star_version_config(self, keep_self: bool, with_local: bool) -> UserConfig {
+    pub fn into_star_version_config(self, keep_self: bool, keep_local: bool) -> UserConfig {
         debug!("Converting packages to config with op: \"*\"...");
         self.into_config(
             |(pkg, _)| (pkg.name, Package::SIMPLE_STAR),
             keep_self,
-            with_local,
+            keep_local,
         )
     }
 
@@ -116,31 +119,55 @@ impl CargoCratesToml {
     /// comparison operator.
     ///
     /// Filters the current crate out of the resulting configuration's packages.
-    fn into_op_version_config(self, op: Op, keep_self: bool, with_local: bool) -> UserConfig {
+    fn into_op_version_config(self, op: Op, keep_self: bool, keep_local: bool) -> UserConfig {
         debug!("Converting packages to config with op: {:#?}...", &op);
         self.into_config(
             |(pkg, _)| (pkg.name, Package::Simple(ver_to_req(&pkg.version, op))),
             keep_self,
-            with_local,
+            keep_local,
         )
     }
 
     /// Converts this toml document into a simple user config containing full
     /// and exact version requirements.
-    pub fn into_exact_version_config(self, keep_self: bool, with_local: bool) -> UserConfig {
-        self.into_op_version_config(Op::Exact, keep_self, with_local)
+    pub fn into_exact_version_config(self, keep_self: bool, keep_local: bool) -> UserConfig {
+        self.into_op_version_config(Op::Exact, keep_self, keep_local)
     }
 
     /// Converts this toml document into a simple user config containing
     /// compatible version requirements, i.e. with the caret operator.
-    pub fn into_comp_version_config(self, keep_self: bool, with_local: bool) -> UserConfig {
-        self.into_op_version_config(Op::Caret, keep_self, with_local)
+    pub fn into_comp_version_config(self, keep_self: bool, keep_local: bool) -> UserConfig {
+        self.into_op_version_config(Op::Caret, keep_self, keep_local)
     }
 
     /// Converts this toml document into a simple user config containing
     /// patch version requirements, i.e. with the tilde operator.
-    pub fn into_patch_version_config(self, keep_self: bool, with_local: bool) -> UserConfig {
-        self.into_op_version_config(Op::Tilde, keep_self, with_local)
+    pub fn into_patch_version_config(self, keep_self: bool, keep_local: bool) -> UserConfig {
+        self.into_op_version_config(Op::Tilde, keep_self, keep_local)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub struct PackageSource {
+    pub origin: String,
+    pub path: String,
+}
+
+impl FromStr for PackageSource {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+        let mut parts = s.splitn(2, '+');
+        Ok(Self {
+            origin: parts
+                .next()
+                .ok_or_else(|| anyhow!("Missing source origin"))?
+                .to_owned(),
+            path: parts
+                .next()
+                .ok_or_else(|| anyhow!("Missing source path"))?
+                .to_owned(),
+        })
     }
 }
 
@@ -151,13 +178,6 @@ pub struct CargoCratesPackage {
     pub name: String,
     pub version: Version,
     pub source: PackageSource,
-}
-
-#[derive(Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
-#[serde(try_from = "String")]
-pub struct PackageSource {
-    pub origin: String,
-    pub path: String,
 }
 
 /// Deserialize by splitting by spaces, isolating the name, parsing the version
@@ -182,25 +202,7 @@ impl TryFrom<String> for CargoCratesPackage {
                 .trim_start_matches('(')
                 .trim_end_matches(')')
                 .to_owned()
-                .try_into()?,
-        })
-    }
-}
-
-impl TryFrom<String> for PackageSource {
-    type Error = anyhow::Error;
-
-    fn try_from(s: String) -> Result<Self> {
-        let mut parts = s.splitn(2, '+');
-        Ok(Self {
-            origin: parts
-                .next()
-                .ok_or_else(|| anyhow!("Missing source origin"))?
-                .to_owned(),
-            path: parts
-                .next()
-                .ok_or_else(|| anyhow!("Missing source path"))?
-                .to_owned(),
+                .parse()?,
         })
     }
 }
@@ -216,6 +218,15 @@ fn ver_to_req(ver: &Version, op: Op) -> VersionReq {
 mod tests {
     use super::*;
     use std::iter;
+
+    impl PackageSource {
+        fn crates_io() -> Self {
+            Self {
+                origin: "registry".to_string(),
+                path: "https://github.com/rust-lang/crates.io-index".to_string(),
+            }
+        }
+    }
 
     #[test]
     fn test_deser_cargocrates_empty_iserr() {
@@ -312,10 +323,7 @@ mod tests {
                 CargoCratesPackage {
                     name: clap::crate_name!().to_owned(),
                     version: "1.2.3".parse().unwrap(),
-                    source: PackageSource {
-                        origin: "registry".to_string(),
-                        path: "https://github.com/rust-lang/crates.io-index".to_string(),
-                    },
+                    source: PackageSource::crates_io(),
                 },
                 vec![],
             ))
@@ -349,10 +357,7 @@ mod tests {
                 CargoCratesPackage {
                     name: clap::crate_name!().to_owned(),
                     version: "1.2.3".parse().unwrap(),
-                    source: PackageSource {
-                        origin: "registry".to_string(),
-                        path: "https://github.com/rust-lang/crates.io-index".to_string(),
-                    },
+                    source: PackageSource::crates_io(),
                 },
                 vec![],
             ))
@@ -386,10 +391,7 @@ mod tests {
                 CargoCratesPackage {
                     name: clap::crate_name!().to_owned(),
                     version: "1.2.3".parse().unwrap(),
-                    source: PackageSource {
-                        origin: "registry".to_string(),
-                        path: "https://github.com/rust-lang/crates.io-index".to_string(),
-                    },
+                    source: PackageSource::crates_io(),
                 },
                 vec![],
             ))
@@ -423,10 +425,7 @@ mod tests {
                 CargoCratesPackage {
                     name: clap::crate_name!().to_owned(),
                     version: "1.2.3".parse().unwrap(),
-                    source: PackageSource {
-                        origin: "registry".to_string(),
-                        path: "https://github.com/rust-lang/crates.io-index".to_string(),
-                    },
+                    source: PackageSource::crates_io(),
                 },
                 vec![],
             ))
@@ -468,10 +467,7 @@ mod tests {
                 CargoCratesPackage {
                     name: clap::crate_name!().to_owned(),
                     version: "1.2.3".parse().unwrap(),
-                    source: PackageSource {
-                        origin: "registry".to_string(),
-                        path: "https://github.com/rust-lang/crates.io-index".to_string(),
-                    },
+                    source: PackageSource::crates_io(),
                 },
                 vec![],
             ))
@@ -483,24 +479,19 @@ mod tests {
     }
 
     #[test]
-    fn test_cargocrates_intostarcfg_withlocal() {
-        assert!(!CargoCratesToml {
-            package_bins: iter::once((
-                CargoCratesPackage {
-                    name: clap::crate_name!().to_owned(),
-                    version: "1.2.3".parse().unwrap(),
-                    source: PackageSource {
-                        origin: "path".to_string(),
-                        path: "file:///home/cargo-liner".to_string(),
-                    },
-                },
-                vec![],
-            ))
-            .collect()
-        }
-        .into_star_version_config(false, true)
-        .packages
-        .contains_key(clap::crate_name!()));
+    fn test_cargocrates_intostarcfg_fullversions_keeplocal() {
+        assert_eq!(
+            cargocrates_example1().into_star_version_config(false, true),
+            UserConfig {
+                packages: [("a", "*"), ("b", "*"), ("c", "*")]
+                    .into_iter()
+                    .map(|(name, version)| (
+                        name.to_owned(),
+                        Package::Simple(VersionReq::parse(version).unwrap()),
+                    ))
+                    .collect::<BTreeMap<_, _>>(),
+            },
+        );
     }
 
     #[test]
@@ -520,16 +511,34 @@ mod tests {
     }
 
     #[test]
+    fn test_cargocrates_intostarcfg_fullversions_keepself_keeplocal() {
+        assert_eq!(
+            cargocrates_example1().into_star_version_config(true, true),
+            UserConfig {
+                packages: [
+                    ("a", "*"),
+                    ("b", "*"),
+                    ("c", "*"),
+                    (clap::crate_name!(), "*")
+                ]
+                .into_iter()
+                .map(|(name, version)| (
+                    name.to_owned(),
+                    Package::Simple(VersionReq::parse(version).unwrap()),
+                ))
+                .collect::<BTreeMap<_, _>>(),
+            },
+        );
+    }
+
+    #[test]
     fn test_cargocrates_intoexactcfg_keepself() {
         assert!(CargoCratesToml {
             package_bins: iter::once((
                 CargoCratesPackage {
                     name: clap::crate_name!().to_owned(),
                     version: "1.2.3".parse().unwrap(),
-                    source: PackageSource {
-                        origin: "registry".to_string(),
-                        path: "https://github.com/rust-lang/crates.io-index".to_string(),
-                    },
+                    source: PackageSource::crates_io(),
                 },
                 vec![],
             ))
@@ -567,10 +576,7 @@ mod tests {
                 CargoCratesPackage {
                     name: clap::crate_name!().to_owned(),
                     version: "1.2.3".parse().unwrap(),
-                    source: PackageSource {
-                        origin: "registry".to_string(),
-                        path: "https://github.com/rust-lang/crates.io-index".to_string(),
-                    },
+                    source: PackageSource::crates_io(),
                 },
                 vec![],
             ))
@@ -608,10 +614,7 @@ mod tests {
                 CargoCratesPackage {
                     name: clap::crate_name!().to_owned(),
                     version: "1.2.3".parse().unwrap(),
-                    source: PackageSource {
-                        origin: "registry".to_string(),
-                        path: "https://github.com/rust-lang/crates.io-index".to_string(),
-                    },
+                    source: PackageSource::crates_io(),
                 },
                 vec![],
             ))

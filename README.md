@@ -430,7 +430,7 @@ Options:
           Default: `false`, i.e. return an error in case the file
           already exists.
 
-  -k, --keep-self
+  -s, --keep-self
           Also import this `cargo-liner` package into the
           configuration, for example in order to specify a certain
           version requirement later on.
@@ -440,8 +440,8 @@ Options:
           configuration file. Note however that the `ship` command
           will still self-update by default.
 
-  -l, --with-local
-          Also import all locally installed packages into the
+  -l, --keep-local
+          Also import all locally-installed packages into the
           configuration. This means packages installed via `cargo
           install --path <path>` will be present in the configuration.
           

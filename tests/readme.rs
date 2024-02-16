@@ -14,9 +14,9 @@ fn validate_readme() {
     // Add example packages to registry.
     let _reg = init_registry();
     fake_publish_all([
-        ("cargo-liner", "0.0.0"),
-        ("bat", "0.24.0"),
-        ("cargo-expand", "1.0.79"),
+        ("cargo-liner", "0.0.0", false),
+        ("bat", "0.24.0", false),
+        ("cargo-expand", "1.0.79", false),
     ]);
 
     // Retrieve some test paths.
@@ -24,7 +24,10 @@ fn validate_readme() {
     let tmp_cargo_home = tmp_home.join(".cargo");
 
     // Mimic previous `cargo install` runs.
-    fake_install_all([("cargo-liner", "0.0.0"), ("cargo-expand", "1.0.78")]);
+    fake_install_all([
+        ("cargo-liner", "0.0.0", false),
+        ("cargo-expand", "1.0.78", false),
+    ]);
     // Add our example configuration.
     write_user_config(&["[packages]", "bat = '*'", "cargo-expand = '*'"]);
 
