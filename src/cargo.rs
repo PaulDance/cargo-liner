@@ -5,7 +5,6 @@
 use std::cmp::Ordering;
 use std::collections::{BTreeMap, BTreeSet};
 use std::ffi::OsStr;
-use std::os::unix::prelude::OsStrExt;
 use std::process::{Child, Command, Stdio};
 use std::str;
 use std::{env, iter};
@@ -212,17 +211,13 @@ pub fn config_get(key: &str) -> Result<String> {
         anyhow!(
             "Command failed with status: {:#?} and stderr: {:#?}.",
             out.status,
-            OsStr::from_bytes(&out.stderr),
+            String::from_utf8(out.stderr),
         )
     })?;
 
-    let out_str = OsStr::from_bytes(&out.stdout);
+    let out_str = String::from_utf8(out.stdout)?;
     trace!("Got: {out_str:#?}.");
-    Ok(out_str
-        .to_string_lossy()
-        .trim_end()
-        .trim_matches('"')
-        .to_owned())
+    Ok(out_str.trim_end().trim_matches('"').to_owned())
 }
 
 /// Logs the program and arguments of the given command to DEBUG.
