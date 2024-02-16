@@ -94,7 +94,9 @@ fn try_main() -> Result<()> {
             } else {
                 CargoCratesToml::into_star_version_config
             })(
-                CargoCratesToml::parse_file()?, import_args.keep_self
+                CargoCratesToml::parse_file()?,
+                import_args.keep_self,
+                import_args.with_local,
             ))?;
         }
         cmd => {

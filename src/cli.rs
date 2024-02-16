@@ -217,6 +217,15 @@ pub struct ImportArgs {
     /// however that the `ship` command will still self-update by default.
     #[arg(short, long)]
     pub keep_self: bool,
+
+    /// Also import all locally installed packages into the configuration. This
+    /// means packages installed via `cargo install --path <path>` will be present
+    /// in the configuration.
+    ///
+    /// Default: `false`, i.e. exclude all packages installed via `cargo install --path <path>`
+    /// from the list of packages to install or update in the resulting configuration file.
+    #[arg(short = 'l', long)]
+    pub with_local: bool,
 }
 
 #[cfg(test)]
@@ -427,6 +436,7 @@ mod tests {
                     patch: false,
                     force: false,
                     keep_self: false,
+                    with_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -446,6 +456,7 @@ mod tests {
                     patch: false,
                     force: true,
                     keep_self: false,
+                    with_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -465,6 +476,7 @@ mod tests {
                     patch: false,
                     force: false,
                     keep_self: false,
+                    with_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -484,6 +496,7 @@ mod tests {
                     patch: false,
                     force: true,
                     keep_self: false,
+                    with_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -503,6 +516,7 @@ mod tests {
                     patch: false,
                     force: false,
                     keep_self: false,
+                    with_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -523,6 +537,7 @@ mod tests {
                     patch: false,
                     force: true,
                     keep_self: false,
+                    with_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -542,6 +557,7 @@ mod tests {
                     patch: true,
                     force: false,
                     keep_self: false,
+                    with_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -561,6 +577,7 @@ mod tests {
                     patch: true,
                     force: true,
                     keep_self: false,
+                    with_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -580,6 +597,27 @@ mod tests {
                     patch: false,
                     force: false,
                     keep_self: true,
+                    with_local: false
+                })),
+                verbose: 0,
+                quiet: 0,
+                color: ColorChoice::Auto,
+            }),
+        );
+    }
+
+    #[test]
+    fn test_import_local() {
+        assert_eq!(
+            CargoArgs::try_parse_from(["cargo", "liner", "import", "--with-local"]).unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Import(ImportArgs {
+                    exact: false,
+                    compatible: false,
+                    patch: false,
+                    force: false,
+                    keep_self: false,
+                    with_local: true
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -600,6 +638,7 @@ mod tests {
                     patch: false,
                     force: true,
                     keep_self: true,
+                    with_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -620,6 +659,7 @@ mod tests {
                     patch: false,
                     force: false,
                     keep_self: true,
+                    with_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -647,6 +687,7 @@ mod tests {
                     patch: false,
                     force: true,
                     keep_self: true,
+                    with_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -667,6 +708,7 @@ mod tests {
                     patch: false,
                     force: false,
                     keep_self: true,
+                    with_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -694,6 +736,7 @@ mod tests {
                     patch: false,
                     force: true,
                     keep_self: true,
+                    with_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -714,6 +757,7 @@ mod tests {
                     patch: true,
                     force: false,
                     keep_self: true,
+                    with_local: false
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -741,6 +785,7 @@ mod tests {
                     patch: true,
                     force: true,
                     keep_self: true,
+                    with_local: false
                 })),
                 verbose: 0,
                 quiet: 0,

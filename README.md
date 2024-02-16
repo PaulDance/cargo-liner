@@ -440,6 +440,15 @@ Options:
           configuration file. Note however that the `ship` command
           will still self-update by default.
 
+  -l, --with-local
+          Also import all locally installed packages into the
+          configuration. This means packages installed via `cargo
+          install --path <path>` will be present in the configuration.
+          
+          Default: `false`, i.e. exclude all packages installed via
+          `cargo install --path <path>` from the list of packages to
+          install or update in the resulting configuration file.
+
   -v, --verbose...
           Be more verbose. Use multiple times to be more and more so
           each time.
