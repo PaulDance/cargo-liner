@@ -1,4 +1,3 @@
 [packages]
 abc = "~0.0.1"
 cargo-liner = "~0.0.3"
-def = "~0.0.2"

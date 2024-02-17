@@ -28,6 +28,32 @@ fn validate_import_keepself() {
 }
 
 #[cargo_test]
+fn validate_import_keeplocal() {
+    fixture_fake_install();
+    cargo_liner()
+        .args(["import", "--keep-local"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_eq_path("tests/fixtures/import/validate_import.stderr");
+    assert_user_config_eq_path("tests/fixtures/import/validate_import_keeplocal.outconfig");
+}
+
+#[cargo_test]
+fn validate_import_keepself_keeplocal() {
+    fixture_fake_install();
+    cargo_liner()
+        .args(["import", "--keep-local", "--keep-self"])
+        .assert()
+        .success()
+        .stdout_eq("")
+        .stderr_eq_path("tests/fixtures/import/validate_import.stderr");
+    assert_user_config_eq_path(
+        "tests/fixtures/import/validate_import_keepself_keeplocal.outconfig",
+    );
+}
+
+#[cargo_test]
 fn validate_import_exact() {
     fixture_fake_install();
     cargo_liner()

@@ -17,9 +17,12 @@ use cargo_test_support::{
 use semver::Version;
 use snapbox::cmd::Command;
 
-/// List of example packages and their respective versions, including self.
-pub const FIXTURE_PACKAGES: [(&str, &str); 3] =
-    [("abc", "0.0.1"), ("def", "0.0.2"), ("cargo-liner", "0.0.3")];
+/// List of example packages, their respective versions and if they are locally installed, including self.
+pub const FIXTURE_PACKAGES: [(&str, &str, bool); 3] = [
+    ("abc", "0.0.1", false),
+    ("def", "0.0.2", true),
+    ("cargo-liner", "0.0.3", false),
+];
 
 /// Invoke `cargo-liner liner` with the test environment.
 #[must_use]
@@ -162,8 +165,8 @@ pub fn write_user_config(content_lines: &[&str]) {
 pub fn fixture_write_user_config() {
     let cfg_pkg_lines = FIXTURE_PACKAGES
         .into_iter()
-        .filter(|(pkg, _)| *pkg != clap::crate_name!())
-        .map(|(pkg, _)| format!("{pkg} = '*'"))
+        .filter(|(pkg, _, _)| *pkg != clap::crate_name!())
+        .map(|(pkg, _, _)| format!("{pkg} = '*'"))
         .collect::<Vec<_>>();
     let cfg_lines = iter::once("[packages]")
         .chain(cfg_pkg_lines.iter().map(String::as_str))
@@ -189,7 +192,7 @@ pub fn assert_user_config_eq_path(test_path: impl AsRef<Path>) {
 /// Creates the `$CARGO_HOME/bin` directory if it does not exist; adds an empty
 /// file of the package's name in it; adds the package's name and version to
 /// the `$CARGO_HOME/.crates.toml` file, creating it if it does not exist.
-pub fn fake_install(pkg: &str, ver: &str) {
+pub fn fake_install(pkg: &str, ver: &str, locally_installed: bool) {
     let tmp_home = cargo_test_support::paths::home();
     let tmp_cargo_home = tmp_home.join(".cargo");
     let tmp_cargo_home_bin = tmp_cargo_home.join("bin");
@@ -218,7 +221,12 @@ pub fn fake_install(pkg: &str, ver: &str) {
             .append(true)
             .open(tmp_cargo_home_crates)
             .unwrap(),
-        "\"{pkg} {ver} (registry+https://github.com/rust-lang/crates.io-index)\" = [\"{pkg}\"]",
+        "\"{pkg} {ver} ({source})\" = [\"{pkg}\"]",
+        source = if locally_installed {
+            "path+file:///a/b/c"
+        } else {
+            "registry+https://github.com/rust-lang/crates.io-index"
+        }
     )
     .unwrap();
 }
@@ -226,15 +234,15 @@ pub fn fake_install(pkg: &str, ver: &str) {
 /// Runs [`fake_install`] and [`assert_installed`] with the current crate as
 /// the package and a default version.
 pub fn fake_install_self() {
-    fake_install(clap::crate_name!(), "0.0.0");
+    fake_install(clap::crate_name!(), "0.0.0", false);
     assert_installed(clap::crate_name!());
 }
 
 /// Runs [`fake_install`] for each package name and version pair yielded by the
 /// given iterator.
-pub fn fake_install_all<'p, 'v>(pkg_vers: impl IntoIterator<Item = (&'p str, &'v str)>) {
-    for (pkg, ver) in pkg_vers {
-        fake_install(pkg, ver);
+pub fn fake_install_all<'p, 'v>(pkg_vers: impl IntoIterator<Item = (&'p str, &'v str, bool)>) {
+    for (pkg, ver, locally) in pkg_vers {
+        fake_install(pkg, ver, locally);
     }
 }
 
@@ -260,7 +268,7 @@ pub fn assert_installed_all(pkgs: impl IntoIterator<Item = &'static str>) {
 
 /// Runs [`assert_installed_all`] on some example packages, self included.
 pub fn fixture_assert_installed() {
-    assert_installed_all(FIXTURE_PACKAGES.into_iter().map(|(pkg, _)| pkg));
+    assert_installed_all(FIXTURE_PACKAGES.into_iter().map(|(pkg, _, _)| pkg));
 }
 
 /// Asserts that the given package is not installed in the testing environment.
@@ -281,8 +289,8 @@ pub fn fake_publish(pkg: &str, ver: &str) {
 
 /// Runs [`fake_publish`] for each package name and version pair yielded by the
 /// given iterator.
-pub fn fake_publish_all<'p, 'v>(pkg_vers: impl IntoIterator<Item = (&'p str, &'v str)>) {
-    for (pkg, ver) in pkg_vers {
+pub fn fake_publish_all<'p, 'v>(pkg_vers: impl IntoIterator<Item = (&'p str, &'v str, bool)>) {
+    for (pkg, ver, _) in pkg_vers {
         fake_publish(pkg, ver);
     }
 }
@@ -297,7 +305,7 @@ pub fn fixture_fake_publish() {
 pub fn fixture_fake_publish_newer_others() {
     let pkgs = FIXTURE_PACKAGES
         .into_iter()
-        .map(|(pkg, ver)| {
+        .map(|(pkg, ver, locally)| {
             (
                 pkg,
                 if pkg == clap::crate_name!() {
@@ -307,8 +315,12 @@ pub fn fixture_fake_publish_newer_others() {
                     ver.patch += 1;
                     ver.to_string()
                 },
+                locally,
             )
         })
         .collect::<Vec<_>>();
-    fake_publish_all(pkgs.iter().map(|(pkg, ver)| (*pkg, ver.as_str())));
+    fake_publish_all(
+        pkgs.iter()
+            .map(|(pkg, ver, locally)| (*pkg, ver.as_str(), *locally)),
+    );
 }
