@@ -222,8 +222,8 @@ mod tests {
     impl PackageSource {
         fn crates_io() -> Self {
             Self {
-                origin: "registry".to_string(),
-                path: "https://github.com/rust-lang/crates.io-index".to_string(),
+                origin: "registry".to_owned(),
+                path: "https://github.com/rust-lang/crates.io-index".to_owned(),
             }
         }
     }
