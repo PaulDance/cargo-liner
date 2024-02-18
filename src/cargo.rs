@@ -6,7 +6,6 @@ use std::cmp::Ordering;
 use std::collections::{BTreeMap, BTreeSet};
 use std::ffi::OsStr;
 use std::process::{Child, Command, Stdio};
-use std::str;
 use std::{env, iter};
 
 use anyhow::{anyhow, Result};
@@ -143,7 +142,7 @@ fn spawn_search_exact(pkg: &str) -> Result<Child> {
 /// Waits for the given child process as spawned by [`spawn_search_exact`] to
 /// finish and extract the received package version from the output.
 fn finish_search_exact(pkg: &str, proc: Child) -> Result<Version> {
-    let out = str::from_utf8(proc.wait_with_output()?.stdout.as_slice())?.to_owned();
+    let out = String::from_utf8(proc.wait_with_output()?.stdout)?;
     trace!("Search for {:#?} got: {:#?}", pkg, out);
 
     // See https://semver.org/#backusnaur-form-grammar-for-valid-semver-versions.
@@ -261,7 +260,7 @@ mod tests {
 
         let res = proc.wait_with_output()?;
         assert!(res.status.success());
-        assert!(str::from_utf8(res.stdout.as_slice())?.lines().count() > 0);
+        assert!(String::from_utf8(res.stdout)?.lines().count() > 0);
 
         Ok(())
     }
@@ -294,7 +293,7 @@ mod tests {
 
         let res = proc.wait_with_output()?;
         assert!(res.status.success());
-        assert_eq!(str::from_utf8(res.stdout.as_slice())?.lines().count(), 0);
+        assert_eq!(String::from_utf8(res.stdout)?.lines().count(), 0);
 
         Ok(())
     }
