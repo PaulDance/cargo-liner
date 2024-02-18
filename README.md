@@ -175,32 +175,32 @@ Options:
           Be more verbose. Use multiple times to be more and more so
           each time.
           
-          When omitted, INFO and above messages of only this crate are
-          logged. When used once, DEBUG and above messages of only
-          this crate are logged. When used twice, DEBUG and above
-          messages of all crates are logged, and `-v` is given to
-          Cargo calls (details ran commands). When used three times or
-          more, TRACE and above messages of all crates are logged, and
-          `-vv` is given to Cargo calls (includes build output). This
-          takes precedence over the environment.
+          When omitted, INFO and above messages of only this crate
+          are logged. When used once, DEBUG and above messages of
+          only this crate are logged. When used twice, DEBUG and
+          above messages of all crates are logged, and `-v` is given
+          to Cargo calls (details ran commands). When used three
+          times or more, TRACE and above messages of all crates are
+          logged, and `-vv` is given to Cargo calls (includes build
+          output). This takes precedence over the environment.
 
   -q, --quiet...
           Be quieter. Use multiple times to be more and more so each
           time.
           
-          When omitted, INFO and above messages of only this crate are
-          logged. When used once, WARN and above messages of only this
-          crate are logged. When used twice, ERROR messages of all
-          crates are logged. When used three times or more, no message
-          will be logged, including Cargo's by passing `-q` to it.
-          This takes precedence over the environment.
+          When omitted, INFO and above messages of only this crate
+          are logged. When used once, WARN and above messages of only
+          this crate are logged. When used twice, ERROR messages of
+          all crates are logged. When used three times or more, no
+          message will be logged, including Cargo's by passing `-q`
+          to it. This takes precedence over the environment.
 
       --color <WHEN>
           Control the coloring of the logging output.
           
-          This enables one to manually specify when should the logs be
-          colored or not, for example if the automatic detection is
-          either not wished or not functional. The value is also
+          This enables one to manually specify when should the logs
+          be colored or not, for example if the automatic detection
+          is either not wished or not functional. The value is also
           passed onto calls to Cargo.
           
           [default: auto]
@@ -303,57 +303,58 @@ Options:
           
           The version check is relatively quick and enables skipping
           calls to `cargo install` when no update is required, which
-          saves quite a bit of time. However, if you wish, this option
-          is still available in order not to run the check: doing so
-          will probably take more time in the end most of the time,
-          except if you have a very small amount of packages
-          configured (e.g. one or two) or if all or almost all
-          packages are not already installed.
+          saves quite a bit of time. However, if you wish, this
+          option is still available in order not to run the check:
+          doing so will probably take more time in the end most of
+          the time, except if you have a very small amount of
+          packages configured (e.g. one or two) or if all or almost
+          all packages are not already installed.
           
           It can also be used as a workaround in case a certain
-          operation fails in your particular environment, for example:
-          reading from `.crates.toml` under the `$CARGO_HOME` or
-          `$CARGO_INSTALL_ROOT` directory or making requests to the
-          registry. These operations will thus be entirely skipped.
+          operation fails in your particular environment, for
+          example: reading from `.crates.toml` under the
+          `$CARGO_HOME` or `$CARGO_INSTALL_ROOT` directory or making
+          requests to the registry. These operations will thus be
+          entirely skipped.
 
   -f, --force
           Force overwriting existing crates or binaries.
           
-          Passes the option flag onto each call of `cargo install`. It
-          will, for example, redownload, recompile and reinstall every
-          configured package when used in conjunction with
+          Passes the option flag onto each call of `cargo install`.
+          It will, for example, redownload, recompile and reinstall
+          every configured package when used in conjunction with
           `--skip-check`.
 
   -v, --verbose...
           Be more verbose. Use multiple times to be more and more so
           each time.
           
-          When omitted, INFO and above messages of only this crate are
-          logged. When used once, DEBUG and above messages of only
-          this crate are logged. When used twice, DEBUG and above
-          messages of all crates are logged, and `-v` is given to
-          Cargo calls (details ran commands). When used three times or
-          more, TRACE and above messages of all crates are logged, and
-          `-vv` is given to Cargo calls (includes build output). This
-          takes precedence over the environment.
+          When omitted, INFO and above messages of only this crate
+          are logged. When used once, DEBUG and above messages of
+          only this crate are logged. When used twice, DEBUG and
+          above messages of all crates are logged, and `-v` is given
+          to Cargo calls (details ran commands). When used three
+          times or more, TRACE and above messages of all crates are
+          logged, and `-vv` is given to Cargo calls (includes build
+          output). This takes precedence over the environment.
 
   -q, --quiet...
           Be quieter. Use multiple times to be more and more so each
           time.
           
-          When omitted, INFO and above messages of only this crate are
-          logged. When used once, WARN and above messages of only this
-          crate are logged. When used twice, ERROR messages of all
-          crates are logged. When used three times or more, no message
-          will be logged, including Cargo's by passing `-q` to it.
-          This takes precedence over the environment.
+          When omitted, INFO and above messages of only this crate
+          are logged. When used once, WARN and above messages of only
+          this crate are logged. When used twice, ERROR messages of
+          all crates are logged. When used three times or more, no
+          message will be logged, including Cargo's by passing `-q`
+          to it. This takes precedence over the environment.
 
       --color <WHEN>
           Control the coloring of the logging output.
           
-          This enables one to manually specify when should the logs be
-          colored or not, for example if the automatic detection is
-          either not wished or not functional. The value is also
+          This enables one to manually specify when should the logs
+          be colored or not, for example if the automatic detection
+          is either not wished or not functional. The value is also
           passed onto calls to Cargo.
           
           [default: auto]
@@ -443,7 +444,8 @@ Options:
   -l, --keep-local
           Also import all locally-installed packages into the
           configuration. This means packages installed via `cargo
-          install --path <path>` will be present in the configuration.
+          install --path <path>` will be present in the
+          configuration.
           
           Default: `false`, i.e. exclude all packages installed via
           `cargo install --path <path>` from the list of packages to
@@ -453,32 +455,32 @@ Options:
           Be more verbose. Use multiple times to be more and more so
           each time.
           
-          When omitted, INFO and above messages of only this crate are
-          logged. When used once, DEBUG and above messages of only
-          this crate are logged. When used twice, DEBUG and above
-          messages of all crates are logged, and `-v` is given to
-          Cargo calls (details ran commands). When used three times or
-          more, TRACE and above messages of all crates are logged, and
-          `-vv` is given to Cargo calls (includes build output). This
-          takes precedence over the environment.
+          When omitted, INFO and above messages of only this crate
+          are logged. When used once, DEBUG and above messages of
+          only this crate are logged. When used twice, DEBUG and
+          above messages of all crates are logged, and `-v` is given
+          to Cargo calls (details ran commands). When used three
+          times or more, TRACE and above messages of all crates are
+          logged, and `-vv` is given to Cargo calls (includes build
+          output). This takes precedence over the environment.
 
   -q, --quiet...
           Be quieter. Use multiple times to be more and more so each
           time.
           
-          When omitted, INFO and above messages of only this crate are
-          logged. When used once, WARN and above messages of only this
-          crate are logged. When used twice, ERROR messages of all
-          crates are logged. When used three times or more, no message
-          will be logged, including Cargo's by passing `-q` to it.
-          This takes precedence over the environment.
+          When omitted, INFO and above messages of only this crate
+          are logged. When used once, WARN and above messages of only
+          this crate are logged. When used twice, ERROR messages of
+          all crates are logged. When used three times or more, no
+          message will be logged, including Cargo's by passing `-q`
+          to it. This takes precedence over the environment.
 
       --color <WHEN>
           Control the coloring of the logging output.
           
-          This enables one to manually specify when should the logs be
-          colored or not, for example if the automatic detection is
-          either not wished or not functional. The value is also
+          This enables one to manually specify when should the logs
+          be colored or not, for example if the automatic detection
+          is either not wished or not functional. The value is also
           passed onto calls to Cargo.
           
           [default: auto]

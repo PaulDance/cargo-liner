@@ -47,7 +47,7 @@ fn validate_readme() {
         // order for the file to be kept properly-formatted. 70 columns should
         // make the output fit in the current rendering of crates.io for code
         // blocks.
-        .env("COLUMNS", "70")
+        .env("COLUMNS", "69")
         .case("README.md")
         .run();
 }
