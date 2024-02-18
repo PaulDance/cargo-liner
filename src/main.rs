@@ -164,7 +164,7 @@ fn log_summary(new_vers: &BTreeMap<String, Version>, old_vers: &BTreeMap<String,
         info!(
             "Results:\n{}",
             Table::new(new_vers.iter().map(|(name, new_ver)| PackageStatus {
-                name: name.to_string(),
+                name: name.clone(),
                 status: old_vers.get(name).map_or_else(
                     || format!("ø -> {new_ver}"),
                     |old_ver| {
