@@ -18,7 +18,9 @@ fn validate_ship_noupdate() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_eq_path("tests/fixtures/ship/validate_ship_noupdate.stderr");
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_noupdate.stderr"
+        ]);
     assert_installed("cargo-liner");
 }
 
@@ -35,7 +37,9 @@ fn validate_ship_onlyself_noupdate() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_eq_path("tests/fixtures/ship/validate_ship_noupdate.stderr");
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_noupdate.stderr"
+        ]);
     assert_installed("cargo-liner");
 }
 
@@ -51,7 +55,9 @@ fn validate_ship_noself_nothing() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_eq_path("tests/fixtures/ship/validate_ship_noself_nothing.stderr");
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_noself_nothing.stderr"
+        ]);
     assert_installed("cargo-liner");
 }
 
@@ -68,7 +74,9 @@ fn validate_ship_skipcheck_noupdate() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_skipcheck_noupdate.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_skipcheck_noupdate.stderr"
+        ]);
     assert_installed("cargo-liner");
 }
 
@@ -85,7 +93,9 @@ fn validate_ship_skipcheck_onlyself_noupdate() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_skipcheck_noupdate.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_skipcheck_noupdate.stderr"
+        ]);
     assert_installed("cargo-liner");
 }
 
@@ -101,7 +111,9 @@ fn validate_ship_skipcheck_noself_nothing() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_eq_path("tests/fixtures/ship/validate_ship_skipcheck_noself_nothing.stderr");
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_skipcheck_noself_nothing.stderr"
+        ]);
     assert_installed("cargo-liner");
 }
 
@@ -118,7 +130,9 @@ fn validate_ship_force_noupdate() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_eq_path("tests/fixtures/ship/validate_ship_noupdate.stderr");
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_noupdate.stderr"
+        ]);
     assert_installed("cargo-liner");
 }
 
@@ -135,7 +149,9 @@ fn validate_ship_onlyself_force_noupdate() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_eq_path("tests/fixtures/ship/validate_ship_noupdate.stderr");
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_noupdate.stderr"
+        ]);
     assert_installed("cargo-liner");
 }
 
@@ -151,7 +167,9 @@ fn validate_ship_noself_force_nothing() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_eq_path("tests/fixtures/ship/validate_ship_noself_nothing.stderr");
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_noself_nothing.stderr"
+        ]);
     assert_installed("cargo-liner");
 }
 
@@ -168,7 +186,9 @@ fn validate_ship_skipcheck_force_update() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_skipcheck_force_update.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_skipcheck_force_update.stderr"
+        ]);
     assert_installed("cargo-liner");
 }
 
@@ -185,7 +205,9 @@ fn validate_ship_skipcheck_onlyself_force_update() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_skipcheck_force_update.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_skipcheck_force_update.stderr"
+        ]);
     assert_installed("cargo-liner");
 }
 
@@ -201,7 +223,9 @@ fn validate_ship_skipcheck_noself_force_nothing() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_eq_path("tests/fixtures/ship/validate_ship_skipcheck_noself_nothing.stderr");
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_skipcheck_noself_nothing.stderr"
+        ]);
     assert_installed("cargo-liner");
 }
 
@@ -218,7 +242,9 @@ fn validate_ship_newerself_update() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_newerself_update.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_newerself_update.stderr"
+        ]);
     assert_installed("cargo-liner");
 }
 
@@ -235,7 +261,9 @@ fn validate_ship_newerself_onlyself_update() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_newerself_update.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_newerself_update.stderr"
+        ]);
     assert_installed("cargo-liner");
 }
 
@@ -252,7 +280,9 @@ fn validate_ship_newerself_noself_nothing() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_eq_path("tests/fixtures/ship/validate_ship_noself_nothing.stderr");
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_noself_nothing.stderr"
+        ]);
     assert_installed("cargo-liner");
 }
 
@@ -269,7 +299,9 @@ fn validate_ship_newerself_skipcheck_update() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_newerself_skipcheck_update.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_newerself_skipcheck_update.stderr"
+        ]);
     assert_installed("cargo-liner");
 }
 
@@ -286,7 +318,9 @@ fn validate_ship_newerself_skipcheck_onlyself_update() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_newerself_skipcheck_update.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_newerself_skipcheck_update.stderr"
+        ]);
     assert_installed("cargo-liner");
 }
 
@@ -303,7 +337,9 @@ fn validate_ship_newerself_skipcheck_noself_nothing() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_eq_path("tests/fixtures/ship/validate_ship_skipcheck_noself_nothing.stderr");
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_skipcheck_noself_nothing.stderr"
+        ]);
     assert_installed("cargo-liner");
 }
 
@@ -320,7 +356,9 @@ fn validate_ship_manynotinstalled_install() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_manynotinstalled_install.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_manynotinstalled_install.stderr"
+        ]);
     fixture_assert_installed();
 }
 
@@ -337,7 +375,9 @@ fn validate_ship_manyinstalled_noupdate() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_manyinstalled_noupdate.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_manyinstalled_noupdate.stderr"
+        ]);
     fixture_assert_installed();
 }
 
@@ -355,7 +395,9 @@ fn validate_ship_manynewer_update() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_manynewer_update.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_manynewer_update.stderr"
+        ]);
     fixture_assert_installed();
 }
 
@@ -381,7 +423,9 @@ fn validate_ship_features_simple_none() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_features.stderr"
+        ]);
     assert_installed("pkg");
 }
 
@@ -408,7 +452,9 @@ fn validate_ship_features_simple_default() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_features.stderr"
+        ]);
     assert_installed("pkg");
 }
 
@@ -434,7 +480,9 @@ fn validate_ship_features_detailed_none() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_features.stderr"
+        ]);
     assert_installed("pkg");
 }
 
@@ -460,7 +508,9 @@ fn validate_ship_features_detailed_one() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_features.stderr"
+        ]);
     assert_installed("pkg");
 }
 
@@ -487,7 +537,9 @@ fn validate_ship_features_detailed_default() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_features.stderr"
+        ]);
     assert_installed("pkg");
 }
 
@@ -517,7 +569,9 @@ fn validate_ship_features_detailed_nodefault() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_features.stderr"
+        ]);
     assert_installed("pkg");
 }
 
@@ -551,7 +605,9 @@ fn validate_ship_features_detailed_nodefault_one() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_features.stderr"
+        ]);
     assert_installed("pkg");
 }
 
@@ -581,7 +637,9 @@ fn validate_ship_features_detailed_all() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_features.stderr"
+        ]);
     assert_installed("pkg");
 }
 
@@ -614,7 +672,9 @@ fn validate_ship_features_detailed_all_one() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_features.stderr"
+        ]);
     assert_installed("pkg");
 }
 
@@ -648,7 +708,9 @@ fn validate_ship_features_detailed_all_default() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_features.stderr"
+        ]);
     assert_installed("pkg");
 }
 
@@ -682,7 +744,9 @@ fn validate_ship_features_detailed_all_nodefault() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_features.stderr"
+        ]);
     assert_installed("pkg");
 }
 
@@ -718,7 +782,9 @@ fn validate_ship_features_detailed_all_default_one() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_features.stderr"
+        ]);
     assert_installed("pkg");
 }
 
@@ -754,7 +820,9 @@ fn validate_ship_features_detailed_all_nodefault_one() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_features.stderr"
+        ]);
     assert_installed("pkg");
 }
 
@@ -770,7 +838,9 @@ fn validate_ship_verbosity_v() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_verbosity_v.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_verbosity_v.stderr"
+        ]);
     assert_installed("pkg");
 }
 
@@ -786,7 +856,9 @@ fn validate_ship_verbosity_vv() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_verbosity_vv.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_verbosity_vv.stderr"
+        ]);
     assert_installed("pkg");
 }
 
@@ -802,7 +874,9 @@ fn validate_ship_verbosity_vvv() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_verbosity_vvv.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_verbosity_vvv.stderr"
+        ]);
     assert_installed("pkg");
 }
 
@@ -818,7 +892,9 @@ fn validate_ship_verbosity_q() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_verbosity_q.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_verbosity_q.stderr"
+        ]);
     assert_installed("pkg");
 }
 
@@ -834,7 +910,9 @@ fn validate_ship_verbosity_qq() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_verbosity_q.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_verbosity_q.stderr"
+        ]);
     assert_installed("pkg");
 }
 
@@ -864,7 +942,9 @@ fn validate_ship_noconfig_iserr() {
         .assert()
         .failure()
         .stdout_eq("")
-        .stderr_eq_path("tests/fixtures/ship/validate_ship_file_err.stderr");
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_file_err.stderr"
+        ]);
 }
 
 /// See #5.
@@ -878,7 +958,9 @@ fn validate_ship_nocratestoml_iserr() {
         .assert()
         .failure()
         .stdout_eq("")
-        .stderr_eq_path("tests/fixtures/ship/validate_ship_file_err.stderr");
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_file_err.stderr"
+        ]);
 }
 
 /// See #5.
@@ -892,7 +974,9 @@ fn validate_ship_nocratestoml_skipcheck_isok() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_eq_path("tests/fixtures/ship/validate_ship_skipcheck_noself_nothing.stderr");
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_skipcheck_noself_nothing.stderr"
+        ]);
 }
 
 /// See #4.
@@ -910,7 +994,9 @@ fn validate_ship_cargoinstallroot_supported() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_cargoinstallroot_supported.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_cargoinstallroot_supported.stderr"
+        ]);
     assert!(tmp_dir.path().join("bin/pkg").is_file());
 }
 
@@ -927,7 +1013,9 @@ fn validate_ship_weirdversions_supported() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_weirdversions_supported.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_weirdversions_supported.stderr"
+        ]);
     assert_installed("pkg");
 }
 
@@ -944,9 +1032,9 @@ fn validate_ship_weirdpackagenames_supported() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path(
-            "tests/fixtures/ship/validate_ship_weirdpackagenames_supported.stderr",
-        );
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_weirdpackagenames_supported.stderr"
+        ]);
     assert_not_installed("--pkg");
 }
 
@@ -964,6 +1052,8 @@ fn validate_ship_cargotermcolor_supported() {
         .assert()
         .success()
         .stdout_eq("")
-        .stderr_matches_path("tests/fixtures/ship/validate_ship_features.stderr");
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_features.stderr"
+        ]);
     assert_installed("pkg");
 }
