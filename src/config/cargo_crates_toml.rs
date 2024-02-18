@@ -98,7 +98,7 @@ impl CargoCratesToml {
                 .package_bins
                 .into_iter()
                 .filter(|(pkg, _)| {
-                    (keep_local || pkg.source.origin != "path")
+                    (keep_local || pkg.source.kind != SourceKind::Path)
                         && (keep_self || pkg.name != clap::crate_name!())
                 })
                 .map(pkg_map)
@@ -185,7 +185,7 @@ impl FromStr for CargoCratesPackage {
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, DeserializeFromStr)]
 pub struct PackageSource {
-    pub origin: String,
+    pub kind: SourceKind,
     pub url: Url,
 }
 
@@ -195,14 +195,36 @@ impl FromStr for PackageSource {
     fn from_str(s: &str) -> Result<Self> {
         let mut parts = s.splitn(2, '+');
         Ok(Self {
-            origin: parts
+            kind: parts
                 .next()
                 .ok_or_else(|| anyhow!("Missing source origin"))?
-                .to_owned(),
+                .parse()?,
             url: parts
                 .next()
                 .ok_or_else(|| anyhow!("Missing source path"))?
                 .parse()?,
+        })
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, DeserializeFromStr)]
+pub enum SourceKind {
+    Git,
+    Path,
+    Registry,
+    SparseRegistry,
+}
+
+impl FromStr for SourceKind {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> Result<Self> {
+        Ok(match s {
+            "git" => Self::Git,
+            "path" => Self::Path,
+            "registry" => Self::Registry,
+            "sparse" => Self::SparseRegistry,
+            kind => anyhow::bail!("Unsupported source protocol: {}", kind),
         })
     }
 }
@@ -222,7 +244,7 @@ mod tests {
     impl PackageSource {
         fn crates_io() -> Self {
             Self {
-                origin: "registry".to_owned(),
+                kind: SourceKind::Registry,
                 url: "https://github.com/rust-lang/crates.io-index"
                     .parse()
                     .unwrap(),
@@ -294,12 +316,12 @@ mod tests {
                     ),
                 ]
                 .into_iter()
-                .map(|(name, version, source_origin, source_url, bins)| (
+                .map(|(name, version, source_kind, source_url, bins)| (
                     CargoCratesPackage {
                         name: name.to_owned(),
                         version: version.parse::<Version>().unwrap(),
                         source: PackageSource {
-                            origin: source_origin.to_owned(),
+                            kind: source_kind.parse().unwrap(),
                             url: source_url.parse().unwrap(),
                         },
                     },
