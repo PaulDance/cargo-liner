@@ -126,8 +126,8 @@ them in some way, using Git for example.
    please make sure it is properly configured in the `$CARGO_INSTALL_ROOT`
    environment variable or the `install.root` key of the
    `$CARGO_HOME/config.toml` file so that the current tool may be able to
-   detect that on itself. See the [`cargo install` documentation](cargo-install)
-   for more details about this.
+   detect that on itself. See the [`cargo install`] documentation for more
+   details about this.
  * Populate the file with packages you wish to be installed, for example:
 
    ```toml
@@ -147,7 +147,7 @@ them in some way, using Git for example.
    more detailed explanations.
 
 [Cargo Home]: https://doc.rust-lang.org/cargo/guide/cargo-home.html
-[cargo-install]: https://doc.rust-lang.org/cargo/commands/cargo-install.html
+[`cargo install`]: https://doc.rust-lang.org/cargo/commands/cargo-install.html
 
 
 ## Usage
