@@ -30,7 +30,7 @@ include = [
 ]
 
 [dependencies]
-clap = { version = "~4.4", features = [
+clap = { version = "~4.5", features = [
     "derive",
     "cargo",
     "wrap_help",
@@ -49,8 +49,8 @@ tabled = "~0.15"
 [dev-dependencies]
 indoc = "~2.0"
 once_cell = "~1.19"
-trycmd = "~0.14"
+trycmd = "~0.15"
 snapbox = "~0.4"
-tempfile = "~3.9"
+tempfile = "~3.10"
 cargo-test-macro = { git = "https://github.com/rust-lang/cargo.git", branch = "master" }
 cargo-test-support = { git = "https://github.com/rust-lang/cargo.git", branch = "master" }
