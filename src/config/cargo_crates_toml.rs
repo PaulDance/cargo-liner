@@ -281,14 +281,14 @@ mod tests {
                         "0.0.0",
                         "path",
                         "file:///a/b/c",
-                        vec!["c1", "c2", "c3"]
+                        vec!["c1", "c2", "c3"],
                     ),
                     (
                         "cargo-liner",
                         "0.2.1",
                         "registry",
                         "https://crates.io/index",
-                        vec!["cargo-liner"]
+                        vec!["cargo-liner"],
                     ),
                 ]
                 .into_iter()

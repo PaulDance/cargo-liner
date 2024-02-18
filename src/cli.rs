@@ -437,7 +437,7 @@ mod tests {
                     patch: false,
                     force: false,
                     keep_self: false,
-                    keep_local: false
+                    keep_local: false,
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -457,7 +457,7 @@ mod tests {
                     patch: false,
                     force: true,
                     keep_self: false,
-                    keep_local: false
+                    keep_local: false,
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -477,7 +477,7 @@ mod tests {
                     patch: false,
                     force: false,
                     keep_self: false,
-                    keep_local: false
+                    keep_local: false,
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -497,7 +497,7 @@ mod tests {
                     patch: false,
                     force: true,
                     keep_self: false,
-                    keep_local: false
+                    keep_local: false,
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -517,7 +517,7 @@ mod tests {
                     patch: false,
                     force: false,
                     keep_self: false,
-                    keep_local: false
+                    keep_local: false,
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -538,7 +538,7 @@ mod tests {
                     patch: false,
                     force: true,
                     keep_self: false,
-                    keep_local: false
+                    keep_local: false,
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -558,7 +558,7 @@ mod tests {
                     patch: true,
                     force: false,
                     keep_self: false,
-                    keep_local: false
+                    keep_local: false,
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -578,7 +578,7 @@ mod tests {
                     patch: true,
                     force: true,
                     keep_self: false,
-                    keep_local: false
+                    keep_local: false,
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -598,7 +598,7 @@ mod tests {
                     patch: false,
                     force: false,
                     keep_self: true,
-                    keep_local: false
+                    keep_local: false,
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -618,7 +618,7 @@ mod tests {
                     patch: false,
                     force: false,
                     keep_self: false,
-                    keep_local: true
+                    keep_local: true,
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -639,7 +639,7 @@ mod tests {
                     patch: false,
                     force: true,
                     keep_self: true,
-                    keep_local: false
+                    keep_local: false,
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -660,7 +660,7 @@ mod tests {
                     patch: false,
                     force: false,
                     keep_self: true,
-                    keep_local: false
+                    keep_local: false,
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -688,7 +688,7 @@ mod tests {
                     patch: false,
                     force: true,
                     keep_self: true,
-                    keep_local: false
+                    keep_local: false,
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -709,7 +709,7 @@ mod tests {
                     patch: false,
                     force: false,
                     keep_self: true,
-                    keep_local: false
+                    keep_local: false,
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -737,7 +737,7 @@ mod tests {
                     patch: false,
                     force: true,
                     keep_self: true,
-                    keep_local: false
+                    keep_local: false,
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -758,7 +758,7 @@ mod tests {
                     patch: true,
                     force: false,
                     keep_self: true,
-                    keep_local: false
+                    keep_local: false,
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -786,7 +786,7 @@ mod tests {
                     patch: true,
                     force: true,
                     keep_self: true,
-                    keep_local: false
+                    keep_local: false,
                 })),
                 verbose: 0,
                 quiet: 0,
