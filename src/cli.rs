@@ -161,7 +161,8 @@ pub struct ShipArgs {
     /// It can also be used as a workaround in case a certain operation fails
     /// in your particular environment, for example: reading from `.crates.toml`
     /// under the `$CARGO_HOME` or `$CARGO_INSTALL_ROOT` directory or making
-    /// requests to the registry. These operations will thus be entirely skipped.
+    /// requests to the registry. These operations will thus be entirely
+    /// skipped.
     #[arg(short = 'c', long)]
     pub skip_check: bool,
 

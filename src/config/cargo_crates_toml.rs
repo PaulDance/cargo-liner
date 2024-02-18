@@ -238,8 +238,9 @@ fn ver_to_req(ver: &Version, op: Op) -> VersionReq {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use std::iter;
+
+    use super::*;
 
     impl PackageSource {
         fn crates_io() -> Self {

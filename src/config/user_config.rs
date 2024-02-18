@@ -30,7 +30,8 @@ impl UserConfig {
     /// Deserializes the user's configuration file and returns the result.
     ///
     /// It may fail on multiple occasions: if Cargo's home may not be found, if
-    /// the file does not exist, if it cannot be read from or if it is malformed.
+    /// the file does not exist, if it cannot be read from or if it is
+    /// malformed.
     pub fn parse_file() -> Result<Self> {
         let path = Self::file_path()?;
         debug!("Reading configuration from {:#?}...", &path);
@@ -75,7 +76,8 @@ impl UserConfig {
         Ok(())
     }
 
-    /// Converts the config to a pretty TOML string with literal strings disabled.
+    /// Converts the config to a pretty TOML string with literal strings
+    /// disabled.
     fn to_string_pretty(&self) -> Result<String> {
         debug!("Serializing configuration...");
         let res = toml::to_string_pretty(self)?;
@@ -122,10 +124,12 @@ impl UserConfig {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use std::iter;
+
     use indoc::indoc;
     use semver::VersionReq;
-    use std::iter;
+
+    use super::*;
 
     #[test]
     fn test_deser_userconfig_empty_iserr() {

@@ -8,12 +8,10 @@ use std::io::Write;
 use std::path::Path;
 use std::{env, io, iter};
 
-use cargo_test_support::registry::Package;
-use cargo_test_support::{
-    compare,
-    registry::{HttpServer, RegistryBuilder, Request, Response, TestRegistry},
-    TestEnv,
+use cargo_test_support::registry::{
+    HttpServer, Package, RegistryBuilder, Request, Response, TestRegistry,
 };
+use cargo_test_support::{compare, TestEnv};
 use semver::Version;
 use snapbox::cmd::Command;
 

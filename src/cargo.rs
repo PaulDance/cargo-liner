@@ -16,8 +16,8 @@ use semver::Version;
 
 use crate::config::Package;
 
-/// Installs a package, by running `cargo install` passing the `name`, `version` and requested
-/// `features`.
+/// Installs a package, by running `cargo install` passing the `name`, `version`
+/// and requested `features`.
 ///
 /// The launched process' path is determined using the `$CARGO` environment
 /// variable as it is set by Cargo when it calls an external subcommand's
@@ -82,7 +82,8 @@ fn install(
     Ok(())
 }
 
-/// Runs `cargo install` for all packages listed in the given user configuration.
+/// Runs `cargo install` for all packages listed in the given user
+/// configuration.
 pub fn install_all(
     packages: &BTreeMap<String, Package>,
     installed: &BTreeSet<String>,
