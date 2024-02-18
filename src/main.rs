@@ -160,24 +160,25 @@ struct PackageStatus {
 fn log_summary(new_vers: &BTreeMap<String, Version>, old_vers: &BTreeMap<String, Version>) {
     if new_vers.is_empty() {
         info!("No packages installed.");
-        return;
+    } else {
+        info!(
+            "Results:\n{}",
+            Table::new(new_vers.iter().map(|(name, new_ver)| PackageStatus {
+                name: name.to_string(),
+                status: old_vers.get(name).map_or_else(
+                    || format!("ø -> {new_ver}"),
+                    |old_ver| {
+                        if old_ver < new_ver {
+                            format!("{old_ver} -> {new_ver}")
+                        } else {
+                            format!("✔ {new_ver}")
+                        }
+                    },
+                ),
+            }))
+            .with(Style::sharp())
+        );
     }
-
-    let pkgs = new_vers.iter().map(|(name, new_ver)| PackageStatus {
-        name: name.to_string(),
-        status: old_vers.get(name).map_or_else(
-            || format!("ø -> {new_ver}"),
-            |old_ver| {
-                if old_ver < new_ver {
-                    format!("{old_ver} -> {new_ver}")
-                } else {
-                    format!("✔ {new_ver}")
-                }
-            },
-        ),
-    });
-
-    info!("Results:\n{}", Table::new(pkgs).with(Style::sharp()));
 }
 
 /// Returns the packages that do indeed need an install or update.
