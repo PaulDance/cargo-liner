@@ -147,7 +147,7 @@ them in some way, using Git for example.
    more detailed explanations.
 
 [Cargo Home]: https://doc.rust-lang.org/cargo/guide/cargo-home.html
-[cargo-install](https://doc.rust-lang.org/cargo/commands/cargo-install.html)
+[cargo-install]: https://doc.rust-lang.org/cargo/commands/cargo-install.html
 
 
 ## Usage
