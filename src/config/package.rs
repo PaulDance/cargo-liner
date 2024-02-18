@@ -3,6 +3,8 @@ use serde::{Deserialize, Serialize};
 
 /// Small helper function that returns true to work around
 /// <https://github.com/serde-rs/serde/issues/368>.
+#[allow(clippy::inline_always)]
+#[inline(always)]
 fn serde_default_true() -> bool {
     true
 }
