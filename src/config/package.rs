@@ -10,7 +10,7 @@ fn serde_default_true() -> bool {
 /// Package requirement with additional options set.
 ///
 /// See <https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html>.
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct DetailedPackageReq {
     #[serde(rename = "default-features", default = "serde_default_true")]
     default_features: bool,
@@ -28,7 +28,7 @@ pub struct DetailedPackageReq {
 ///
 /// There is only one variant for now: a version requirement string.
 /// The enumeration is deserialized from an untagged form.
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum Package {
     /// Simple form: only a SemVer requirement string.

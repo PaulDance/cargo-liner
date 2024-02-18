@@ -12,7 +12,7 @@ use super::{Package, UserConfig};
 use crate::cargo;
 
 /// Representation of the `$CARGO_HOME/.crates.toml` Cargo-managed save file.
-#[derive(Deserialize, Debug, Default, Clone, PartialEq, Eq)]
+#[derive(Debug, Default, Clone, PartialEq, Eq, Deserialize)]
 pub struct CargoCratesToml {
     #[serde(rename = "v1")]
     pub package_bins: BTreeMap<CargoCratesPackage, Vec<String>>,
@@ -148,7 +148,7 @@ impl CargoCratesToml {
 }
 
 /// Representation of keys of the `v1` table parsed by [`CargoCratesToml`].
-#[derive(Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Deserialize)]
 #[serde(try_from = "String")]
 pub struct CargoCratesPackage {
     pub name: String,
