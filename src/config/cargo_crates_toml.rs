@@ -177,7 +177,6 @@ impl TryFrom<String> for CargoCratesPackage {
                 .ok_or_else(|| anyhow!("Missing source"))?
                 .trim_start_matches('(')
                 .trim_end_matches(')')
-                .to_owned()
                 .parse()?,
         })
     }
