@@ -171,7 +171,7 @@ impl TryFrom<String> for CargoCratesPackage {
             version: parts
                 .next()
                 .ok_or_else(|| anyhow!("Missing version"))?
-                .parse::<Version>()?,
+                .parse()?,
             source: parts
                 .next()
                 .ok_or_else(|| anyhow!("Missing source"))?
