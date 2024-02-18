@@ -11,18 +11,19 @@ in all your interactions with the project.
 
 ## Pull Request Process
 
-1. Add as much tests as possible. Unit tests are directly in modules.
+1. Please GPG-sign your Git commits.
+2. Add as much tests as possible. Unit tests are directly in modules.
    Integration tests are in the `tests` directory. Add feature tests when
    adding new functionalities. Add regression tests when fixing bugs.
-2. Update the `README.md` with details of changes to the interface, this
+3. Update the `README.md` with details of changes to the interface, this
    includes new environment variables, exposed CLI options, useful file
    locations and configuration options.
-3. Increase the version numbers in any examples files and the `README.md` to
+4. Increase the version numbers in any examples files and the `README.md` to
    the new version that this Pull Request would represent. The versioning
    scheme we use is [SemVer](http://semver.org/).
-4. Ensure any install or build dependencies are removed before the end of the
+5. Ensure any install or build dependencies are removed before the end of the
    layer when doing a Docker build, if applicable.
-5. You may merge the Pull Request in once you have the sign-off at least one
+6. You may merge the Pull Request in once you have the sign-off at least one
    other developer, or if you do not have permission to do that, you may
    request the second reviewer to merge it for you.
 
