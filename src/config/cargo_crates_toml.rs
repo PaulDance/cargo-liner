@@ -7,6 +7,7 @@ use anyhow::{anyhow, Result};
 use home::cargo_home;
 use semver::{Op, Version, VersionReq};
 use serde::Deserialize;
+use serde_with::DeserializeFromStr;
 
 use super::{Package, UserConfig};
 use crate::cargo;
@@ -148,8 +149,7 @@ impl CargoCratesToml {
 }
 
 /// Representation of keys of the `v1` table parsed by [`CargoCratesToml`].
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Deserialize)]
-#[serde(try_from = "String")]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, DeserializeFromStr)]
 pub struct CargoCratesPackage {
     pub name: String,
     pub version: Version,
@@ -158,10 +158,10 @@ pub struct CargoCratesPackage {
 
 /// Deserialize by splitting by spaces, isolating the name, parsing the version
 /// and trimming the parentheses around the source.
-impl TryFrom<String> for CargoCratesPackage {
-    type Error = anyhow::Error;
+impl FromStr for CargoCratesPackage {
+    type Err = anyhow::Error;
 
-    fn try_from(s: String) -> Result<Self> {
+    fn from_str(s: &str) -> Result<Self> {
         let mut parts = s.splitn(3, ' ');
         Ok(Self {
             name: parts
@@ -182,7 +182,7 @@ impl TryFrom<String> for CargoCratesPackage {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, DeserializeFromStr)]
 pub struct PackageSource {
     pub origin: String,
     pub path: String,
