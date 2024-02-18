@@ -192,7 +192,7 @@ pub struct PackageSource {
 impl FromStr for PackageSource {
     type Err = anyhow::Error;
 
-    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+    fn from_str(s: &str) -> Result<Self> {
         let mut parts = s.splitn(2, '+');
         Ok(Self {
             origin: parts
