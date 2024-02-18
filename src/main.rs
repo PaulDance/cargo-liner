@@ -1,23 +1,24 @@
 //! Main module: regroups parsing CLI arguments, deserializing configuration,
 //! and execution of `cargo install` with the required settings.
-use anyhow::{bail, Result};
 use std::collections::{BTreeMap, BTreeSet};
 use std::env;
 use std::process::ExitCode;
+
 #[macro_use]
 extern crate log;
+use anyhow::{bail, Result};
 use clap::ColorChoice;
 use log::LevelFilter;
 use pretty_env_logger::env_logger::WriteStyle;
 use semver::Version;
 use tabled::settings::Style;
 use tabled::{Table, Tabled};
+
 mod cargo;
 mod cli;
 use cli::{LinerArgs, LinerCommands};
 mod config;
 use config::{CargoCratesToml, Package, UserConfig};
-
 #[cfg(test)]
 #[path = "../tests/common/mod.rs"]
 mod testing;
