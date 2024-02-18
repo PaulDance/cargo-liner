@@ -147,30 +147,6 @@ impl CargoCratesToml {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
-pub struct PackageSource {
-    pub origin: String,
-    pub path: String,
-}
-
-impl FromStr for PackageSource {
-    type Err = anyhow::Error;
-
-    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
-        let mut parts = s.splitn(2, '+');
-        Ok(Self {
-            origin: parts
-                .next()
-                .ok_or_else(|| anyhow!("Missing source origin"))?
-                .to_owned(),
-            path: parts
-                .next()
-                .ok_or_else(|| anyhow!("Missing source path"))?
-                .to_owned(),
-        })
-    }
-}
-
 /// Representation of keys of the `v1` table parsed by [`CargoCratesToml`].
 #[derive(Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 #[serde(try_from = "String")]
@@ -203,6 +179,30 @@ impl TryFrom<String> for CargoCratesPackage {
                 .trim_end_matches(')')
                 .to_owned()
                 .parse()?,
+        })
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub struct PackageSource {
+    pub origin: String,
+    pub path: String,
+}
+
+impl FromStr for PackageSource {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+        let mut parts = s.splitn(2, '+');
+        Ok(Self {
+            origin: parts
+                .next()
+                .ok_or_else(|| anyhow!("Missing source origin"))?
+                .to_owned(),
+            path: parts
+                .next()
+                .ok_or_else(|| anyhow!("Missing source path"))?
+                .to_owned(),
         })
     }
 }
