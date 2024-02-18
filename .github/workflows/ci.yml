@@ -37,7 +37,18 @@ jobs:
       run: cargo test --verbose --all-targets --all-features
 
     - name: Check correct rustfmt formatting
-      run: cargo fmt --verbose --all --check
+      # HACK: pass all configuration items via CLI to circumvent unstability restriction.
+      run: >
+        cargo fmt --verbose --all --check
+        -- --config-path=/dev/null --config=$(
+          cat rustfmt.toml |
+          sed -E 's/\#.*$//g' |
+          sed '/^$/d' |
+          sed 's/ //g' |
+          sed -Ez 's/(\r)?\n/,/g' |
+          sed 's/,$//' |
+          sed 's/"//g'
+        )
 
     - name: Check clippy warnings
       run: cargo clippy --verbose --all-targets --all-features -- --deny warnings
