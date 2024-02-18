@@ -8,6 +8,7 @@ use home::cargo_home;
 use semver::{Op, Version, VersionReq};
 use serde::Deserialize;
 use serde_with::DeserializeFromStr;
+use url::Url;
 
 use super::{Package, UserConfig};
 use crate::cargo;
@@ -185,7 +186,7 @@ impl FromStr for CargoCratesPackage {
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, DeserializeFromStr)]
 pub struct PackageSource {
     pub origin: String,
-    pub path: String,
+    pub url: Url,
 }
 
 impl FromStr for PackageSource {
@@ -198,10 +199,10 @@ impl FromStr for PackageSource {
                 .next()
                 .ok_or_else(|| anyhow!("Missing source origin"))?
                 .to_owned(),
-            path: parts
+            url: parts
                 .next()
                 .ok_or_else(|| anyhow!("Missing source path"))?
-                .to_owned(),
+                .parse()?,
         })
     }
 }
@@ -222,7 +223,9 @@ mod tests {
         fn crates_io() -> Self {
             Self {
                 origin: "registry".to_owned(),
-                path: "https://github.com/rust-lang/crates.io-index".to_owned(),
+                url: "https://github.com/rust-lang/crates.io-index"
+                    .parse()
+                    .unwrap(),
             }
         }
     }
@@ -291,13 +294,13 @@ mod tests {
                     ),
                 ]
                 .into_iter()
-                .map(|(name, version, source_origin, source_path, bins)| (
+                .map(|(name, version, source_origin, source_url, bins)| (
                     CargoCratesPackage {
                         name: name.to_owned(),
                         version: version.parse::<Version>().unwrap(),
                         source: PackageSource {
                             origin: source_origin.to_owned(),
-                            path: source_path.to_owned(),
+                            url: source_url.parse().unwrap(),
                         },
                     },
                     bins.into_iter().map(str::to_owned).collect::<Vec<_>>(),
