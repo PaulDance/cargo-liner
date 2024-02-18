@@ -17,7 +17,8 @@ use cargo_test_support::{
 use semver::Version;
 use snapbox::cmd::Command;
 
-/// List of example packages, their respective versions and if they are locally installed, including self.
+/// List of example packages, their respective versions and if they are locally
+/// installed, including self.
 pub const FIXTURE_PACKAGES: [(&str, &str, bool); 3] = [
     ("abc", "0.0.1", false),
     ("def", "0.0.2", true),

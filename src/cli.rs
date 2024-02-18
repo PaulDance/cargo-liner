@@ -219,11 +219,12 @@ pub struct ImportArgs {
     pub keep_self: bool,
 
     /// Also import all locally-installed packages into the configuration. This
-    /// means packages installed via `cargo install --path <path>` will be present
-    /// in the configuration.
+    /// means packages installed via `cargo install --path <path>` will be
+    /// present in the configuration.
     ///
-    /// Default: `false`, i.e. exclude all packages installed via `cargo install --path <path>`
-    /// from the list of packages to install or update in the resulting configuration file.
+    /// Default: `false`, i.e. exclude all packages installed via `cargo
+    /// install --path <path>` from the list of packages to install or update
+    /// in the resulting configuration file.
     #[arg(short = 'l', long)]
     pub keep_local: bool,
 }
