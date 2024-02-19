@@ -17,7 +17,7 @@
 
 ## Fixes
 
- * Made sure the CLI verbosity controls has precedence over the environment:
+ * Made sure the CLI verbosity controls had precedence over the environment:
    its variables were previously parsed after the CLI options were applied on
    the logging configuration, which was incorrect; the two have therefore been
    switched in order to fix the issue.
