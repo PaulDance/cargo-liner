@@ -30,8 +30,8 @@ in all your interactions with the project.
 
 ## Issue Reports
 
-- Be sure to make the best use of predefined issue templates.
-- `--verbose` is definitely on. We consider better to add as much details you
+* Be sure to make the best use of predefined issue templates.
+* `--verbose` is definitely on. We consider better to add as much details you
   judge relevant to the issue, even if they reveal to be useless after all.
   More is just more.
-- Respect a contributor's decision: if it's a wontfix, then it's a wontfix.
+* Respect a contributor's decision: if it's a wontfix, then it's a wontfix.
