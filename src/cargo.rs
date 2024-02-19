@@ -143,12 +143,23 @@ fn spawn_search_exact(pkg: &str) -> Result<Child> {
 /// Waits for the given child process as spawned by [`spawn_search_exact`] to
 /// finish and extract the received package version from the output.
 fn finish_search_exact(pkg: &str, proc: Child) -> Result<Version> {
-    let out = String::from_utf8(proc.wait_with_output()?.stdout)?;
-    trace!("Search for {:#?} got: {:#?}", pkg, out);
+    let out = proc.wait_with_output()?;
+
+    if !out.status.success() {
+        anyhow::bail!(
+            "Search for {:?} failed on {:?} with stderr: {:?}",
+            pkg,
+            out.status.code(),
+            String::from_utf8(out.stderr),
+        );
+    }
+
+    let stdout = String::from_utf8(out.stdout)?;
+    trace!("Search for {:?} got: {:?}", pkg, stdout);
 
     // See https://semver.org/#backusnaur-form-grammar-for-valid-semver-versions.
     let ver = Regex::new(&format!(r#"{pkg}\s=\s"([0-9a-zA-Z.+-]+)"\s+#.*"#))?
-        .captures(out.lines().next().ok_or_else(|| {
+        .captures(stdout.lines().next().ok_or_else(|| {
             anyhow!("Not at least one line in search output for {pkg:#?}: does the package exist?")
         })?)
         .ok_or_else(|| {
