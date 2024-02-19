@@ -9,6 +9,31 @@ Please note we have a [code of conduct](./CODE_OF_CONDUCT.md), please follow it
 in all your interactions with the project.
 
 
+## Development environment
+
+The current development environment is relatively standard.
+
+* The used toolchain and target is stable Rust for x86_64 GNU/Linux, as checked
+  in CI at least.
+* Integration tests are mostly based on [Trycmd] for the README check and
+  [Snapbox] with [`cargo-test-support`] for the rest. In particular, most
+  outputs are exported in separate files living in the [`tests/fixtures/`]
+  directory. They both have ways to automatically update their respective
+  output files: see their docs or the comments included in this project.
+* The `cargo-test-*` dev-only Git dependencies currently make Cargo emit a
+  *lot* of false-positive warnings that cannot be disabled in any way. This
+  does not affect the build itself, however. A workaround is underway in Cargo.
+* The Rustfmt configuration used in CI uses unstable features, so a nightly
+  toolchain will be required specifically for this.
+* A `Justfile` is provided in order to make a bunch of useful shortcuts
+  available. It is to be used with [Just].
+
+[Trycmd]: https://crates.io/crates/trycmd
+[Snapbox]: https://crates.io/crates/snapbox
+[`cargo-test-support`]: https://github.com/rust-lang/cargo/tree/master/crates/cargo-test-support
+[Just]: https://github.com/casey/just
+
+
 ## Pull Request Process
 
 1. Please GPG-sign your Git commits.
