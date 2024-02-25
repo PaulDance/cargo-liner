@@ -10,7 +10,7 @@
     <a href="https://github.com/PaulDance/cargo-liner/releases/latest">
         <img
             alt="GitHub release (latest by date including pre-releases)"
-            src="https://img.shields.io/github/v/release/PaulDance/cargo-liner?include_prereleases&style=for-the-badge"
+            src="https://img.shields.io/github/v/release/PaulDance/cargo-liner?style=for-the-badge&include_prereleases"
         />
     </a>
     <a href="https://github.com/PaulDance/cargo-liner/releases/latest">
@@ -29,7 +29,7 @@
     <a href="https://github.com/PaulDance/cargo-liner/actions">
         <img
             alt="GitHub Workflow Status"
-            src="https://img.shields.io/github/actions/workflow/status/PaulDance/cargo-liner/ci.yml?branch=master&style=for-the-badge"
+            src="https://img.shields.io/github/actions/workflow/status/PaulDance/cargo-liner/ci.yml?style=for-the-badge&branch=master"
         />
     </a>
     <a href="https://crates.io/crates/cargo-liner">
