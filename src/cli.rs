@@ -34,11 +34,14 @@ pub struct LinerArgs {
     /// Be more verbose. Use multiple times to be more and more so each time.
     ///
     /// When omitted, INFO and above messages of only this crate are logged.
-    /// When used once, DEBUG and above messages of only this crate are logged.
-    /// When used twice, DEBUG and above messages of all crates are logged, and
-    /// `-v` is given to Cargo calls (details ran commands).
+    /// When used once, DEBUG and above messages of only this crate are logged
+    /// and error backtraces are shown (`RUST_BACKTRACE=1`).
+    /// When used twice, DEBUG and above messages of all crates are logged,
+    /// `-v` is given to Cargo calls (details ran commands), and error
+    /// backtraces are fully shown (`RUST_BACKTRACE=full`).
     /// When used three times or more, TRACE and above messages of all crates
-    /// are logged, and `-vv` is given to Cargo calls (includes build output).
+    /// are logged, `-vv` is given to Cargo calls (includes build output) and
+    /// error backtraces are fully shown (`RUST_BACKTRACE=full`).
     /// This takes precedence over the environment.
     #[arg(
         short,
@@ -56,7 +59,7 @@ pub struct LinerArgs {
     /// When used once, WARN and above messages of only this crate are logged.
     /// When used twice, ERROR messages of all crates are logged.
     /// When used three times or more, no message will be logged, including
-    /// Cargo's by passing `-q` to it.
+    /// Cargo's by passing `-q` to it and error reports are silenced.
     /// This takes precedence over the environment.
     #[arg(
         short,
@@ -70,9 +73,10 @@ pub struct LinerArgs {
 
     /// Control the coloring of the logging output.
     ///
-    /// This enables one to manually specify when should the logs be colored or
-    /// not, for example if the automatic detection is either not wished or not
-    /// functional. The value is also passed onto calls to Cargo.
+    /// This enables one to manually specify when should the logs and error
+    /// reports be colored or not, for example if the automatic detection is
+    /// either not wished or not functional. The value is also passed onto
+    /// calls to Cargo.
     #[arg(
         long,
         global = true,
