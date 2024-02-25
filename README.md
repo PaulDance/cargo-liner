@@ -32,7 +32,7 @@
             src="https://img.shields.io/github/actions/workflow/status/PaulDance/cargo-liner/ci.yml?style=for-the-badge&branch=master"
         />
     </a>
-    <a href="https://crates.io/crates/cargo-liner">
+    <a href="https://crates.io/crates/cargo-liner#user-content-bottom">
         <img
             alt="Crates.io downloads"
             src="https://img.shields.io/crates/d/cargo-liner?style=for-the-badge"
@@ -573,3 +573,5 @@ conduct].
 [Sergej Tucakov] for the animation used as this project's logo.
 
 [Sergej Tucakov]: https://dribbble.com/sergejtucakov
+
+<a id="bottom"></a>
