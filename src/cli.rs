@@ -87,7 +87,7 @@ pub struct LinerArgs {
 impl LinerArgs {
     /// Parses the arguments from the environment and returns them.
     ///
-    /// Although it does not return `anyhow::Result<Self>`, the function is
+    /// Although it does not return `eyre::Result<Self>`, the function is
     /// actually fallible: it will print an error to stderr and exit the current
     /// process on an error status code if a parsing error occurs.
     pub fn parse_env() -> Self {

@@ -4,7 +4,7 @@ use std::io::Write;
 use std::iter;
 use std::path::PathBuf;
 
-use anyhow::Result;
+use color_eyre::eyre::Result;
 use home::cargo_home;
 use serde::{Deserialize, Serialize};
 

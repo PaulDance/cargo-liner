@@ -8,8 +8,8 @@ use std::ffi::OsStr;
 use std::process::{Child, Command, Stdio};
 use std::{env, iter};
 
-use anyhow::{anyhow, Result};
 use clap::ColorChoice;
+use color_eyre::eyre::{self, eyre, Result};
 use log::Level;
 use regex::Regex;
 use semver::Version;
@@ -146,7 +146,7 @@ fn finish_search_exact(pkg: &str, proc: Child) -> Result<Version> {
     let out = proc.wait_with_output()?;
 
     if !out.status.success() {
-        anyhow::bail!(
+        eyre::bail!(
             "Search for {:?} failed on {:?} with stderr: {:?}",
             pkg,
             out.status.code(),
@@ -160,17 +160,15 @@ fn finish_search_exact(pkg: &str, proc: Child) -> Result<Version> {
     // See https://semver.org/#backusnaur-form-grammar-for-valid-semver-versions.
     let ver = Regex::new(&format!(r#"{pkg}\s=\s"([0-9a-zA-Z.+-]+)"\s+#.*"#))?
         .captures(stdout.lines().next().ok_or_else(|| {
-            anyhow!("Not at least one line in search output for {pkg:#?}: does the package exist?")
+            eyre!("Not at least one line in search output for {pkg:#?}: does the package exist?")
         })?)
         .ok_or_else(|| {
-            anyhow!(
+            eyre!(
                 "No regex capture while parsing search output for {pkg:#?}: does the package exist?"
             )
         })?
         .get(1)
-        .ok_or_else(|| {
-            anyhow!("Version not captured by regex matching search output for {pkg:#?}.")
-        })?
+        .ok_or_else(|| eyre!("Version not captured by regex matching search output for {pkg:#?}."))?
         .as_str()
         .parse::<Version>()?;
     log::trace!("Parsed version is: {:#?}.", ver);
@@ -219,7 +217,7 @@ pub fn config_get(key: &str) -> Result<String> {
     log_cmd(&cmd);
     let out = cmd.output()?;
     out.status.success().then_some(()).ok_or_else(|| {
-        anyhow!(
+        eyre!(
             "Command failed with status: {:#?} and stderr: {:#?}.",
             out.status,
             String::from_utf8(out.stderr),
@@ -344,7 +342,7 @@ mod tests {
                     "cargo-expand" => "1.0.79",
                     "cargo-tarpaulin" => "0.27.3",
                     "bat" => "0.24.0",
-                    pkg => anyhow::bail!("Unexpected package: {pkg:?}"),
+                    pkg => eyre::bail!("Unexpected package: {pkg:?}"),
                 }
                 .parse()?,
             );

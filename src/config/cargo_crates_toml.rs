@@ -3,7 +3,7 @@ use std::fs;
 use std::path::PathBuf;
 use std::str::FromStr;
 
-use anyhow::{anyhow, Result};
+use color_eyre::eyre::{self, eyre, Result};
 use home::cargo_home;
 use semver::{Op, Version, VersionReq};
 use serde::Deserialize;
@@ -161,22 +161,22 @@ pub struct CargoCratesPackage {
 /// Deserialize by splitting by spaces, isolating the name, parsing the version
 /// and trimming the parentheses around the source.
 impl FromStr for CargoCratesPackage {
-    type Err = anyhow::Error;
+    type Err = eyre::Error;
 
     fn from_str(s: &str) -> Result<Self> {
         let mut parts = s.splitn(3, ' ');
         Ok(Self {
             name: parts
                 .next()
-                .ok_or_else(|| anyhow!("Missing name"))?
+                .ok_or_else(|| eyre!("Missing name"))?
                 .to_owned(),
             version: parts
                 .next()
-                .ok_or_else(|| anyhow!("Missing version"))?
+                .ok_or_else(|| eyre!("Missing version"))?
                 .parse()?,
             source: parts
                 .next()
-                .ok_or_else(|| anyhow!("Missing source"))?
+                .ok_or_else(|| eyre!("Missing source"))?
                 .trim_start_matches('(')
                 .trim_end_matches(')')
                 .parse()?,
@@ -191,18 +191,18 @@ pub struct PackageSource {
 }
 
 impl FromStr for PackageSource {
-    type Err = anyhow::Error;
+    type Err = eyre::Error;
 
     fn from_str(s: &str) -> Result<Self> {
         let mut parts = s.splitn(2, '+');
         Ok(Self {
             kind: parts
                 .next()
-                .ok_or_else(|| anyhow!("Missing source origin"))?
+                .ok_or_else(|| eyre!("Missing source origin"))?
                 .parse()?,
             url: parts
                 .next()
-                .ok_or_else(|| anyhow!("Missing source path"))?
+                .ok_or_else(|| eyre!("Missing source path"))?
                 .parse()?,
         })
     }
@@ -217,7 +217,7 @@ pub enum SourceKind {
 }
 
 impl FromStr for SourceKind {
-    type Err = anyhow::Error;
+    type Err = eyre::Error;
 
     fn from_str(s: &str) -> Result<Self> {
         Ok(match s {
@@ -225,7 +225,7 @@ impl FromStr for SourceKind {
             "path" => Self::Path,
             "registry" => Self::Registry,
             "sparse" => Self::SparseRegistry,
-            kind => anyhow::bail!("Unsupported source protocol: {}", kind),
+            kind => eyre::bail!("Unsupported source protocol: {}", kind),
         })
     }
 }

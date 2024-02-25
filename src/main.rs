@@ -4,8 +4,8 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::env;
 use std::process::ExitCode;
 
-use anyhow::Result;
 use clap::ColorChoice;
+use color_eyre::eyre::{self, Result};
 use log::LevelFilter;
 use pretty_env_logger::env_logger::WriteStyle;
 use semver::Version;
@@ -75,9 +75,7 @@ fn try_main() -> Result<()> {
                 if import_args.force {
                     log::warn!("Configuration file will be overwritten.");
                 } else {
-                    anyhow::bail!(
-                        "Configuration file already exists, use -f/--force to overwrite."
-                    );
+                    eyre::bail!("Configuration file already exists, use -f/--force to overwrite.");
                 }
             }
             log::info!("Importing Cargo installed crates as a new configuration file...");
