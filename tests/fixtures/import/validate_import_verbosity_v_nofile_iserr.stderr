@@ -1,0 +1,17 @@
+...
+Error: 
+   0: No such file or directory (os error 2)
+
+Location:
+   src/[..].rs:[..]
+
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ BACKTRACE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[..]⋮ [..] frames hidden ⋮[..]
+   [..]: [..]
+      at [..]
+   [..]: cargo_liner::[..]
+      at [..]
+...
+
+Run with COLORBT_SHOW_HIDDEN=1 environment variable to disable frame filtering.
+Run with RUST_BACKTRACE=full to include source snippets.

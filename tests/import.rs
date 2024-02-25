@@ -172,6 +172,19 @@ fn validate_import_noforce_withfile_iserr() {
 }
 
 #[cargo_test]
+fn validate_import_nofile_iserr() {
+    cargo_liner()
+        .arg("import")
+        .assert()
+        .failure()
+        .stdout_eq("")
+        .stderr_matches(snapbox::file![
+            "fixtures/import/validate_import_nofile_iserr.stderr"
+        ]);
+    assert_user_config_absent();
+}
+
+#[cargo_test]
 fn validate_import_verbosity_v() {
     fixture_fake_install();
 
@@ -214,6 +227,46 @@ fn validate_import_verbosity_vvv() {
             "fixtures/import/validate_import_verbosity_vvv.stderr"
         ]);
     assert_user_config_eq_path("tests/fixtures/import/validate_import.outconfig");
+}
+
+#[cargo_test]
+fn validate_import_verbosity_v_nofile_iserr() {
+    cargo_liner()
+        .args(["-v", "import"])
+        .assert()
+        .failure()
+        .stdout_eq("")
+        .stderr_matches(snapbox::file![
+            "fixtures/import/validate_import_verbosity_v_nofile_iserr.stderr"
+        ]);
+    assert_user_config_absent();
+}
+
+#[cargo_test]
+fn validate_import_verbosity_vv_nofile_iserr() {
+    cargo_liner()
+        .args(["-vv", "import"])
+        .assert()
+        .failure()
+        .stdout_eq("")
+        .stderr_matches(snapbox::file![
+            "fixtures/import/validate_import_verbosity_vv_nofile_iserr.stderr"
+        ]);
+    assert_user_config_absent();
+}
+
+#[cargo_test]
+fn validate_import_verbosity_vvv_nofile_iserr() {
+    cargo_liner()
+        .args(["-vvv", "import"])
+        .assert()
+        .failure()
+        .stdout_eq("")
+        .stderr_matches(snapbox::file![
+            // Intentionally the same as the test above: nothing should change.
+            "fixtures/import/validate_import_verbosity_vv_nofile_iserr.stderr"
+        ]);
+    assert_user_config_absent();
 }
 
 #[cargo_test]
