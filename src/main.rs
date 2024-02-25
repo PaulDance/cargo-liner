@@ -1,10 +1,10 @@
 //! Main module: regroups parsing CLI arguments, deserializing configuration,
 //! and execution of `cargo install` with the required settings.
 use std::collections::{BTreeMap, BTreeSet};
-use std::env;
-use std::process::ExitCode;
+use std::{env, process};
 
 use clap::ColorChoice;
+use color_eyre::config::{HookBuilder, Theme};
 use color_eyre::eyre::{self, Result};
 use log::LevelFilter;
 use pretty_env_logger::env_logger::WriteStyle;
@@ -21,22 +21,29 @@ use config::{CargoCratesToml, Package, UserConfig};
 #[path = "../tests/common/mod.rs"]
 mod testing;
 
-/// Wrap the desired main and display errors in a fashion consistent with the
-/// rest of the messages.
-fn main() -> ExitCode {
-    match try_main() {
-        Ok(()) => ExitCode::SUCCESS,
-        Err(err) => {
-            log::error!("{}", err);
-            ExitCode::FAILURE
-        }
+/// Wrap the desired main and let `color-eyre` display errors.
+fn main() -> Result<()> {
+    // Logging and error reporting are controlled by the CLI arguments, so they
+    // must be parsed first.
+    let args = LinerArgs::parse_env();
+
+    // Explicitely disable error colors when explicitely asked to do so.
+    if args.color == ColorChoice::Never {
+        HookBuilder::new().theme(Theme::new()).install()?;
+    } else {
+        color_eyre::install()?;
+    }
+
+    // HACK: reproduce the previous behavior by directly exiting: don't display
+    // anything, but only report an error code when verbosity is low enough.
+    match try_main(&args) {
+        Err(_) if args.verbosity() <= -3 => process::exit(1),
+        res => res,
     }
 }
 
 /// Actual main operation.
-fn try_main() -> Result<()> {
-    // Logging is controlled by args, so they must be parsed first.
-    let args = LinerArgs::parse_env();
+fn try_main(args: &LinerArgs) -> Result<()> {
     let mut bld = pretty_env_logger::formatted_builder();
     bld.parse_default_env();
 

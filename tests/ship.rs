@@ -942,8 +942,8 @@ fn validate_ship_noconfig_iserr() {
         .assert()
         .failure()
         .stdout_eq("")
-        .stderr_eq(snapbox::file![
-            "fixtures/ship/validate_ship_file_err.stderr"
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_noconfig_iserr.stderr"
         ]);
 }
 
@@ -958,8 +958,8 @@ fn validate_ship_nocratestoml_iserr() {
         .assert()
         .failure()
         .stdout_eq("")
-        .stderr_eq(snapbox::file![
-            "fixtures/ship/validate_ship_file_err.stderr"
+        .stderr_matches(snapbox::file![
+            "fixtures/ship/validate_ship_nocratestoml_iserr.stderr"
         ]);
 }
 

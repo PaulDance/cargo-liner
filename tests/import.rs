@@ -165,7 +165,7 @@ fn validate_import_noforce_withfile_iserr() {
         .assert()
         .failure()
         .stdout_eq("")
-        .stderr_eq(snapbox::file![
+        .stderr_matches(snapbox::file![
             "fixtures/import/validate_import_force_err.stderr"
         ]);
     assert_user_config_eq("[packages]");
@@ -256,7 +256,7 @@ fn validate_import_verbosity_qq_noforce() {
         .assert()
         .failure()
         .stdout_eq("")
-        .stderr_eq(snapbox::file![
+        .stderr_matches(snapbox::file![
             "fixtures/import/validate_import_force_err.stderr"
         ]);
     assert_user_config_eq("[packages]");
