@@ -27,6 +27,17 @@ fn main() -> Result<()> {
     // must be parsed first.
     let args = LinerArgs::parse_env();
 
+    // Let the CLI verbosity have control over the backtraces displayed.
+    if let verb @ 1.. = args.verbosity() {
+        env::set_var(
+            "RUST_BACKTRACE",
+            match verb {
+                1 => "1",
+                _ => "full",
+            },
+        );
+    }
+
     // Explicitely disable error colors when explicitely asked to do so.
     if args.color == ColorChoice::Never {
         HookBuilder::new().theme(Theme::new()).install()?;
