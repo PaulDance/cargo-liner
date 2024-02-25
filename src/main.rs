@@ -4,9 +4,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::env;
 use std::process::ExitCode;
 
-#[macro_use]
-extern crate log;
-use anyhow::{bail, Result};
+use anyhow::Result;
 use clap::ColorChoice;
 use log::LevelFilter;
 use pretty_env_logger::env_logger::WriteStyle;
@@ -29,7 +27,7 @@ fn main() -> ExitCode {
     match try_main() {
         Ok(()) => ExitCode::SUCCESS,
         Err(err) => {
-            error!("{}", err);
+            log::error!("{}", err);
             ExitCode::FAILURE
         }
     }
@@ -75,12 +73,14 @@ fn try_main() -> Result<()> {
         Some(LinerCommands::Import(import_args)) => {
             if UserConfig::file_path()?.try_exists()? {
                 if import_args.force {
-                    warn!("Configuration file will be overwritten.");
+                    log::warn!("Configuration file will be overwritten.");
                 } else {
-                    bail!("Configuration file already exists, use -f/--force to overwrite.");
+                    anyhow::bail!(
+                        "Configuration file already exists, use -f/--force to overwrite."
+                    );
                 }
             }
-            info!("Importing Cargo installed crates as a new configuration file...");
+            log::info!("Importing Cargo installed crates as a new configuration file...");
             // Clap conflict settings ensure the options are mutually exclusive.
             (if import_args.force {
                 UserConfig::overwrite_file
@@ -144,7 +144,7 @@ fn try_main() -> Result<()> {
         }
     }
 
-    info!("Done.");
+    log::info!("Done.");
     Ok(())
 }
 
@@ -159,9 +159,9 @@ struct PackageStatus {
 /// Displays whether each package needs an update or not.
 fn log_summary(new_vers: &BTreeMap<String, Version>, old_vers: &BTreeMap<String, Version>) {
     if new_vers.is_empty() {
-        info!("No packages installed.");
+        log::info!("No packages installed.");
     } else {
-        info!(
+        log::info!(
             "Results:\n{}",
             Table::new(new_vers.iter().map(|(name, new_ver)| PackageStatus {
                 name: name.clone(),
@@ -188,7 +188,7 @@ fn needing_install(
     old_vers: &BTreeMap<String, Version>,
 ) -> BTreeMap<String, Package> {
     let mut to_install = BTreeMap::new();
-    debug!("Filtering packages by versions...");
+    log::debug!("Filtering packages by versions...");
 
     for (pkg_name, pkg) in pkgs {
         if old_vers
@@ -196,12 +196,12 @@ fn needing_install(
             .map_or(true, |ver| ver < new_vers.get(pkg_name).unwrap())
         {
             to_install.insert(pkg_name.clone(), pkg.clone());
-            trace!("{:#?} is selected to be installed or updated.", pkg_name);
+            log::trace!("{:#?} is selected to be installed or updated.", pkg_name);
         } else {
-            trace!("{:#?} is not selected: already up-to-date.", pkg_name);
+            log::trace!("{:#?} is not selected: already up-to-date.", pkg_name);
         }
     }
 
-    trace!("Filtered packages: {:#?}.", &to_install);
+    log::trace!("Filtered packages: {:#?}.", &to_install);
     to_install
 }

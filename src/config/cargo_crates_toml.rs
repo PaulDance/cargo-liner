@@ -31,7 +31,7 @@ impl CargoCratesToml {
     /// otherwise.
     pub fn file_path() -> Result<PathBuf> {
         const INSTALL_ROOT_CONFIG_KEY: &str = "install.root";
-        debug!("Building file path...");
+        log::debug!("Building file path...");
 
         // Don't particularly filter: default to `$CARGO_HOME` on any error.
         match cargo::config_get(INSTALL_ROOT_CONFIG_KEY) {
@@ -39,11 +39,12 @@ impl CargoCratesToml {
                 Ok(install_root_path.parse::<PathBuf>()?.join(Self::FILE_NAME))
             }
             Err(err) => {
-                debug!(
+                log::debug!(
                     "Failed to retrieve `{}` from Cargo's configuration on error: {:#?}.",
-                    INSTALL_ROOT_CONFIG_KEY, err,
+                    INSTALL_ROOT_CONFIG_KEY,
+                    err,
                 );
-                debug!("Defaulting to Cargo's home directory...");
+                log::debug!("Defaulting to Cargo's home directory...");
                 Ok(cargo_home()?.join(Self::FILE_NAME))
             }
         }
@@ -53,13 +54,13 @@ impl CargoCratesToml {
     /// Cargo-managed save file.
     pub fn parse_file() -> Result<Self> {
         let path = Self::file_path()?;
-        debug!("Reading Cargo-installed packages from {:#?}...", &path);
+        log::debug!("Reading Cargo-installed packages from {:#?}...", &path);
         let info_str = fs::read_to_string(path)?;
-        trace!("Read {} bytes.", info_str.len());
-        trace!("Got: {:#?}.", &info_str);
-        debug!("Deserializing packages...");
+        log::trace!("Read {} bytes.", info_str.len());
+        log::trace!("Got: {:#?}.", &info_str);
+        log::debug!("Deserializing packages...");
         let info = toml::from_str(&info_str)?;
-        trace!("Got: {:#?}.", &info);
+        log::trace!("Got: {:#?}.", &info);
         Ok(info)
     }
 
@@ -109,7 +110,7 @@ impl CargoCratesToml {
     /// Converts this toml document into a simple user config containing no
     /// particular version requirement, only stars are used.
     pub fn into_star_version_config(self, keep_self: bool, keep_local: bool) -> UserConfig {
-        debug!("Converting packages to config with op: \"*\"...");
+        log::debug!("Converting packages to config with op: \"*\"...");
         self.into_config(
             |(pkg, _)| (pkg.name, Package::SIMPLE_STAR),
             keep_self,
@@ -122,7 +123,7 @@ impl CargoCratesToml {
     ///
     /// Filters the current crate out of the resulting configuration's packages.
     fn into_op_version_config(self, op: Op, keep_self: bool, keep_local: bool) -> UserConfig {
-        debug!("Converting packages to config with op: {:#?}...", &op);
+        log::debug!("Converting packages to config with op: {:#?}...", &op);
         self.into_config(
             |(pkg, _)| (pkg.name, Package::Simple(ver_to_req(&pkg.version, op))),
             keep_self,

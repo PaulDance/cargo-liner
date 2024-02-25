@@ -44,11 +44,11 @@ fn install(
                 .chain(iter::repeat('v').take(verbosity.try_into().unwrap()))
                 .collect::<String>();
             cmd.arg(&opt);
-            trace!("`{opt}` arg added.");
+            log::trace!("`{opt}` arg added.");
         }
         Ordering::Less => {
             cmd.arg("-q");
-            trace!("`-q` arg added.");
+            log::trace!("`-q` arg added.");
         }
         Ordering::Equal => {}
     }
@@ -57,22 +57,22 @@ fn install(
 
     if no_default_features {
         cmd.arg("--no-default-features");
-        trace!("`--no-default-features` arg added.");
+        log::trace!("`--no-default-features` arg added.");
     }
 
     if all_features {
         cmd.arg("--all-features");
-        trace!("`--all-features` arg added.");
+        log::trace!("`--all-features` arg added.");
     }
 
     if !features.is_empty() {
         cmd.arg("--features").arg(features.join(","));
-        trace!("`--features` arg added.");
+        log::trace!("`--features` arg added.");
     }
 
     if force {
         cmd.arg("--force");
-        trace!("`--force` arg added.");
+        log::trace!("`--force` arg added.");
     }
 
     cmd.args(["--", name]);
@@ -93,9 +93,9 @@ pub fn install_all(
 ) -> Result<()> {
     for (pkg_name, pkg) in packages {
         if installed.contains(pkg_name) {
-            info!("Updating `{}`...", pkg_name);
+            log::info!("Updating `{}`...", pkg_name);
         } else {
-            info!("Installing `{}`...", pkg_name);
+            log::info!("Installing `{}`...", pkg_name);
         }
 
         install(
@@ -122,7 +122,7 @@ fn spawn_search_exact(pkg: &str) -> Result<Child> {
     let mut cmd = Command::new(env::var("CARGO")?);
 
     cmd.stdin(Stdio::null());
-    cmd.stderr(if is_test || log_enabled!(Level::Debug) {
+    cmd.stderr(if is_test || log::log_enabled!(Level::Debug) {
         Stdio::inherit()
     } else {
         Stdio::null()
@@ -155,7 +155,7 @@ fn finish_search_exact(pkg: &str, proc: Child) -> Result<Version> {
     }
 
     let stdout = String::from_utf8(out.stdout)?;
-    trace!("Search for {:?} got: {:?}", pkg, stdout);
+    log::trace!("Search for {:?} got: {:?}", pkg, stdout);
 
     // See https://semver.org/#backusnaur-form-grammar-for-valid-semver-versions.
     let ver = Regex::new(&format!(r#"{pkg}\s=\s"([0-9a-zA-Z.+-]+)"\s+#.*"#))?
@@ -173,7 +173,7 @@ fn finish_search_exact(pkg: &str, proc: Child) -> Result<Version> {
         })?
         .as_str()
         .parse::<Version>()?;
-    trace!("Parsed version is: {:#?}.", ver);
+    log::trace!("Parsed version is: {:#?}.", ver);
 
     Ok(ver)
 }
@@ -181,16 +181,16 @@ fn finish_search_exact(pkg: &str, proc: Child) -> Result<Version> {
 /// Runs `*_search_exact` for all packages in the given map and returns the
 /// thus fetched versions in the collected map.
 pub fn search_exact_all(pkgs: &BTreeMap<String, Package>) -> Result<BTreeMap<String, Version>> {
-    info!("Fetching latest package versions...");
+    log::info!("Fetching latest package versions...");
     let mut procs = Vec::new();
     let mut vers = BTreeMap::new();
 
-    debug!("Spawning search child processes in parallel...");
+    log::debug!("Spawning search child processes in parallel...");
     for pkg in pkgs.keys() {
         procs.push(spawn_search_exact(pkg)?);
     }
 
-    debug!("Waiting for each search child processes to finish...");
+    log::debug!("Waiting for each search child processes to finish...");
     // Key traversal order is stable because sorted.
     for (pkg, proc) in pkgs.keys().zip(procs.into_iter()) {
         vers.insert(pkg.clone(), finish_search_exact(pkg, proc)?);
@@ -227,13 +227,13 @@ pub fn config_get(key: &str) -> Result<String> {
     })?;
 
     let out_str = String::from_utf8(out.stdout)?;
-    trace!("Got: {out_str:#?}.");
+    log::trace!("Got: {out_str:#?}.");
     Ok(out_str.trim_end().trim_matches('"').to_owned())
 }
 
 /// Logs the program and arguments of the given command to DEBUG.
 fn log_cmd(cmd: &Command) {
-    debug!(
+    log::debug!(
         "Running {:#?} with arguments {:#?}...",
         cmd.get_program().to_string_lossy(),
         cmd.get_args()
@@ -246,7 +246,6 @@ fn log_cmd(cmd: &Command) {
 mod tests {
     use std::sync::Mutex;
 
-    use anyhow::bail;
     use cargo_test_macro::cargo_test;
     use once_cell::sync::Lazy;
 
@@ -345,7 +344,7 @@ mod tests {
                     "cargo-expand" => "1.0.79",
                     "cargo-tarpaulin" => "0.27.3",
                     "bat" => "0.24.0",
-                    pkg => bail!("Unexpected package: {pkg:?}"),
+                    pkg => anyhow::bail!("Unexpected package: {pkg:?}"),
                 }
                 .parse()?,
             );

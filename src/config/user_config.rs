@@ -23,7 +23,7 @@ impl UserConfig {
 
     /// Returns the [`PathBuf`] pointing to the associated configuration file.
     pub fn file_path() -> Result<PathBuf> {
-        debug!("Building file path...");
+        log::debug!("Building file path...");
         Ok(cargo_home()?.join(Self::FILE_NAME))
     }
 
@@ -34,13 +34,13 @@ impl UserConfig {
     /// malformed.
     pub fn parse_file() -> Result<Self> {
         let path = Self::file_path()?;
-        debug!("Reading configuration from {:#?}...", &path);
+        log::debug!("Reading configuration from {:#?}...", &path);
         let config_str = fs::read_to_string(path)?;
-        trace!("Read {} bytes.", config_str.len());
-        trace!("Got: {:#?}.", &config_str);
-        debug!("Deserializing contents...");
+        log::trace!("Read {} bytes.", config_str.len());
+        log::trace!("Got: {:#?}.", &config_str);
+        log::debug!("Deserializing contents...");
         let config = toml::from_str::<Self>(&config_str)?;
-        trace!("Got: {:#?}.", &config);
+        log::trace!("Got: {:#?}.", &config);
         Ok(config.self_update(true))
     }
 
@@ -52,7 +52,7 @@ impl UserConfig {
     pub fn overwrite_file(&self) -> Result<()> {
         let path = Self::file_path()?;
         let config_str = self.to_string_pretty()?;
-        debug!("Overwriting configuration to {:#?}...", &path);
+        log::debug!("Overwriting configuration to {:#?}...", &path);
         fs::write(path, config_str)?;
         Ok(())
     }
@@ -66,7 +66,7 @@ impl UserConfig {
     pub fn save_file(&self) -> Result<()> {
         let path = Self::file_path()?;
         let config_str = self.to_string_pretty()?;
-        debug!("Writing configuration to {:#?}...", &path);
+        log::debug!("Writing configuration to {:#?}...", &path);
         File::options()
             .read(true)
             .write(true)
@@ -79,9 +79,9 @@ impl UserConfig {
     /// Converts the config to a pretty TOML string with literal strings
     /// disabled.
     fn to_string_pretty(&self) -> Result<String> {
-        debug!("Serializing configuration...");
+        log::debug!("Serializing configuration...");
         let res = toml::to_string_pretty(self)?;
-        trace!("Got: {:#?}.", &res);
+        log::trace!("Got: {:#?}.", &res);
         Ok(res)
     }
 
@@ -94,10 +94,10 @@ impl UserConfig {
             self.packages
                 .entry(clap::crate_name!().to_owned())
                 .or_insert(Package::SIMPLE_STAR);
-            debug!("Self-updating enabled.");
+            log::debug!("Self-updating enabled.");
         } else {
             self.packages.remove(clap::crate_name!());
-            debug!("Self-updating disabled.");
+            log::debug!("Self-updating disabled.");
         }
         self
     }
@@ -116,7 +116,7 @@ impl UserConfig {
                     .clone(),
             ))
             .collect();
-            debug!("Updating of other packages disabled.");
+            log::debug!("Updating of other packages disabled.");
         }
         self
     }
