@@ -177,6 +177,11 @@ pub fn fixture_write_user_config() {
     write_user_config(&cfg_lines);
 }
 
+/// Asserts the user configuration does not exist.
+pub fn assert_user_config_absent() {
+    assert!(!user_config_path().exists());
+}
+
 /// Asserts the user configuration file's contents are exactly equal to the
 /// given string.
 pub fn assert_user_config_eq(test_str: &str) {
