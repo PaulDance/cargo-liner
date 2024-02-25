@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use std::ffi::OsStr;
 use std::fs::{self, File};
 use std::io::Write;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::{env, io, iter};
 
 use cargo_test_support::registry::{
@@ -145,19 +145,23 @@ pub fn set_env() {
     CurrentEnv {}.test_env();
 }
 
+/// Returns the filesystem path pointing to the user configuration.
+pub fn user_config_path() -> PathBuf {
+    cargo_test_support::paths::home().join(".cargo/liner.toml")
+}
+
 /// Reads the user configuration file to a string.
 #[must_use]
 pub fn read_user_config() -> String {
-    fs::read_to_string(cargo_test_support::paths::home().join(".cargo/liner.toml")).unwrap()
+    fs::read_to_string(user_config_path()).unwrap()
 }
 
 /// Writes the given lines of content to the `$CARGO_HOME/liner.toml` user
 /// configuration.
 pub fn write_user_config(content_lines: &[&str]) {
-    let cargo_home = cargo_test_support::install::cargo_home();
-    let _ = fs::create_dir(cargo_home.as_path())
+    let _ = fs::create_dir(cargo_test_support::install::cargo_home())
         .map_err(|err| assert_eq!(err.kind(), io::ErrorKind::AlreadyExists));
-    fs::write(cargo_home.join("liner.toml"), content_lines.join("\n")).unwrap();
+    fs::write(user_config_path(), content_lines.join("\n")).unwrap();
 }
 
 /// Runs [`write_user_config`] with an example configuration excluding self.
