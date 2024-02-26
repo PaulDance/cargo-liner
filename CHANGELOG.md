@@ -7,6 +7,89 @@
 ## Miscellaneous
 -->
 
+# [Version 0.6.0 (26/02/2024)](https://crates.io/crates/cargo-liner/0.6.0)
+## Features
+
+ * Merged #19 that closed #13: the version report displayed early in the
+   execution of the `ship` subcommand now uses [`tabled`] in order to present
+   it in the form of a table, which looks much better while only requiring
+   little code to achieve it. An example of it can be found in the updated
+   `README.md`. Many thanks to @ToBinio.
+
+ * Merged #22 that closed #21: the `import` subcommand now ignores by default
+   all locally-installed packages, i.e. the ones installed through `cargo
+   install --path=...`. This should help to avoid poluting the destination
+   configuration file with packages that cannot be updated anyway since they
+   have no guarantee of existing in the registry used. If the previous behavior
+   is still desired however, a new `--keep-local` CLI option has been added for
+   this reason. As a side-effect, `--keep-self`'s shorthand `-k` has been
+   changed to `-s` in order to make room for the new option's `-l`. Many thanks
+   to @ToBinio.
+
+ * The error reporting has been completely overhauled in order to add context
+   through the call stacks. Thanks to [`color-eyre`], the errors now transport
+   additional information indicating what exactly failed, why it could have
+   happened so and how it could be fixed. This should help users diagnose and
+   fix the usual issues quicker, such as missing files. It should also combine
+   well with the CLI verbosity controls in case more precise debugging is still
+   required as they now also control the verbosity of these error reports: when
+   `-v` is given, the `RUST_BACKTRACE=1` format is used and when `-vv` or more
+   is given, `RUST_BACKTRACE=full` is used; when `-qqq` or more is given, the
+   error report is entirely skipped. It is also not displayed in the logs
+   anymore, since the whole point is to have a proper termination type.
+
+[`tabled`]: https://docs.rs/tabled/latest/tabled/
+[`color-eyre`]: https://docs.rs/color-eyre/latest/color_eyre/
+
+## Fixes
+
+ * Merged #20: the build was broken for Windows because of some Unix-specific
+   API that slipped in; it is now fixed. GNU/Linux is still the only platform
+   tested in CI, but the others should work fine. Thanks to @ToBinio.
+
+ * Made sure the exit status code of the `cargo search` child processes spawned
+   in order to fetch the latest versions of the configured packages was checked
+   before continuing. Previously, only errors specifically related to spawning
+   and waiting for them were checked and bubbled up, but no manual check was
+   actually done on the status code. The reported error should now be clearer.
+
+## Testing
+
+The fixtures have been updated and new tests have been added for:
+ * The change of the version report.
+ * The new `import` filtering feature and its `--keep-local` option.
+ * The new error reporting.
+
+## Documentation
+
+ * `CONTRIBUTING.md`:
+   * Added a mention for GPG signing as a requirement.
+   * Added precisions about the development environment used.
+   * Added a mention for the new error contexts.
+ * `README.md`:
+   * Updated the CLI help usage messages for the new features: the new import
+     option and the changed error reporting.
+   * Fixed the link to Cargo's `install` documentation.
+   * Wrapped the example output lines to 69 columns at most. It was previously
+     done at 70, but was apparently still too much by one for crates.io.
+     Hopefully, it is now correct.
+   * Updated the crates.io download stats badge's link to point at the bottom
+     of the page in order to provide quicker access. Hopefully, it will work.
+ * `CHANGELOG.md`:
+   * Fixed a random typo lost somewhere.
+   * Made a hidden version notes template for quicker releases.
+   * Added a new version.
+
+## Miscellaneous
+
+ * The dependencies have been updated, which required updating some testing
+   code to adapt to the changes included in Snapbox.
+ * Introduced a stricter Rustfmt configuration for more control over the
+   automatic formatting and to enforce things done manually.
+ * Introduced a Justfile in order to provide some command shortcuts useful
+   during development.
+ * The MSRV has been bumped to 1.76 in order to use `Result::inspect_err`.
+
 
 # [Version 0.5.0 (03/02/2024)](https://crates.io/crates/cargo-liner/0.5.0)
 ## Features
