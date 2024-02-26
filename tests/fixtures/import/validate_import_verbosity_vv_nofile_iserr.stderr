@@ -1,14 +1,22 @@
 ...
 Error: 
-   0: No such file or directory (os error 2)
+   0: Failed to parse Cargo's .crates.toml file.
+   1: Failed to read Cargo's .crates.toml file.
+   2: No such file or directory (os error 2)
 
 Location:
    src/[..].rs:[..]
 
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ BACKTRACE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[..]⋮ [..] frames hidden ⋮[..]
+[..]⋮ [..] frame[..] hidden ⋮[..]
    [..]: [..]
       at [..]
+        [..] │[..]
+        [..] │[..]
+        [..] >[..]
+        [..] │[..]
+        [..] │[..]
+[..]⋮ [..] frame[..] hidden ⋮[..]
    [..]: cargo_liner::[..]
       at [..]
         [..] │[..]
@@ -17,5 +25,8 @@ Location:
         [..] │[..]
         [..] │[..]
 ...
+
+Note: This can happen for many reasons.
+Suggestion: Check if the file exists and has the correct permissions.
 
 Run with COLORBT_SHOW_HIDDEN=1 environment variable to disable frame filtering.

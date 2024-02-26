@@ -1,8 +1,13 @@
 Error: 
-   0: No such file or directory (os error 2)
+   0: Failed to parse the user configuration.
+   1: Failed to read the configuration file.
+   2: No such file or directory (os error 2)
 
 Location:
    src/config/user_config.rs:[..]
+
+Note: This can happen for many reasons.
+Suggestion: Check if the file exists and has the correct permissions.
 
 Backtrace omitted. Run with RUST_BACKTRACE=1 environment variable to display it.
 Run with RUST_BACKTRACE=full to include source snippets.

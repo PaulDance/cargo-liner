@@ -1,8 +1,13 @@
 Error: 
-   0: No such file or directory (os error 2)
+   0: Failed to parse Cargo's .crates.toml file.
+   1: Failed to read Cargo's .crates.toml file.
+   2: No such file or directory (os error 2)
 
 Location:
    src/config/cargo_crates_toml.rs:[..]
+
+Note: This can happen for many reasons.
+Suggestion: Check if the file exists and has the correct permissions.
 
 Backtrace omitted. Run with RUST_BACKTRACE=1 environment variable to display it.
 Run with RUST_BACKTRACE=full to include source snippets.

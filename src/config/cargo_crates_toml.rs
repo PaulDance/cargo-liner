@@ -3,8 +3,8 @@ use std::fs;
 use std::path::PathBuf;
 use std::str::FromStr;
 
-use color_eyre::eyre::{self, eyre, Result};
-use home::cargo_home;
+use color_eyre::eyre::{self, eyre, Result, WrapErr};
+use color_eyre::Section;
 use semver::{Op, Version, VersionReq};
 use serde::Deserialize;
 use serde_with::DeserializeFromStr;
@@ -35,9 +35,11 @@ impl CargoCratesToml {
 
         // Don't particularly filter: default to `$CARGO_HOME` on any error.
         match cargo::config_get(INSTALL_ROOT_CONFIG_KEY) {
-            Ok(install_root_path) => {
-                Ok(install_root_path.parse::<PathBuf>()?.join(Self::FILE_NAME))
-            }
+            Ok(install_root_path) => Ok(install_root_path
+                .parse::<PathBuf>()
+                .wrap_err("Failed to parse the install.root Cargo config as a path.")
+                .suggestion("Check in Cargo's config if the value is a well-formed path.")?
+                .join(Self::FILE_NAME)),
             Err(err) => {
                 log::debug!(
                     "Failed to retrieve `{}` from Cargo's configuration on error: {:#?}.",
@@ -45,7 +47,7 @@ impl CargoCratesToml {
                     err,
                 );
                 log::debug!("Defaulting to Cargo's home directory...");
-                Ok(cargo_home()?.join(Self::FILE_NAME))
+                Ok(cargo::home()?.join(Self::FILE_NAME))
             }
         }
     }
@@ -53,13 +55,19 @@ impl CargoCratesToml {
     /// Parse and return a representation of the `$CARGO_HOME/.crates.toml`
     /// Cargo-managed save file.
     pub fn parse_file() -> Result<Self> {
-        let path = Self::file_path()?;
+        let path = Self::file_path().wrap_err("Failed to build Cargo's .crates.toml file path.")?;
         log::debug!("Reading Cargo-installed packages from {:#?}...", &path);
-        let info_str = fs::read_to_string(path)?;
+        let info_str = fs::read_to_string(path)
+            .wrap_err("Failed to read Cargo's .crates.toml file.")
+            .note("This can happen for many reasons.")
+            .suggestion("Check if the file exists and has the correct permissions.")?;
         log::trace!("Read {} bytes.", info_str.len());
         log::trace!("Got: {:#?}.", &info_str);
         log::debug!("Deserializing packages...");
-        let info = toml::from_str(&info_str)?;
+        let info = toml::from_str(&info_str)
+            .wrap_err("Failed to deserialize Cargo's .crates.toml file contents.")
+            .note("This should not easily happen as the file is automatically maintained by Cargo.")
+            .suggestion("Check if it is corrupted in some way.")?;
         log::trace!("Got: {:#?}.", &info);
         Ok(info)
     }
@@ -165,21 +173,25 @@ impl FromStr for CargoCratesPackage {
 
     fn from_str(s: &str) -> Result<Self> {
         let mut parts = s.splitn(3, ' ');
+        let name = parts
+            .next()
+            .ok_or_else(|| eyre!("Missing name."))?
+            .to_owned();
+
         Ok(Self {
-            name: parts
-                .next()
-                .ok_or_else(|| eyre!("Missing name"))?
-                .to_owned(),
             version: parts
                 .next()
-                .ok_or_else(|| eyre!("Missing version"))?
-                .parse()?,
+                .ok_or_else(|| eyre!("Missing version for {name:?}."))?
+                .parse()
+                .wrap_err_with(|| format!("Failed to parse the version for {name:?}."))?,
             source: parts
                 .next()
-                .ok_or_else(|| eyre!("Missing source"))?
+                .ok_or_else(|| eyre!("Missing source for {name:?}."))?
                 .trim_start_matches('(')
                 .trim_end_matches(')')
-                .parse()?,
+                .parse()
+                .wrap_err_with(|| format!("Failed to parse the source for {name:?}."))?,
+            name,
         })
     }
 }
@@ -198,12 +210,14 @@ impl FromStr for PackageSource {
         Ok(Self {
             kind: parts
                 .next()
-                .ok_or_else(|| eyre!("Missing source origin"))?
-                .parse()?,
+                .ok_or_else(|| eyre!("Missing source origin."))?
+                .parse()
+                .wrap_err("Failed to parse the source kind.")?,
             url: parts
                 .next()
-                .ok_or_else(|| eyre!("Missing source path"))?
-                .parse()?,
+                .ok_or_else(|| eyre!("Missing source path."))?
+                .parse()
+                .wrap_err("Failed to parse the source URL.")?,
         })
     }
 }

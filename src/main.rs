@@ -5,7 +5,8 @@ use std::{env, process};
 
 use clap::ColorChoice;
 use color_eyre::config::{HookBuilder, Theme};
-use color_eyre::eyre::{self, Result};
+use color_eyre::eyre::{self, Result, WrapErr};
+use color_eyre::Section;
 use log::LevelFilter;
 use pretty_env_logger::env_logger::WriteStyle;
 use semver::Version;
@@ -20,6 +21,9 @@ use config::{CargoCratesToml, Package, UserConfig};
 #[cfg(test)]
 #[path = "../tests/common/mod.rs"]
 mod testing;
+
+pub const OPEN_ISSUE_MSG: &str =
+    "Open an issue using https://github.com/PaulDance/cargo-liner/issues/new/choose.";
 
 /// Wrap the desired main and let `color-eyre` display errors.
 fn main() -> Result<()> {
@@ -40,10 +44,13 @@ fn main() -> Result<()> {
 
     // Explicitely disable error colors when explicitely asked to do so.
     if args.color == ColorChoice::Never {
-        HookBuilder::new().theme(Theme::new()).install()?;
+        HookBuilder::new().theme(Theme::new()).install()
     } else {
-        color_eyre::install()?;
+        color_eyre::install()
     }
+    .wrap_err("Failed to install the error hook.")
+    .note("This should only happen if it is attempted twice.")
+    .suggestion(OPEN_ISSUE_MSG)?;
 
     // HACK: reproduce the previous behavior by directly exiting: don't display
     // anything, but only report an error code when verbosity is low enough.
@@ -54,6 +61,7 @@ fn main() -> Result<()> {
 }
 
 /// Actual main operation.
+#[allow(clippy::too_many_lines)]
 fn try_main(args: &LinerArgs) -> Result<()> {
     let mut bld = pretty_env_logger::formatted_builder();
     bld.parse_default_env();
@@ -84,12 +92,20 @@ fn try_main(args: &LinerArgs) -> Result<()> {
         ColorChoice::Auto => WriteStyle::Auto,
         ColorChoice::Never => WriteStyle::Never,
     });
-    bld.try_init()?;
+    bld.try_init()
+        .wrap_err("Failed to initialize the logger.")
+        .note("This should only happen if it is attempted twice.")
+        .suggestion(OPEN_ISSUE_MSG)?;
 
     // CLI command dispatch.
     match &args.command {
         Some(LinerCommands::Import(import_args)) => {
-            if UserConfig::file_path()?.try_exists()? {
+            if UserConfig::file_path()
+                .wrap_err("Failed to build the configuration file path.")?
+                .try_exists()
+                .wrap_err("Failed to check if the configuration file exists.")
+                .suggestion("Check the permissions of the Cargo home directory.")?
+            {
                 if import_args.force {
                     log::warn!("Configuration file will be overwritten.");
                 } else {
@@ -111,15 +127,18 @@ fn try_main(args: &LinerArgs) -> Result<()> {
             } else {
                 CargoCratesToml::into_star_version_config
             })(
-                CargoCratesToml::parse_file()?,
+                CargoCratesToml::parse_file()
+                    .wrap_err("Failed to parse Cargo's .crates.toml file.")?,
                 import_args.keep_self,
                 import_args.keep_local,
-            ))?;
+            ))
+            .wrap_err("Failed to save the configuration file.")?;
         }
         cmd => {
             let mut skip_check = false;
             let mut force = false;
-            let mut config = UserConfig::parse_file()?;
+            let mut config =
+                UserConfig::parse_file().wrap_err("Failed to parse the user configuration.")?;
             let cargo_verbosity = match args.verbosity() {
                 -2..=1 => 0,
                 v if v > 1 => v - 1,
@@ -143,10 +162,13 @@ fn try_main(args: &LinerArgs) -> Result<()> {
                     force,
                     args.color,
                     cargo_verbosity,
-                )?;
+                )
+                .wrap_err("Failed to install or update the configured packages.")?;
             } else {
-                let cct = CargoCratesToml::parse_file()?;
-                let vers = cargo::search_exact_all(&config.packages)?;
+                let cct = CargoCratesToml::parse_file()
+                    .wrap_err("Failed to parse Cargo's .crates.toml file.")?;
+                let vers = cargo::search_exact_all(&config.packages)
+                    .wrap_err("Failed to fetch the latest versions of the configured packages.")?;
                 log_summary(&vers, &cct.clone().into_name_versions());
 
                 cargo::install_all(
@@ -155,7 +177,8 @@ fn try_main(args: &LinerArgs) -> Result<()> {
                     force,
                     args.color,
                     cargo_verbosity,
-                )?;
+                )
+                .wrap_err("Failed to install or update the configured packages.")?;
             }
         }
     }

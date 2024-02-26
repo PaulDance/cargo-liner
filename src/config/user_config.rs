@@ -4,11 +4,12 @@ use std::io::Write;
 use std::iter;
 use std::path::PathBuf;
 
-use color_eyre::eyre::Result;
-use home::cargo_home;
+use color_eyre::eyre::{Result, WrapErr};
+use color_eyre::Section;
 use serde::{Deserialize, Serialize};
 
 use super::Package;
+use crate::cargo;
 
 /// Represents the user's configuration deserialized from its file.
 #[derive(Serialize, Deserialize, Debug, Default, Clone, PartialEq, Eq)]
@@ -24,7 +25,7 @@ impl UserConfig {
     /// Returns the [`PathBuf`] pointing to the associated configuration file.
     pub fn file_path() -> Result<PathBuf> {
         log::debug!("Building file path...");
-        Ok(cargo_home()?.join(Self::FILE_NAME))
+        Ok(cargo::home()?.join(Self::FILE_NAME))
     }
 
     /// Deserializes the user's configuration file and returns the result.
@@ -33,13 +34,19 @@ impl UserConfig {
     /// the file does not exist, if it cannot be read from or if it is
     /// malformed.
     pub fn parse_file() -> Result<Self> {
-        let path = Self::file_path()?;
+        let path = Self::file_path().wrap_err("Failed to build the configuration file path.")?;
         log::debug!("Reading configuration from {:#?}...", &path);
-        let config_str = fs::read_to_string(path)?;
+        let config_str = fs::read_to_string(path)
+            .wrap_err("Failed to read the configuration file.")
+            .note("This can happen for many reasons.")
+            .suggestion("Check if the file exists and has the correct permissions.")?;
         log::trace!("Read {} bytes.", config_str.len());
         log::trace!("Got: {:#?}.", &config_str);
         log::debug!("Deserializing contents...");
-        let config = toml::from_str::<Self>(&config_str)?;
+        let config = toml::from_str::<Self>(&config_str)
+            .wrap_err("Failed to deserialize the configuration file contents.")
+            .note("This can easily happen as the file is edited manually.")
+            .suggestion("Check the file for any typos and syntax errors.")?;
         log::trace!("Got: {:#?}.", &config);
         Ok(config.self_update(true))
     }
@@ -50,10 +57,13 @@ impl UserConfig {
     /// contents will be enterily overwritten. Just as [`Self::parse_file`], it
     /// may fail on several occasions.
     pub fn overwrite_file(&self) -> Result<()> {
-        let path = Self::file_path()?;
+        let path = Self::file_path().wrap_err("Failed to build the configuration file path.")?;
         let config_str = self.to_string_pretty()?;
         log::debug!("Overwriting configuration to {:#?}...", &path);
-        fs::write(path, config_str)?;
+        fs::write(path, config_str)
+            .wrap_err("Failed to write the new configuration file contents.")
+            .note("This can happen for many reasons.")
+            .suggestion("Check the permissions of Cargo's directory and of the file.")?;
         Ok(())
     }
 
@@ -64,15 +74,23 @@ impl UserConfig {
     /// it will fail on an appropriate error. Just as [`Self::overwrite_file`],
     /// it may fail on several occasions.
     pub fn save_file(&self) -> Result<()> {
-        let path = Self::file_path()?;
+        let path = Self::file_path().wrap_err("Failed to build the configuration file path.")?;
         let config_str = self.to_string_pretty()?;
         log::debug!("Writing configuration to {:#?}...", &path);
         File::options()
             .read(true)
             .write(true)
             .create_new(true)
-            .open(path)?
-            .write_all(config_str.as_bytes())?;
+            .open(&path)
+            .wrap_err_with(|| format!("Failed to open the file at path: {path:?}."))
+            .note("This can happen for many reasons.")
+            .suggestion(
+                "Check Cargo's home permissions and if the file already exists while it should not.",
+            )?
+            .write_all(config_str.as_bytes())
+            .wrap_err_with(|| format!("Failed to write to the opened file at {path:?}."))
+            .note("This can happen for many reasons, but it should not happen easily at this point.")
+            .suggestion("Read the underlying error message.")?;
         Ok(())
     }
 
@@ -80,7 +98,10 @@ impl UserConfig {
     /// disabled.
     fn to_string_pretty(&self) -> Result<String> {
         log::debug!("Serializing configuration...");
-        let res = toml::to_string_pretty(self)?;
+        let res = toml::to_string_pretty(self)
+            .wrap_err("Failed to serialize the already-parsed user configuration.")
+            .note("This should not easily happen.")
+            .suggestion(crate::OPEN_ISSUE_MSG)?;
         log::trace!("Got: {:#?}.", &res);
         Ok(res)
     }

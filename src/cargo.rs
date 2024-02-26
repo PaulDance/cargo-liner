@@ -5,11 +5,13 @@
 use std::cmp::Ordering;
 use std::collections::{BTreeMap, BTreeSet};
 use std::ffi::OsStr;
+use std::path::PathBuf;
 use std::process::{Child, Command, Stdio};
 use std::{env, iter};
 
 use clap::ColorChoice;
-use color_eyre::eyre::{self, eyre, Result};
+use color_eyre::eyre::{self, eyre, Result, WrapErr};
+use color_eyre::Section;
 use log::Level;
 use regex::Regex;
 use semver::Version;
@@ -35,7 +37,7 @@ fn install(
     color: ColorChoice,
     verbosity: i8,
 ) -> Result<()> {
-    let mut cmd = Command::new(env::var("CARGO")?);
+    let mut cmd = Command::new(env_var()?);
     cmd.args(["--color", &color.to_string()]);
 
     match verbosity.cmp(&0) {
@@ -78,7 +80,10 @@ fn install(
     cmd.args(["--", name]);
     log_cmd(&cmd);
 
-    cmd.status()?;
+    cmd.status()
+        .wrap_err("Failed to execute Cargo.")
+        .note("This can happen for many reasons, but it should not happen easily at this point.")
+        .suggestion("Read the underlying error message.")?;
     Ok(())
 }
 
@@ -107,7 +112,17 @@ pub fn install_all(
             force,
             color,
             verbosity,
-        )?;
+        )
+        .wrap_err_with(|| {
+            format!(
+                "Failed to {} {pkg_name:?}.",
+                if installed.contains(pkg_name) {
+                    "update"
+                } else {
+                    "install"
+                }
+            )
+        })?;
     }
 
     Ok(())
@@ -119,7 +134,7 @@ pub fn install_all(
 fn spawn_search_exact(pkg: &str) -> Result<Child> {
     // HACK: detect test environment using some environment variable.
     let is_test = env::var_os("__CARGO_TEST_ROOT").is_some();
-    let mut cmd = Command::new(env::var("CARGO")?);
+    let mut cmd = Command::new(env_var()?);
 
     cmd.stdin(Stdio::null());
     cmd.stderr(if is_test || log::log_enabled!(Level::Debug) {
@@ -137,13 +152,20 @@ fn spawn_search_exact(pkg: &str) -> Result<Child> {
     cmd.args(["--limit=1", "--", pkg]);
 
     log_cmd(&cmd);
-    Ok(cmd.spawn()?)
+    cmd.spawn()
+        .wrap_err("Failed to spawn Cargo.")
+        .note("This can happen for many reasons, but it should not happen easily at this point.")
+        .suggestion("Read the underlying error message.")
 }
 
 /// Waits for the given child process as spawned by [`spawn_search_exact`] to
 /// finish and extract the received package version from the output.
 fn finish_search_exact(pkg: &str, proc: Child) -> Result<Version> {
-    let out = proc.wait_with_output()?;
+    let out = proc
+        .wait_with_output()
+        .wrap_err_with(|| format!("Failed to wait for the Cargo child process for {pkg:?}."))
+        .note("This can happen for many reasons, but it should not happen easily at this point.")
+        .suggestion("Read the underlying error message.")?;
 
     if !out.status.success() {
         eyre::bail!(
@@ -154,23 +176,39 @@ fn finish_search_exact(pkg: &str, proc: Child) -> Result<Version> {
         );
     }
 
-    let stdout = String::from_utf8(out.stdout)?;
+    let stdout = String::from_utf8(out.stdout)
+        .wrap_err("Failed to decode the standard output.")
+        .note("This really should not happen.")
+        .suggestion(crate::OPEN_ISSUE_MSG)?;
     log::trace!("Search for {:?} got: {:?}", pkg, stdout);
 
     // See https://semver.org/#backusnaur-form-grammar-for-valid-semver-versions.
-    let ver = Regex::new(&format!(r#"{pkg}\s=\s"([0-9a-zA-Z.+-]+)"\s+#.*"#))?
-        .captures(stdout.lines().next().ok_or_else(|| {
-            eyre!("Not at least one line in search output for {pkg:#?}: does the package exist?")
-        })?)
-        .ok_or_else(|| {
-            eyre!(
-                "No regex capture while parsing search output for {pkg:#?}: does the package exist?"
-            )
-        })?
+    let ver = Regex::new(&format!(r#"{pkg}\s=\s"([0-9a-zA-Z.+-]+)"\s+#.*"#))
+        .wrap_err_with(|| format!("Failed to build the search regex for {pkg:?}."))
+        .note("This can happen if the package name contains some special characters.")
+        .suggestion("Check that the name is the intended one or open an issue.")?
+        .captures(
+            stdout
+                .lines()
+                .next()
+                .ok_or_else(|| eyre!("Not at least one line in search output for {pkg:#?}."))
+                .suggestion("Check that the package does indeed exist.")?,
+        )
+        .ok_or_else(|| eyre!("No regex capture while parsing search output for {pkg:#?}."))
+        .suggestion("Check that the package does indeed exist.")?
         .get(1)
-        .ok_or_else(|| eyre!("Version not captured by regex matching search output for {pkg:#?}."))?
+        .ok_or_else(|| eyre!("Version not captured by regex matching search output for {pkg:#?}."))
+        .note(
+            "This should not easily happen at this point: the search returned the wanted package.",
+        )
+        .suggestion(crate::OPEN_ISSUE_MSG)?
         .as_str()
-        .parse::<Version>()?;
+        .parse::<Version>()
+        .wrap_err_with(|| format!("Failed to parse the version received for {pkg:?}."))
+        .note(
+            "This should not easily happen at this point: the search returned the wanted package.",
+        )
+        .suggestion(crate::OPEN_ISSUE_MSG)?;
     log::trace!("Parsed version is: {:#?}.", ver);
 
     Ok(ver)
@@ -185,13 +223,20 @@ pub fn search_exact_all(pkgs: &BTreeMap<String, Package>) -> Result<BTreeMap<Str
 
     log::debug!("Spawning search child processes in parallel...");
     for pkg in pkgs.keys() {
-        procs.push(spawn_search_exact(pkg)?);
+        procs.push(
+            spawn_search_exact(pkg)
+                .wrap_err_with(|| format!("Failed to spawn search for {pkg:?}."))?,
+        );
     }
 
     log::debug!("Waiting for each search child processes to finish...");
     // Key traversal order is stable because sorted.
     for (pkg, proc) in pkgs.keys().zip(procs.into_iter()) {
-        vers.insert(pkg.clone(), finish_search_exact(pkg, proc)?);
+        vers.insert(
+            pkg.clone(),
+            finish_search_exact(pkg, proc)
+                .wrap_err_with(|| format!("Failed to finish search for {pkg:?}."))?,
+        );
     }
 
     Ok(vers)
@@ -200,7 +245,7 @@ pub fn search_exact_all(pkgs: &BTreeMap<String, Package>) -> Result<BTreeMap<Str
 /// Runs `cargo config get` with the given configuration key and returns the
 /// collected string value.
 pub fn config_get(key: &str) -> Result<String> {
-    let mut cmd = Command::new(env::var("CARGO")?);
+    let mut cmd = Command::new(env_var()?);
     // HACK: get access to nightly features.
     // FIXME: remove when `config` gets stabilized.
     cmd.env("RUSTC_BOOTSTRAP", "1");
@@ -215,7 +260,11 @@ pub fn config_get(key: &str) -> Result<String> {
     ]);
 
     log_cmd(&cmd);
-    let out = cmd.output()?;
+    let out = cmd
+        .output()
+        .wrap_err("Failed to execute Cargo.")
+        .note("This can happen for many reasons, but it should not happen easily at this point.")
+        .suggestion("Read the underlying error message.")?;
     out.status.success().then_some(()).ok_or_else(|| {
         eyre!(
             "Command failed with status: {:#?} and stderr: {:#?}.",
@@ -224,9 +273,27 @@ pub fn config_get(key: &str) -> Result<String> {
         )
     })?;
 
-    let out_str = String::from_utf8(out.stdout)?;
+    let out_str = String::from_utf8(out.stdout)
+        .wrap_err("Failed to decode the standard output.")
+        .note("This really should not happen.")
+        .suggestion(crate::OPEN_ISSUE_MSG)?;
     log::trace!("Got: {out_str:#?}.");
     Ok(out_str.trim_end().trim_matches('"').to_owned())
+}
+
+/// Wrapper around [`home::cargo_home`] with additional reporting context.
+pub fn home() -> Result<PathBuf> {
+    home::cargo_home()
+        .wrap_err("Failed to get the path to Cargo's home.")
+        .suggestion("Check the current directory's permissions and your user OS configuration.")
+}
+
+/// Fetches the `CARGO` variable from the environment.
+fn env_var() -> Result<String> {
+    env::var("CARGO")
+        .wrap_err("Failed to get the `CARGO` environment variable.")
+        .note("This should not happen easily as it is set by Cargo.")
+        .suggestion("Run the command through Cargo as intended.")
 }
 
 /// Logs the program and arguments of the given command to DEBUG.
