@@ -37,20 +37,25 @@ The current development environment is relatively standard.
 ## Pull Request Process
 
 1. Please GPG-sign your Git commits.
-2. Add as much tests as possible. Unit tests are directly in modules.
+2. Add context to errors and don't simply bubble them up with `?`. Do so using
+   logging with the [`log`] macros and error wraps with [`color-eyre`]'s traits.
+3. Add as much tests as possible. Unit tests are directly in modules.
    Integration tests are in the `tests` directory. Add feature tests when
    adding new functionalities. Add regression tests when fixing bugs.
-3. Update the `README.md` with details of changes to the interface, this
+4. Update the `README.md` with details of changes to the interface, this
    includes new environment variables, exposed CLI options, useful file
    locations and configuration options.
-4. Increase the version numbers in any examples files and the `README.md` to
+5. Increase the version numbers in any examples files and the `README.md` to
    the new version that this Pull Request would represent. The versioning
    scheme we use is [SemVer](http://semver.org/).
-5. Ensure any install or build dependencies are removed before the end of the
+6. Ensure any install or build dependencies are removed before the end of the
    layer when doing a Docker build, if applicable.
-6. You may merge the Pull Request in once you have the sign-off at least one
+7. You may merge the Pull Request in once you have the sign-off at least one
    other developer, or if you do not have permission to do that, you may
    request the second reviewer to merge it for you.
+
+[`log`]: https://docs.rs/log/latest/log/
+[`color-eyre`]: https://docs.rs/color-eyre/latest/color_eyre/
 
 
 ## Issue Reports
