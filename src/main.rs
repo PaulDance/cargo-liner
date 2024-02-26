@@ -235,12 +235,12 @@ fn needing_install(
             .map_or(true, |ver| ver < new_vers.get(pkg_name).unwrap())
         {
             to_install.insert(pkg_name.clone(), pkg.clone());
-            log::trace!("{:#?} is selected to be installed or updated.", pkg_name);
+            log::trace!("{pkg_name:?} is selected to be installed or updated.");
         } else {
-            log::trace!("{:#?} is not selected: already up-to-date.", pkg_name);
+            log::trace!("{pkg_name:?} is not selected: already up-to-date.");
         }
     }
 
-    log::trace!("Filtered packages: {:#?}.", &to_install);
+    log::trace!("Filtered packages: {to_install:#?}.");
     to_install
 }

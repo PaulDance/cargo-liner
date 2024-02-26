@@ -98,9 +98,9 @@ pub fn install_all(
 ) -> Result<()> {
     for (pkg_name, pkg) in packages {
         if installed.contains(pkg_name) {
-            log::info!("Updating `{}`...", pkg_name);
+            log::info!("Updating `{pkg_name}`...");
         } else {
-            log::info!("Installing `{}`...", pkg_name);
+            log::info!("Installing `{pkg_name}`...");
         }
 
         install(
@@ -180,7 +180,7 @@ fn finish_search_exact(pkg: &str, proc: Child) -> Result<Version> {
         .wrap_err("Failed to decode the standard output.")
         .note("This really should not happen.")
         .suggestion(crate::OPEN_ISSUE_MSG)?;
-    log::trace!("Search for {:?} got: {:?}", pkg, stdout);
+    log::trace!("Search for {pkg:?} got: {stdout:?}");
 
     // See https://semver.org/#backusnaur-form-grammar-for-valid-semver-versions.
     let ver = Regex::new(&format!(r#"{pkg}\s=\s"([0-9a-zA-Z.+-]+)"\s+#.*"#))
@@ -209,7 +209,7 @@ fn finish_search_exact(pkg: &str, proc: Child) -> Result<Version> {
             "This should not easily happen at this point: the search returned the wanted package.",
         )
         .suggestion(crate::OPEN_ISSUE_MSG)?;
-    log::trace!("Parsed version is: {:#?}.", ver);
+    log::trace!("Parsed version is: {ver:#?}.");
 
     Ok(ver)
 }

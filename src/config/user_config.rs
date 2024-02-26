@@ -35,19 +35,19 @@ impl UserConfig {
     /// malformed.
     pub fn parse_file() -> Result<Self> {
         let path = Self::file_path().wrap_err("Failed to build the configuration file path.")?;
-        log::debug!("Reading configuration from {:#?}...", &path);
+        log::debug!("Reading configuration from {path:#?}...");
         let config_str = fs::read_to_string(path)
             .wrap_err("Failed to read the configuration file.")
             .note("This can happen for many reasons.")
             .suggestion("Check if the file exists and has the correct permissions.")?;
         log::trace!("Read {} bytes.", config_str.len());
-        log::trace!("Got: {:#?}.", &config_str);
+        log::trace!("Got: {config_str:#?}.");
         log::debug!("Deserializing contents...");
         let config = toml::from_str::<Self>(&config_str)
             .wrap_err("Failed to deserialize the configuration file contents.")
             .note("This can easily happen as the file is edited manually.")
             .suggestion("Check the file for any typos and syntax errors.")?;
-        log::trace!("Got: {:#?}.", &config);
+        log::trace!("Got: {config:#?}.");
         Ok(config.self_update(true))
     }
 
@@ -59,7 +59,7 @@ impl UserConfig {
     pub fn overwrite_file(&self) -> Result<()> {
         let path = Self::file_path().wrap_err("Failed to build the configuration file path.")?;
         let config_str = self.to_string_pretty()?;
-        log::debug!("Overwriting configuration to {:#?}...", &path);
+        log::debug!("Overwriting configuration to {path:#?}...");
         fs::write(path, config_str)
             .wrap_err("Failed to write the new configuration file contents.")
             .note("This can happen for many reasons.")
@@ -76,7 +76,7 @@ impl UserConfig {
     pub fn save_file(&self) -> Result<()> {
         let path = Self::file_path().wrap_err("Failed to build the configuration file path.")?;
         let config_str = self.to_string_pretty()?;
-        log::debug!("Writing configuration to {:#?}...", &path);
+        log::debug!("Writing configuration to {path:#?}...");
         File::options()
             .read(true)
             .write(true)
@@ -102,7 +102,7 @@ impl UserConfig {
             .wrap_err("Failed to serialize the already-parsed user configuration.")
             .note("This should not easily happen.")
             .suggestion(crate::OPEN_ISSUE_MSG)?;
-        log::trace!("Got: {:#?}.", &res);
+        log::trace!("Got: {res:#?}.");
         Ok(res)
     }
 

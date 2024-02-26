@@ -42,9 +42,8 @@ impl CargoCratesToml {
                 .join(Self::FILE_NAME)),
             Err(err) => {
                 log::debug!(
-                    "Failed to retrieve `{}` from Cargo's configuration on error: {:#?}.",
+                    "Failed to retrieve `{}` from Cargo's configuration on error: {err:#?}.",
                     INSTALL_ROOT_CONFIG_KEY,
-                    err,
                 );
                 log::debug!("Defaulting to Cargo's home directory...");
                 Ok(cargo::home()?.join(Self::FILE_NAME))
@@ -56,19 +55,19 @@ impl CargoCratesToml {
     /// Cargo-managed save file.
     pub fn parse_file() -> Result<Self> {
         let path = Self::file_path().wrap_err("Failed to build Cargo's .crates.toml file path.")?;
-        log::debug!("Reading Cargo-installed packages from {:#?}...", &path);
+        log::debug!("Reading Cargo-installed packages from {path:#?}...");
         let info_str = fs::read_to_string(path)
             .wrap_err("Failed to read Cargo's .crates.toml file.")
             .note("This can happen for many reasons.")
             .suggestion("Check if the file exists and has the correct permissions.")?;
         log::trace!("Read {} bytes.", info_str.len());
-        log::trace!("Got: {:#?}.", &info_str);
+        log::trace!("Got: {info_str:#?}.");
         log::debug!("Deserializing packages...");
         let info = toml::from_str(&info_str)
             .wrap_err("Failed to deserialize Cargo's .crates.toml file contents.")
             .note("This should not easily happen as the file is automatically maintained by Cargo.")
             .suggestion("Check if it is corrupted in some way.")?;
-        log::trace!("Got: {:#?}.", &info);
+        log::trace!("Got: {info:#?}.");
         Ok(info)
     }
 
@@ -131,7 +130,7 @@ impl CargoCratesToml {
     ///
     /// Filters the current crate out of the resulting configuration's packages.
     fn into_op_version_config(self, op: Op, keep_self: bool, keep_local: bool) -> UserConfig {
-        log::debug!("Converting packages to config with op: {:#?}...", &op);
+        log::debug!("Converting packages to config with op: {op:#?}...");
         self.into_config(
             |(pkg, _)| (pkg.name, Package::Simple(ver_to_req(&pkg.version, op))),
             keep_self,
