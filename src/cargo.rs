@@ -97,11 +97,14 @@ pub fn install_all(
     verbosity: i8,
 ) -> Result<()> {
     for (pkg_name, pkg) in packages {
-        if installed.contains(pkg_name) {
-            log::info!("Updating `{pkg_name}`...");
-        } else {
-            log::info!("Installing `{pkg_name}`...");
-        }
+        log::info!(
+            "{}ing `{pkg_name}`...",
+            if installed.contains(pkg_name) {
+                "Updat"
+            } else {
+                "Install"
+            }
+        );
 
         install(
             pkg_name,
