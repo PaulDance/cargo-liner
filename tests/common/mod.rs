@@ -66,11 +66,10 @@ pub fn init_registry() -> TestRegistry {
             let (res_len, pkg_res) = dl_path
                 .join(req_pkg)
                 .read_dir()
-                .map_err(|err| {
+                .inspect_err(|err| {
                     eprintln!(
                         "Error when reading directory `{req_pkg}` under `{dl_path:?}`: {err:#?}"
                     );
-                    err
                 })
                 // Sub-directories have versions as names: take the max.
                 .map(|mut dir_itr| {
@@ -160,7 +159,7 @@ pub fn read_user_config() -> String {
 /// configuration.
 pub fn write_user_config(content_lines: &[&str]) {
     let _ = fs::create_dir(cargo_test_support::install::cargo_home())
-        .map_err(|err| assert_eq!(err.kind(), io::ErrorKind::AlreadyExists));
+        .inspect_err(|err| assert_eq!(err.kind(), io::ErrorKind::AlreadyExists));
     fs::write(user_config_path(), content_lines.join("\n")).unwrap();
 }
 
