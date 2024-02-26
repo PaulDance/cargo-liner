@@ -1,3 +1,13 @@
+<!-- Version notes template:
+# [Version 0.. (//)](https://crates.io/crates/cargo-liner/0..)
+## Features
+## Fixes
+## Testing
+## Documentation
+## Miscellaneous
+-->
+
+
 # [Version 0.5.0 (03/02/2024)](https://crates.io/crates/cargo-liner/0.5.0)
 ## Features
 
