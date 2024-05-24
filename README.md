@@ -381,16 +381,16 @@ Simply run `cargo liner ship` in order to:
    configuration item in `$CARGO_HOME/config.toml`, or fall back to searching
    the file under the default `$CARGO_HOME` directory if the first attempt
    fails for any reason, the simple absence of the setting being one of them.
-   See the [`cargo install` documentation](cargo-install) for more details
-   about this. Whenever the first attempt fails, it is logged as a `DEBUG`
-   message before attempting the default, so use `-vv` to investiguate if your
-   configuration seems not to be taken into account.
+   See the [`cargo install`] documentation for more details about this.
+   Whenever the first attempt fails, it is logged as a `DEBUG` message before
+   attempting the default, so use `-vv` to investiguate if your configuration
+   seems not to be taken into account.
  * Check the latest available version for each of them using `cargo search`.
  * Run `cargo install` for each that needs an install or update, respecting
    the version requirements.
  * Self-update only if `--no-self` is not given.
 
-[cargo-install](https://doc.rust-lang.org/cargo/commands/cargo-install.html)
+[`cargo install`](https://doc.rust-lang.org/cargo/commands/cargo-install.html)
 
 
 #### `import` subcommand
