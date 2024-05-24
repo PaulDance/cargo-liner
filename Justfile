@@ -37,7 +37,7 @@ doc *args:
 alias f := fmt
 # Alias for `fmt --check`.
 fc *args: (fmt "--check" args)
-# Runs `cargo +nightly clippy` with some default flags.
+# Runs `cargo +nightly fmt` with some default flags.
 fmt *args:
     cargo +nightly fmt --all {{ args }}
 
