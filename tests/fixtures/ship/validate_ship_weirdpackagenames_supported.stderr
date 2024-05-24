@@ -10,15 +10,11 @@
     Updating `dummy-registry` index
  Downloading crates ...
   Downloaded --pkg v0.0.0 (registry `dummy-registry`)
+error: invalid character `-` in package name: `--pkg`, the first character must be a Unicode XID start character (most letters or `_`)
+ --> [..]/--pkg-0.0.0/Cargo.toml:[..]:[..]
+  |
+[..] |[..]name = "--pkg"
+  |[..]^^^^^^^
+  |
 error: failed to download replaced source registry `crates-io`
-
-Caused by:
-  failed to parse manifest at `[..]/--pkg-0.0.0/Cargo.toml`
-
-Caused by:
-  TOML parse error at line [..], column [..]
-    |
-  [..] | [..]name = "--pkg"
-    | [..]^^^^^^^
-  invalid character `-` in package name: `--pkg`, the first character must be a Unicode XID start character (most letters or `_`)
  INFO  cargo_liner        > Done.

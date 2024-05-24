@@ -5,7 +5,7 @@
   Installing cargo-liner v0.0.4
     Updating `dummy-registry` index
    Compiling cargo-liner v0.0.4
-    Finished release [optimized] target(s) in [..]s
+    Finished `release` profile [optimized] target(s) in [..]s
    Replacing [..]/.cargo/bin/cargo-liner
     Replaced package `cargo-liner v0.0.3` with `cargo-liner v0.0.4` (executable `cargo-liner`)
 warning: be sure to add `[..]/.cargo/bin` to your PATH to be able to run the installed binaries

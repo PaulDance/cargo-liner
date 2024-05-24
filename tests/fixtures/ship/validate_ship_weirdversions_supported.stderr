@@ -13,7 +13,7 @@
   Installing pkg v1.0.0+meta123
     Updating `dummy-registry` index
    Compiling pkg v1.0.0+meta123
-    Finished release [optimized] target(s) in [..]s
+    Finished `release` profile [optimized] target(s) in [..]s
   Installing [..]/.cargo/bin/pkg
    Installed package `pkg v1.0.0+meta123` (executable `pkg`)
 warning: be sure to add `[..]/.cargo/bin` to your PATH to be able to run the installed binaries

@@ -15,7 +15,7 @@
   Installing abc v0.0.2
     Updating `dummy-registry` index
    Compiling abc v0.0.2
-    Finished release [optimized] target(s) in [..]s
+    Finished `release` profile [optimized] target(s) in [..]s
    Replacing [..]/.cargo/bin/abc
     Replaced package `abc v0.0.1` with `abc v0.0.2` (executable `abc`)
 warning: be sure to add `[..]/.cargo/bin` to your PATH to be able to run the installed binaries
@@ -26,7 +26,7 @@ warning: be sure to add `[..]/.cargo/bin` to your PATH to be able to run the ins
   Installing def v0.0.3
     Updating `dummy-registry` index
    Compiling def v0.0.3
-    Finished release [optimized] target(s) in [..]s
+    Finished `release` profile [optimized] target(s) in [..]s
    Replacing [..]/.cargo/bin/def
     Replaced package `def v0.0.2 (/a/b/c)` with `def v0.0.3` (executable `def`)
 warning: be sure to add `[..]/.cargo/bin` to your PATH to be able to run the installed binaries

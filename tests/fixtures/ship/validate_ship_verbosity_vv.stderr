@@ -18,7 +18,7 @@
     Updating `dummy-registry` index
    Compiling pkg v0.0.0
      Running `rustc [..]`
-    Finished release [optimized] target(s) in [..]s
+    Finished `release` profile [optimized] target(s) in [..]s
   Installing [..]/.cargo/bin/pkg
    Installed package `pkg v0.0.0` (executable `pkg`)
 warning: be sure to add `[..]/.cargo/bin` to your PATH to be able to run the installed binaries
