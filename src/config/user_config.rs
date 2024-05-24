@@ -39,7 +39,10 @@ impl UserConfig {
         let config_str = fs::read_to_string(path)
             .wrap_err("Failed to read the configuration file.")
             .note("This can happen for many reasons.")
-            .suggestion("Check if the file exists and has the correct permissions.")?;
+            .suggestion("Check if the file exists and has the correct permissions.")
+            .suggestion(
+                "If the file does indeed not exist, it can be automatically created using `import`.",
+            )?;
         log::trace!("Read {} bytes.", config_str.len());
         log::trace!("Got: {config_str:#?}.");
         log::debug!("Deserializing contents...");

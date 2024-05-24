@@ -8,6 +8,7 @@ Location:
 
 Note: This can happen for many reasons.
 Suggestion: Check if the file exists and has the correct permissions.
+Suggestion: If the file does indeed not exist, it can be automatically created using `import`.
 
 Backtrace omitted. Run with RUST_BACKTRACE=1 environment variable to display it.
 Run with RUST_BACKTRACE=full to include source snippets.
