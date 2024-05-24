@@ -54,10 +54,11 @@ fn main() -> Result<()> {
 
     // HACK: reproduce the previous behavior by directly exiting: don't display
     // anything, but only report an error code when verbosity is low enough.
-    match try_main(&args) {
-        Err(_) if args.verbosity() <= -3 => process::exit(1),
-        res => res,
-    }
+    try_main(&args).inspect_err(|_| {
+        if args.verbosity() <= -3 {
+            process::exit(1);
+        }
+    })
 }
 
 /// Actual main operation.
