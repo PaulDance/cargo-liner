@@ -60,3 +60,4 @@ cargo-test-support = { git = "https://github.com/rust-lang/cargo.git", branch = 
 [lints.clippy]
 all = { level = "warn", priority = 0 }
 pedantic = { level = "warn", priority = 1 }
+dbg-macro = { level = "warn", priority = 2 }
