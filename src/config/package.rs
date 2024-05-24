@@ -33,6 +33,7 @@ pub struct DetailedPackageReq {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum Package {
+    #[allow(clippy::doc_markdown)]
     /// Simple form: only a SemVer requirement string.
     Simple(VersionReq),
     /// Detailed form: all supported options made available.
