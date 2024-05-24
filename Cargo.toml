@@ -56,3 +56,7 @@ snapbox = "~0.5"
 tempfile = "~3.10"
 cargo-test-macro = { git = "https://github.com/rust-lang/cargo.git", branch = "master" }
 cargo-test-support = { git = "https://github.com/rust-lang/cargo.git", branch = "master" }
+
+[lints.clippy]
+all = { level = "warn", priority = 0 }
+pedantic = { level = "warn", priority = 1 }

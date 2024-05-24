@@ -25,9 +25,9 @@ test *args:
     cargo test --all-targets --all-features {{ args }}
 
 alias cl := clippy
-# Runs `cargo clippy` with some default flags, such as `-Wclippy::pedantic`.
+# Runs `cargo clippy` with some default flags.
 clippy *args:
-    cargo clippy --all-targets --all-features -- -Wclippy::pedantic {{ args }}
+    cargo clippy --all-targets --all-features {{ args }}
 
 alias d := doc
 # Runs `cargo check` with some default flags.
