@@ -518,8 +518,17 @@ cargo-make = "*"
 cargo-outdated = "*"
 ```
 
-The command will by default import them with star version requirements. The
-`--exact`, `--compatible` and `--patch` options are provided in order to
+The command will by default exclude from the destination file:
+ * `cargo-liner`: would duplicate the dedicated self-updating; the
+   `-s/--keep-self` option flag is there to disable this exclusion.
+ * all locally-installed packages, i.e. the ones installed through `cargo
+   install --path=...`: avoids polluting the destination file with packages
+   that cannot be updated anyway since they have no guarantee of existing in
+   the registry used; the `-l/--keep-local` option flag is there to disable
+   this exclusion.
+
+The command will by default import the packages with star version requirements.
+The `--exact`, `--compatible` and `--patch` options are provided in order to
 customize how the currently-installed versions are imported into version
 requirements: `--exact` will prepend them with `=`, `--compatible` with `^`,
 and `--patch` with `~`.
