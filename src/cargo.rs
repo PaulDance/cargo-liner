@@ -6,7 +6,7 @@ use std::cmp::Ordering;
 use std::collections::{BTreeMap, BTreeSet};
 use std::ffi::OsStr;
 use std::path::PathBuf;
-use std::process::{Child, Command, Stdio};
+use std::process::{Child, Command, ExitStatus, Stdio};
 use std::{env, iter};
 
 use clap::ColorChoice;
@@ -19,7 +19,7 @@ use semver::Version;
 use crate::config::Package;
 
 /// Installs a package, by running `cargo install` passing the `name`, `version`
-/// and requested `features`.
+/// and requested `features`, and returns the exit code of the process.
 ///
 /// The launched process' path is determined using the `$CARGO` environment
 /// variable as it is set by Cargo when it calls an external subcommand's
@@ -36,7 +36,7 @@ fn install(
     force: bool,
     color: ColorChoice,
     verbosity: i8,
-) -> Result<()> {
+) -> Result<ExitStatus> {
     let mut cmd = Command::new(env_var()?);
     cmd.args(["--color", &color.to_string()]);
 
@@ -83,8 +83,7 @@ fn install(
     cmd.status()
         .wrap_err("Failed to execute Cargo.")
         .note("This can happen for many reasons, but it should not happen easily at this point.")
-        .suggestion("Read the underlying error message.")?;
-    Ok(())
+        .suggestion("Read the underlying error message.")
 }
 
 /// Runs `cargo install` for all packages listed in the given user
@@ -116,6 +115,13 @@ pub fn install_all(
             color,
             verbosity,
         )
+        .and_then(|status| {
+            status.success().then_some(()).ok_or_else(|| {
+                eyre!("Cargo process finished unsuccessfully: {status}")
+                    .note("This can happen for many reasons.")
+                    .suggestion("Read Cargo's output.")
+            })
+        })
         .wrap_err_with(|| {
             format!(
                 "Failed to {} {pkg_name:?}.",

@@ -1017,7 +1017,7 @@ fn validate_ship_weirdpackagenames_supported() {
     cargo_liner()
         .args(["ship", "--no-self"])
         .assert()
-        .success()
+        .failure()
         .stdout_eq_("".into_data().raw())
         .stderr_eq_(snapbox::file![
             "fixtures/ship/validate_ship_weirdpackagenames_supported.stderr"
