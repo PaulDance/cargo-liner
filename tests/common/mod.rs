@@ -296,15 +296,15 @@ pub fn fake_publish(pkg: &str, ver: &str) {
 
 /// Runs [`fake_publish`] for each package name and version pair yielded by the
 /// given iterator.
-pub fn fake_publish_all<'p, 'v>(pkg_vers: impl IntoIterator<Item = (&'p str, &'v str, bool)>) {
-    for (pkg, ver, _) in pkg_vers {
+pub fn fake_publish_all<'p, 'v>(pkg_vers: impl IntoIterator<Item = (&'p str, &'v str)>) {
+    for (pkg, ver) in pkg_vers {
         fake_publish(pkg, ver);
     }
 }
 
 /// Runs [`fake_publish_all`] on some example packages, self included.
 pub fn fixture_fake_publish() {
-    fake_publish_all(FIXTURE_PACKAGES);
+    fake_publish_all(FIXTURE_PACKAGES.into_iter().map(|(pkg, ver, _)| (pkg, ver)));
 }
 
 /// Runs [`fake_publish_all`] on some example packages, self included, but with
@@ -326,8 +326,5 @@ pub fn fixture_fake_publish_newer_others() {
             )
         })
         .collect::<Vec<_>>();
-    fake_publish_all(
-        pkgs.iter()
-            .map(|(pkg, ver, locally)| (*pkg, ver.as_str(), *locally)),
-    );
+    fake_publish_all(pkgs.iter().map(|(pkg, ver, _)| (*pkg, ver.as_str())));
 }

@@ -14,9 +14,9 @@ fn validate_readme() {
     // Add example packages to registry.
     let _reg = init_registry();
     fake_publish_all([
-        ("cargo-liner", "0.0.0", false),
-        ("bat", "0.24.0", false),
-        ("cargo-expand", "1.0.79", false),
+        ("cargo-liner", "0.0.0"),
+        ("bat", "0.24.0"),
+        ("cargo-expand", "1.0.79"),
     ]);
 
     // Retrieve some test paths.
