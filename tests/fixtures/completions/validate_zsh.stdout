@@ -1,0 +1,187 @@
+#compdef cargo-liner
+
+autoload -U is-at-least
+
+_cargo-liner() {
+    typeset -A opt_args
+    typeset -a _arguments_options
+    local ret=1
+
+    if is-at-least 5.2; then
+        _arguments_options=(-s -S -C)
+    else
+        _arguments_options=(-s -C)
+    fi
+
+    local context curcontext="$curcontext" state line
+    _arguments "${_arguments_options[@]}" \
+'--color=[Control the coloring of the logging output]:WHEN:(auto always never)' \
+'(-q --quiet)*-v[Be more verbose. Use multiple times to be more and more so each time]' \
+'(-q --quiet)*--verbose[Be more verbose. Use multiple times to be more and more so each time]' \
+'(-v --verbose)*-q[Be quieter. Use multiple times to be more and more so each time]' \
+'(-v --verbose)*--quiet[Be quieter. Use multiple times to be more and more so each time]' \
+'-h[Print help (see more with '\''--help'\'')]' \
+'--help[Print help (see more with '\''--help'\'')]' \
+'-V[Print version]' \
+'--version[Print version]' \
+":: :_cargo-liner_commands" \
+"*::: :->cargo-liner" \
+&& ret=0
+    case $state in
+    (cargo-liner)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:cargo-liner-command-$line[1]:"
+        case $line[1] in
+            (ship)
+_arguments "${_arguments_options[@]}" \
+'--color=[Control the coloring of the logging output]:WHEN:(auto always never)' \
+'(-s --only-self)-n[Disable self-updating]' \
+'(-s --only-self)--no-self[Disable self-updating]' \
+'(-n --no-self)-s[Only self-update and do not install or update any other package]' \
+'(-n --no-self)--only-self[Only self-update and do not install or update any other package]' \
+'-c[Skip the summary version check and directly call \`cargo install\` on each configured package]' \
+'--skip-check[Skip the summary version check and directly call \`cargo install\` on each configured package]' \
+'-f[Force overwriting existing crates or binaries]' \
+'--force[Force overwriting existing crates or binaries]' \
+'(-q --quiet)*-v[Be more verbose. Use multiple times to be more and more so each time]' \
+'(-q --quiet)*--verbose[Be more verbose. Use multiple times to be more and more so each time]' \
+'(-v --verbose)*-q[Be quieter. Use multiple times to be more and more so each time]' \
+'(-v --verbose)*--quiet[Be quieter. Use multiple times to be more and more so each time]' \
+'-h[Print help (see more with '\''--help'\'')]' \
+'--help[Print help (see more with '\''--help'\'')]' \
+&& ret=0
+;;
+(import)
+_arguments "${_arguments_options[@]}" \
+'--color=[Control the coloring of the logging output]:WHEN:(auto always never)' \
+'(-c --compatible -p --patch)-e[Import package versions as "exact versions", i.e. prepended with an equal operator]' \
+'(-c --compatible -p --patch)--exact[Import package versions as "exact versions", i.e. prepended with an equal operator]' \
+'(-e --exact -p --patch)-c[Import package versions as "compatible versions", i.e. prepended with a caret operator]' \
+'(-e --exact -p --patch)--compatible[Import package versions as "compatible versions", i.e. prepended with a caret operator]' \
+'(-e --exact -c --compatible)-p[Import package versions as "patch versions", i.e. prepended with a tilde operator]' \
+'(-e --exact -c --compatible)--patch[Import package versions as "patch versions", i.e. prepended with a tilde operator]' \
+'-f[Overwrite the current configuration file if it already exists]' \
+'--force[Overwrite the current configuration file if it already exists]' \
+'-s[Also import this \`cargo-liner\` package into the configuration, for example in order to specify a certain version requirement later on]' \
+'--keep-self[Also import this \`cargo-liner\` package into the configuration, for example in order to specify a certain version requirement later on]' \
+'-l[Also import all locally-installed packages into the configuration. This means packages installed via \`cargo install --path <path>\` will be present in the configuration]' \
+'--keep-local[Also import all locally-installed packages into the configuration. This means packages installed via \`cargo install --path <path>\` will be present in the configuration]' \
+'(-q --quiet)*-v[Be more verbose. Use multiple times to be more and more so each time]' \
+'(-q --quiet)*--verbose[Be more verbose. Use multiple times to be more and more so each time]' \
+'(-v --verbose)*-q[Be quieter. Use multiple times to be more and more so each time]' \
+'(-v --verbose)*--quiet[Be quieter. Use multiple times to be more and more so each time]' \
+'-h[Print help (see more with '\''--help'\'')]' \
+'--help[Print help (see more with '\''--help'\'')]' \
+&& ret=0
+;;
+(completions)
+_arguments "${_arguments_options[@]}" \
+'--color=[Control the coloring of the logging output]:WHEN:(auto always never)' \
+'(-q --quiet)*-v[Be more verbose. Use multiple times to be more and more so each time]' \
+'(-q --quiet)*--verbose[Be more verbose. Use multiple times to be more and more so each time]' \
+'(-v --verbose)*-q[Be quieter. Use multiple times to be more and more so each time]' \
+'(-v --verbose)*--quiet[Be quieter. Use multiple times to be more and more so each time]' \
+'-h[Print help (see more with '\''--help'\'')]' \
+'--help[Print help (see more with '\''--help'\'')]' \
+':shell -- The shell flavor to use when generating the completions:(bash elvish fish powershell zsh)' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" \
+":: :_cargo-liner__help_commands" \
+"*::: :->help" \
+&& ret=0
+
+    case $state in
+    (help)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:cargo-liner-help-command-$line[1]:"
+        case $line[1] in
+            (ship)
+_arguments "${_arguments_options[@]}" \
+&& ret=0
+;;
+(import)
+_arguments "${_arguments_options[@]}" \
+&& ret=0
+;;
+(completions)
+_arguments "${_arguments_options[@]}" \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+}
+
+(( $+functions[_cargo-liner_commands] )) ||
+_cargo-liner_commands() {
+    local commands; commands=(
+'ship:The default command if omitted\: install and update configured packages' \
+'import:Import the \`\$CARGO_HOME/.crates.toml\` Cargo-edited save file as a new Liner configuration file' \
+'completions:Generate an auto-completion script for the given shell' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'cargo-liner commands' commands "$@"
+}
+(( $+functions[_cargo-liner__completions_commands] )) ||
+_cargo-liner__completions_commands() {
+    local commands; commands=()
+    _describe -t commands 'cargo-liner completions commands' commands "$@"
+}
+(( $+functions[_cargo-liner__help__completions_commands] )) ||
+_cargo-liner__help__completions_commands() {
+    local commands; commands=()
+    _describe -t commands 'cargo-liner help completions commands' commands "$@"
+}
+(( $+functions[_cargo-liner__help_commands] )) ||
+_cargo-liner__help_commands() {
+    local commands; commands=(
+'ship:The default command if omitted\: install and update configured packages' \
+'import:Import the \`\$CARGO_HOME/.crates.toml\` Cargo-edited save file as a new Liner configuration file' \
+'completions:Generate an auto-completion script for the given shell' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'cargo-liner help commands' commands "$@"
+}
+(( $+functions[_cargo-liner__help__help_commands] )) ||
+_cargo-liner__help__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'cargo-liner help help commands' commands "$@"
+}
+(( $+functions[_cargo-liner__help__import_commands] )) ||
+_cargo-liner__help__import_commands() {
+    local commands; commands=()
+    _describe -t commands 'cargo-liner help import commands' commands "$@"
+}
+(( $+functions[_cargo-liner__import_commands] )) ||
+_cargo-liner__import_commands() {
+    local commands; commands=()
+    _describe -t commands 'cargo-liner import commands' commands "$@"
+}
+(( $+functions[_cargo-liner__help__ship_commands] )) ||
+_cargo-liner__help__ship_commands() {
+    local commands; commands=()
+    _describe -t commands 'cargo-liner help ship commands' commands "$@"
+}
+(( $+functions[_cargo-liner__ship_commands] )) ||
+_cargo-liner__ship_commands() {
+    local commands; commands=()
+    _describe -t commands 'cargo-liner ship commands' commands "$@"
+}
+
+if [ "$funcstack[1]" = "_cargo-liner" ]; then
+    _cargo-liner "$@"
+else
+    compdef _cargo-liner cargo-liner
+fi
