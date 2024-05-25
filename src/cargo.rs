@@ -33,6 +33,7 @@ fn install(
     no_default_features: bool,
     all_features: bool,
     features: &[String],
+    extra_arguments: &[String],
     force: bool,
     color: ColorChoice,
     verbosity: i8,
@@ -77,6 +78,12 @@ fn install(
         log::trace!("`--force` arg added.");
     }
 
+    // This should be kept here: after all other options and before the `--`.
+    if !extra_arguments.is_empty() {
+        cmd.args(extra_arguments);
+        log::trace!("Extra arguments added: {:?}", extra_arguments);
+    }
+
     cmd.args(["--", name]);
     log_cmd(&cmd);
 
@@ -115,6 +122,7 @@ pub fn install_all(
             !pkg.default_features(),
             pkg.all_features(),
             pkg.features(),
+            pkg.extra_arguments(),
             force,
             color,
             verbosity,
