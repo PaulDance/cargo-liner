@@ -229,21 +229,22 @@ mod tests {
                     c = { version = "1.2", features = [ "foo" ], default-features = false }
                     d = { version = "1.2", all-features = true }
                     e = { version = "1.2" }
+                    f = { version = "1.2", extra-arguments = [] }
+                    g = { version = "1.2", extra-arguments = [ "--abc", "--def" ] }
                 "#,
         )
         .unwrap()
         .packages
         .into_iter()
         .map(|(name, req)| {
-            let version = req.version().to_string();
-            let features = req.features().to_owned();
             (
                 name,
                 (
-                    version,
-                    features,
+                    req.version().to_string(),
+                    req.features().to_owned(),
                     req.all_features(),
                     req.default_features(),
+                    req.extra_arguments().to_owned(),
                 ),
             )
         })
@@ -253,11 +254,31 @@ mod tests {
         let packages: Vec<_> = packages.into_iter().map(|(_, v)| v).collect();
 
         let expected = [
-            ("^1.2.3".to_string(), vec![], false, true),
-            ("^1.2".to_string(), vec!["foo".to_string()], false, true),
-            ("^1.2".to_string(), vec!["foo".to_string()], false, false),
-            ("^1.2".to_string(), vec![], true, true),
-            ("^1.2".to_string(), vec![], false, true),
+            ("^1.2.3".to_string(), vec![], false, true, vec![]),
+            (
+                "^1.2".to_string(),
+                vec!["foo".to_string()],
+                false,
+                true,
+                vec![],
+            ),
+            (
+                "^1.2".to_string(),
+                vec!["foo".to_string()],
+                false,
+                false,
+                vec![],
+            ),
+            ("^1.2".to_string(), vec![], true, true, vec![]),
+            ("^1.2".to_string(), vec![], false, true, vec![]),
+            ("^1.2".to_string(), vec![], false, true, vec![]),
+            (
+                "^1.2".to_string(),
+                vec![],
+                false,
+                true,
+                vec!["--abc".to_owned(), "--def".to_owned()],
+            ),
         ]
         .into_iter()
         .collect::<Vec<_>>();
