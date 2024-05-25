@@ -10,7 +10,7 @@ use std::process::{Child, Command, ExitStatus, Stdio};
 use std::{env, iter};
 
 use clap::ColorChoice;
-use color_eyre::eyre::{self, eyre, Result, WrapErr};
+use color_eyre::eyre::{self, eyre, Report, Result, WrapErr};
 use color_eyre::Section;
 use log::Level;
 use regex::Regex;
@@ -91,10 +91,14 @@ fn install(
 pub fn install_all(
     packages: &BTreeMap<String, Package>,
     installed: &BTreeSet<String>,
+    keep_going: bool,
     force: bool,
     color: ColorChoice,
     verbosity: i8,
 ) -> Result<()> {
+    // Aggregation of errors when `keep_going` is enabled.
+    let mut rep = None::<Report>;
+
     for (pkg_name, pkg) in packages {
         log::info!(
             "{}ing `{pkg_name}`...",
@@ -105,7 +109,7 @@ pub fn install_all(
             }
         );
 
-        install(
+        if let Err(err) = install(
             pkg_name,
             &pkg.version().to_string(),
             !pkg.default_features(),
@@ -131,10 +135,20 @@ pub fn install_all(
                     "install"
                 }
             )
-        })?;
+        }) {
+            if keep_going {
+                // Can't use `Option::map_or` for ownership issues.
+                rep = Some(match rep {
+                    Some(rep) => rep.wrap_err(err),
+                    None => err,
+                });
+            } else {
+                return Err(err);
+            }
+        }
     }
 
-    Ok(())
+    rep.map_or(Ok(()), Err)
 }
 
 /// Spawns `cargo search` for the given package with only stdout piped and

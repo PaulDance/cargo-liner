@@ -155,6 +155,7 @@ fn try_main(args: &LinerArgs) -> Result<()> {
         }
         cmd @ (None | Some(LinerCommands::Ship(_))) => {
             let mut skip_check = false;
+            let mut keep_going = false;
             let mut force = false;
             let mut config =
                 UserConfig::parse_file().wrap_err("Failed to parse the user configuration.")?;
@@ -167,6 +168,7 @@ fn try_main(args: &LinerArgs) -> Result<()> {
 
             if let Some(LinerCommands::Ship(ship_args)) = cmd {
                 skip_check = ship_args.skip_check;
+                keep_going = ship_args.keep_going;
                 force = ship_args.force;
                 config = config
                     .self_update(!ship_args.no_self)
@@ -178,6 +180,7 @@ fn try_main(args: &LinerArgs) -> Result<()> {
                 cargo::install_all(
                     &config.packages,
                     &BTreeSet::new(),
+                    keep_going,
                     force,
                     args.color,
                     cargo_verbosity,
@@ -193,6 +196,7 @@ fn try_main(args: &LinerArgs) -> Result<()> {
                 cargo::install_all(
                     &needing_install(&config.packages, &vers, &cct.clone().into_name_versions()),
                     &cct.into_names(),
+                    keep_going,
                     force,
                     args.color,
                     cargo_verbosity,
