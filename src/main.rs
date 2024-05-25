@@ -1,5 +1,7 @@
 //! Main module: regroups parsing CLI arguments, deserializing configuration,
 //! and execution of `cargo install` with the required settings.
+#![warn(unused_crate_dependencies)]
+
 use std::collections::{BTreeMap, BTreeSet};
 use std::{env, process};
 
@@ -12,6 +14,10 @@ use pretty_env_logger::env_logger::WriteStyle;
 use semver::Version;
 use tabled::settings::Style;
 use tabled::{Table, Tabled};
+#[cfg(test)]
+use tempfile as _;
+#[cfg(test)]
+use trycmd as _;
 
 mod cargo;
 mod cli;
