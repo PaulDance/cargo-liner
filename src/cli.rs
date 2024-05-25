@@ -836,4 +836,31 @@ mod tests {
                 .is_err()
         );
     }
+
+    #[test]
+    fn test_completions() {
+        assert_eq!(
+            CargoArgs::try_parse_from(["cargo", "liner", "completions", "bash"]).unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Completions(CompletionsArgs {
+                    shell: Shell::Bash,
+                })),
+                verbose: 0,
+                quiet: 0,
+                color: ColorChoice::Auto,
+            })
+        );
+    }
+
+    #[test]
+    fn test_completions_noarg_iserr() {
+        assert!(CargoArgs::try_parse_from(["cargo", "liner", "completions"]).is_err());
+    }
+
+    #[test]
+    fn test_completions_wrongarg_iserr() {
+        assert!(
+            CargoArgs::try_parse_from(["cargo", "liner", "completions", "idontexist"]).is_err()
+        );
+    }
 }
