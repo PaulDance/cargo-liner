@@ -24,6 +24,12 @@ pub struct DetailedPackageReq {
     features: Vec<String>,
 
     version: VersionReq,
+
+    /// Additional CLI arguments that must be passed onto the associated `cargo
+    /// install` call between the last one set by proper options and the `--`
+    /// separating the following fixed arguments.
+    #[serde(rename = "extra-arguments", default)]
+    extra_arguments: Vec<String>,
 }
 
 /// Represents the requirement setting configured for a package.
@@ -82,6 +88,17 @@ impl Package {
         match self {
             Self::Simple(_) => &[],
             Self::Detailed(DetailedPackageReq { features, .. }) => features.as_slice(),
+        }
+    }
+
+    /// Returns a slice of the extra `cargo install` arguments required for the
+    /// package, defaulting to an empty one when the package is simple.
+    pub fn extra_arguments(&self) -> &[String] {
+        match self {
+            Self::Simple(_) => &[],
+            Self::Detailed(DetailedPackageReq {
+                extra_arguments, ..
+            }) => extra_arguments.as_slice(),
         }
     }
 }
