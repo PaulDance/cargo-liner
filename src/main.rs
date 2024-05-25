@@ -3,9 +3,9 @@
 #![warn(unused_crate_dependencies)]
 
 use std::collections::{BTreeMap, BTreeSet};
-use std::{env, process};
+use std::{env, io, process};
 
-use clap::ColorChoice;
+use clap::{ColorChoice, CommandFactory};
 use color_eyre::config::{HookBuilder, Theme};
 use color_eyre::eyre::{self, Result, WrapErr};
 use color_eyre::Section;
@@ -106,6 +106,18 @@ fn try_main(args: &LinerArgs) -> Result<()> {
 
     // CLI command dispatch.
     match &args.command {
+        Some(LinerCommands::Completions(comp_args)) => {
+            log::info!(
+                "Generating auto-completion script for {:?}...",
+                comp_args.shell,
+            );
+            clap_complete::generate(
+                comp_args.shell,
+                &mut LinerArgs::command(),
+                clap::crate_name!(),
+                &mut io::stdout(),
+            );
+        }
         Some(LinerCommands::Import(import_args)) => {
             if UserConfig::file_path()
                 .wrap_err("Failed to build the configuration file path.")?
@@ -141,7 +153,7 @@ fn try_main(args: &LinerArgs) -> Result<()> {
             ))
             .wrap_err("Failed to save the configuration file.")?;
         }
-        cmd => {
+        cmd @ (None | Some(LinerCommands::Ship(_))) => {
             let mut skip_check = false;
             let mut force = false;
             let mut config =
