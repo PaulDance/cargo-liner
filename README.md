@@ -657,6 +657,7 @@ package-name-3 = {
     all-features = boolean,
     default-features = boolean,
     features = ["feature-1", "feature-2"],
+    extra-arguments = ["--arg1", "--arg2"],
 }
 #...
 ```
@@ -673,6 +674,11 @@ where:
    the `--no-default-features` flag of `cargo install`.
  * `features` (optional): list of strings instructing which of the associated
    crate's Cargo features should be enabled when building it.
+ * `extra-arguments` (optional): list of strings given as additional arguments
+   to `cargo install` for the associated package and located between the last
+   one given by Cargo Liner and the following `--` seperating options from
+   fixed arguments. This can be used in order to successfully manage a package
+   using a Cargo Liner version that does not yet implement the desired option.
 
 with the following constraints, mostly enforced by Cargo, but also by TOML:
  * `package-name-*` must be a valid [package name], i.e. match
@@ -683,12 +689,14 @@ with the following constraints, mostly enforced by Cargo, but also by TOML:
  * `feature-*` must be the name of a [Cargo feature] defined by the package
    being installed, which has constraints similar to a package name; in
    particular, it shouldn't contain a comma.
+ * `--arg*` must be the name of a [`cargo install` CLI argument].
  * `boolean` is a [TOML boolean], either `true` or `false`.
 
 [package name]: https://doc.rust-lang.org/cargo/reference/manifest.html#the-name-field
 [SemVer]: https://semver.org/
 [Cargo style]: https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html
 [Cargo feature]: https://doc.rust-lang.org/cargo/reference/features.html
+[`cargo install` CLI argument]: https://doc.rust-lang.org/cargo/commands/cargo-install.html
 [TOML boolean]: https://toml.io/en/v1.0.0#boolean
 
 
