@@ -4,6 +4,7 @@
 //! environment.
 #![allow(clippy::struct_excessive_bools)]
 use clap::{ArgAction, ColorChoice, Parser};
+use clap_complete::Shell;
 
 /// Cargo entry point for `cargo-liner`.
 ///
@@ -25,7 +26,7 @@ impl CargoArgs {
 }
 
 // The actual entry point in this tool's argument parser.
-#[derive(clap::Args, Debug, PartialEq, Eq)]
+#[derive(clap::Parser, Debug, PartialEq, Eq)]
 #[command(author, version, about, long_about)]
 pub struct LinerArgs {
     #[command(subcommand)]
@@ -131,6 +132,13 @@ pub enum LinerCommands {
     /// Star versions are used by default. The version transformation options
     /// are mutually exclusive.
     Import(ImportArgs),
+
+    /// Generate an auto-completion script for the given shell.
+    ///
+    /// The script is generated for `cargo-liner`, but with arguments rooted on
+    /// `cargo-liner liner`, thus making auto-completing work when typing
+    /// `cargo liner`. The generated script is emitted to standard output.
+    Completions(CompletionsArgs),
 }
 
 /// Arguments for the `ship` subcommand.
@@ -232,6 +240,12 @@ pub struct ImportArgs {
     /// in the resulting configuration file.
     #[arg(short = 'l', long)]
     pub keep_local: bool,
+}
+
+#[derive(clap::Args, Debug, PartialEq, Eq)]
+pub struct CompletionsArgs {
+    /// The shell flavor to use when generating the completions.
+    pub shell: Shell,
 }
 
 #[cfg(test)]
