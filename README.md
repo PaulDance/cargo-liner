@@ -662,19 +662,34 @@ package-name-3 = {
 ```
 
 where:
+ * `packages` (mandatory): map of package name to package details instructing
+   which and how packages should be installed or updated.
+ * `version` (mandatory): version requirement string to use when installing or
+   updating the associated package; this is the detailed field set when only
+   using the simple configuration style.
+ * `all-features` (optional): boolean that, when set to `true`, enables the
+   `--all-features` flag of `cargo install`.
+ * `default-features` (optional): boolean that, when set to `false`, enables
+   the `--no-default-features` flag of `cargo install`.
+ * `features` (optional): list of strings instructing which of the associated
+   crate's Cargo features should be enabled when building it.
+
+with the following constraints, mostly enforced by Cargo, but also by TOML:
  * `package-name-*` must be a valid [package name], i.e. match
    `[a-zA-Z][a-zA-Z0-9_-]*` or something like that.
  * `version-req-*` must be a valid [SemVer] requirement, [Cargo style]. In
    particular, the catch-all wildcard `*` can be used to require the latest
    version available.
- * `feature-*` must be the name of a [cargo feature] defined by the crate being installed.
- * `boolean` is a [toml boolean], either `true` or `false`.
+ * `feature-*` must be the name of a [Cargo feature] defined by the package
+   being installed, which has constraints similar to a package name; in
+   particular, it shouldn't contain a comma.
+ * `boolean` is a [TOML boolean], either `true` or `false`.
 
 [package name]: https://doc.rust-lang.org/cargo/reference/manifest.html#the-name-field
 [SemVer]: https://semver.org/
 [Cargo style]: https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html
-[cargo feature]: https://doc.rust-lang.org/cargo/reference/features.html
-[toml boolean]: https://toml.io/en/v1.0.0#boolean
+[Cargo feature]: https://doc.rust-lang.org/cargo/reference/features.html
+[TOML boolean]: https://toml.io/en/v1.0.0#boolean
 
 
 ## Contributing
