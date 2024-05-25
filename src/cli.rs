@@ -178,6 +178,21 @@ pub struct ShipArgs {
     #[arg(short = 'c', long)]
     pub skip_check: bool,
 
+    /// Disable the default fail-fast execution of `cargo install`s.
+    ///
+    /// By default, whenever a call to `cargo install` fails for any reason,
+    /// the overall operation is stopped as soon as possible. In some cases,
+    /// such as packages simply failing to compile, this is a bit too
+    /// restrictive as it prevents installing the following packages. The
+    /// option it therefore provided in order to make the installation keep on
+    /// going by continuing to call `cargo install` on each configured package,
+    /// even if some previous one failed. However, in case any of the packages
+    /// fails to install and the option is used, an error will still be
+    /// reported at the end, containing an indication of all the packages that
+    /// failed to install.
+    #[arg(short, long)]
+    pub keep_going: bool,
+
     /// Force overwriting existing crates or binaries.
     ///
     /// Passes the option flag onto each call of `cargo install`. It will, for
@@ -356,6 +371,7 @@ mod tests {
                     no_self: false,
                     only_self: false,
                     skip_check: false,
+                    keep_going: false,
                     force: false,
                 })),
                 verbose: 0,
@@ -374,6 +390,7 @@ mod tests {
                     no_self: true,
                     only_self: false,
                     skip_check: false,
+                    keep_going: false,
                     force: false,
                 })),
                 verbose: 0,
@@ -392,6 +409,7 @@ mod tests {
                     no_self: false,
                     only_self: true,
                     skip_check: false,
+                    keep_going: false,
                     force: false,
                 })),
                 verbose: 0,
@@ -410,6 +428,7 @@ mod tests {
                     no_self: false,
                     only_self: false,
                     skip_check: true,
+                    keep_going: false,
                     force: false,
                 })),
                 verbose: 0,
@@ -428,6 +447,7 @@ mod tests {
                     no_self: false,
                     only_self: false,
                     skip_check: false,
+                    keep_going: false,
                     force: true,
                 })),
                 verbose: 0,

@@ -323,6 +323,23 @@ Options:
           requests to the registry. These operations will thus be
           entirely skipped.
 
+  -k, --keep-going
+          Disable the default fail-fast execution of `cargo
+          install`s.
+          
+          By default, whenever a call to `cargo install` fails for
+          any reason, the overall operation is stopped as soon as
+          possible. In some cases, such as packages simply failing to
+          compile, this is a bit too restrictive as it prevents
+          installing the following packages. The option it therefore
+          provided in order to make the installation keep on going by
+          continuing to call `cargo install` on each configured
+          package, even if some previous one failed. However, in case
+          any of the packages fails to install and the option is
+          used, an error will still be reported at the end,
+          containing an indication of all the packages that failed to
+          install.
+
   -f, --force
           Force overwriting existing crates or binaries.
           
