@@ -185,7 +185,6 @@ fn try_main(args: &LinerArgs) -> Result<()> {
                     args.color,
                     cargo_verbosity,
                 )
-                .wrap_err("Failed to install or update the configured packages.")?;
             } else {
                 let cct = CargoCratesToml::parse_file()
                     .wrap_err("Failed to parse Cargo's .crates.toml file.")?;
@@ -201,8 +200,13 @@ fn try_main(args: &LinerArgs) -> Result<()> {
                     args.color,
                     cargo_verbosity,
                 )
-                .wrap_err("Failed to install or update the configured packages.")?;
             }
+            .wrap_err_with(|| {
+                format!(
+                    "Failed to install or update {} of the configured packages.",
+                    if keep_going { "some" } else { "one" }
+                )
+            })?;
         }
     }
 

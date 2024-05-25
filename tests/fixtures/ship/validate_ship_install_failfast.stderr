@@ -2,7 +2,7 @@
     Updating `dummy-registry` index
 error: could not find `abc` in registry `crates-io` with version `*`
 Error: 
-   0: Failed to install or update the configured packages.
+   0: Failed to install or update one of the configured packages.
    1: Failed to install "abc".
    2: Cargo process finished unsuccessfully: exit status: 101
 

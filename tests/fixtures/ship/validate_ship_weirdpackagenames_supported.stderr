@@ -18,7 +18,7 @@ error: invalid character `-` in package name: `--pkg`, the first character must 
   |
 error: failed to download replaced source registry `crates-io`
 Error: 
-   0: Failed to install or update the configured packages.
+   0: Failed to install or update one of the configured packages.
    1: Failed to install "--pkg".
    2: Cargo process finished unsuccessfully: exit status: 101
 
