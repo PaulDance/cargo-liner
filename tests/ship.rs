@@ -1045,6 +1045,7 @@ fn validate_ship_cargotermcolor_supported() {
     assert_installed("pkg");
 }
 
+/// See #11.
 #[cargo_test]
 fn validate_ship_install_failfast() {
     let _reg = init_registry();
@@ -1100,4 +1101,27 @@ fn validate_ship_install_keepgoing_ok_isok() {
         ]);
     assert_installed("abc");
     assert_installed("def");
+}
+
+/// See #23.
+#[cargo_test]
+fn validate_ship_extrargs_list() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish("abc", "0.0.0");
+    write_user_config(&[
+        "[packages]",
+        // HACK: use `--list` in order to obtain a small and stable output
+        // sufficient to confirm the argument is taken into account.
+        "abc = { version = '*', extra-arguments = ['--list'] }",
+    ]);
+
+    cargo_liner()
+        .args(["ship", "--skip-check", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq_(snapbox::file![
+            "fixtures/ship/validate_ship_extrargs_list.stdout"
+        ])
+        .stderr_eq_(snapbox::file!["fixtures/ship/validate_ship_extrargs_list.stderr"].raw());
 }
