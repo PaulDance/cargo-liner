@@ -1044,3 +1044,22 @@ fn validate_ship_cargotermcolor_supported() {
         ]);
     assert_installed("pkg");
 }
+
+#[cargo_test]
+fn validate_ship_install_failfast() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish("def", "0.0.0");
+    write_user_config(&["[packages]", "abc = '*'", "def = '*'"]);
+
+    cargo_liner()
+        .args(["ship", "--skip-check", "--no-self"])
+        .assert()
+        .failure()
+        .stdout_eq_("".into_data().raw())
+        .stderr_eq_(snapbox::file![
+            "fixtures/ship/validate_ship_install_failfast.stderr"
+        ]);
+    assert_not_installed("abc");
+    assert_not_installed("def");
+}

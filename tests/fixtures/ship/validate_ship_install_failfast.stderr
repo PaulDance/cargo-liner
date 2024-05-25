@@ -1,0 +1,16 @@
+ INFO  cargo_liner::cargo > Installing `abc`...
+    Updating `dummy-registry` index
+error: could not find `abc` in registry `crates-io` with version `*`
+Error: 
+   0: Failed to install or update the configured packages.
+   1: Failed to install "abc".
+   2: Cargo process finished unsuccessfully: exit status: 101
+
+Location:
+   src/cargo.rs:[..]
+
+Note: This can happen for many reasons.
+Suggestion: Read Cargo's output.
+
+Backtrace omitted. Run with RUST_BACKTRACE=1 environment variable to display it.
+Run with RUST_BACKTRACE=full to include source snippets.
