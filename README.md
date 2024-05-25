@@ -163,12 +163,14 @@ configuration.
 Usage: cargo liner [OPTIONS] [COMMAND]
 
 Commands:
-  ship    The default command if omitted: install and update
-              configured packages
-  import  Import the `$CARGO_HOME/.crates.toml` Cargo-edited save
-              file as a new Liner configuration file
-  help    Print this message or the help of the given
-              subcommand(s)
+  ship         The default command if omitted: install and update
+                   configured packages
+  import       Import the `$CARGO_HOME/.crates.toml` Cargo-edited
+                   save file as a new Liner configuration file
+  completions  Generate an auto-completion script for the given
+                   shell
+  help         Print this message or the help of the given
+                   subcommand(s)
 
 Options:
   -v, --verbose...
