@@ -548,6 +548,84 @@ cargo-outdated = "~0.11.1"
 The file can of course be edited manually afterwards, as intended.
 
 
+#### `completions` subcommand
+
+This enables obtaining CLI auto-completion in a shell for the current project:
+
+```console
+$ cargo liner help completions
+Generate an auto-completion script for the given shell.
+
+The script is generated for `cargo-liner`, but with arguments rooted
+on `cargo-liner liner`, thus making auto-completing work when typing
+`cargo liner`. The generated script is emitted to standard output.
+
+Usage: cargo liner completions [OPTIONS] <SHELL>
+
+Arguments:
+  <SHELL>
+          The shell flavor to use when generating the completions
+          
+          [possible values: bash, elvish, fish, powershell, zsh]
+
+Options:
+  -v, --verbose...
+          Be more verbose. Use multiple times to be more and more so
+          each time.
+          
+          When omitted, INFO and above messages of only this crate
+          are logged. When used once, DEBUG and above messages of
+          only this crate are logged and error backtraces are shown
+          (`RUST_BACKTRACE=1`). When used twice, DEBUG and above
+          messages of all crates are logged, `-v` is given to Cargo
+          calls (details ran commands), and error backtraces are
+          fully shown (`RUST_BACKTRACE=full`). When used three times
+          or more, TRACE and above messages of all crates are logged,
+          `-vv` is given to Cargo calls (includes build output) and
+          error backtraces are fully shown (`RUST_BACKTRACE=full`).
+          This takes precedence over the environment.
+
+  -q, --quiet...
+          Be quieter. Use multiple times to be more and more so each
+          time.
+          
+          When omitted, INFO and above messages of only this crate
+          are logged. When used once, WARN and above messages of only
+          this crate are logged. When used twice, ERROR messages of
+          all crates are logged. When used three times or more, no
+          message will be logged, including Cargo's by passing `-q`
+          to it and error reports are silenced. This takes precedence
+          over the environment.
+
+      --color <WHEN>
+          Control the coloring of the logging output.
+          
+          This enables one to manually specify when should the logs
+          and error reports be colored or not, for example if the
+          automatic detection is either not wished or not functional.
+          The value is also passed onto calls to Cargo.
+          
+          [default: auto]
+          [possible values: auto, always, never]
+
+  -h, --help
+          Print help (see a summary with '-h')
+
+```
+
+Its result can either be saved to a file configured to be `source`d (or
+equivalent) by your shell, or generated and `eval`uated (or equivalent) at each
+startup. For example with Zsh, adding:
+
+```zsh
+[[ -f ~/.cargo/bin/cargo-liner ]] && eval "$(cargo liner -qqq completions zsh)"
+```
+
+to one's `~/.zshrc` will enable the completions in every new shell, but only if
+Cargo Liner is indeed installed (that part may need to be adapted to your
+particular environment).
+
+
 ### Configuration
 
 The file must be located at `$CARGO_HOME/liner.toml` and contain a
