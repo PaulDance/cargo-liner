@@ -439,6 +439,25 @@ mod tests {
     }
 
     #[test]
+    fn test_ship_keepgoing() {
+        assert_eq!(
+            CargoArgs::try_parse_from(["cargo", "liner", "ship", "--keep-going"]).unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Ship(ShipArgs {
+                    no_self: false,
+                    only_self: false,
+                    skip_check: false,
+                    keep_going: true,
+                    force: false,
+                })),
+                verbose: 0,
+                quiet: 0,
+                color: ColorChoice::Auto,
+            }),
+        );
+    }
+
+    #[test]
     fn test_ship_force() {
         assert_eq!(
             CargoArgs::try_parse_from(["cargo", "liner", "ship", "--force"]).unwrap(),
