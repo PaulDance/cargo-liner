@@ -658,6 +658,7 @@ package-name-3 = {
     default-features = boolean,
     features = ["feature-1", "feature-2"],
     extra-arguments = ["--arg1", "--arg2"],
+    environment = { ENV1 = "abc", ENV2 = "def" },
 }
 #...
 ```
@@ -679,6 +680,8 @@ where:
    one given by Cargo Liner and the following `--` seperating options from
    fixed arguments. This can be used in order to successfully manage a package
    using a Cargo Liner version that does not yet implement the desired option.
+ * `environment` (optional): map of string to strings specifying which and how
+   environment variables should be set for the spawned `cargo install` process.
 
 with the following constraints, mostly enforced by Cargo, but also by TOML:
  * `package-name-*` must be a valid [package name], i.e. match
@@ -690,6 +693,7 @@ with the following constraints, mostly enforced by Cargo, but also by TOML:
    being installed, which has constraints similar to a package name; in
    particular, it shouldn't contain a comma.
  * `--arg*` must be the name of a [`cargo install` CLI argument].
+ * `ENV*` should be the name of a [`cargo install` environment variable].
  * `boolean` is a [TOML boolean], either `true` or `false`.
 
 [package name]: https://doc.rust-lang.org/cargo/reference/manifest.html#the-name-field
@@ -697,6 +701,7 @@ with the following constraints, mostly enforced by Cargo, but also by TOML:
 [Cargo style]: https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html
 [Cargo feature]: https://doc.rust-lang.org/cargo/reference/features.html
 [`cargo install` CLI argument]: https://doc.rust-lang.org/cargo/commands/cargo-install.html
+[`cargo install` environment variable]: https://doc.rust-lang.org/cargo/reference/environment-variables.html
 [TOML boolean]: https://toml.io/en/v1.0.0#boolean
 
 
