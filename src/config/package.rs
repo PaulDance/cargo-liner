@@ -13,11 +13,12 @@ fn serde_default_true() -> bool {
 ///
 /// See <https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html>.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
 pub struct DetailedPackageReq {
-    #[serde(rename = "default-features", default = "serde_default_true")]
+    #[serde(default = "serde_default_true")]
     default_features: bool,
 
-    #[serde(rename = "all-features", default)]
+    #[serde(default)]
     all_features: bool,
 
     #[serde(default)]
@@ -28,7 +29,7 @@ pub struct DetailedPackageReq {
     /// Additional CLI arguments that must be passed onto the associated `cargo
     /// install` call between the last one set by proper options and the `--`
     /// separating the following fixed arguments.
-    #[serde(rename = "extra-arguments", default)]
+    #[serde(default)]
     extra_arguments: Vec<String>,
 }
 
