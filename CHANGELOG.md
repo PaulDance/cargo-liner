@@ -7,6 +7,76 @@
 ## Miscellaneous
 -->
 
+# [Version 0.7.0 (26/05/2024)](https://crates.io/crates/cargo-liner/0.7.0)
+## Features
+
+ * Completed #24: a new `completions` subcommand has been introduced in order
+   to enable one to generate shell CLI auto-completion scripts for the program
+   this project delivers. More could be added to this in the future, but for
+   now, the simplest is to add it to one's shell configuration to be loaded at
+   each startup so it may be dynamically up-to-date.
+
+ * Completed #11: a new `--keep-going` CLI option has been added to the `ship`
+   subcommand. It enables one to bypass the new by-default fail-fast behavior
+   of the command in order to make it ignore `cargo install` errors instead and
+   continue on calling it for other packages. This can be used as a way to
+   still install or update the remaining packages when one fails, but not
+   without having read the error message first and decided what was the best
+   course for remediation beforehand.
+
+ * Completed #23's first part: a new `extra-arguments` package option has been
+   added to the user configuration file. It enables one to specify additional
+   CLI arguments that should be given to the call to `cargo install` associated
+   with the concerned package. They are not used for other packages.
+
+ * Completed #23's second part: a new `environment` package option has been
+   added to the user configuration file. It enables one to specify environment
+   variable names and values that should be set for the `cargo install` process
+   spawned for the associated package. They are not used for other packages.
+
+## Fixes
+
+ * Part of #11: previously, whenever some package would fail to install for any
+   reason reported by Cargo, the overall operation would always ignore the
+   error as it was simply not checked and continue on with the rest of the
+   packages, which somewhat worked, but wasn't the clearest as the message
+   could simply slip by unnoticed among the rest of the numerous Cargo output
+   lines. Now, the exit status of the `cargo install` process is properly
+   checked and when unsuccessful, makes the overall operation stop as soon as
+   possible, thus making it fail-fast by default.
+
+## Testing
+
+ * The fixtures have been updated to take changes to Cargo, dependencies and
+   internal refactors into account.
+ * Added coverage for the new fixes and features.
+
+## Documentation
+
+ * `README.md`:
+   * Fixed a link to cargo install docs.
+   * Added a clarification about what the `import` subcommand ignores by
+     default and that was missing in the previous release.
+   * Added the missing documentation about the various configuration sections,
+     expected and optional, and how and what they are used for.
+   * Documented the new features.
+ * `CHANGELOG.md`: new version.
+
+## Miscellaneous
+
+ * The dependencies have been updated.
+ * Recent changes to Cargo and Clippy have been taken into account.
+ * More lints have been enabled on the codebase.
+ * Added a suggestion message to use the `import` subcommand when `ship` fails
+   because of the `liner.toml` configuration file's not existing.
+ * The global error message displayed when an installation fails has been
+   adapted to take into account whether `--keep-going` has been used or not so
+   it may be a bit clearer and explicit.
+ * Added a suggestion message to the error message displayed when `ship` is
+   called and `cargo install` fails, to use the `--keep-going` option when not
+   set. This should guide one to use the new feature when appropriate.
+
+
 # [Version 0.6.0 (26/02/2024)](https://crates.io/crates/cargo-liner/0.6.0)
 ## Features
 
