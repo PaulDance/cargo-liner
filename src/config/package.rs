@@ -1,3 +1,5 @@
+use std::collections::BTreeMap;
+
 use semver::VersionReq;
 use serde::{Deserialize, Serialize};
 
@@ -31,6 +33,10 @@ pub struct DetailedPackageReq {
     /// separating the following fixed arguments.
     #[serde(default)]
     extra_arguments: Vec<String>,
+
+    /// Environment variables that must be set for the `cargo install` process.
+    #[serde(default)]
+    environment: BTreeMap<String, String>,
 }
 
 /// Represents the requirement setting configured for a package.
@@ -100,6 +106,16 @@ impl Package {
             Self::Detailed(DetailedPackageReq {
                 extra_arguments, ..
             }) => extra_arguments.as_slice(),
+        }
+    }
+
+    /// Returns a clone of the environment variables that should be set for the
+    /// spawned `cargo install` process, defaulting to an empty map when the
+    /// package is simple.
+    pub fn environment(&self) -> BTreeMap<String, String> {
+        match self {
+            Self::Simple(_) => BTreeMap::new(),
+            Self::Detailed(DetailedPackageReq { environment, .. }) => environment.clone(),
         }
     }
 }
