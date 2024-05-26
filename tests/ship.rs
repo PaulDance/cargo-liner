@@ -1125,3 +1125,24 @@ fn validate_ship_extrargs_list() {
         ])
         .stderr_eq_(snapbox::file!["fixtures/ship/validate_ship_extrargs_list.stderr"].raw());
 }
+
+/// See #23.
+#[cargo_test]
+fn validate_ship_environment_list() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish("abc", "0.0.0");
+    write_user_config(&[
+        "[packages]",
+        // HACK: use the quiet control to observe a stable change in behavior.
+        "abc = { version = '*', environment = { CARGO_TERM_QUIET = 'true' } }",
+    ]);
+
+    cargo_liner()
+        .args(["ship", "--skip-check", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq_("".into_data().raw())
+        .stderr_eq_(snapbox::file!["fixtures/ship/validate_ship_extrargs_list.stderr"].raw());
+    assert_installed("abc");
+}
