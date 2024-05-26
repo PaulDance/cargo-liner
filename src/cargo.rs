@@ -137,9 +137,17 @@ pub fn install_all(
         )
         .and_then(|status| {
             status.success().then_some(()).ok_or_else(|| {
-                eyre!("Cargo process finished unsuccessfully: {status}")
+                let err = eyre!("Cargo process finished unsuccessfully: {status}")
                     .note("This can happen for many reasons.")
-                    .suggestion("Read Cargo's output.")
+                    .suggestion("Read Cargo's output.");
+
+                if keep_going {
+                    err
+                } else {
+                    err.suggestion(
+                        "Use `--keep-going` to ignore this and continue on with other packages.",
+                    )
+                }
             })
         })
         .wrap_err_with(|| {
