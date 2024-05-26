@@ -34,11 +34,18 @@ fn install(
     all_features: bool,
     features: &[String],
     extra_arguments: &[String],
+    environment: &BTreeMap<String, String>,
     force: bool,
     color: ColorChoice,
     verbosity: i8,
 ) -> Result<ExitStatus> {
     let mut cmd = Command::new(env_var()?);
+
+    if !environment.is_empty() {
+        cmd.envs(environment);
+        log::trace!("Environment set: {:#?}", environment);
+    }
+
     cmd.args(["--color", &color.to_string()]);
 
     match verbosity.cmp(&0) {
@@ -81,7 +88,7 @@ fn install(
     // This should be kept here: after all other options and before the `--`.
     if !extra_arguments.is_empty() {
         cmd.args(extra_arguments);
-        log::trace!("Extra arguments added: {:?}", extra_arguments);
+        log::trace!("Extra arguments added: {:#?}", extra_arguments);
     }
 
     cmd.args(["--", name]);
@@ -123,6 +130,7 @@ pub fn install_all(
             pkg.all_features(),
             pkg.features(),
             pkg.extra_arguments(),
+            &pkg.environment(),
             force,
             color,
             verbosity,
