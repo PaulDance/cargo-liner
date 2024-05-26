@@ -148,6 +148,7 @@ impl UserConfig {
 
 #[cfg(test)]
 mod tests {
+    #![allow(clippy::too_many_lines)]
     use std::iter;
 
     use indoc::indoc;
@@ -231,6 +232,8 @@ mod tests {
                     e = { version = "1.2" }
                     f = { version = "1.2", extra-arguments = [] }
                     g = { version = "1.2", extra-arguments = [ "--abc", "--def" ] }
+                    h = { version = "1.2", environment = {} }
+                    i = { version = "1.2", environment = { ABC = "def", XYZ = "123" } }
                 "#,
         )
         .unwrap()
@@ -245,6 +248,7 @@ mod tests {
                     req.all_features(),
                     req.default_features(),
                     req.extra_arguments().to_owned(),
+                    req.environment(),
                 ),
             )
         })
@@ -254,13 +258,21 @@ mod tests {
         let packages: Vec<_> = packages.into_iter().map(|(_, v)| v).collect();
 
         let expected = [
-            ("^1.2.3".to_string(), vec![], false, true, vec![]),
+            (
+                "^1.2.3".to_string(),
+                vec![],
+                false,
+                true,
+                vec![],
+                BTreeMap::new(),
+            ),
             (
                 "^1.2".to_string(),
                 vec!["foo".to_string()],
                 false,
                 true,
                 vec![],
+                BTreeMap::new(),
             ),
             (
                 "^1.2".to_string(),
@@ -268,16 +280,58 @@ mod tests {
                 false,
                 false,
                 vec![],
+                BTreeMap::new(),
             ),
-            ("^1.2".to_string(), vec![], true, true, vec![]),
-            ("^1.2".to_string(), vec![], false, true, vec![]),
-            ("^1.2".to_string(), vec![], false, true, vec![]),
+            (
+                "^1.2".to_string(),
+                vec![],
+                true,
+                true,
+                vec![],
+                BTreeMap::new(),
+            ),
+            (
+                "^1.2".to_string(),
+                vec![],
+                false,
+                true,
+                vec![],
+                BTreeMap::new(),
+            ),
+            (
+                "^1.2".to_string(),
+                vec![],
+                false,
+                true,
+                vec![],
+                BTreeMap::new(),
+            ),
             (
                 "^1.2".to_string(),
                 vec![],
                 false,
                 true,
                 vec!["--abc".to_owned(), "--def".to_owned()],
+                BTreeMap::new(),
+            ),
+            (
+                "^1.2".to_string(),
+                vec![],
+                false,
+                true,
+                vec![],
+                BTreeMap::new(),
+            ),
+            (
+                "^1.2".to_string(),
+                vec![],
+                false,
+                true,
+                vec![],
+                [("ABC", "def"), ("XYZ", "123")]
+                    .into_iter()
+                    .map(|(k, v)| (k.to_owned(), v.to_owned()))
+                    .collect(),
             ),
         ]
         .into_iter()
