@@ -48,16 +48,7 @@ fn main() -> Result<()> {
         );
     }
 
-    // Explicitely disable error colors when explicitely asked to do so.
-    if args.color == ColorChoice::Never {
-        HookBuilder::new().theme(Theme::new()).install()
-    } else {
-        color_eyre::install()
-    }
-    .wrap_err("Failed to install the error hook.")
-    .note("This should only happen if it is attempted twice.")
-    .suggestion(OPEN_ISSUE_MSG)?;
-
+    install_error_hook(&args)?;
     // HACK: reproduce the previous behavior by directly exiting: don't display
     // anything, but only report an error code when verbosity is low enough.
     try_main(&args).inspect_err(|_| {
@@ -65,6 +56,21 @@ fn main() -> Result<()> {
             process::exit(1);
         }
     })
+}
+
+/// Initializes the `color-eyre` machinery.
+///
+/// Explicitely disables error colors when explicitely asked to do so in the
+/// passed CLI arguments.
+fn install_error_hook(args: &LinerArgs) -> Result<()> {
+    if args.color == ColorChoice::Never {
+        HookBuilder::new().theme(Theme::new()).install()
+    } else {
+        color_eyre::install()
+    }
+    .wrap_err("Failed to install the error hook.")
+    .note("This should only happen if it is attempted twice.")
+    .suggestion(OPEN_ISSUE_MSG)
 }
 
 /// Actual main operation.
