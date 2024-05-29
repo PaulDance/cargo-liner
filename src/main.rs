@@ -229,6 +229,31 @@ fn init_logger(args: &LinerArgs) -> Result<()> {
         .suggestion(OPEN_ISSUE_MSG)
 }
 
+/// Returns the packages that do indeed need an install or update.
+fn needing_install(
+    pkgs: &BTreeMap<String, Package>,
+    new_vers: &BTreeMap<String, Version>,
+    old_vers: &BTreeMap<String, Version>,
+) -> BTreeMap<String, Package> {
+    let mut to_install = BTreeMap::new();
+    log::debug!("Filtering packages by versions...");
+
+    for (pkg_name, pkg) in pkgs {
+        if old_vers
+            .get(pkg_name)
+            .map_or(true, |ver| ver < new_vers.get(pkg_name).unwrap())
+        {
+            to_install.insert(pkg_name.clone(), pkg.clone());
+            log::trace!("{pkg_name:?} is selected to be installed or updated.");
+        } else {
+            log::trace!("{pkg_name:?} is not selected: already up-to-date.");
+        }
+    }
+
+    log::trace!("Filtered packages: {to_install:#?}.");
+    to_install
+}
+
 #[derive(Tabled)]
 struct PackageStatus {
     #[tabled(rename = "Name")]
@@ -264,31 +289,6 @@ fn log_summary(
             .with(Style::sharp())
         );
     }
-}
-
-/// Returns the packages that do indeed need an install or update.
-fn needing_install(
-    pkgs: &BTreeMap<String, Package>,
-    new_vers: &BTreeMap<String, Version>,
-    old_vers: &BTreeMap<String, Version>,
-) -> BTreeMap<String, Package> {
-    let mut to_install = BTreeMap::new();
-    log::debug!("Filtering packages by versions...");
-
-    for (pkg_name, pkg) in pkgs {
-        if old_vers
-            .get(pkg_name)
-            .map_or(true, |ver| ver < new_vers.get(pkg_name).unwrap())
-        {
-            to_install.insert(pkg_name.clone(), pkg.clone());
-            log::trace!("{pkg_name:?} is selected to be installed or updated.");
-        } else {
-            log::trace!("{pkg_name:?} is not selected: already up-to-date.");
-        }
-    }
-
-    log::trace!("Filtered packages: {to_install:#?}.");
-    to_install
 }
 
 /// Assembles both an output stream's color capacity and a color preference in
