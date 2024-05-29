@@ -3,11 +3,14 @@
 #![warn(unused_crate_dependencies)]
 
 use std::collections::{BTreeMap, BTreeSet};
+use std::fmt::Display;
+use std::io::IsTerminal;
 use std::{env, io, process};
 
 use clap::{ColorChoice, CommandFactory};
 use color_eyre::config::{HookBuilder, Theme};
 use color_eyre::eyre::{self, Result, WrapErr};
+use color_eyre::owo_colors::OwoColorize;
 use color_eyre::Section;
 use log::LevelFilter;
 use pretty_env_logger::env_logger::WriteStyle;
@@ -77,6 +80,7 @@ fn install_error_hook(args: &LinerArgs) -> Result<()> {
 #[allow(clippy::too_many_lines)]
 fn try_main(args: &LinerArgs) -> Result<()> {
     init_logger(args)?;
+    let colorizer = Colorizer::new(&std::io::stderr(), args.color);
 
     // CLI command dispatch.
     match &args.command {
@@ -164,7 +168,7 @@ fn try_main(args: &LinerArgs) -> Result<()> {
                     .wrap_err("Failed to parse Cargo's .crates.toml file.")?;
                 let vers = cargo::search_exact_all(&config.packages)
                     .wrap_err("Failed to fetch the latest versions of the configured packages.")?;
-                log_summary(&vers, &cct.clone().into_name_versions());
+                log_summary(&colorizer, &vers, &cct.clone().into_name_versions());
 
                 cargo::install_all(
                     &needing_install(&config.packages, &vers, &cct.clone().into_name_versions()),
@@ -234,7 +238,11 @@ struct PackageStatus {
 }
 
 /// Displays whether each package needs an update or not.
-fn log_summary(new_vers: &BTreeMap<String, Version>, old_vers: &BTreeMap<String, Version>) {
+fn log_summary(
+    colorizer: &Colorizer,
+    new_vers: &BTreeMap<String, Version>,
+    old_vers: &BTreeMap<String, Version>,
+) {
     if new_vers.is_empty() {
         log::info!("No packages installed.");
     } else {
@@ -248,7 +256,7 @@ fn log_summary(new_vers: &BTreeMap<String, Version>, old_vers: &BTreeMap<String,
                         if old_ver < new_ver {
                             format!("{old_ver} -> {new_ver}")
                         } else {
-                            format!("✔ {new_ver}")
+                            format!("{} {new_ver}", colorizer.colorize_with(&"✔", <&str>::green))
                         }
                     },
                 ),
@@ -281,4 +289,47 @@ fn needing_install(
 
     log::trace!("Filtered packages: {to_install:#?}.");
     to_install
+}
+
+/// Assembles both an output stream's color capacity and a color preference in
+/// order to condtionally emit colorized content.
+struct Colorizer {
+    is_terminal: bool,
+    color_choice: ColorChoice,
+}
+
+impl Colorizer {
+    /// Builds a new colorizer.
+    ///
+    ///  * `out`: the descriptor that will be used in order to write the output
+    ///    of [`Self::colorize_with`].
+    ///  * `color_choice`: color preference to apply.
+    pub fn new<D: IsTerminal>(out: &D, color_choice: ColorChoice) -> Self {
+        Self {
+            is_terminal: out.is_terminal(),
+            color_choice,
+        }
+    }
+
+    /// Returns `input` or `color_fn(input)` depending on the current color
+    /// preference and whether a terminal is used.
+    pub fn colorize_with<'i, 'o, I, F, O>(&self, input: &'i I, color_fn: F) -> Box<dyn Display + 'o>
+    where
+        'i: 'o,
+        I: Display + ?Sized,
+        O: Display + 'o,
+        F: Fn(&'i I) -> O,
+    {
+        match self.color_choice {
+            ColorChoice::Never => Box::new(input),
+            ColorChoice::Always => Box::new(color_fn(input)),
+            ColorChoice::Auto => {
+                if self.is_terminal {
+                    Box::new(color_fn(input))
+                } else {
+                    Box::new(input)
+                }
+            }
+        }
+    }
 }
