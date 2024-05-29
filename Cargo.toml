@@ -58,6 +58,10 @@ tempfile = "~3.10"
 cargo-test-macro = { git = "https://github.com/rust-lang/cargo.git", branch = "master" }
 cargo-test-support = { git = "https://github.com/rust-lang/cargo.git", branch = "master" }
 
+# See https://crates.io/crates/color-eyre: debug `backtrace` is slow.
+[profile.dev.package.backtrace]
+opt-level = 3
+
 [lints.clippy]
 all = { level = "warn", priority = 0 }
 pedantic = { level = "warn", priority = 1 }
