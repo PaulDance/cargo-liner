@@ -18,8 +18,8 @@ fn validate_ship_noupdate() {
         .arg("ship")
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file!["fixtures/ship/validate_ship_noupdate.stderr"].raw());
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_noupdate.stderr"].raw());
     assert_installed("cargo-liner");
 }
 
@@ -35,8 +35,8 @@ fn validate_ship_onlyself_noupdate() {
         .args(["ship", "--only-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file!["fixtures/ship/validate_ship_noupdate.stderr"].raw());
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_noupdate.stderr"].raw());
     assert_installed("cargo-liner");
 }
 
@@ -51,8 +51,8 @@ fn validate_ship_noself_nothing() {
         .args(["ship", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file!["fixtures/ship/validate_ship_noself_nothing.stderr"].raw());
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_noself_nothing.stderr"].raw());
     assert_installed("cargo-liner");
 }
 
@@ -68,8 +68,8 @@ fn validate_ship_skipcheck_noupdate() {
         .args(["ship", "--skip-check"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_skipcheck_noupdate.stderr"
         ]);
     assert_installed("cargo-liner");
@@ -87,8 +87,8 @@ fn validate_ship_skipcheck_onlyself_noupdate() {
         .args(["ship", "--skip-check", "--only-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_skipcheck_noupdate.stderr"
         ]);
     assert_installed("cargo-liner");
@@ -105,8 +105,8 @@ fn validate_ship_skipcheck_noself_nothing() {
         .args(["ship", "--skip-check", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(
             snapbox::file!["fixtures/ship/validate_ship_skipcheck_noself_nothing.stderr"].raw(),
         );
     assert_installed("cargo-liner");
@@ -124,8 +124,8 @@ fn validate_ship_force_noupdate() {
         .args(["ship", "--force"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file!["fixtures/ship/validate_ship_noupdate.stderr"].raw());
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_noupdate.stderr"].raw());
     assert_installed("cargo-liner");
 }
 
@@ -141,8 +141,8 @@ fn validate_ship_onlyself_force_noupdate() {
         .args(["ship", "--only-self", "--force"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file!["fixtures/ship/validate_ship_noupdate.stderr"].raw());
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_noupdate.stderr"].raw());
     assert_installed("cargo-liner");
 }
 
@@ -157,8 +157,8 @@ fn validate_ship_noself_force_nothing() {
         .args(["ship", "--no-self", "--force"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file!["fixtures/ship/validate_ship_noself_nothing.stderr"].raw());
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_noself_nothing.stderr"].raw());
     assert_installed("cargo-liner");
 }
 
@@ -174,8 +174,8 @@ fn validate_ship_skipcheck_force_update() {
         .args(["ship", "--skip-check", "--force"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_skipcheck_force_update.stderr"
         ]);
     assert_installed("cargo-liner");
@@ -193,8 +193,8 @@ fn validate_ship_skipcheck_onlyself_force_update() {
         .args(["ship", "--skip-check", "--only-self", "--force"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_skipcheck_force_update.stderr"
         ]);
     assert_installed("cargo-liner");
@@ -211,8 +211,8 @@ fn validate_ship_skipcheck_noself_force_nothing() {
         .args(["ship", "--skip-check", "--no-self", "--force"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(
             snapbox::file!["fixtures/ship/validate_ship_skipcheck_noself_nothing.stderr"].raw(),
         );
     assert_installed("cargo-liner");
@@ -230,8 +230,8 @@ fn validate_ship_newerself_update() {
         .arg("ship")
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_newerself_update.stderr"
         ]);
     assert_installed("cargo-liner");
@@ -249,8 +249,8 @@ fn validate_ship_newerself_onlyself_update() {
         .args(["ship", "--only-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_newerself_update.stderr"
         ]);
     assert_installed("cargo-liner");
@@ -268,8 +268,8 @@ fn validate_ship_newerself_noself_nothing() {
         .args(["ship", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file!["fixtures/ship/validate_ship_noself_nothing.stderr"].raw());
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_noself_nothing.stderr"].raw());
     assert_installed("cargo-liner");
 }
 
@@ -285,8 +285,8 @@ fn validate_ship_newerself_skipcheck_update() {
         .args(["ship", "--skip-check"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_newerself_skipcheck_update.stderr"
         ]);
     assert_installed("cargo-liner");
@@ -304,8 +304,8 @@ fn validate_ship_newerself_skipcheck_onlyself_update() {
         .args(["ship", "--skip-check", "--only-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_newerself_skipcheck_update.stderr"
         ]);
     assert_installed("cargo-liner");
@@ -323,8 +323,8 @@ fn validate_ship_newerself_skipcheck_noself_nothing() {
         .args(["ship", "--skip-check", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(
             snapbox::file!["fixtures/ship/validate_ship_skipcheck_noself_nothing.stderr"].raw(),
         );
     assert_installed("cargo-liner");
@@ -342,8 +342,8 @@ fn validate_ship_manynotinstalled_install() {
         .arg("ship")
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_manynotinstalled_install.stderr"
         ]);
     fixture_assert_installed();
@@ -361,8 +361,8 @@ fn validate_ship_manyinstalled_noupdate() {
         .arg("ship")
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_manyinstalled_noupdate.stderr"
         ]);
     fixture_assert_installed();
@@ -381,8 +381,8 @@ fn validate_ship_manynewer_update() {
         .arg("ship")
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_manynewer_update.stderr"
         ]);
     fixture_assert_installed();
@@ -409,8 +409,8 @@ fn validate_ship_features_simple_none() {
         .args(["ship", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_features.stderr"
         ]);
     assert_installed("pkg");
@@ -438,8 +438,8 @@ fn validate_ship_features_simple_default() {
         .args(["ship", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_features.stderr"
         ]);
     assert_installed("pkg");
@@ -466,8 +466,8 @@ fn validate_ship_features_detailed_none() {
         .args(["ship", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_features.stderr"
         ]);
     assert_installed("pkg");
@@ -494,8 +494,8 @@ fn validate_ship_features_detailed_one() {
         .args(["ship", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_features.stderr"
         ]);
     assert_installed("pkg");
@@ -523,8 +523,8 @@ fn validate_ship_features_detailed_default() {
         .args(["ship", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_features.stderr"
         ]);
     assert_installed("pkg");
@@ -555,8 +555,8 @@ fn validate_ship_features_detailed_nodefault() {
         .args(["ship", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_features.stderr"
         ]);
     assert_installed("pkg");
@@ -591,8 +591,8 @@ fn validate_ship_features_detailed_nodefault_one() {
         .args(["ship", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_features.stderr"
         ]);
     assert_installed("pkg");
@@ -623,8 +623,8 @@ fn validate_ship_features_detailed_all() {
         .args(["ship", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_features.stderr"
         ]);
     assert_installed("pkg");
@@ -658,8 +658,8 @@ fn validate_ship_features_detailed_all_one() {
         .args(["ship", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_features.stderr"
         ]);
     assert_installed("pkg");
@@ -694,8 +694,8 @@ fn validate_ship_features_detailed_all_default() {
         .args(["ship", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_features.stderr"
         ]);
     assert_installed("pkg");
@@ -730,8 +730,8 @@ fn validate_ship_features_detailed_all_nodefault() {
         .args(["ship", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_features.stderr"
         ]);
     assert_installed("pkg");
@@ -768,8 +768,8 @@ fn validate_ship_features_detailed_all_default_one() {
         .args(["ship", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_features.stderr"
         ]);
     assert_installed("pkg");
@@ -806,8 +806,8 @@ fn validate_ship_features_detailed_all_nodefault_one() {
         .args(["ship", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_features.stderr"
         ]);
     assert_installed("pkg");
@@ -824,8 +824,8 @@ fn validate_ship_verbosity_v() {
         .args(["-v", "ship", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_verbosity_v.stderr"
         ]);
     assert_installed("pkg");
@@ -842,8 +842,8 @@ fn validate_ship_verbosity_vv() {
         .args(["-vv", "ship", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_verbosity_vv.stderr"
         ]);
     assert_installed("pkg");
@@ -860,8 +860,8 @@ fn validate_ship_verbosity_vvv() {
         .args(["-vvv", "ship", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_verbosity_vvv.stderr"
         ]);
     assert_installed("pkg");
@@ -878,8 +878,8 @@ fn validate_ship_verbosity_q() {
         .args(["-q", "ship", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_verbosity_q.stderr"
         ]);
     assert_installed("pkg");
@@ -896,8 +896,8 @@ fn validate_ship_verbosity_qq() {
         .args(["-qq", "ship", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_verbosity_q.stderr"
         ]);
     assert_installed("pkg");
@@ -914,8 +914,8 @@ fn validate_ship_verbosity_qqq() {
         .args(["-qqq", "ship", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_("    Updating `dummy-registry` index\n".raw());
+        .stdout_eq("".into_data().raw())
+        .stderr_eq("    Updating `dummy-registry` index\n".raw());
     assert_installed("pkg");
 }
 
@@ -928,8 +928,8 @@ fn validate_ship_noconfig_iserr() {
         .args(["ship", "--no-self"])
         .assert()
         .failure()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_noconfig_iserr.stderr"
         ]);
 }
@@ -944,8 +944,8 @@ fn validate_ship_nocratestoml_iserr() {
         .args(["ship", "--no-self"])
         .assert()
         .failure()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_nocratestoml_iserr.stderr"
         ]);
 }
@@ -960,8 +960,8 @@ fn validate_ship_nocratestoml_skipcheck_isok() {
         .args(["ship", "--no-self", "--skip-check"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(
             snapbox::file!["fixtures/ship/validate_ship_skipcheck_noself_nothing.stderr"].raw(),
         );
 }
@@ -980,8 +980,8 @@ fn validate_ship_cargoinstallroot_supported() {
         .args(["ship", "--no-self", "--force"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_cargoinstallroot_supported.stderr"
         ]);
     assert!(tmp_dir.path().join("bin/pkg").is_file());
@@ -999,8 +999,8 @@ fn validate_ship_weirdversions_supported() {
         .args(["ship", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_weirdversions_supported.stderr"
         ]);
     assert_installed("pkg");
@@ -1018,8 +1018,8 @@ fn validate_ship_weirdpackagenames_supported() {
         .args(["ship", "--no-self"])
         .assert()
         .failure()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_weirdpackagenames_supported.stderr"
         ]);
     assert_not_installed("--pkg");
@@ -1038,8 +1038,8 @@ fn validate_ship_cargotermcolor_supported() {
         .args(["ship", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_features.stderr"
         ]);
     assert_installed("pkg");
@@ -1057,8 +1057,8 @@ fn validate_ship_install_failfast() {
         .args(["ship", "--skip-check", "--no-self"])
         .assert()
         .failure()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_install_failfast.stderr"
         ]);
     assert_not_installed("abc");
@@ -1076,8 +1076,8 @@ fn validate_ship_install_keepgoing_err_iserr() {
         .args(["ship", "--skip-check", "--no-self", "--keep-going"])
         .assert()
         .failure()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_install_keepgoing_err_iserr.stderr"
         ]);
     assert_not_installed("abc");
@@ -1095,8 +1095,8 @@ fn validate_ship_install_keepgoing_ok_isok() {
         .args(["ship", "--skip-check", "--no-self", "--keep-going"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_install_keepgoing_ok_isok.stderr"
         ]);
     assert_installed("abc");
@@ -1120,10 +1120,10 @@ fn validate_ship_extrargs_list() {
         .args(["ship", "--skip-check", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_(snapbox::file![
+        .stdout_eq(snapbox::file![
             "fixtures/ship/validate_ship_extrargs_list.stdout"
         ])
-        .stderr_eq_(snapbox::file!["fixtures/ship/validate_ship_extrargs_list.stderr"].raw());
+        .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_extrargs_list.stderr"].raw());
 }
 
 /// See #23.
@@ -1142,7 +1142,7 @@ fn validate_ship_environment_list() {
         .args(["ship", "--skip-check", "--no-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file!["fixtures/ship/validate_ship_extrargs_list.stderr"].raw());
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_extrargs_list.stderr"].raw());
     assert_installed("abc");
 }

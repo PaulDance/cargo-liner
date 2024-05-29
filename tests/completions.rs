@@ -13,8 +13,8 @@ fn validate_shell(shell: &str, run: bool) {
         .args(["completions", shell])
         .assert()
         .success()
-        .stderr_eq_("...")
-        .stdout_eq_(
+        .stderr_eq("...")
+        .stdout_eq(
             Data::read_from(
                 &snapbox::utils::current_dir!()
                     .join(format!("fixtures/completions/validate_{shell}.stdout")),
@@ -34,8 +34,8 @@ fn validate_shell(shell: &str, run: bool) {
                     ))
                     .assert()
                     .success()
-                    .stdout_eq_("".into_data().raw())
-                    .stderr_eq_("".into_data().raw());
+                    .stdout_eq("".into_data().raw())
+                    .stderr_eq("".into_data().raw());
             }
         }
     }

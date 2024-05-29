@@ -254,7 +254,7 @@ dependencies = [
  "semver",
  "serde",
  "serde_with",
- "snapbox 0.5.14",
+ "snapbox",
  "tabled",
  "tempfile",
  "toml",
@@ -265,12 +265,12 @@ dependencies = [
 [[package]]
 name = "cargo-test-macro"
 version = "0.2.1"
-source = "git+https://github.com/rust-lang/cargo.git?branch=master#37e5f139891f58bb1a9472122b8187e1824ba7b3"
+source = "git+https://github.com/rust-lang/cargo.git?branch=master#2c8d176e608c0174cbeb0144884469bde925f9be"
 
 [[package]]
 name = "cargo-test-support"
 version = "0.2.1"
-source = "git+https://github.com/rust-lang/cargo.git?branch=master#37e5f139891f58bb1a9472122b8187e1824ba7b3"
+source = "git+https://github.com/rust-lang/cargo.git?branch=master#2c8d176e608c0174cbeb0144884469bde925f9be"
 dependencies = [
  "anstream",
  "anstyle",
@@ -284,9 +284,10 @@ dependencies = [
  "glob",
  "itertools",
  "pasetors",
+ "regex",
  "serde",
  "serde_json",
- "snapbox 0.5.14",
+ "snapbox",
  "tar",
  "time",
  "toml",
@@ -298,7 +299,7 @@ dependencies = [
 [[package]]
 name = "cargo-util"
 version = "0.2.13"
-source = "git+https://github.com/rust-lang/cargo.git?branch=master#37e5f139891f58bb1a9472122b8187e1824ba7b3"
+source = "git+https://github.com/rust-lang/cargo.git?branch=master#2c8d176e608c0174cbeb0144884469bde925f9be"
 dependencies = [
  "anyhow",
  "core-foundation",
@@ -473,7 +474,7 @@ dependencies = [
 [[package]]
 name = "crates-io"
 version = "0.40.3"
-source = "git+https://github.com/rust-lang/cargo.git?branch=master#37e5f139891f58bb1a9472122b8187e1824ba7b3"
+source = "git+https://github.com/rust-lang/cargo.git?branch=master#2c8d176e608c0174cbeb0144884469bde925f9be"
 dependencies = [
  "curl",
  "percent-encoding",
@@ -1701,9 +1702,9 @@ checksum = "fa42c91313f1d05da9b26f267f931cf178d4aba455b4c4622dd7355eb80c6640"
 
 [[package]]
 name = "snapbox"
-version = "0.5.14"
+version = "0.6.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f37d101fcafc8e73748fd8a1b7048f5979f93d372fd17027d7724c1643bc379b"
+checksum = "94204b12a4d3550420babdb4148c6639692e4e3e61060866929c5107f208aeb6"
 dependencies = [
  "anstream",
  "anstyle",
@@ -1711,28 +1712,11 @@ dependencies = [
  "content_inspector",
  "dunce",
  "filetime",
- "normalize-line-endings",
- "serde_json",
- "similar",
- "snapbox-macros",
- "tempfile",
- "walkdir",
-]
-
-[[package]]
-name = "snapbox"
-version = "0.6.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a324e0f697e58f2ce2d7adc252625d5831e61545bbe523f2bebb1b7f796b768e"
-dependencies = [
- "anstream",
- "anstyle",
- "content_inspector",
- "dunce",
- "filetime",
  "libc",
  "normalize-line-endings",
  "os_pipe",
+ "regex",
+ "serde_json",
  "similar",
  "snapbox-macros",
  "tempfile",
@@ -2047,7 +2031,7 @@ dependencies = [
  "rayon",
  "serde",
  "shlex",
- "snapbox 0.6.4",
+ "snapbox",
  "toml_edit",
 ]
 
@@ -2385,9 +2369,9 @@ checksum = "bec47e5bfd1bff0eeaf6d8b485cc1074891a197ab4225d504cb7a1ab88b02bf0"
 
 [[package]]
 name = "winnow"
-version = "0.6.8"
+version = "0.6.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c3c52e9c97a68071b23e836c9380edae937f17b9c4667bd021973efc689f618d"
+checksum = "86c949fede1d13936a99f14fafd3e76fd642b556dd2ce96287fbe2e0151bfac6"
 dependencies = [
  "memchr",
 ]

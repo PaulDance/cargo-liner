@@ -11,8 +11,8 @@ fn validate_import() {
         .arg("import")
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file!["fixtures/import/validate_import.stderr"].raw());
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file!["fixtures/import/validate_import.stderr"].raw());
     assert_user_config_eq_path("tests/fixtures/import/validate_import.outconfig");
 }
 
@@ -23,8 +23,8 @@ fn validate_import_keepself() {
         .args(["import", "--keep-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file!["fixtures/import/validate_import.stderr"].raw());
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file!["fixtures/import/validate_import.stderr"].raw());
     assert_user_config_eq_path("tests/fixtures/import/validate_import_keepself.outconfig");
 }
 
@@ -35,8 +35,8 @@ fn validate_import_keeplocal() {
         .args(["import", "--keep-local"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file!["fixtures/import/validate_import.stderr"].raw());
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file!["fixtures/import/validate_import.stderr"].raw());
     assert_user_config_eq_path("tests/fixtures/import/validate_import_keeplocal.outconfig");
 }
 
@@ -47,8 +47,8 @@ fn validate_import_keepself_keeplocal() {
         .args(["import", "--keep-local", "--keep-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file!["fixtures/import/validate_import.stderr"].raw());
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file!["fixtures/import/validate_import.stderr"].raw());
     assert_user_config_eq_path(
         "tests/fixtures/import/validate_import_keepself_keeplocal.outconfig",
     );
@@ -61,8 +61,8 @@ fn validate_import_exact() {
         .args(["import", "--exact"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file!["fixtures/import/validate_import.stderr"].raw());
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file!["fixtures/import/validate_import.stderr"].raw());
     assert_user_config_eq_path("tests/fixtures/import/validate_import_exact.outconfig");
 }
 
@@ -73,8 +73,8 @@ fn validate_import_exact_keepself() {
         .args(["import", "--exact", "--keep-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file!["fixtures/import/validate_import.stderr"].raw());
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file!["fixtures/import/validate_import.stderr"].raw());
     assert_user_config_eq_path("tests/fixtures/import/validate_import_exact_keepself.outconfig");
 }
 
@@ -85,8 +85,8 @@ fn validate_import_compatible() {
         .args(["import", "--compatible"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file!["fixtures/import/validate_import.stderr"].raw());
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file!["fixtures/import/validate_import.stderr"].raw());
     assert_user_config_eq_path("tests/fixtures/import/validate_import_compatible.outconfig");
 }
 
@@ -97,8 +97,8 @@ fn validate_import_compatible_keepself() {
         .args(["import", "--compatible", "--keep-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file!["fixtures/import/validate_import.stderr"].raw());
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file!["fixtures/import/validate_import.stderr"].raw());
     assert_user_config_eq_path(
         "tests/fixtures/import/validate_import_compatible_keepself.outconfig",
     );
@@ -111,8 +111,8 @@ fn validate_import_patch() {
         .args(["import", "--patch"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file!["fixtures/import/validate_import.stderr"].raw());
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file!["fixtures/import/validate_import.stderr"].raw());
     assert_user_config_eq_path("tests/fixtures/import/validate_import_patch.outconfig");
 }
 
@@ -123,8 +123,8 @@ fn validate_import_patch_keepself() {
         .args(["import", "--patch", "--keep-self"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file!["fixtures/import/validate_import.stderr"].raw());
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file!["fixtures/import/validate_import.stderr"].raw());
     assert_user_config_eq_path("tests/fixtures/import/validate_import_patch_keepself.outconfig");
 }
 
@@ -135,8 +135,8 @@ fn validate_import_force_nofile_isok() {
         .args(["import", "--force"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file!["fixtures/import/validate_import.stderr"].raw());
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file!["fixtures/import/validate_import.stderr"].raw());
     assert_user_config_eq_path("tests/fixtures/import/validate_import.outconfig");
 }
 
@@ -149,8 +149,8 @@ fn validate_import_force_withfile_iswarn() {
         .args(["import", "--force"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file!["fixtures/import/validate_import_force_warn.stderr"].raw());
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file!["fixtures/import/validate_import_force_warn.stderr"].raw());
     assert_user_config_eq_path("tests/fixtures/import/validate_import.outconfig");
 }
 
@@ -163,8 +163,8 @@ fn validate_import_noforce_withfile_iserr() {
         .arg("import")
         .assert()
         .failure()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/import/validate_import_force_err.stderr"
         ]);
     assert_user_config_eq("[packages]");
@@ -176,8 +176,8 @@ fn validate_import_nofile_iserr() {
         .arg("import")
         .assert()
         .failure()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/import/validate_import_nofile_iserr.stderr"
         ]);
     assert_user_config_absent();
@@ -191,8 +191,8 @@ fn validate_import_verbosity_v() {
         .args(["-v", "import"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/import/validate_import_verbosity_v.stderr"
         ]);
     assert_user_config_eq_path("tests/fixtures/import/validate_import.outconfig");
@@ -206,8 +206,8 @@ fn validate_import_verbosity_vv() {
         .args(["-vv", "import"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/import/validate_import_verbosity_v.stderr"
         ]);
     assert_user_config_eq_path("tests/fixtures/import/validate_import.outconfig");
@@ -221,8 +221,8 @@ fn validate_import_verbosity_vvv() {
         .args(["-vvv", "import"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/import/validate_import_verbosity_vvv.stderr"
         ]);
     assert_user_config_eq_path("tests/fixtures/import/validate_import.outconfig");
@@ -234,8 +234,8 @@ fn validate_import_verbosity_v_nofile_iserr() {
         .args(["-v", "import"])
         .assert()
         .failure()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/import/validate_import_verbosity_v_nofile_iserr.stderr"
         ]);
     assert_user_config_absent();
@@ -247,8 +247,8 @@ fn validate_import_verbosity_vv_nofile_iserr() {
         .args(["-vv", "import"])
         .assert()
         .failure()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/import/validate_import_verbosity_vv_nofile_iserr.stderr"
         ]);
     assert_user_config_absent();
@@ -260,8 +260,8 @@ fn validate_import_verbosity_vvv_nofile_iserr() {
         .args(["-vvv", "import"])
         .assert()
         .failure()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             // Intentionally the same as the test above: nothing should change.
             "fixtures/import/validate_import_verbosity_vv_nofile_iserr.stderr"
         ]);
@@ -277,8 +277,8 @@ fn validate_import_verbosity_q_force() {
         .args(["-q", "import", "--force"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(
             snapbox::file!["fixtures/import/validate_import_verbosity_q_force.stderr"].raw(),
         );
     assert_user_config_eq_path("tests/fixtures/import/validate_import.outconfig");
@@ -293,8 +293,8 @@ fn validate_import_verbosity_qq_force() {
         .args(["-qq", "import", "--force"])
         .assert()
         .success()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_("".into_data().raw());
+        .stdout_eq("".into_data().raw())
+        .stderr_eq("".into_data().raw());
     assert_user_config_eq_path("tests/fixtures/import/validate_import.outconfig");
 }
 
@@ -307,8 +307,8 @@ fn validate_import_verbosity_qq_noforce() {
         .args(["-qq", "import"])
         .assert()
         .failure()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_(snapbox::file![
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
             "fixtures/import/validate_import_force_err.stderr"
         ]);
     assert_user_config_eq("[packages]");
@@ -323,7 +323,7 @@ fn validate_import_verbosity_qqq_noforce() {
         .args(["-qqq", "import"])
         .assert()
         .failure()
-        .stdout_eq_("".into_data().raw())
-        .stderr_eq_("".into_data().raw());
+        .stdout_eq("".into_data().raw())
+        .stderr_eq("".into_data().raw());
     assert_user_config_eq("[packages]");
 }
