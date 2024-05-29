@@ -76,39 +76,7 @@ fn install_error_hook(args: &LinerArgs) -> Result<()> {
 /// Actual main operation.
 #[allow(clippy::too_many_lines)]
 fn try_main(args: &LinerArgs) -> Result<()> {
-    let mut bld = pretty_env_logger::formatted_builder();
-    bld.parse_default_env();
-
-    // Logging setup parameterized by CLI args.
-    if args.verbosity().abs() < 2 {
-        bld.filter_module("::", LevelFilter::Error);
-        bld.filter_module(
-            env!("CARGO_CRATE_NAME"),
-            match args.verbosity() {
-                0 => LevelFilter::Info,
-                1 => LevelFilter::Debug,
-                -1 => LevelFilter::Warn,
-                _ => unreachable!(),
-            },
-        );
-    } else {
-        bld.filter_level(match args.verbosity() {
-            2 => LevelFilter::Debug,
-            v if v > 2 => LevelFilter::Trace,
-            -2 => LevelFilter::Error,
-            q if q < -2 => LevelFilter::Off,
-            _ => unreachable!(),
-        });
-    }
-    bld.write_style(match args.color {
-        ColorChoice::Always => WriteStyle::Always,
-        ColorChoice::Auto => WriteStyle::Auto,
-        ColorChoice::Never => WriteStyle::Never,
-    });
-    bld.try_init()
-        .wrap_err("Failed to initialize the logger.")
-        .note("This should only happen if it is attempted twice.")
-        .suggestion(OPEN_ISSUE_MSG)?;
+    init_logger(args)?;
 
     // CLI command dispatch.
     match &args.command {
@@ -218,6 +186,43 @@ fn try_main(args: &LinerArgs) -> Result<()> {
 
     log::info!("Done.");
     Ok(())
+}
+
+/// Initializes the logger machinery form the passed CLI arguments.
+fn init_logger(args: &LinerArgs) -> Result<()> {
+    let mut bld = pretty_env_logger::formatted_builder();
+    bld.parse_default_env();
+
+    // Logging setup parameterized by CLI args.
+    if args.verbosity().abs() < 2 {
+        bld.filter_module("::", LevelFilter::Error);
+        bld.filter_module(
+            env!("CARGO_CRATE_NAME"),
+            match args.verbosity() {
+                0 => LevelFilter::Info,
+                1 => LevelFilter::Debug,
+                -1 => LevelFilter::Warn,
+                _ => unreachable!(),
+            },
+        );
+    } else {
+        bld.filter_level(match args.verbosity() {
+            2 => LevelFilter::Debug,
+            v if v > 2 => LevelFilter::Trace,
+            -2 => LevelFilter::Error,
+            q if q < -2 => LevelFilter::Off,
+            _ => unreachable!(),
+        });
+    }
+    bld.write_style(match args.color {
+        ColorChoice::Always => WriteStyle::Always,
+        ColorChoice::Auto => WriteStyle::Auto,
+        ColorChoice::Never => WriteStyle::Never,
+    });
+    bld.try_init()
+        .wrap_err("Failed to initialize the logger.")
+        .note("This should only happen if it is attempted twice.")
+        .suggestion(OPEN_ISSUE_MSG)
 }
 
 #[derive(Tabled)]
