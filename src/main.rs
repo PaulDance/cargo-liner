@@ -281,21 +281,18 @@ fn log_summary(
                 let old_ver = old_vers.get(name);
                 PackageStatus {
                     name: name.clone(),
-                    old_ver: old_ver.map_or_else(|| NONE_ICON.to_owned(), ToString::to_string),
+                    old_ver: old_ver
+                        .map_or_else(|| colorizer.none_icon().to_string(), ToString::to_string),
                     new_ver: old_ver
-                        .and_then(|old_ver| (old_ver >= new_ver).then(|| NONE_ICON.to_owned()))
+                        .and_then(|old_ver| {
+                            (old_ver >= new_ver).then(|| colorizer.none_icon().to_string())
+                        })
                         .unwrap_or_else(|| new_ver.to_string()),
                     status: old_ver
                         .and_then(|old_ver| {
-                            (old_ver >= new_ver).then(|| {
-                                colorizer.colorize_with(&OK_ICON, <&str>::green).to_string()
-                            })
+                            (old_ver >= new_ver).then(|| colorizer.ok_icon().to_string())
                         })
-                        .unwrap_or_else(|| {
-                            colorizer
-                                .colorize_with(&TODO_ICON, |s| s.bold().blue().to_string())
-                                .to_string()
-                        }),
+                        .unwrap_or_else(|| colorizer.todo_icon().to_string()),
                 }
             }))
             .with(Style::sharp())
@@ -350,5 +347,21 @@ impl Colorizer {
                 }
             }
         }
+    }
+
+    /// Returns the colorized version of [`NONE_ICON`].
+    #[allow(clippy::unused_self)] // so refactors may be easier.
+    pub fn none_icon(&self) -> impl Display {
+        NONE_ICON
+    }
+
+    /// Returns the colorized version of [`TODO_ICON`].
+    pub fn todo_icon(&self) -> impl Display {
+        self.colorize_with(&TODO_ICON, |s| s.bold().blue().to_string())
+    }
+
+    /// Returns the colorized version of [`OK_ICON`].
+    pub fn ok_icon(&self) -> impl Display {
+        self.colorize_with(&OK_ICON, <&str>::green)
     }
 }
