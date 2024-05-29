@@ -281,18 +281,19 @@ fn log_summary(
                 let old_ver = old_vers.get(name);
                 PackageStatus {
                     name: name.clone(),
-                    old_ver: old_ver.map_or_else(|| "ø".to_owned(), ToString::to_string),
+                    old_ver: old_ver.map_or_else(|| NONE_ICON.to_owned(), ToString::to_string),
                     new_ver: old_ver
-                        .and_then(|old_ver| (old_ver >= new_ver).then(|| "ø".to_owned()))
+                        .and_then(|old_ver| (old_ver >= new_ver).then(|| NONE_ICON.to_owned()))
                         .unwrap_or_else(|| new_ver.to_string()),
                     status: old_ver
                         .and_then(|old_ver| {
-                            (old_ver >= new_ver)
-                                .then(|| colorizer.colorize_with(&"✔", <&str>::green).to_string())
+                            (old_ver >= new_ver).then(|| {
+                                colorizer.colorize_with(&OK_ICON, <&str>::green).to_string()
+                            })
                         })
                         .unwrap_or_else(|| {
                             colorizer
-                                .colorize_with(&"🛈", |s| s.blue().bold().to_string())
+                                .colorize_with(&TODO_ICON, |s| s.bold().blue().to_string())
                                 .to_string()
                         }),
                 }
@@ -301,6 +302,13 @@ fn log_summary(
         );
     }
 }
+
+/// When nothing to display or needs to be done: already up-to-date.
+const NONE_ICON: &str = "ø";
+/// When something needs to be performed: fresh installation of a package.
+const TODO_ICON: &str = "🛈";
+/// When things went right: already up-to-date.
+const OK_ICON: &str = "✔";
 
 /// Assembles both an output stream's color capacity and a color preference in
 /// order to condtionally emit colorized content.
