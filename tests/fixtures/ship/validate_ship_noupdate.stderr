@@ -1,9 +1,9 @@
  INFO  cargo_liner::cargo > Fetching latest package versions...
     Updating `dummy-registry` index
  INFO  cargo_liner        > Results:
-┌─────────────┬─────────┐
-│ Name        │ Status  │
-├─────────────┼─────────┤
-│ cargo-liner │ ✔ 0.0.3 │
-└─────────────┴─────────┘
+┌─────────────┬─────────────┬─────────────┬────────┐
+│ Name        │ Old version │ New version │ Status │
+├─────────────┼─────────────┼─────────────┼────────┤
+│ cargo-liner │ 0.0.3       │ ø           │ ✔      │
+└─────────────┴─────────────┴─────────────┴────────┘
  INFO  cargo_liner        > Done.

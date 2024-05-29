@@ -258,6 +258,10 @@ fn needing_install(
 struct PackageStatus {
     #[tabled(rename = "Name")]
     name: String,
+    #[tabled(rename = "Old version")]
+    old_ver: String,
+    #[tabled(rename = "New version")]
+    new_ver: String,
     #[tabled(rename = "Status")]
     status: String,
 }
@@ -273,18 +277,25 @@ fn log_summary(
     } else {
         log::info!(
             "Results:\n{}",
-            Table::new(new_vers.iter().map(|(name, new_ver)| PackageStatus {
-                name: name.clone(),
-                status: old_vers.get(name).map_or_else(
-                    || format!("ø -> {new_ver}"),
-                    |old_ver| {
-                        if old_ver < new_ver {
-                            format!("{old_ver} -> {new_ver}")
-                        } else {
-                            format!("{} {new_ver}", colorizer.colorize_with(&"✔", <&str>::green))
-                        }
-                    },
-                ),
+            Table::new(new_vers.iter().map(|(name, new_ver)| {
+                let old_ver = old_vers.get(name);
+                PackageStatus {
+                    name: name.clone(),
+                    old_ver: old_ver.map_or_else(|| "ø".to_owned(), ToString::to_string),
+                    new_ver: old_ver
+                        .and_then(|old_ver| (old_ver >= new_ver).then(|| "ø".to_owned()))
+                        .unwrap_or_else(|| new_ver.to_string()),
+                    status: old_ver
+                        .and_then(|old_ver| {
+                            (old_ver >= new_ver)
+                                .then(|| colorizer.colorize_with(&"✔", <&str>::green).to_string())
+                        })
+                        .unwrap_or_else(|| {
+                            colorizer
+                                .colorize_with(&"🛈", |s| s.blue().bold().to_string())
+                                .to_string()
+                        }),
+                }
             }))
             .with(Style::sharp())
         );
