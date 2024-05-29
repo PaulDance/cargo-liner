@@ -259,7 +259,7 @@ mod tests {
 
         let expected = [
             (
-                "^1.2.3".to_string(),
+                "^1.2.3".to_owned(),
                 vec![],
                 false,
                 true,
@@ -267,23 +267,23 @@ mod tests {
                 BTreeMap::new(),
             ),
             (
-                "^1.2".to_string(),
-                vec!["foo".to_string()],
+                "^1.2".to_owned(),
+                vec!["foo".to_owned()],
                 false,
                 true,
                 vec![],
                 BTreeMap::new(),
             ),
             (
-                "^1.2".to_string(),
-                vec!["foo".to_string()],
+                "^1.2".to_owned(),
+                vec!["foo".to_owned()],
                 false,
                 false,
                 vec![],
                 BTreeMap::new(),
             ),
             (
-                "^1.2".to_string(),
+                "^1.2".to_owned(),
                 vec![],
                 true,
                 true,
@@ -291,15 +291,7 @@ mod tests {
                 BTreeMap::new(),
             ),
             (
-                "^1.2".to_string(),
-                vec![],
-                false,
-                true,
-                vec![],
-                BTreeMap::new(),
-            ),
-            (
-                "^1.2".to_string(),
+                "^1.2".to_owned(),
                 vec![],
                 false,
                 true,
@@ -307,7 +299,15 @@ mod tests {
                 BTreeMap::new(),
             ),
             (
-                "^1.2".to_string(),
+                "^1.2".to_owned(),
+                vec![],
+                false,
+                true,
+                vec![],
+                BTreeMap::new(),
+            ),
+            (
+                "^1.2".to_owned(),
                 vec![],
                 false,
                 true,
@@ -315,7 +315,7 @@ mod tests {
                 BTreeMap::new(),
             ),
             (
-                "^1.2".to_string(),
+                "^1.2".to_owned(),
                 vec![],
                 false,
                 true,
@@ -323,7 +323,7 @@ mod tests {
                 BTreeMap::new(),
             ),
             (
-                "^1.2".to_string(),
+                "^1.2".to_owned(),
                 vec![],
                 false,
                 true,
