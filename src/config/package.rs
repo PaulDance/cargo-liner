@@ -34,6 +34,9 @@ pub struct DetailedPackageReq {
     #[serde(default)]
     registry: Option<String>,
 
+    #[serde(default)]
+    git: Option<String>,
+
     /// Additional CLI arguments that must be passed onto the associated `cargo
     /// install` call between the last one set by proper options and the `--`
     /// separating the following fixed arguments.
@@ -118,6 +121,14 @@ impl Package {
         match self {
             Self::Simple(_) => None,
             Self::Detailed(pkg_req) => pkg_req.registry.as_deref(),
+        }
+    }
+
+    /// Returns the Git URL to use or `None` if either not configured or simple.
+    pub fn git(&self) -> Option<&str> {
+        match self {
+            Self::Simple(_) => None,
+            Self::Detailed(pkg_req) => pkg_req.git.as_deref(),
         }
     }
 

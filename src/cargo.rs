@@ -35,6 +35,7 @@ fn install(
     features: &[String],
     index: Option<&str>,
     registry: Option<&str>,
+    git: Option<&str>,
     extra_arguments: &[String],
     environment: &BTreeMap<String, String>,
     force: bool,
@@ -92,6 +93,11 @@ fn install(
         log::trace!("`--registry {}` args added.", registry);
     }
 
+    if let Some(git) = git {
+        cmd.args(["--git", git]);
+        log::trace!("`--git {}` args added.", git);
+    }
+
     if force {
         cmd.arg("--force");
         log::trace!("`--force` arg added.");
@@ -145,6 +151,7 @@ pub fn install_all(
             pkg.features(),
             pkg.index(),
             pkg.registry(),
+            pkg.git(),
             pkg.extra_arguments(),
             &pkg.environment(),
             force,

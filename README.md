@@ -697,6 +697,7 @@ where:
    crate's Cargo features should be enabled when building it.
  * `index` (optional): string specifying the registry index to install from.
  * `registry` (optional): string specifying the registry to use.
+ * `git` (optional): string specifying the Git URL to install from.
  * `extra-arguments` (optional): list of strings given as additional arguments
    to `cargo install` for the associated package and located between the last
    one given by Cargo Liner and the following `--` seperating options from
