@@ -28,6 +28,9 @@ pub struct DetailedPackageReq {
     #[serde(default)]
     features: Vec<String>,
 
+    #[serde(default)]
+    index: Option<String>,
+
     /// Additional CLI arguments that must be passed onto the associated `cargo
     /// install` call between the last one set by proper options and the `--`
     /// separating the following fixed arguments.
@@ -95,6 +98,14 @@ impl Package {
         match self {
             Self::Simple(_) => &[],
             Self::Detailed(pkg_req) => pkg_req.features.as_slice(),
+        }
+    }
+
+    /// Returns the index to use or `None` if either not configured or simple.
+    pub fn index(&self) -> Option<&str> {
+        match self {
+            Self::Simple(_) => None,
+            Self::Detailed(pkg_req) => pkg_req.index.as_deref(),
         }
     }
 

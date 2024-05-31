@@ -234,6 +234,7 @@ mod tests {
                     g = { version = "1.2", extra-arguments = [ "--abc", "--def" ] }
                     h = { version = "1.2", environment = {} }
                     i = { version = "1.2", environment = { ABC = "def", XYZ = "123" } }
+                    j = { version = "1.2", index = "http://abc123.com" }
                 "#,
         )
         .unwrap()
@@ -247,6 +248,7 @@ mod tests {
                     req.features().to_owned(),
                     req.all_features(),
                     req.default_features(),
+                    req.index().map(ToOwned::to_owned),
                     req.extra_arguments().to_owned(),
                     req.environment(),
                 ),
@@ -263,6 +265,7 @@ mod tests {
                 vec![],
                 false,
                 true,
+                None,
                 vec![],
                 BTreeMap::new(),
             ),
@@ -271,6 +274,7 @@ mod tests {
                 vec!["foo".to_owned()],
                 false,
                 true,
+                None,
                 vec![],
                 BTreeMap::new(),
             ),
@@ -279,6 +283,7 @@ mod tests {
                 vec!["foo".to_owned()],
                 false,
                 false,
+                None,
                 vec![],
                 BTreeMap::new(),
             ),
@@ -287,14 +292,7 @@ mod tests {
                 vec![],
                 true,
                 true,
-                vec![],
-                BTreeMap::new(),
-            ),
-            (
-                "^1.2".to_owned(),
-                vec![],
-                false,
-                true,
+                None,
                 vec![],
                 BTreeMap::new(),
             ),
@@ -303,6 +301,7 @@ mod tests {
                 vec![],
                 false,
                 true,
+                None,
                 vec![],
                 BTreeMap::new(),
             ),
@@ -311,6 +310,16 @@ mod tests {
                 vec![],
                 false,
                 true,
+                None,
+                vec![],
+                BTreeMap::new(),
+            ),
+            (
+                "^1.2".to_owned(),
+                vec![],
+                false,
+                true,
+                None,
                 vec!["--abc".to_owned(), "--def".to_owned()],
                 BTreeMap::new(),
             ),
@@ -319,6 +328,7 @@ mod tests {
                 vec![],
                 false,
                 true,
+                None,
                 vec![],
                 BTreeMap::new(),
             ),
@@ -327,11 +337,21 @@ mod tests {
                 vec![],
                 false,
                 true,
+                None,
                 vec![],
                 [("ABC", "def"), ("XYZ", "123")]
                     .into_iter()
                     .map(|(k, v)| (k.to_owned(), v.to_owned()))
                     .collect(),
+            ),
+            (
+                "^1.2".to_owned(),
+                vec![],
+                false,
+                true,
+                Some("http://abc123.com".to_owned()),
+                vec![],
+                BTreeMap::new(),
             ),
         ]
         .into_iter()

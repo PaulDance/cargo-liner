@@ -33,6 +33,7 @@ fn install(
     no_default_features: bool,
     all_features: bool,
     features: &[String],
+    index: Option<&str>,
     extra_arguments: &[String],
     environment: &BTreeMap<String, String>,
     force: bool,
@@ -78,6 +79,11 @@ fn install(
     if !features.is_empty() {
         cmd.arg("--features").arg(features.join(","));
         log::trace!("`--features` arg added.");
+    }
+
+    if let Some(index) = index {
+        cmd.args(["--index", index]);
+        log::trace!("`--index {}` args added.", index);
     }
 
     if force {
@@ -131,6 +137,7 @@ pub fn install_all(
             !pkg.default_features(),
             pkg.all_features(),
             pkg.features(),
+            pkg.index(),
             pkg.extra_arguments(),
             &pkg.environment(),
             force,
