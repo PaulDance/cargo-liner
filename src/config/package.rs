@@ -17,6 +17,8 @@ fn serde_default_true() -> bool {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub struct DetailedPackageReq {
+    version: VersionReq,
+
     #[serde(default = "serde_default_true")]
     default_features: bool,
 
@@ -25,8 +27,6 @@ pub struct DetailedPackageReq {
 
     #[serde(default)]
     features: Vec<String>,
-
-    version: VersionReq,
 
     /// Additional CLI arguments that must be passed onto the associated `cargo
     /// install` call between the last one set by proper options and the `--`
@@ -61,7 +61,7 @@ impl Package {
     pub fn version(&self) -> &VersionReq {
         match self {
             Self::Simple(v) => v,
-            Self::Detailed(DetailedPackageReq { version, .. }) => version,
+            Self::Detailed(pkg_req) => &pkg_req.version,
         }
     }
 
@@ -94,7 +94,7 @@ impl Package {
     pub fn features(&self) -> &[String] {
         match self {
             Self::Simple(_) => &[],
-            Self::Detailed(DetailedPackageReq { features, .. }) => features.as_slice(),
+            Self::Detailed(pkg_req) => pkg_req.features.as_slice(),
         }
     }
 
@@ -103,9 +103,7 @@ impl Package {
     pub fn extra_arguments(&self) -> &[String] {
         match self {
             Self::Simple(_) => &[],
-            Self::Detailed(DetailedPackageReq {
-                extra_arguments, ..
-            }) => extra_arguments.as_slice(),
+            Self::Detailed(pkg_req) => pkg_req.extra_arguments.as_slice(),
         }
     }
 
@@ -115,7 +113,7 @@ impl Package {
     pub fn environment(&self) -> BTreeMap<String, String> {
         match self {
             Self::Simple(_) => BTreeMap::new(),
-            Self::Detailed(DetailedPackageReq { environment, .. }) => environment.clone(),
+            Self::Detailed(pkg_req) => pkg_req.environment.clone(),
         }
     }
 }
