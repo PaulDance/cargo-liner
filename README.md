@@ -271,6 +271,13 @@ $ cargo liner
    Replacing [..]/.cargo/bin/cargo-expand
     Replaced package `cargo-expand v1.0.78` with `cargo-expand v1.0.79` (executable `cargo-expand`)
 ...
+ INFO  cargo_liner        > Installation report:
+┌──────────────┬─────────────┬─────────────┬────────┐
+│ Name         │ Old version │ New version │ Status │
+├──────────────┼─────────────┼─────────────┼────────┤
+│ bat          │ ø           │ 0.24.0      │ +      │
+│ cargo-expand │ 1.0.78      │ 1.0.79      │ ✔      │
+└──────────────┴─────────────┴─────────────┴────────┘
  INFO  cargo_liner        > Done.
 
 ```
