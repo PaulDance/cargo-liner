@@ -9,4 +9,10 @@
    Replacing [..]/.cargo/bin/cargo-liner
     Replaced package `cargo-liner v0.0.3` with `cargo-liner v0.0.3` (executable `cargo-liner`)
 warning: be sure to add `[..]/.cargo/bin` to your PATH to be able to run the installed binaries
+ INFO  cargo_liner        > Installation report:
+┌─────────────┬─────────────┬─────────────┬────────┐
+│ Name        │ Old version │ New version │ Status │
+├─────────────┼─────────────┼─────────────┼────────┤
+│ cargo-liner │ ø           │ ø           │ +      │
+└─────────────┴─────────────┴─────────────┴────────┘
  INFO  cargo_liner        > Done.

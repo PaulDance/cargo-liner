@@ -23,6 +23,7 @@ use tempfile as _;
 use trycmd as _;
 
 mod cargo;
+use cargo::InstallStatus;
 mod cli;
 use cli::{LinerArgs, LinerCommands};
 mod config;
@@ -153,35 +154,47 @@ fn try_main(args: &LinerArgs) -> Result<()> {
                     .update_others(!ship_args.only_self);
             }
 
-            let inst_res = if skip_check {
+            let (inst_res, old_vers, new_vers) = if skip_check {
                 // Don't parse `.crates.toml` here: can be used as a workaround.
-                cargo::install_all(
-                    &config.packages,
-                    &BTreeSet::new(),
-                    keep_going,
-                    force,
-                    args.color,
-                    cargo_verbosity,
+                (
+                    cargo::install_all(
+                        &config.packages,
+                        &BTreeSet::new(),
+                        keep_going,
+                        force,
+                        args.color,
+                        cargo_verbosity,
+                    ),
+                    BTreeMap::new(),
+                    BTreeMap::new(),
                 )
             } else {
                 let cct = CargoCratesToml::parse_file()
                     .wrap_err("Failed to parse Cargo's .crates.toml file.")?;
-                let vers = cargo::search_exact_all(&config.packages)
+                let old_vers = cct.clone().into_name_versions();
+                let new_vers = cargo::search_exact_all(&config.packages)
                     .wrap_err("Failed to fetch the latest versions of the configured packages.")?;
-                log_summary(&colorizer, &vers, &cct.clone().into_name_versions());
+                log_version_check_summary(&colorizer, &new_vers, &old_vers);
 
-                cargo::install_all(
-                    &needing_install(&config.packages, &vers, &cct.clone().into_name_versions()),
-                    &cct.into_names(),
-                    keep_going,
-                    force,
-                    args.color,
-                    cargo_verbosity,
+                (
+                    cargo::install_all(
+                        &needing_install(&config.packages, &new_vers, &old_vers),
+                        &cct.into_names(),
+                        keep_going,
+                        force,
+                        args.color,
+                        cargo_verbosity,
+                    ),
+                    old_vers,
+                    new_vers,
                 )
             };
 
             if let Some(err) = match inst_res {
-                Ok(rep) => rep.error_report,
+                Ok(rep) => {
+                    log_install_report(&colorizer, &rep.package_statuses, &new_vers, &old_vers);
+                    rep.error_report
+                }
                 Err(err) => Some(err),
             } {
                 Err(err).wrap_err_with(|| {
@@ -273,7 +286,7 @@ struct PackageStatus {
 }
 
 /// Displays whether each package needs an update or not.
-fn log_summary(
+fn log_version_check_summary(
     colorizer: &Colorizer,
     new_vers: &BTreeMap<String, Version>,
     old_vers: &BTreeMap<String, Version>,
@@ -306,11 +319,46 @@ fn log_summary(
     }
 }
 
+/// Displays the ending report about each package's installation status.
+fn log_install_report(
+    colorizer: &Colorizer,
+    install_report: &BTreeMap<String, InstallStatus>,
+    new_vers: &BTreeMap<String, Version>,
+    old_vers: &BTreeMap<String, Version>,
+) {
+    if !install_report.is_empty() {
+        log::info!(
+            "Installation report:\n{}",
+            Table::new(install_report.iter().map(|(pkg_name, status)| {
+                PackageStatus {
+                    name: pkg_name.clone(),
+                    old_ver: old_vers
+                        .get(pkg_name)
+                        .map_or_else(|| colorizer.none_icon().to_string(), ToString::to_string),
+                    new_ver: new_vers
+                        .get(pkg_name)
+                        .map_or_else(|| colorizer.none_icon().to_string(), ToString::to_string),
+                    status: match status {
+                        InstallStatus::Installed => colorizer.new_icon().to_string(),
+                        InstallStatus::Updated => colorizer.ok_icon().to_string(),
+                        InstallStatus::Failed => colorizer.err_icon().to_string(),
+                    },
+                }
+            }))
+            .with(Style::sharp())
+        );
+    }
+}
+
 /// When nothing to display or needs to be done: already up-to-date.
 const NONE_ICON: &str = "ø";
-/// When something needs to be performed: fresh installation of a package.
+/// When something needs to be performed: installation or update of a package.
 const TODO_ICON: &str = "🛈";
-/// When things went right: already up-to-date.
+/// When something was successfully added: new installation of a package.
+const NEW_ICON: &str = "+";
+/// When something failed.
+const ERR_ICON: &str = "✘";
+/// When things went right: already up-to-date or successful update.
 const OK_ICON: &str = "✔";
 
 /// Assembles both an output stream's color capacity and a color preference in
@@ -364,6 +412,16 @@ impl Colorizer {
     /// Returns the colorized version of [`TODO_ICON`].
     pub fn todo_icon(&self) -> impl Display {
         self.colorize_with(&TODO_ICON, |s| s.bold().blue().to_string())
+    }
+
+    /// Returns the colorized version of [`NEW_ICON`].
+    pub fn new_icon(&self) -> impl Display {
+        self.colorize_with(&NEW_ICON, |s| s.bold().green().to_string())
+    }
+
+    /// Returns the colorized version of [`ERR_ICON`].
+    pub fn err_icon(&self) -> impl Display {
+        self.colorize_with(&ERR_ICON, <&str>::red)
     }
 
     /// Returns the colorized version of [`OK_ICON`].

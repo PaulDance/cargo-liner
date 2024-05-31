@@ -30,4 +30,11 @@ warning: be sure to add `[..]/.cargo/bin` to your PATH to be able to run the ins
   Installing [..]/.cargo/bin/def
    Installed package `def v0.0.2` (executable `def`)
 warning: be sure to add `[..]/.cargo/bin` to your PATH to be able to run the installed binaries
+ INFO  cargo_liner        > Installation report:
+┌──────┬─────────────┬─────────────┬────────┐
+│ Name │ Old version │ New version │ Status │
+├──────┼─────────────┼─────────────┼────────┤
+│ abc  │ ø           │ 0.0.1       │ +      │
+│ def  │ ø           │ 0.0.2       │ +      │
+└──────┴─────────────┴─────────────┴────────┘
  INFO  cargo_liner        > Done.

@@ -30,4 +30,11 @@ warning: be sure to add `[..]/.cargo/bin` to your PATH to be able to run the ins
    Replacing [..]/.cargo/bin/def
     Replaced package `def v0.0.2 (/a/b/c)` with `def v0.0.3` (executable `def`)
 warning: be sure to add `[..]/.cargo/bin` to your PATH to be able to run the installed binaries
+ INFO  cargo_liner        > Installation report:
+┌──────┬─────────────┬─────────────┬────────┐
+│ Name │ Old version │ New version │ Status │
+├──────┼─────────────┼─────────────┼────────┤
+│ abc  │ 0.0.1       │ 0.0.2       │ ✔      │
+│ def  │ 0.0.2       │ 0.0.3       │ ✔      │
+└──────┴─────────────┴─────────────┴────────┘
  INFO  cargo_liner        > Done.

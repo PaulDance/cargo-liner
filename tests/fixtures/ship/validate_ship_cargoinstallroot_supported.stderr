@@ -17,4 +17,10 @@
   Installing /tmp/[..]/bin/pkg
    Installed package `pkg v0.0.0` (executable `pkg`)
 warning: be sure to add `/tmp/[..]/bin` to your PATH to be able to run the installed binaries
+ INFO  cargo_liner        > Installation report:
+┌──────┬─────────────┬─────────────┬────────┐
+│ Name │ Old version │ New version │ Status │
+├──────┼─────────────┼─────────────┼────────┤
+│ pkg  │ ø           │ 0.0.0       │ +      │
+└──────┴─────────────┴─────────────┴────────┘
  INFO  cargo_liner        > Done.

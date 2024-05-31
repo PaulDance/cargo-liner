@@ -4,4 +4,10 @@
   Downloaded cargo-liner v0.0.3 (registry `dummy-registry`)
      Ignored package `cargo-liner v0.0.3` is already installed, use --force to override
 warning: be sure to add `[..]/.cargo/bin` to your PATH to be able to run the installed binaries
+ INFO  cargo_liner        > Installation report:
+┌─────────────┬─────────────┬─────────────┬────────┐
+│ Name        │ Old version │ New version │ Status │
+├─────────────┼─────────────┼─────────────┼────────┤
+│ cargo-liner │ ø           │ ø           │ +      │
+└─────────────┴─────────────┴─────────────┴────────┘
  INFO  cargo_liner        > Done.

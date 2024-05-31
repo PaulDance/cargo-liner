@@ -12,6 +12,13 @@ error: could not find `abc` in registry `crates-io` with version `*`
   Installing [..]/.cargo/bin/def
    Installed package `def v0.0.0` (executable `def`)
 warning: be sure to add `[..]/.cargo/bin` to your PATH to be able to run the installed binaries
+ INFO  cargo_liner        > Installation report:
+┌──────┬─────────────┬─────────────┬────────┐
+│ Name │ Old version │ New version │ Status │
+├──────┼─────────────┼─────────────┼────────┤
+│ abc  │ ø           │ ø           │ ✘      │
+│ def  │ ø           │ ø           │ +      │
+└──────┴─────────────┴─────────────┴────────┘
 Error: 
    0: Failed to install or update some of the configured packages.
    1: Failed to install "abc".
