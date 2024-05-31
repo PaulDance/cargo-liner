@@ -31,6 +31,9 @@ pub struct DetailedPackageReq {
     #[serde(default)]
     index: Option<String>,
 
+    #[serde(default)]
+    registry: Option<String>,
+
     /// Additional CLI arguments that must be passed onto the associated `cargo
     /// install` call between the last one set by proper options and the `--`
     /// separating the following fixed arguments.
@@ -106,6 +109,15 @@ impl Package {
         match self {
             Self::Simple(_) => None,
             Self::Detailed(pkg_req) => pkg_req.index.as_deref(),
+        }
+    }
+
+    /// Returns the registry to use or `None` if either not configured or
+    /// simple.
+    pub fn registry(&self) -> Option<&str> {
+        match self {
+            Self::Simple(_) => None,
+            Self::Detailed(pkg_req) => pkg_req.registry.as_deref(),
         }
     }
 

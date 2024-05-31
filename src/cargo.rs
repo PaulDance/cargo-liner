@@ -34,6 +34,7 @@ fn install(
     all_features: bool,
     features: &[String],
     index: Option<&str>,
+    registry: Option<&str>,
     extra_arguments: &[String],
     environment: &BTreeMap<String, String>,
     force: bool,
@@ -84,6 +85,11 @@ fn install(
     if let Some(index) = index {
         cmd.args(["--index", index]);
         log::trace!("`--index {}` args added.", index);
+    }
+
+    if let Some(registry) = registry {
+        cmd.args(["--registry", registry]);
+        log::trace!("`--registry {}` args added.", registry);
     }
 
     if force {
@@ -138,6 +144,7 @@ pub fn install_all(
             pkg.all_features(),
             pkg.features(),
             pkg.index(),
+            pkg.registry(),
             pkg.extra_arguments(),
             &pkg.environment(),
             force,
