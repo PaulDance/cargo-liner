@@ -37,6 +37,7 @@ fn install(
     registry: Option<&str>,
     git: Option<&str>,
     branch: Option<&str>,
+    tag: Option<&str>,
     extra_arguments: &[String],
     environment: &BTreeMap<String, String>,
     force: bool,
@@ -104,6 +105,11 @@ fn install(
         log::trace!("`--branch {}` args added.", branch);
     }
 
+    if let Some(tag) = tag {
+        cmd.args(["--tag", tag]);
+        log::trace!("`--tag {}` args added.", tag);
+    }
+
     if force {
         cmd.arg("--force");
         log::trace!("`--force` arg added.");
@@ -159,6 +165,7 @@ pub fn install_all(
             pkg.registry(),
             pkg.git(),
             pkg.branch(),
+            pkg.tag(),
             pkg.extra_arguments(),
             &pkg.environment(),
             force,

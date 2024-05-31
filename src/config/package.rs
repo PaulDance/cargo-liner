@@ -41,6 +41,9 @@ pub struct DetailedPackageReq {
     #[serde(default)]
     branch: Option<String>,
 
+    #[serde(default)]
+    tag: Option<String>,
+
     // Additional options.
     /// Additional CLI arguments that must be passed onto the associated `cargo
     /// install` call between the last one set by proper options and the `--`
@@ -143,6 +146,14 @@ impl Package {
         match self {
             Self::Simple(_) => None,
             Self::Detailed(pkg_req) => pkg_req.branch.as_deref(),
+        }
+    }
+
+    /// Returns the Git tag to use or `None` if either not configured or simple.
+    pub fn tag(&self) -> Option<&str> {
+        match self {
+            Self::Simple(_) => None,
+            Self::Detailed(pkg_req) => pkg_req.tag.as_deref(),
         }
     }
 
