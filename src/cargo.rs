@@ -10,7 +10,7 @@ use std::process::{Child, Command, ExitStatus, Stdio};
 use std::{env, iter};
 
 use clap::ColorChoice;
-use color_eyre::eyre::{self, eyre, Report, Result, WrapErr};
+use color_eyre::eyre::{self, eyre, Result, WrapErr};
 use color_eyre::Section;
 use log::Level;
 use regex::Regex;
@@ -101,7 +101,10 @@ fn install(
 }
 
 /// Runs `cargo install` for all packages listed in the given user
-/// configuration.
+/// configuration and returns a per-package installation report.
+///
+/// Returns `Ok(report)` when `keep_going` is `true`, otherwise `Err(err)` of
+/// the first error `err` encountered.
 pub fn install_all(
     packages: &BTreeMap<String, Package>,
     installed: &BTreeSet<String>,
@@ -109,18 +112,17 @@ pub fn install_all(
     force: bool,
     color: ColorChoice,
     verbosity: i8,
-) -> Result<()> {
+) -> Result<InstallReport> {
+    // Returned installation report.
+    let mut rep = BTreeMap::new();
     // Aggregation of errors when `keep_going` is enabled.
-    let mut rep = None::<Report>;
+    let mut err_rep = None::<eyre::Report>;
 
     for (pkg_name, pkg) in packages {
+        let is_installed = installed.contains(pkg_name);
         log::info!(
             "{}ing `{pkg_name}`...",
-            if installed.contains(pkg_name) {
-                "Updat"
-            } else {
-                "Install"
-            }
+            if is_installed { "Updat" } else { "Install" }
         );
 
         if let Err(err) = install(
@@ -150,20 +152,27 @@ pub fn install_all(
                 }
             })
         })
+        .inspect(|()| {
+            rep.insert(
+                pkg_name.clone(),
+                if is_installed {
+                    InstallStatus::Updated
+                } else {
+                    InstallStatus::Installed
+                },
+            );
+        })
         .wrap_err_with(|| {
+            rep.insert(pkg_name.clone(), InstallStatus::Failed);
             format!(
                 "Failed to {} {pkg_name:?}.",
-                if installed.contains(pkg_name) {
-                    "update"
-                } else {
-                    "install"
-                }
+                if is_installed { "update" } else { "install" }
             )
         }) {
             if keep_going {
-                // Can't use `Option::map_or` for ownership issues.
-                rep = Some(match rep {
-                    Some(rep) => rep.wrap_err(err),
+                // Can't use `Option::map_or` for ownership reasons.
+                err_rep = Some(match err_rep {
+                    Some(err_rep) => err_rep.wrap_err(err),
                     None => err,
                 });
             } else {
@@ -172,7 +181,31 @@ pub fn install_all(
         }
     }
 
-    rep.map_or(Ok(()), Err)
+    Ok(InstallReport {
+        package_statuses: rep,
+        error_report: err_rep,
+    })
+}
+
+/// Result of [`install_all`].
+#[must_use]
+#[derive(Debug)]
+pub struct InstallReport {
+    /// Installation status per package name.
+    pub package_statuses: BTreeMap<String, InstallStatus>,
+    /// Aggregation of errors to bubble up.
+    pub error_report: Option<eyre::Report>,
+}
+
+/// Result of [`install`] for some package.
+#[derive(Debug)]
+pub enum InstallStatus {
+    /// The package was newly installed with success.
+    Installed,
+    /// The package was successfully updated, replacing a previous version.
+    Updated,
+    /// The package failed to install or update.
+    Failed,
 }
 
 /// Spawns `cargo search` for the given package with only stdout piped and

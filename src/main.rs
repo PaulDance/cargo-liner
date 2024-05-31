@@ -153,7 +153,7 @@ fn try_main(args: &LinerArgs) -> Result<()> {
                     .update_others(!ship_args.only_self);
             }
 
-            if skip_check {
+            let inst_res = if skip_check {
                 // Don't parse `.crates.toml` here: can be used as a workaround.
                 cargo::install_all(
                     &config.packages,
@@ -178,13 +178,19 @@ fn try_main(args: &LinerArgs) -> Result<()> {
                     args.color,
                     cargo_verbosity,
                 )
+            };
+
+            if let Some(err) = match inst_res {
+                Ok(rep) => rep.error_report,
+                Err(err) => Some(err),
+            } {
+                Err(err).wrap_err_with(|| {
+                    format!(
+                        "Failed to install or update {} of the configured packages.",
+                        if keep_going { "some" } else { "one" }
+                    )
+                })?;
             }
-            .wrap_err_with(|| {
-                format!(
-                    "Failed to install or update {} of the configured packages.",
-                    if keep_going { "some" } else { "one" }
-                )
-            })?;
         }
     }
 
