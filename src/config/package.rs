@@ -17,6 +17,7 @@ fn serde_default_true() -> bool {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub struct DetailedPackageReq {
+    // Options from the Cargo Install CLI.
     version: VersionReq,
 
     #[serde(default = "serde_default_true")]
@@ -37,6 +38,10 @@ pub struct DetailedPackageReq {
     #[serde(default)]
     git: Option<String>,
 
+    #[serde(default)]
+    branch: Option<String>,
+
+    // Additional options.
     /// Additional CLI arguments that must be passed onto the associated `cargo
     /// install` call between the last one set by proper options and the `--`
     /// separating the following fixed arguments.
@@ -129,6 +134,15 @@ impl Package {
         match self {
             Self::Simple(_) => None,
             Self::Detailed(pkg_req) => pkg_req.git.as_deref(),
+        }
+    }
+
+    /// Returns the Git branch to use or `None` if either not configured or
+    /// simple.
+    pub fn branch(&self) -> Option<&str> {
+        match self {
+            Self::Simple(_) => None,
+            Self::Detailed(pkg_req) => pkg_req.branch.as_deref(),
         }
     }
 
