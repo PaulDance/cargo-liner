@@ -282,6 +282,19 @@ $ cargo liner
 
 ```
 
+in which the first table displays each configured package's currently-installed
+and most recent versions, along with the action that will be performed; the
+second table shows an ending report displaying each touched package's previous
+and new versions, along with the result of the call to `cargo install`.
+
+Status icons are optionally colored in the output and stand for the following:
+ * `ø`: when nothing to display or needs to be done: already up-to-date.
+ * `🛈`: when something needs to be performed: installation or update of a
+   package.
+ * `+`: when something was successfully added: new installation of a package.
+ * `✘`: when something failed.
+ * `✔`: when things went right: already up-to-date or successful update.
+
 
 #### `ship` subcommand
 
