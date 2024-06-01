@@ -701,6 +701,8 @@ where:
  * `branch` (optional): string specifying the branch to use when installing
    from Git.
  * `tag` (optional): string specifying the tag to use when installing from Git.
+ * `rev` (optional): string specifying the commit to use when installing from
+   Git.
  * `extra-arguments` (optional): list of strings given as additional arguments
    to `cargo install` for the associated package and located between the last
    one given by Cargo Liner and the following `--` seperating options from

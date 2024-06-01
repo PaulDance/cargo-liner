@@ -1234,3 +1234,20 @@ fn validate_ship_tag() {
         .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_tag.stderr"]);
     assert_not_installed("abc");
 }
+
+#[cargo_test]
+fn validate_ship_rev() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish("abc", "0.0.0");
+    // HACK: observe the error to confirm the argument is passed.
+    write_user_config(&["[packages]", "abc = { version = '*', rev = '' }"]);
+
+    cargo_liner()
+        .args(["-q", "ship", "--skip-check", "--no-self"])
+        .assert()
+        .failure()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_rev.stderr"]);
+    assert_not_installed("abc");
+}

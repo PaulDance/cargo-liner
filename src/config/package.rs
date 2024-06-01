@@ -44,6 +44,9 @@ pub struct DetailedPackageReq {
     #[serde(default)]
     tag: Option<String>,
 
+    #[serde(default)]
+    rev: Option<String>,
+
     // Additional options.
     /// Additional CLI arguments that must be passed onto the associated `cargo
     /// install` call between the last one set by proper options and the `--`
@@ -154,6 +157,15 @@ impl Package {
         match self {
             Self::Simple(_) => None,
             Self::Detailed(pkg_req) => pkg_req.tag.as_deref(),
+        }
+    }
+
+    /// Returns the Git commit to use or `None` if either not configured or
+    /// simple.
+    pub fn rev(&self) -> Option<&str> {
+        match self {
+            Self::Simple(_) => None,
+            Self::Detailed(pkg_req) => pkg_req.rev.as_deref(),
         }
     }
 
