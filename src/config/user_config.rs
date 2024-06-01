@@ -242,24 +242,24 @@ mod tests {
 
         let mut packages = toml::from_str::<UserConfig>(
             r#"
-                    [packages]
-                    a = "1.2.3"
-                    b = { version = "1.2", features = [ "foo" ] }
-                    c = { version = "1.2", features = [ "foo" ], default-features = false }
-                    d = { version = "1.2", all-features = true }
-                    e = { version = "1.2" }
-                    f = { version = "1.2", extra-arguments = [] }
-                    g = { version = "1.2", extra-arguments = [ "--abc", "--def" ] }
-                    h = { version = "1.2", environment = {} }
-                    i = { version = "1.2", environment = { ABC = "def", XYZ = "123" } }
-                    j = { version = "1.2", index = "http://abc123.com" }
-                    k = { version = "1.2", registry = "abc123" }
-                    l = { version = "1.2", git = "https://mygit.com/abc/123" }
-                    m = { version = "1.2", branch = "master-and-servant" }
-                    n = { version = "1.2", tag = "tig-tag" }
-                    o = { version = "1.2", rev = "fakesha1" }
-                    p = { version = "1.2", path = "/a/b/c" }
-                "#,
+                [packages]
+                a = "1.2.3"
+                b = { version = "1.2", features = [ "foo" ] }
+                c = { version = "1.2", features = [ "foo" ], default-features = false }
+                d = { version = "1.2", all-features = true }
+                e = { version = "1.2" }
+                f = { version = "1.2", extra-arguments = [] }
+                g = { version = "1.2", extra-arguments = [ "--abc", "--def" ] }
+                h = { version = "1.2", environment = {} }
+                i = { version = "1.2", environment = { ABC = "def", XYZ = "123" } }
+                j = { version = "1.2", index = "http://abc123.com" }
+                k = { version = "1.2", registry = "abc123" }
+                l = { version = "1.2", git = "https://mygit.com/abc/123" }
+                m = { version = "1.2", branch = "master-and-servant" }
+                n = { version = "1.2", tag = "tig-tag" }
+                o = { version = "1.2", rev = "fakesha1" }
+                p = { version = "1.2", path = "/a/b/c" }
+            "#,
         )
         .unwrap()
         .packages
