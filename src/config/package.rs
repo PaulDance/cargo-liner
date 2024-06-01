@@ -47,6 +47,9 @@ pub struct DetailedPackageReq {
     #[serde(default)]
     rev: Option<String>,
 
+    #[serde(default)]
+    path: Option<String>,
+
     // Additional options.
     /// Additional CLI arguments that must be passed onto the associated `cargo
     /// install` call between the last one set by proper options and the `--`
@@ -166,6 +169,15 @@ impl Package {
         match self {
             Self::Simple(_) => None,
             Self::Detailed(pkg_req) => pkg_req.rev.as_deref(),
+        }
+    }
+
+    /// Returns the file path to use or `None` if either not configured or
+    /// simple.
+    pub fn path(&self) -> Option<&str> {
+        match self {
+            Self::Simple(_) => None,
+            Self::Detailed(pkg_req) => pkg_req.path.as_deref(),
         }
     }
 

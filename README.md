@@ -703,6 +703,8 @@ where:
  * `tag` (optional): string specifying the tag to use when installing from Git.
  * `rev` (optional): string specifying the commit to use when installing from
    Git.
+ * `path` (optional): string specifying the filesystem path to local crate to
+   install from.
  * `extra-arguments` (optional): list of strings given as additional arguments
    to `cargo install` for the associated package and located between the last
    one given by Cargo Liner and the following `--` seperating options from
