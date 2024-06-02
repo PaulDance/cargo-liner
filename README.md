@@ -715,6 +715,9 @@ where:
    repetition of its `--example` option.
  * `all-examples` (optional): boolean that, when `true`, passes the `--examples`
    CLI option to Cargo, thus installing all examples of the package.
+ * `force` (optional): boolean that, when `true`, passes `--force` to Cargo,
+   thus potentially overwriting existing binaries or examples; only useful if
+   `--skip-check` is passed as well.
  * `extra-arguments` (optional): list of strings given as additional arguments
    to `cargo install` for the associated package and located between the last
    one given by Cargo Liner and the following `--` seperating options from

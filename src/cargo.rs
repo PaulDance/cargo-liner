@@ -211,7 +211,7 @@ pub fn install_all(
             pkg.all_examples(),
             pkg.extra_arguments(),
             &pkg.environment(),
-            force,
+            force || pkg.force(),
             color,
             verbosity,
         )

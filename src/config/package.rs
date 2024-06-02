@@ -63,6 +63,9 @@ pub struct DetailedPackageReq {
     #[serde(default)]
     all_examples: bool,
 
+    #[serde(default)]
+    force: bool,
+
     // Additional options.
     /// Additional CLI arguments that must be passed onto the associated `cargo
     /// install` call between the last one set by proper options and the `--`
@@ -229,6 +232,12 @@ impl Package {
                 ..
             })
         )
+    }
+
+    /// Returns `true` iff the package is detailed and `force` was passed as
+    /// `true`.
+    pub fn force(&self) -> bool {
+        matches!(self, Self::Detailed(DetailedPackageReq { force: true, .. }))
     }
 
     /// Returns a slice of the extra `cargo install` arguments required for the

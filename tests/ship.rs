@@ -1361,3 +1361,23 @@ fn validate_ship_all_examples() {
         ]);
     assert_installed_all(["ex1", "ex2", "ex3"]);
 }
+
+#[cargo_test]
+fn validate_ship_skipcheck_configforce() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish("abc", "0.0.0");
+    fake_install("abc", "0.0.0", false);
+    assert_installed("abc");
+    write_user_config(&["[packages]", "abc = { version = '*', force = true }"]);
+
+    cargo_liner()
+        .args(["ship", "--no-self", "--skip-check"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_skipcheck_configforce.stderr"
+        ]);
+    assert_installed("abc");
+}
