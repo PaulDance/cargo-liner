@@ -66,6 +66,9 @@ pub struct DetailedPackageReq {
     #[serde(default)]
     force: bool,
 
+    #[serde(default)]
+    ignore_rust_version: bool,
+
     // Additional options.
     /// Additional CLI arguments that must be passed onto the associated `cargo
     /// install` call between the last one set by proper options and the `--`
@@ -238,6 +241,18 @@ impl Package {
     /// `true`.
     pub fn force(&self) -> bool {
         matches!(self, Self::Detailed(DetailedPackageReq { force: true, .. }))
+    }
+
+    /// Returns `true` iff the package is detailed and `ignore-rust-version` was
+    /// passed as `true`.
+    pub fn ignore_rust_version(&self) -> bool {
+        matches!(
+            self,
+            Self::Detailed(DetailedPackageReq {
+                ignore_rust_version: true,
+                ..
+            })
+        )
     }
 
     /// Returns a slice of the extra `cargo install` arguments required for the

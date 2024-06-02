@@ -45,6 +45,7 @@ fn install(
     all_bins: bool,
     examples: &[String],
     all_examples: bool,
+    ignore_rust_version: bool,
     extra_arguments: &[String],
     environment: &BTreeMap<String, String>,
     force: bool,
@@ -147,6 +148,11 @@ fn install(
         log::trace!("`--examples` arg added.");
     }
 
+    if ignore_rust_version {
+        cmd.arg("--ignore-rust-version");
+        log::trace!("`--ignore-rust-version` arg added.");
+    }
+
     if force {
         cmd.arg("--force");
         log::trace!("`--force` arg added.");
@@ -209,6 +215,7 @@ pub fn install_all(
             pkg.all_bins(),
             pkg.examples(),
             pkg.all_examples(),
+            pkg.ignore_rust_version(),
             pkg.extra_arguments(),
             &pkg.environment(),
             force || pkg.force(),

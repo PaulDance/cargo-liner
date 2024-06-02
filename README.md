@@ -718,6 +718,9 @@ where:
  * `force` (optional): boolean that, when `true`, passes `--force` to Cargo,
    thus potentially overwriting existing binaries or examples; only useful if
    `--skip-check` is passed as well.
+ * `ignore-rust-version` (optional): boolean that, when `true`, passes the
+   `--ignore-rust-version` CLI option to Cargo, thus ignoring `rust-version`
+   specifications in packages.
  * `extra-arguments` (optional): list of strings given as additional arguments
    to `cargo install` for the associated package and located between the last
    one given by Cargo Liner and the following `--` seperating options from

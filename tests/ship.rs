@@ -1381,3 +1381,28 @@ fn validate_ship_skipcheck_configforce() {
         ]);
     assert_installed("abc");
 }
+
+#[cargo_test]
+fn validate_ship_ignorerustversion() {
+    let _reg = init_registry();
+    fake_install_self();
+    Package::new("abc", "0.0.0")
+        .file("src/main.rs", "fn main() {}")
+        // Hopefully, that's enough.
+        .rust_version("999.999")
+        .publish();
+    write_user_config(&[
+        "[packages]",
+        "abc = { version = '*', ignore-rust-version = true }",
+    ]);
+
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_ignorerustversion.stderr"
+        ]);
+    assert_installed("abc");
+}
