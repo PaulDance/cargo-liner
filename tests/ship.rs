@@ -1311,3 +1311,30 @@ fn validate_ship_all_bins() {
         ]);
     assert_installed_all(["b1", "b2", "b3"]);
 }
+
+#[cargo_test]
+fn validate_ship_examples() {
+    let _reg = init_registry();
+    fake_install_self();
+    Package::new("abc", "0.0.0")
+        .file("src/lib.rs", "")
+        .file("examples/ex1.rs", "fn main() {}")
+        .file("examples/ex2.rs", "fn main() {}")
+        .file("examples/ex3.rs", "fn main() {}")
+        .publish();
+    write_user_config(&[
+        "[packages]",
+        "abc = { version = '*', examples = ['ex1', 'ex2'] }",
+    ]);
+
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_examples.stderr"
+        ]);
+    assert_installed_all(["ex1", "ex2"]);
+    assert_not_installed("ex3");
+}

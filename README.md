@@ -710,6 +710,9 @@ where:
    its `--bin` option.
  * `all-bins` (optional): boolean that, when `true`, passes the `--bins` CLI
    option to Cargo, thus installing all binaries of the package.
+ * `examples` (optional): list of strings specifying the examples to install
+   among the targeted crate's example targets, passed onto Cargo as a
+   repetition of its `--example` option.
  * `extra-arguments` (optional): list of strings given as additional arguments
    to `cargo install` for the associated package and located between the last
    one given by Cargo Liner and the following `--` seperating options from

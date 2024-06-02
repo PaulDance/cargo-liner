@@ -56,6 +56,9 @@ pub struct DetailedPackageReq {
     #[serde(default)]
     all_bins: bool,
 
+    #[serde(default)]
+    examples: Vec<String>,
+
     // Additional options.
     /// Additional CLI arguments that must be passed onto the associated `cargo
     /// install` call between the last one set by proper options and the `--`
@@ -202,6 +205,14 @@ impl Package {
             self,
             Self::Detailed(DetailedPackageReq { all_bins: true, .. })
         )
+    }
+
+    /// Returns the list of example targets to install, empty if simple.
+    pub fn examples(&self) -> &[String] {
+        match self {
+            Self::Simple(_) => &[],
+            Self::Detailed(pkg_req) => &pkg_req.examples,
+        }
     }
 
     /// Returns a slice of the extra `cargo install` arguments required for the
