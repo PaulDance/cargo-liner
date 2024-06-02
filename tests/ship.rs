@@ -1289,3 +1289,25 @@ fn validate_ship_bins() {
     assert_installed_all(["b1", "b2"]);
     assert_not_installed("b3");
 }
+
+#[cargo_test]
+fn validate_ship_all_bins() {
+    let _reg = init_registry();
+    fake_install_self();
+    Package::new("abc", "0.0.0")
+        .file("src/bin/b1.rs", "fn main() {}")
+        .file("src/bin/b2.rs", "fn main() {}")
+        .file("src/bin/b3.rs", "fn main() {}")
+        .publish();
+    write_user_config(&["[packages]", "abc = { version = '*', all-bins = true }"]);
+
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_all_bins.stderr"
+        ]);
+    assert_installed_all(["b1", "b2", "b3"]);
+}

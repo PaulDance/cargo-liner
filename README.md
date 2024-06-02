@@ -708,6 +708,8 @@ where:
  * `bins` (optional): list of strings specifying the binaries to install among
    the targeted crate's binary targets, passed onto Cargo as a repetition of
    its `--bin` option.
+ * `all-bins` (optional): boolean that, when `true`, passes the `--bins` CLI
+   option to Cargo, thus installing all binaries of the package.
  * `extra-arguments` (optional): list of strings given as additional arguments
    to `cargo install` for the associated package and located between the last
    one given by Cargo Liner and the following `--` seperating options from

@@ -53,6 +53,9 @@ pub struct DetailedPackageReq {
     #[serde(default)]
     bins: Vec<String>,
 
+    #[serde(default)]
+    all_bins: bool,
+
     // Additional options.
     /// Additional CLI arguments that must be passed onto the associated `cargo
     /// install` call between the last one set by proper options and the `--`
@@ -190,6 +193,15 @@ impl Package {
             Self::Simple(_) => &[],
             Self::Detailed(pkg_req) => &pkg_req.bins,
         }
+    }
+
+    /// Returns `true` iff the package is detailed and `all-bins` was passed as
+    /// `true`.
+    pub fn all_bins(&self) -> bool {
+        matches!(
+            self,
+            Self::Detailed(DetailedPackageReq { all_bins: true, .. })
+        )
     }
 
     /// Returns a slice of the extra `cargo install` arguments required for the

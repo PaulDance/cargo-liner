@@ -27,6 +27,7 @@ use crate::config::Package;
 ///
 /// [Cargo reference]: https://doc.rust-lang.org/cargo/reference/external-tools.html#custom-subcommands
 #[allow(clippy::too_many_arguments)]
+#[allow(clippy::fn_params_excessive_bools)]
 fn install(
     name: &str,
     version: &str,
@@ -41,6 +42,7 @@ fn install(
     rev: Option<&str>,
     path: Option<&str>,
     bins: &[String],
+    all_bins: bool,
     extra_arguments: &[String],
     environment: &BTreeMap<String, String>,
     force: bool,
@@ -128,6 +130,11 @@ fn install(
         log::trace!("`--bin {}` args added.", bin);
     }
 
+    if all_bins {
+        cmd.arg("--bins");
+        log::trace!("`--bins` arg added.");
+    }
+
     if force {
         cmd.arg("--force");
         log::trace!("`--force` arg added.");
@@ -187,6 +194,7 @@ pub fn install_all(
             pkg.rev(),
             pkg.path(),
             pkg.bins(),
+            pkg.all_bins(),
             pkg.extra_arguments(),
             &pkg.environment(),
             force,
