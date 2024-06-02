@@ -1423,3 +1423,26 @@ fn validate_ship_frozen() {
         .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_frozen.stderr"]);
     assert_not_installed("abc");
 }
+
+#[cargo_test]
+fn validate_ship_locked() {
+    let _reg = init_registry();
+    fake_install_self();
+    Package::new("abc", "0.0.0")
+        .file("src/main.rs", "fn main() {}")
+        .dep("def", "0.0.0")
+        .publish();
+    Package::new("def", "0.0.0")
+        .file("src/lib.rs", "")
+        .publish();
+    // HACK: observe the warning to confirm the argument is passed.
+    write_user_config(&["[packages]", "abc = { version = '*', locked = true }"]);
+
+    cargo_liner()
+        .args(["-q", "ship", "--skip-check", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_locked.stderr"]);
+    assert_installed("abc");
+}

@@ -724,6 +724,8 @@ where:
  * `frozen` (optional): boolean that, when `true`, passes the `--frozen` CLI
    option to Cargo, thus requiring the package's `Cargo.lock` and Cargo's cache
    to be both up-to-date.
+ * `locked` (optional): boolean that, when `true`, passes the `--locked` CLI
+   option to Cargo, thus requiring the package's `Cargo.lock` to be up-to-date.
  * `extra-arguments` (optional): list of strings given as additional arguments
    to `cargo install` for the associated package and located between the last
    one given by Cargo Liner and the following `--` seperating options from

@@ -1,0 +1,14 @@
+    Updating `dummy-registry` index
+ Downloading crates ...
+  Downloaded abc v0.0.0 (registry `dummy-registry`)
+warning: no Cargo.lock file published in abc v0.0.0
+  Installing abc v0.0.0
+    Updating `dummy-registry` index
+ Downloading crates ...
+  Downloaded def v0.0.0 (registry `dummy-registry`)
+   Compiling def v0.0.0
+   Compiling abc v0.0.0
+    Finished `release` profile [optimized] target(s) in [ELAPSED]s
+  Installing [ROOT]/home/.cargo/bin/abc
+   Installed package `abc v0.0.0` (executable `abc`)
+warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run the installed binaries

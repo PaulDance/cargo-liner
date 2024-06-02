@@ -28,6 +28,7 @@ use crate::config::Package;
 /// [Cargo reference]: https://doc.rust-lang.org/cargo/reference/external-tools.html#custom-subcommands
 #[allow(clippy::too_many_arguments)]
 #[allow(clippy::fn_params_excessive_bools)]
+#[allow(clippy::too_many_lines)]
 fn install(
     name: &str,
     version: &str,
@@ -47,6 +48,7 @@ fn install(
     all_examples: bool,
     ignore_rust_version: bool,
     frozen: bool,
+    locked: bool,
     extra_arguments: &[String],
     environment: &BTreeMap<String, String>,
     force: bool,
@@ -164,6 +166,11 @@ fn install(
         log::trace!("`--frozen` arg added.");
     }
 
+    if locked {
+        cmd.arg("--locked");
+        log::trace!("`--locked` arg added.");
+    }
+
     // This should be kept here: after all other options and before the `--`.
     if !extra_arguments.is_empty() {
         cmd.args(extra_arguments);
@@ -223,6 +230,7 @@ pub fn install_all(
             pkg.all_examples(),
             pkg.ignore_rust_version(),
             pkg.frozen(),
+            pkg.locked(),
             pkg.extra_arguments(),
             &pkg.environment(),
             force || pkg.force(),

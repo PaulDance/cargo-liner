@@ -72,6 +72,9 @@ pub struct DetailedPackageReq {
     #[serde(default)]
     frozen: bool,
 
+    #[serde(default)]
+    locked: bool,
+
     // Additional options.
     /// Additional CLI arguments that must be passed onto the associated `cargo
     /// install` call between the last one set by proper options and the `--`
@@ -264,6 +267,15 @@ impl Package {
         matches!(
             self,
             Self::Detailed(DetailedPackageReq { frozen: true, .. })
+        )
+    }
+
+    /// Returns `true` iff the package is detailed and `locked` was passed as
+    /// `true`.
+    pub fn locked(&self) -> bool {
+        matches!(
+            self,
+            Self::Detailed(DetailedPackageReq { locked: true, .. })
         )
     }
 
