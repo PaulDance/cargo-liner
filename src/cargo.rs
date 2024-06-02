@@ -40,6 +40,7 @@ fn install(
     tag: Option<&str>,
     rev: Option<&str>,
     path: Option<&str>,
+    bins: &[String],
     extra_arguments: &[String],
     environment: &BTreeMap<String, String>,
     force: bool,
@@ -122,6 +123,11 @@ fn install(
         log::trace!("`--path {}` args added.", path);
     }
 
+    for bin in bins {
+        cmd.args(["--bin", bin]);
+        log::trace!("`--bin {}` args added.", bin);
+    }
+
     if force {
         cmd.arg("--force");
         log::trace!("`--force` arg added.");
@@ -180,6 +186,7 @@ pub fn install_all(
             pkg.tag(),
             pkg.rev(),
             pkg.path(),
+            pkg.bins(),
             pkg.extra_arguments(),
             &pkg.environment(),
             force,

@@ -50,6 +50,9 @@ pub struct DetailedPackageReq {
     #[serde(default)]
     path: Option<String>,
 
+    #[serde(default)]
+    bins: Vec<String>,
+
     // Additional options.
     /// Additional CLI arguments that must be passed onto the associated `cargo
     /// install` call between the last one set by proper options and the `--`
@@ -178,6 +181,14 @@ impl Package {
         match self {
             Self::Simple(_) => None,
             Self::Detailed(pkg_req) => pkg_req.path.as_deref(),
+        }
+    }
+
+    /// Returns the list of binary targets to install, empty if simple.
+    pub fn bins(&self) -> &[String] {
+        match self {
+            Self::Simple(_) => &[],
+            Self::Detailed(pkg_req) => &pkg_req.bins,
         }
     }
 

@@ -705,6 +705,9 @@ where:
    Git.
  * `path` (optional): string specifying the filesystem path to local crate to
    install from.
+ * `bins` (optional): list of strings specifying the binaries to install among
+   the targeted crate's binary targets, passed onto Cargo as a repetition of
+   its `--bin` option.
  * `extra-arguments` (optional): list of strings given as additional arguments
    to `cargo install` for the associated package and located between the last
    one given by Cargo Liner and the following `--` seperating options from
