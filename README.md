@@ -677,6 +677,22 @@ package-name-3 = {
     all-features = boolean,
     default-features = boolean,
     features = ["feature-1", "feature-2"],
+    index = "http://example.com/"
+    registry = "example-registry"
+    git = "http://example.com/exa/mple.git"
+    branch = "branch"
+    tag = "tag"
+    rev = "SHA1"
+    path = "/a/b/c"
+    bins = ["bin1", "bin2"]
+    all-bins = boolean
+    examples = ["ex1", "ex2"]
+    all-examples = boolean
+    force = boolean
+    ignore-rust-version = boolean
+    frozen = boolean
+    locked = boolean
+    offline = boolean
     extra-arguments = ["--arg1", "--arg2"],
     environment = { ENV1 = "abc", ENV2 = "def" },
 }
