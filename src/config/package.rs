@@ -69,6 +69,9 @@ pub struct DetailedPackageReq {
     #[serde(default)]
     ignore_rust_version: bool,
 
+    #[serde(default)]
+    frozen: bool,
+
     // Additional options.
     /// Additional CLI arguments that must be passed onto the associated `cargo
     /// install` call between the last one set by proper options and the `--`
@@ -252,6 +255,15 @@ impl Package {
                 ignore_rust_version: true,
                 ..
             })
+        )
+    }
+
+    /// Returns `true` iff the package is detailed and `frozen` was passed as
+    /// `true`.
+    pub fn frozen(&self) -> bool {
+        matches!(
+            self,
+            Self::Detailed(DetailedPackageReq { frozen: true, .. })
         )
     }
 

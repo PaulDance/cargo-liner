@@ -46,6 +46,7 @@ fn install(
     examples: &[String],
     all_examples: bool,
     ignore_rust_version: bool,
+    frozen: bool,
     extra_arguments: &[String],
     environment: &BTreeMap<String, String>,
     force: bool,
@@ -158,6 +159,11 @@ fn install(
         log::trace!("`--force` arg added.");
     }
 
+    if frozen {
+        cmd.arg("--frozen");
+        log::trace!("`--frozen` arg added.");
+    }
+
     // This should be kept here: after all other options and before the `--`.
     if !extra_arguments.is_empty() {
         cmd.args(extra_arguments);
@@ -216,6 +222,7 @@ pub fn install_all(
             pkg.examples(),
             pkg.all_examples(),
             pkg.ignore_rust_version(),
+            pkg.frozen(),
             pkg.extra_arguments(),
             &pkg.environment(),
             force || pkg.force(),
