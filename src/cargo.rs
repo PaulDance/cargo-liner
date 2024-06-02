@@ -49,6 +49,7 @@ fn install(
     ignore_rust_version: bool,
     frozen: bool,
     locked: bool,
+    offline: bool,
     extra_arguments: &[String],
     environment: &BTreeMap<String, String>,
     force: bool,
@@ -171,6 +172,11 @@ fn install(
         log::trace!("`--locked` arg added.");
     }
 
+    if offline {
+        cmd.arg("--offline");
+        log::trace!("`--offline` arg added.");
+    }
+
     // This should be kept here: after all other options and before the `--`.
     if !extra_arguments.is_empty() {
         cmd.args(extra_arguments);
@@ -231,6 +237,7 @@ pub fn install_all(
             pkg.ignore_rust_version(),
             pkg.frozen(),
             pkg.locked(),
+            pkg.offline(),
             pkg.extra_arguments(),
             &pkg.environment(),
             force || pkg.force(),

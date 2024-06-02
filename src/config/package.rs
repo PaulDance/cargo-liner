@@ -75,6 +75,9 @@ pub struct DetailedPackageReq {
     #[serde(default)]
     locked: bool,
 
+    #[serde(default)]
+    offline: bool,
+
     // Additional options.
     /// Additional CLI arguments that must be passed onto the associated `cargo
     /// install` call between the last one set by proper options and the `--`
@@ -276,6 +279,15 @@ impl Package {
         matches!(
             self,
             Self::Detailed(DetailedPackageReq { locked: true, .. })
+        )
+    }
+
+    /// Returns `true` iff the package is detailed and `offline` was passed as
+    /// `true`.
+    pub fn offline(&self) -> bool {
+        matches!(
+            self,
+            Self::Detailed(DetailedPackageReq { offline: true, .. })
         )
     }
 

@@ -726,6 +726,9 @@ where:
    to be both up-to-date.
  * `locked` (optional): boolean that, when `true`, passes the `--locked` CLI
    option to Cargo, thus requiring the package's `Cargo.lock` to be up-to-date.
+ * `offline` (optional): boolean that, when `true`, passes the `--offline` CLI
+   option to Cargo, thus requiring Cargo to run without accessing the network;
+   can only be of use if `--skip-check` is passed as well.
  * `extra-arguments` (optional): list of strings given as additional arguments
    to `cargo install` for the associated package and located between the last
    one given by Cargo Liner and the following `--` seperating options from
