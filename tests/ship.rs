@@ -1338,3 +1338,26 @@ fn validate_ship_examples() {
     assert_installed_all(["ex1", "ex2"]);
     assert_not_installed("ex3");
 }
+
+#[cargo_test]
+fn validate_ship_all_examples() {
+    let _reg = init_registry();
+    fake_install_self();
+    Package::new("abc", "0.0.0")
+        .file("src/lib.rs", "")
+        .file("examples/ex1.rs", "fn main() {}")
+        .file("examples/ex2.rs", "fn main() {}")
+        .file("examples/ex3.rs", "fn main() {}")
+        .publish();
+    write_user_config(&["[packages]", "abc = { version = '*', all-examples = true }"]);
+
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_all_examples.stderr"
+        ]);
+    assert_installed_all(["ex1", "ex2", "ex3"]);
+}

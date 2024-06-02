@@ -713,6 +713,8 @@ where:
  * `examples` (optional): list of strings specifying the examples to install
    among the targeted crate's example targets, passed onto Cargo as a
    repetition of its `--example` option.
+ * `all-examples` (optional): boolean that, when `true`, passes the `--examples`
+   CLI option to Cargo, thus installing all examples of the package.
  * `extra-arguments` (optional): list of strings given as additional arguments
    to `cargo install` for the associated package and located between the last
    one given by Cargo Liner and the following `--` seperating options from

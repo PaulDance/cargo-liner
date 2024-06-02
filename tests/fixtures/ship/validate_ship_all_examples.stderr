@@ -1,0 +1,28 @@
+ INFO  cargo_liner::cargo > Fetching latest package versions...
+    Updating `dummy-registry` index
+ INFO  cargo_liner        > Results:
+┌──────┬─────────────┬─────────────┬────────┐
+│ Name │ Old version │ New version │ Status │
+├──────┼─────────────┼─────────────┼────────┤
+│ abc  │ ø           │ 0.0.0       │ 🛈      │
+└──────┴─────────────┴─────────────┴────────┘
+ INFO  cargo_liner::cargo > Installing `abc`...
+    Updating `dummy-registry` index
+ Downloading crates ...
+  Downloaded abc v0.0.0 (registry `dummy-registry`)
+  Installing abc v0.0.0
+    Updating `dummy-registry` index
+   Compiling abc v0.0.0
+    Finished `release` profile [optimized] target(s) in [ELAPSED]s
+  Installing [ROOT]/home/.cargo/bin/ex1
+  Installing [ROOT]/home/.cargo/bin/ex2
+  Installing [ROOT]/home/.cargo/bin/ex3
+   Installed package `abc v0.0.0` (executables `ex1`, `ex2`, `ex3`)
+warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run the installed binaries
+ INFO  cargo_liner        > Installation report:
+┌──────┬─────────────┬─────────────┬────────┐
+│ Name │ Old version │ New version │ Status │
+├──────┼─────────────┼─────────────┼────────┤
+│ abc  │ ø           │ 0.0.0       │ +      │
+└──────┴─────────────┴─────────────┴────────┘
+ INFO  cargo_liner        > Done.

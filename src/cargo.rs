@@ -44,6 +44,7 @@ fn install(
     bins: &[String],
     all_bins: bool,
     examples: &[String],
+    all_examples: bool,
     extra_arguments: &[String],
     environment: &BTreeMap<String, String>,
     force: bool,
@@ -141,6 +142,11 @@ fn install(
         log::trace!("`--example {}` args added.", example);
     }
 
+    if all_examples {
+        cmd.arg("--examples");
+        log::trace!("`--examples` arg added.");
+    }
+
     if force {
         cmd.arg("--force");
         log::trace!("`--force` arg added.");
@@ -202,6 +208,7 @@ pub fn install_all(
             pkg.bins(),
             pkg.all_bins(),
             pkg.examples(),
+            pkg.all_examples(),
             pkg.extra_arguments(),
             &pkg.environment(),
             force,
