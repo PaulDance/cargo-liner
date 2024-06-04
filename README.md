@@ -136,11 +136,11 @@ them in some way, using Git for example.
    cargo-tarpaulin = "~0.22"
    nu = "=0.71.0"
    ripgrep = { version = "13.0.0", all-features = true }
-   sqlx-cli = {
-       version = "0.6.2",
-       default-features = false,
-       features = ["native-tls", "postgres"],
-   }
+
+       [packages.sqlx-cli]
+       version = "0.6.2"
+       default-features = false
+       features = ["native-tls", "postgres"]
    ```
 
    or use `cargo liner import` to do it automatically for you, see below for
@@ -672,11 +672,12 @@ properly-formed TOML document respecting the following format:
 [packages]
 package-name-1 = "version-req-1"
 package-name-2 = "version-req-2"
-package-name-3 = {
-    version = "version-req-3",
-    all-features = boolean,
-    default-features = boolean,
-    features = ["feature-1", "feature-2"],
+
+    [packages.package-name-3]
+    version = "version-req-3"
+    all-features = boolean
+    default-features = boolean
+    features = ["feature-1", "feature-2"]
     index = "http://example.com/"
     registry = "example-registry"
     git = "http://example.com/exa/mple.git"
@@ -693,9 +694,8 @@ package-name-3 = {
     frozen = boolean
     locked = boolean
     offline = boolean
-    extra-arguments = ["--arg1", "--arg2"],
-    environment = { ENV1 = "abc", ENV2 = "def" },
-}
+    extra-arguments = ["--arg1", "--arg2"]
+    environment = { ENV1 = "abc", ENV2 = "def" }
 #...
 ```
 
