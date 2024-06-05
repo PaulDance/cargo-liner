@@ -13,10 +13,10 @@
   Installing pkg v0.0.0
     Updating `dummy-registry` index
    Compiling pkg v0.0.0
-    Finished `release` profile [optimized] target(s) in [..]s
-  Installing [..]/.cargo/bin/pkg
+    Finished `release` profile [optimized] target(s) in [ELAPSED]s
+  Installing [ROOT]/home/.cargo/bin/pkg
    Installed package `pkg v0.0.0` (executable `pkg`)
-warning: be sure to add `[..]/.cargo/bin` to your PATH to be able to run the installed binaries
+warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run the installed binaries
  INFO  cargo_liner        > Installation report:
 ┌──────┬─────────────┬─────────────┬────────┐
 │ Name │ Old version │ New version │ Status │
