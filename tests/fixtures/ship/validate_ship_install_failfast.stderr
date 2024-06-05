@@ -7,7 +7,7 @@ Error:
    2: Cargo process finished unsuccessfully: exit status: 101
 
 Location:
-   src/cargo.rs:[..]
+   src/[..].rs:[..]
 
 Note: This can happen for many reasons.
 Suggestion: Read Cargo's output.

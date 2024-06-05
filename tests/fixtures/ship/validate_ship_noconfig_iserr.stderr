@@ -4,7 +4,7 @@ Error:
    2: No such file or directory (os error 2)
 
 Location:
-   src/config/user_config.rs:[..]
+   src/[..].rs:[..]
 
 Note: This can happen for many reasons.
 Suggestion: Check if the file exists and has the correct permissions.
