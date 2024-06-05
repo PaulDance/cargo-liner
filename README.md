@@ -151,6 +151,118 @@ them in some way, using Git for example.
 
 
 ## Usage
+### Configuration
+
+The file must be located at `$CARGO_HOME/liner.toml` and contain a
+properly-formed TOML document respecting the following format:
+
+```toml
+[packages]
+package-name-1 = "version-req-1"
+package-name-2 = "version-req-2"
+
+    [packages.package-name-3]
+    version = "version-req-3"
+    all-features = boolean
+    default-features = boolean
+    features = ["feature-1", "feature-2"]
+    index = "http://example.com/"
+    registry = "example-registry"
+    git = "http://example.com/exa/mple.git"
+    branch = "branch"
+    tag = "tag"
+    rev = "SHA1"
+    path = "/a/b/c"
+    bins = ["bin1", "bin2"]
+    all-bins = boolean
+    examples = ["ex1", "ex2"]
+    all-examples = boolean
+    force = boolean
+    ignore-rust-version = boolean
+    frozen = boolean
+    locked = boolean
+    offline = boolean
+    extra-arguments = ["--arg1", "--arg2"]
+    environment = { ENV1 = "abc", ENV2 = "def" }
+#...
+```
+
+where:
+ * `packages` (mandatory): map of package name to package details instructing
+   which and how packages should be installed or updated.
+ * `version` (mandatory): version requirement string to use when installing or
+   updating the associated package; this is the detailed field set when only
+   using the simple configuration style.
+ * `all-features` (optional): boolean that, when set to `true`, enables the
+   `--all-features` flag of `cargo install`.
+ * `default-features` (optional): boolean that, when set to `false`, enables
+   the `--no-default-features` flag of `cargo install`.
+ * `features` (optional): list of strings instructing which of the associated
+   crate's Cargo features should be enabled when building it.
+ * `index` (optional): string specifying the registry index to install from.
+ * `registry` (optional): string specifying the registry to use.
+ * `git` (optional): string specifying the Git URL to install from.
+ * `branch` (optional): string specifying the branch to use when installing
+   from Git.
+ * `tag` (optional): string specifying the tag to use when installing from Git.
+ * `rev` (optional): string specifying the commit to use when installing from
+   Git.
+ * `path` (optional): string specifying the filesystem path to local crate to
+   install from.
+ * `bins` (optional): list of strings specifying the binaries to install among
+   the targeted crate's binary targets, passed onto Cargo as a repetition of
+   its `--bin` option.
+ * `all-bins` (optional): boolean that, when `true`, passes the `--bins` CLI
+   option to Cargo, thus installing all binaries of the package.
+ * `examples` (optional): list of strings specifying the examples to install
+   among the targeted crate's example targets, passed onto Cargo as a
+   repetition of its `--example` option.
+ * `all-examples` (optional): boolean that, when `true`, passes the `--examples`
+   CLI option to Cargo, thus installing all examples of the package.
+ * `force` (optional): boolean that, when `true`, passes `--force` to Cargo,
+   thus potentially overwriting existing binaries or examples; only useful if
+   `--skip-check` is passed as well.
+ * `ignore-rust-version` (optional): boolean that, when `true`, passes the
+   `--ignore-rust-version` CLI option to Cargo, thus ignoring `rust-version`
+   specifications in packages.
+ * `frozen` (optional): boolean that, when `true`, passes the `--frozen` CLI
+   option to Cargo, thus requiring the package's `Cargo.lock` and Cargo's cache
+   to be both up-to-date.
+ * `locked` (optional): boolean that, when `true`, passes the `--locked` CLI
+   option to Cargo, thus requiring the package's `Cargo.lock` to be up-to-date.
+ * `offline` (optional): boolean that, when `true`, passes the `--offline` CLI
+   option to Cargo, thus requiring Cargo to run without accessing the network;
+   can only be of use if `--skip-check` is passed as well.
+ * `extra-arguments` (optional): list of strings given as additional arguments
+   to `cargo install` for the associated package and located between the last
+   one given by Cargo Liner and the following `--` seperating options from
+   fixed arguments. This can be used in order to successfully manage a package
+   using a Cargo Liner version that does not yet implement the desired option.
+ * `environment` (optional): map of string to strings specifying which and how
+   environment variables should be set for the spawned `cargo install` process.
+
+with the following constraints, mostly enforced by Cargo, but also by TOML:
+ * `package-name-*` must be a valid [package name], i.e. match
+   `[a-zA-Z][a-zA-Z0-9_-]*` or something like that.
+ * `version-req-*` must be a valid [SemVer] requirement, [Cargo style]. In
+   particular, the catch-all wildcard `*` can be used to require the latest
+   version available.
+ * `feature-*` must be the name of a [Cargo feature] defined by the package
+   being installed, which has constraints similar to a package name; in
+   particular, it shouldn't contain a comma.
+ * `--arg*` must be the name of a [`cargo install` CLI argument].
+ * `ENV*` should be the name of a [`cargo install` environment variable].
+ * `boolean` is a [TOML boolean], either `true` or `false`.
+
+[package name]: https://doc.rust-lang.org/cargo/reference/manifest.html#the-name-field
+[SemVer]: https://semver.org/
+[Cargo style]: https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html
+[Cargo feature]: https://doc.rust-lang.org/cargo/reference/features.html
+[`cargo install` CLI argument]: https://doc.rust-lang.org/cargo/commands/cargo-install.html
+[`cargo install` environment variable]: https://doc.rust-lang.org/cargo/reference/environment-variables.html
+[TOML boolean]: https://toml.io/en/v1.0.0#boolean
+
+
 ### CLI
 
 A few commands are available:
@@ -661,118 +773,6 @@ startup. For example with Zsh, adding:
 to one's `~/.zshrc` will enable the completions in every new shell, but only if
 Cargo Liner is indeed installed (that part may need to be adapted to your
 particular environment).
-
-
-### Configuration
-
-The file must be located at `$CARGO_HOME/liner.toml` and contain a
-properly-formed TOML document respecting the following format:
-
-```toml
-[packages]
-package-name-1 = "version-req-1"
-package-name-2 = "version-req-2"
-
-    [packages.package-name-3]
-    version = "version-req-3"
-    all-features = boolean
-    default-features = boolean
-    features = ["feature-1", "feature-2"]
-    index = "http://example.com/"
-    registry = "example-registry"
-    git = "http://example.com/exa/mple.git"
-    branch = "branch"
-    tag = "tag"
-    rev = "SHA1"
-    path = "/a/b/c"
-    bins = ["bin1", "bin2"]
-    all-bins = boolean
-    examples = ["ex1", "ex2"]
-    all-examples = boolean
-    force = boolean
-    ignore-rust-version = boolean
-    frozen = boolean
-    locked = boolean
-    offline = boolean
-    extra-arguments = ["--arg1", "--arg2"]
-    environment = { ENV1 = "abc", ENV2 = "def" }
-#...
-```
-
-where:
- * `packages` (mandatory): map of package name to package details instructing
-   which and how packages should be installed or updated.
- * `version` (mandatory): version requirement string to use when installing or
-   updating the associated package; this is the detailed field set when only
-   using the simple configuration style.
- * `all-features` (optional): boolean that, when set to `true`, enables the
-   `--all-features` flag of `cargo install`.
- * `default-features` (optional): boolean that, when set to `false`, enables
-   the `--no-default-features` flag of `cargo install`.
- * `features` (optional): list of strings instructing which of the associated
-   crate's Cargo features should be enabled when building it.
- * `index` (optional): string specifying the registry index to install from.
- * `registry` (optional): string specifying the registry to use.
- * `git` (optional): string specifying the Git URL to install from.
- * `branch` (optional): string specifying the branch to use when installing
-   from Git.
- * `tag` (optional): string specifying the tag to use when installing from Git.
- * `rev` (optional): string specifying the commit to use when installing from
-   Git.
- * `path` (optional): string specifying the filesystem path to local crate to
-   install from.
- * `bins` (optional): list of strings specifying the binaries to install among
-   the targeted crate's binary targets, passed onto Cargo as a repetition of
-   its `--bin` option.
- * `all-bins` (optional): boolean that, when `true`, passes the `--bins` CLI
-   option to Cargo, thus installing all binaries of the package.
- * `examples` (optional): list of strings specifying the examples to install
-   among the targeted crate's example targets, passed onto Cargo as a
-   repetition of its `--example` option.
- * `all-examples` (optional): boolean that, when `true`, passes the `--examples`
-   CLI option to Cargo, thus installing all examples of the package.
- * `force` (optional): boolean that, when `true`, passes `--force` to Cargo,
-   thus potentially overwriting existing binaries or examples; only useful if
-   `--skip-check` is passed as well.
- * `ignore-rust-version` (optional): boolean that, when `true`, passes the
-   `--ignore-rust-version` CLI option to Cargo, thus ignoring `rust-version`
-   specifications in packages.
- * `frozen` (optional): boolean that, when `true`, passes the `--frozen` CLI
-   option to Cargo, thus requiring the package's `Cargo.lock` and Cargo's cache
-   to be both up-to-date.
- * `locked` (optional): boolean that, when `true`, passes the `--locked` CLI
-   option to Cargo, thus requiring the package's `Cargo.lock` to be up-to-date.
- * `offline` (optional): boolean that, when `true`, passes the `--offline` CLI
-   option to Cargo, thus requiring Cargo to run without accessing the network;
-   can only be of use if `--skip-check` is passed as well.
- * `extra-arguments` (optional): list of strings given as additional arguments
-   to `cargo install` for the associated package and located between the last
-   one given by Cargo Liner and the following `--` seperating options from
-   fixed arguments. This can be used in order to successfully manage a package
-   using a Cargo Liner version that does not yet implement the desired option.
- * `environment` (optional): map of string to strings specifying which and how
-   environment variables should be set for the spawned `cargo install` process.
-
-with the following constraints, mostly enforced by Cargo, but also by TOML:
- * `package-name-*` must be a valid [package name], i.e. match
-   `[a-zA-Z][a-zA-Z0-9_-]*` or something like that.
- * `version-req-*` must be a valid [SemVer] requirement, [Cargo style]. In
-   particular, the catch-all wildcard `*` can be used to require the latest
-   version available.
- * `feature-*` must be the name of a [Cargo feature] defined by the package
-   being installed, which has constraints similar to a package name; in
-   particular, it shouldn't contain a comma.
- * `--arg*` must be the name of a [`cargo install` CLI argument].
- * `ENV*` should be the name of a [`cargo install` environment variable].
- * `boolean` is a [TOML boolean], either `true` or `false`.
-
-[package name]: https://doc.rust-lang.org/cargo/reference/manifest.html#the-name-field
-[SemVer]: https://semver.org/
-[Cargo style]: https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html
-[Cargo feature]: https://doc.rust-lang.org/cargo/reference/features.html
-[`cargo install` CLI argument]: https://doc.rust-lang.org/cargo/commands/cargo-install.html
-[`cargo install` environment variable]: https://doc.rust-lang.org/cargo/reference/environment-variables.html
-[TOML boolean]: https://toml.io/en/v1.0.0#boolean
 
 
 ## Contributing
