@@ -350,19 +350,19 @@ fn log_install_report(
     }
 }
 
-/// Collection of single-character strings to be used as display icons.
+/// Collection of adequate characters to be used as display icons.
 mod icons {
     /// When nothing to display or needs to be done: already up-to-date.
-    pub(super) const NONE: &str = "ø";
+    pub(super) const NONE: char = 'ø';
     /// When something needs to be performed: installation or update of a
     /// package.
-    pub(super) const TODO: &str = "🛈";
+    pub(super) const TODO: char = '🛈';
     /// When something was successfully added: new installation of a package.
-    pub(super) const NEW: &str = "+";
+    pub(super) const NEW: char = '+';
     /// When something failed.
-    pub(super) const ERR: &str = "✘";
+    pub(super) const ERR: char = '✘';
     /// When things went right: already up-to-date or successful update.
-    pub(super) const OK: &str = "✔";
+    pub(super) const OK: char = '✔';
 }
 
 /// Assembles both an output stream's color capacity and a color preference in
@@ -425,11 +425,11 @@ impl Colorizer {
 
     /// Returns the colorized version of [`icons::ERR`].
     pub fn err_icon(&self) -> impl Display {
-        self.colorize_with(&icons::ERR, <&str>::red)
+        self.colorize_with(&icons::ERR, char::red)
     }
 
     /// Returns the colorized version of [`icons::OK`].
     pub fn ok_icon(&self) -> impl Display {
-        self.colorize_with(&icons::OK, <&str>::green)
+        self.colorize_with(&icons::OK, char::green)
     }
 }
