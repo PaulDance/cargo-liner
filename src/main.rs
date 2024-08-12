@@ -350,16 +350,20 @@ fn log_install_report(
     }
 }
 
-/// When nothing to display or needs to be done: already up-to-date.
-const NONE_ICON: &str = "ø";
-/// When something needs to be performed: installation or update of a package.
-const TODO_ICON: &str = "🛈";
-/// When something was successfully added: new installation of a package.
-const NEW_ICON: &str = "+";
-/// When something failed.
-const ERR_ICON: &str = "✘";
-/// When things went right: already up-to-date or successful update.
-const OK_ICON: &str = "✔";
+/// Collection of single-character strings to be used as display icons.
+mod icons {
+    /// When nothing to display or needs to be done: already up-to-date.
+    pub(super) const NONE: &str = "ø";
+    /// When something needs to be performed: installation or update of a
+    /// package.
+    pub(super) const TODO: &str = "🛈";
+    /// When something was successfully added: new installation of a package.
+    pub(super) const NEW: &str = "+";
+    /// When something failed.
+    pub(super) const ERR: &str = "✘";
+    /// When things went right: already up-to-date or successful update.
+    pub(super) const OK: &str = "✔";
+}
 
 /// Assembles both an output stream's color capacity and a color preference in
 /// order to condtionally emit colorized content.
@@ -403,29 +407,29 @@ impl Colorizer {
         }
     }
 
-    /// Returns the colorized version of [`NONE_ICON`].
+    /// Returns the colorized version of [`icons::NONE`].
     #[allow(clippy::unused_self)] // so refactors may be easier.
     pub fn none_icon(&self) -> impl Display {
-        NONE_ICON
+        icons::NONE
     }
 
-    /// Returns the colorized version of [`TODO_ICON`].
+    /// Returns the colorized version of [`icons::TODO`].
     pub fn todo_icon(&self) -> impl Display {
-        self.colorize_with(&TODO_ICON, |s| s.bold().blue().to_string())
+        self.colorize_with(&icons::TODO, |s| s.bold().blue().to_string())
     }
 
-    /// Returns the colorized version of [`NEW_ICON`].
+    /// Returns the colorized version of [`icons::NEW`].
     pub fn new_icon(&self) -> impl Display {
-        self.colorize_with(&NEW_ICON, |s| s.bold().green().to_string())
+        self.colorize_with(&icons::NEW, |s| s.bold().green().to_string())
     }
 
-    /// Returns the colorized version of [`ERR_ICON`].
+    /// Returns the colorized version of [`icons::ERR`].
     pub fn err_icon(&self) -> impl Display {
-        self.colorize_with(&ERR_ICON, <&str>::red)
+        self.colorize_with(&icons::ERR, <&str>::red)
     }
 
-    /// Returns the colorized version of [`OK_ICON`].
+    /// Returns the colorized version of [`icons::OK`].
     pub fn ok_icon(&self) -> impl Display {
-        self.colorize_with(&OK_ICON, <&str>::green)
+        self.colorize_with(&icons::OK, <&str>::green)
     }
 }
