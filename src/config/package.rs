@@ -92,11 +92,10 @@ pub struct DetailedPackageReq {
 
 /// Represents the requirement setting configured for a package.
 ///
-/// There is only one variant for now: a version requirement string.
 /// The enumeration is deserialized from an untagged form.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum Package {
+pub enum PackageRequirement {
     #[allow(clippy::doc_markdown)]
     /// Simple form: only a SemVer requirement string.
     Simple(VersionReq),
@@ -104,7 +103,7 @@ pub enum Package {
     Detailed(DetailedPackageReq),
 }
 
-impl Package {
+impl PackageRequirement {
     /// Convenience shortcut for simple and star version requirement package.
     pub const SIMPLE_STAR: Self = Self::Simple(VersionReq::STAR);
 

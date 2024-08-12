@@ -27,7 +27,7 @@ use cargo::InstallStatus;
 mod cli;
 use cli::{LinerArgs, LinerCommands};
 mod config;
-use config::{CargoCratesToml, Package, UserConfig};
+use config::{CargoCratesToml, PackageRequirement, UserConfig};
 #[cfg(test)]
 #[path = "../tests/common/mod.rs"]
 mod testing;
@@ -250,10 +250,10 @@ fn init_logger(args: &LinerArgs) -> Result<()> {
 
 /// Returns the packages that do indeed need an install or update.
 fn needing_install(
-    pkgs: &BTreeMap<String, Package>,
+    pkgs: &BTreeMap<String, PackageRequirement>,
     new_vers: &BTreeMap<String, Version>,
     old_vers: &BTreeMap<String, Version>,
-) -> BTreeMap<String, Package> {
+) -> BTreeMap<String, PackageRequirement> {
     let mut to_install = BTreeMap::new();
     log::debug!("Filtering packages by versions...");
 

@@ -10,7 +10,7 @@ use serde::Deserialize;
 use serde_with::DeserializeFromStr;
 use url::Url;
 
-use super::{Package, UserConfig};
+use super::{PackageRequirement, UserConfig};
 use crate::cargo;
 
 /// Representation of the `$CARGO_HOME/.crates.toml` Cargo-managed save file.
@@ -90,7 +90,7 @@ impl CargoCratesToml {
     ///
     /// The function must take in by value the couple of [`CargoCratesPackage`]
     /// to vector of binary names and return a couple of package name to
-    /// [`Package`] information.
+    /// [`PackageRequirement`] information.
     ///
     /// The current crate will be kept in the packages if `keep_self` is
     /// `true`, otherwise it will be filtered out.
@@ -99,7 +99,7 @@ impl CargoCratesToml {
     /// `true`, otherwise they will be filtered out.
     fn into_config<F>(self, pkg_map: F, keep_self: bool, keep_local: bool) -> UserConfig
     where
-        F: FnMut((CargoCratesPackage, Vec<String>)) -> (String, Package),
+        F: FnMut((CargoCratesPackage, Vec<String>)) -> (String, PackageRequirement),
     {
         UserConfig {
             packages: self
@@ -119,7 +119,7 @@ impl CargoCratesToml {
     pub fn into_star_version_config(self, keep_self: bool, keep_local: bool) -> UserConfig {
         log::debug!("Converting packages to config with op: \"*\"...");
         self.into_config(
-            |(pkg, _)| (pkg.name, Package::SIMPLE_STAR),
+            |(pkg, _)| (pkg.name, PackageRequirement::SIMPLE_STAR),
             keep_self,
             keep_local,
         )
@@ -132,7 +132,12 @@ impl CargoCratesToml {
     fn into_op_version_config(self, op: Op, keep_self: bool, keep_local: bool) -> UserConfig {
         log::debug!("Converting packages to config with op: {op:#?}...");
         self.into_config(
-            |(pkg, _)| (pkg.name, Package::Simple(ver_to_req(&pkg.version, op))),
+            |(pkg, _)| {
+                (
+                    pkg.name,
+                    PackageRequirement::Simple(ver_to_req(&pkg.version, op)),
+                )
+            },
             keep_self,
             keep_local,
         )
@@ -382,7 +387,7 @@ mod tests {
                     .into_iter()
                     .map(|(name, version)| (
                         name.to_owned(),
-                        Package::Simple(VersionReq::parse(version).unwrap()),
+                        PackageRequirement::Simple(VersionReq::parse(version).unwrap()),
                     ))
                     .collect::<BTreeMap<_, _>>(),
             },
@@ -416,7 +421,7 @@ mod tests {
                     .into_iter()
                     .map(|(name, version)| (
                         name.to_owned(),
-                        Package::Simple(VersionReq::parse(version).unwrap()),
+                        PackageRequirement::Simple(VersionReq::parse(version).unwrap()),
                     ))
                     .collect::<BTreeMap<_, _>>(),
             },
@@ -450,7 +455,7 @@ mod tests {
                     .into_iter()
                     .map(|(name, version)| (
                         name.to_owned(),
-                        Package::Simple(VersionReq::parse(version).unwrap()),
+                        PackageRequirement::Simple(VersionReq::parse(version).unwrap()),
                     ))
                     .collect::<BTreeMap<_, _>>(),
             },
@@ -484,7 +489,7 @@ mod tests {
                     .into_iter()
                     .map(|(name, version)| (
                         name.to_owned(),
-                        Package::Simple(VersionReq::parse(version).unwrap()),
+                        PackageRequirement::Simple(VersionReq::parse(version).unwrap()),
                     ))
                     .collect::<BTreeMap<_, _>>(),
             },
@@ -526,7 +531,7 @@ mod tests {
                     .into_iter()
                     .map(|(name, version)| (
                         name.to_owned(),
-                        Package::Simple(VersionReq::parse(version).unwrap()),
+                        PackageRequirement::Simple(VersionReq::parse(version).unwrap()),
                     ))
                     .collect::<BTreeMap<_, _>>(),
             },
@@ -542,7 +547,7 @@ mod tests {
                     .into_iter()
                     .map(|(name, version)| (
                         name.to_owned(),
-                        Package::Simple(VersionReq::parse(version).unwrap()),
+                        PackageRequirement::Simple(VersionReq::parse(version).unwrap()),
                     ))
                     .collect::<BTreeMap<_, _>>(),
             },
@@ -563,7 +568,7 @@ mod tests {
                 .into_iter()
                 .map(|(name, version)| (
                     name.to_owned(),
-                    Package::Simple(VersionReq::parse(version).unwrap()),
+                    PackageRequirement::Simple(VersionReq::parse(version).unwrap()),
                 ))
                 .collect::<BTreeMap<_, _>>(),
             },
@@ -601,7 +606,7 @@ mod tests {
                 .into_iter()
                 .map(|(name, version)| (
                     name.to_owned(),
-                    Package::Simple(VersionReq::parse(version).unwrap()),
+                    PackageRequirement::Simple(VersionReq::parse(version).unwrap()),
                 ))
                 .collect::<BTreeMap<_, _>>(),
             },
@@ -639,7 +644,7 @@ mod tests {
                 .into_iter()
                 .map(|(name, version)| (
                     name.to_owned(),
-                    Package::Simple(VersionReq::parse(version).unwrap()),
+                    PackageRequirement::Simple(VersionReq::parse(version).unwrap()),
                 ))
                 .collect::<BTreeMap<_, _>>(),
             },
@@ -677,7 +682,7 @@ mod tests {
                 .into_iter()
                 .map(|(name, version)| (
                     name.to_owned(),
-                    Package::Simple(VersionReq::parse(version).unwrap()),
+                    PackageRequirement::Simple(VersionReq::parse(version).unwrap()),
                 ))
                 .collect::<BTreeMap<_, _>>(),
             },

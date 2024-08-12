@@ -8,14 +8,14 @@ use color_eyre::eyre::{Result, WrapErr};
 use color_eyre::Section;
 use serde::{Deserialize, Serialize};
 
-use super::Package;
+use super::PackageRequirement;
 use crate::cargo;
 
 /// Represents the user's configuration deserialized from its file.
 #[derive(Serialize, Deserialize, Debug, Default, Clone, PartialEq, Eq)]
 pub struct UserConfig {
     /// The name-to-setting map for the `packages` section of the config.
-    pub packages: BTreeMap<String, Package>,
+    pub packages: BTreeMap<String, PackageRequirement>,
 }
 
 impl UserConfig {
@@ -117,7 +117,7 @@ impl UserConfig {
         if sup {
             self.packages
                 .entry(clap::crate_name!().to_owned())
-                .or_insert(Package::SIMPLE_STAR);
+                .or_insert(PackageRequirement::SIMPLE_STAR);
             log::debug!("Self-updating enabled.");
         } else {
             self.packages.remove(clap::crate_name!());
@@ -136,7 +136,7 @@ impl UserConfig {
                 clap::crate_name!().to_owned(),
                 self.packages
                     .get(clap::crate_name!())
-                    .unwrap_or(&Package::SIMPLE_STAR)
+                    .unwrap_or(&PackageRequirement::SIMPLE_STAR)
                     .clone(),
             ))
             .collect();
@@ -213,7 +213,7 @@ mod tests {
                 .into_iter()
                 .map(|(name, version)| (
                     name.to_owned(),
-                    Package::Simple(VersionReq::parse(version).unwrap()),
+                    PackageRequirement::Simple(VersionReq::parse(version).unwrap()),
                 ))
                 .collect::<BTreeMap<_, _>>(),
             }
@@ -953,7 +953,7 @@ mod tests {
                 .into_iter()
                 .map(|(name, version)| (
                     name.to_owned(),
-                    Package::Simple(VersionReq::parse(version).unwrap()),
+                    PackageRequirement::Simple(VersionReq::parse(version).unwrap()),
                 ))
                 .collect::<BTreeMap<_, _>>(),
             }
@@ -979,7 +979,7 @@ mod tests {
     fn test_userconfig_selfupdate_enable() {
         assert_eq!(
             UserConfig::default().self_update(true).packages,
-            iter::once(("cargo-liner".to_owned(), Package::SIMPLE_STAR))
+            iter::once(("cargo-liner".to_owned(), PackageRequirement::SIMPLE_STAR))
                 .collect::<BTreeMap<_, _>>(),
         );
     }
@@ -988,7 +988,7 @@ mod tests {
     fn test_userconfig_selfupdate_enable_noreplace() {
         let pkgs = iter::once((
             "cargo-liner".to_owned(),
-            Package::Simple(VersionReq::parse("1.2.3").unwrap()),
+            PackageRequirement::Simple(VersionReq::parse("1.2.3").unwrap()),
         ))
         .collect::<BTreeMap<_, _>>();
 
@@ -1019,7 +1019,7 @@ mod tests {
             UserConfig {
                 packages: iter::once((
                     "cargo-liner".to_owned(),
-                    Package::Simple(VersionReq::parse("1.2.3").unwrap()),
+                    PackageRequirement::Simple(VersionReq::parse("1.2.3").unwrap()),
                 ))
                 .collect::<BTreeMap<_, _>>(),
             }
@@ -1037,7 +1037,7 @@ mod tests {
                 .self_update(true)
                 .update_others(false)
                 .packages,
-            iter::once(("cargo-liner".to_owned(), Package::SIMPLE_STAR))
+            iter::once(("cargo-liner".to_owned(), PackageRequirement::SIMPLE_STAR))
                 .collect::<BTreeMap<_, _>>(),
         );
     }
@@ -1051,10 +1051,10 @@ mod tests {
                 .update_others(true)
                 .packages,
             [
-                ("cargo-liner".to_owned(), Package::SIMPLE_STAR),
+                ("cargo-liner".to_owned(), PackageRequirement::SIMPLE_STAR),
                 (
                     "a".to_owned(),
-                    Package::Simple(VersionReq::parse("1.2.3").unwrap())
+                    PackageRequirement::Simple(VersionReq::parse("1.2.3").unwrap())
                 )
             ]
             .into_iter()
@@ -1066,7 +1066,7 @@ mod tests {
     fn test_userconfig_onlyselfupdate_enable_isnoreplace() {
         let pkgs = iter::once((
             "cargo-liner".to_owned(),
-            Package::Simple(VersionReq::parse("1.2.3").unwrap()),
+            PackageRequirement::Simple(VersionReq::parse("1.2.3").unwrap()),
         ))
         .collect::<BTreeMap<_, _>>();
 

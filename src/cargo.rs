@@ -16,7 +16,7 @@ use log::Level;
 use regex::Regex;
 use semver::Version;
 
-use crate::config::Package;
+use crate::config::PackageRequirement;
 
 /// Installs a package, by running `cargo install` passing the `name`, `version`
 /// and requested `features`, and returns the exit code of the process.
@@ -198,7 +198,7 @@ fn install(
 /// Returns `Ok(report)` when `keep_going` is `true`, otherwise `Err(err)` of
 /// the first error `err` encountered.
 pub fn install_all(
-    packages: &BTreeMap<String, Package>,
+    packages: &BTreeMap<String, PackageRequirement>,
     installed: &BTreeSet<String>,
     keep_going: bool,
     force: bool,
@@ -403,7 +403,9 @@ fn finish_search_exact(pkg: &str, proc: Child) -> Result<Version> {
 
 /// Runs `*_search_exact` for all packages in the given map and returns the
 /// thus fetched versions in the collected map.
-pub fn search_exact_all(pkgs: &BTreeMap<String, Package>) -> Result<BTreeMap<String, Version>> {
+pub fn search_exact_all(
+    pkgs: &BTreeMap<String, PackageRequirement>,
+) -> Result<BTreeMap<String, Version>> {
     log::info!("Fetching latest package versions...");
     let mut procs = Vec::new();
     let mut vers = BTreeMap::new();
@@ -586,7 +588,7 @@ mod tests {
         for (pkg, ver) in search_exact_all(
             &[SELF, "cargo-expand", "cargo-tarpaulin", "bat"]
                 .into_iter()
-                .map(|pkg| (pkg.to_owned(), Package::SIMPLE_STAR))
+                .map(|pkg| (pkg.to_owned(), PackageRequirement::SIMPLE_STAR))
                 .collect(),
         )? {
             assert_eq!(
@@ -611,7 +613,7 @@ mod tests {
         testing::set_env();
 
         assert!(search_exact_all(
-            &[(NONE.to_owned(), Package::SIMPLE_STAR)]
+            &[(NONE.to_owned(), PackageRequirement::SIMPLE_STAR)]
                 .into_iter()
                 .collect()
         )
