@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 /// <https://github.com/serde-rs/serde/issues/368>.
 #[allow(clippy::inline_always)]
 #[inline(always)]
-fn serde_default_true() -> bool {
+const fn serde_default_true() -> bool {
     true
 }
 
