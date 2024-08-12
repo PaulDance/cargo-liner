@@ -14,7 +14,7 @@ _cargo-liner() {
     fi
 
     local context curcontext="$curcontext" state line
-    _arguments "${_arguments_options[@]}" \
+    _arguments "${_arguments_options[@]}" : \
 '--color=[Control the coloring of the logging output]:WHEN:(auto always never)' \
 '(-q --quiet)*-v[Be more verbose. Use multiple times to be more and more so each time]' \
 '(-q --quiet)*--verbose[Be more verbose. Use multiple times to be more and more so each time]' \
@@ -34,7 +34,7 @@ _cargo-liner() {
         curcontext="${curcontext%:*:*}:cargo-liner-command-$line[1]:"
         case $line[1] in
             (ship)
-_arguments "${_arguments_options[@]}" \
+_arguments "${_arguments_options[@]}" : \
 '--color=[Control the coloring of the logging output]:WHEN:(auto always never)' \
 '(-s --only-self)-n[Disable self-updating]' \
 '(-s --only-self)--no-self[Disable self-updating]' \
@@ -55,7 +55,7 @@ _arguments "${_arguments_options[@]}" \
 && ret=0
 ;;
 (import)
-_arguments "${_arguments_options[@]}" \
+_arguments "${_arguments_options[@]}" : \
 '--color=[Control the coloring of the logging output]:WHEN:(auto always never)' \
 '(-c --compatible -p --patch)-e[Import package versions as "exact versions", i.e. prepended with an equal operator]' \
 '(-c --compatible -p --patch)--exact[Import package versions as "exact versions", i.e. prepended with an equal operator]' \
@@ -78,7 +78,7 @@ _arguments "${_arguments_options[@]}" \
 && ret=0
 ;;
 (completions)
-_arguments "${_arguments_options[@]}" \
+_arguments "${_arguments_options[@]}" : \
 '--color=[Control the coloring of the logging output]:WHEN:(auto always never)' \
 '(-q --quiet)*-v[Be more verbose. Use multiple times to be more and more so each time]' \
 '(-q --quiet)*--verbose[Be more verbose. Use multiple times to be more and more so each time]' \
@@ -90,7 +90,7 @@ _arguments "${_arguments_options[@]}" \
 && ret=0
 ;;
 (help)
-_arguments "${_arguments_options[@]}" \
+_arguments "${_arguments_options[@]}" : \
 ":: :_cargo-liner__help_commands" \
 "*::: :->help" \
 && ret=0
@@ -102,19 +102,19 @@ _arguments "${_arguments_options[@]}" \
         curcontext="${curcontext%:*:*}:cargo-liner-help-command-$line[1]:"
         case $line[1] in
             (ship)
-_arguments "${_arguments_options[@]}" \
+_arguments "${_arguments_options[@]}" : \
 && ret=0
 ;;
 (import)
-_arguments "${_arguments_options[@]}" \
+_arguments "${_arguments_options[@]}" : \
 && ret=0
 ;;
 (completions)
-_arguments "${_arguments_options[@]}" \
+_arguments "${_arguments_options[@]}" : \
 && ret=0
 ;;
 (help)
-_arguments "${_arguments_options[@]}" \
+_arguments "${_arguments_options[@]}" : \
 && ret=0
 ;;
         esac
@@ -141,11 +141,6 @@ _cargo-liner__completions_commands() {
     local commands; commands=()
     _describe -t commands 'cargo-liner completions commands' commands "$@"
 }
-(( $+functions[_cargo-liner__help__completions_commands] )) ||
-_cargo-liner__help__completions_commands() {
-    local commands; commands=()
-    _describe -t commands 'cargo-liner help completions commands' commands "$@"
-}
 (( $+functions[_cargo-liner__help_commands] )) ||
 _cargo-liner__help_commands() {
     local commands; commands=(
@@ -155,6 +150,11 @@ _cargo-liner__help_commands() {
 'help:Print this message or the help of the given subcommand(s)' \
     )
     _describe -t commands 'cargo-liner help commands' commands "$@"
+}
+(( $+functions[_cargo-liner__help__completions_commands] )) ||
+_cargo-liner__help__completions_commands() {
+    local commands; commands=()
+    _describe -t commands 'cargo-liner help completions commands' commands "$@"
 }
 (( $+functions[_cargo-liner__help__help_commands] )) ||
 _cargo-liner__help__help_commands() {
@@ -166,15 +166,15 @@ _cargo-liner__help__import_commands() {
     local commands; commands=()
     _describe -t commands 'cargo-liner help import commands' commands "$@"
 }
-(( $+functions[_cargo-liner__import_commands] )) ||
-_cargo-liner__import_commands() {
-    local commands; commands=()
-    _describe -t commands 'cargo-liner import commands' commands "$@"
-}
 (( $+functions[_cargo-liner__help__ship_commands] )) ||
 _cargo-liner__help__ship_commands() {
     local commands; commands=()
     _describe -t commands 'cargo-liner help ship commands' commands "$@"
+}
+(( $+functions[_cargo-liner__import_commands] )) ||
+_cargo-liner__import_commands() {
+    local commands; commands=()
+    _describe -t commands 'cargo-liner import commands' commands "$@"
 }
 (( $+functions[_cargo-liner__ship_commands] )) ||
 _cargo-liner__ship_commands() {
