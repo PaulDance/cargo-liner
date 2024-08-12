@@ -16,7 +16,7 @@ use log::Level;
 use regex::Regex;
 use semver::Version;
 
-use crate::config::PackageRequirement;
+use crate::config::DetailedPackageReq;
 
 /// Installs a package, by running `cargo install` passing the `name`, `version`
 /// and requested `features`, and returns the exit code of the process.
@@ -26,41 +26,19 @@ use crate::config::PackageRequirement;
 /// corresponding program. See the [Cargo reference] for more details.
 ///
 /// [Cargo reference]: https://doc.rust-lang.org/cargo/reference/external-tools.html#custom-subcommands
-#[allow(clippy::too_many_arguments)]
-#[allow(clippy::fn_params_excessive_bools)]
 #[allow(clippy::too_many_lines)]
 fn install(
-    name: &str,
-    version: &str,
-    no_default_features: bool,
-    all_features: bool,
-    features: &[String],
-    index: Option<&str>,
-    registry: Option<&str>,
-    git: Option<&str>,
-    branch: Option<&str>,
-    tag: Option<&str>,
-    rev: Option<&str>,
-    path: Option<&str>,
-    bins: &[String],
-    all_bins: bool,
-    examples: &[String],
-    all_examples: bool,
-    ignore_rust_version: bool,
-    frozen: bool,
-    locked: bool,
-    offline: bool,
-    extra_arguments: &[String],
-    environment: &BTreeMap<String, String>,
+    pkg_name: &str,
+    pkg_req: &DetailedPackageReq,
     force: bool,
     color: ColorChoice,
     verbosity: i8,
 ) -> Result<ExitStatus> {
     let mut cmd = Command::new(env_var()?);
 
-    if !environment.is_empty() {
-        cmd.envs(environment);
-        log::trace!("Environment set: {:#?}", environment);
+    if !pkg_req.environment.is_empty() {
+        cmd.envs(&pkg_req.environment);
+        log::trace!("Environment set: {:#?}", pkg_req.environment);
     }
 
     cmd.args(["--color", &color.to_string()]);
@@ -80,79 +58,79 @@ fn install(
         Ordering::Equal => {}
     }
 
-    cmd.args(["install", "--version", version]);
+    cmd.args(["install", "--version", &pkg_req.version.to_string()]);
 
-    if no_default_features {
+    if !pkg_req.default_features {
         cmd.arg("--no-default-features");
         log::trace!("`--no-default-features` arg added.");
     }
 
-    if all_features {
+    if pkg_req.all_features {
         cmd.arg("--all-features");
         log::trace!("`--all-features` arg added.");
     }
 
-    if !features.is_empty() {
-        cmd.arg("--features").arg(features.join(","));
+    if !pkg_req.features.is_empty() {
+        cmd.arg("--features").arg(pkg_req.features.join(","));
         log::trace!("`--features` arg added.");
     }
 
-    if let Some(index) = index {
+    if let Some(index) = pkg_req.index.as_deref() {
         cmd.args(["--index", index]);
         log::trace!("`--index {}` args added.", index);
     }
 
-    if let Some(registry) = registry {
+    if let Some(registry) = pkg_req.registry.as_deref() {
         cmd.args(["--registry", registry]);
         log::trace!("`--registry {}` args added.", registry);
     }
 
-    if let Some(git) = git {
+    if let Some(git) = pkg_req.git.as_deref() {
         cmd.args(["--git", git]);
         log::trace!("`--git {}` args added.", git);
     }
 
-    if let Some(branch) = branch {
+    if let Some(branch) = pkg_req.branch.as_deref() {
         cmd.args(["--branch", branch]);
         log::trace!("`--branch {}` args added.", branch);
     }
 
-    if let Some(tag) = tag {
+    if let Some(tag) = pkg_req.tag.as_deref() {
         cmd.args(["--tag", tag]);
         log::trace!("`--tag {}` args added.", tag);
     }
 
-    if let Some(rev) = rev {
+    if let Some(rev) = pkg_req.rev.as_deref() {
         cmd.args(["--rev", rev]);
         log::trace!("`--rev {}` args added.", rev);
     }
 
-    if let Some(path) = path {
+    if let Some(path) = pkg_req.path.as_deref() {
         cmd.args(["--path", path]);
         log::trace!("`--path {}` args added.", path);
     }
 
-    for bin in bins {
+    for bin in &pkg_req.bins {
         cmd.args(["--bin", bin]);
         log::trace!("`--bin {}` args added.", bin);
     }
 
-    if all_bins {
+    if pkg_req.all_bins {
         cmd.arg("--bins");
         log::trace!("`--bins` arg added.");
     }
 
-    for example in examples {
+    for example in &pkg_req.examples {
         cmd.args(["--example", example]);
         log::trace!("`--example {}` args added.", example);
     }
 
-    if all_examples {
+    if pkg_req.all_examples {
         cmd.arg("--examples");
         log::trace!("`--examples` arg added.");
     }
 
-    if ignore_rust_version {
+    if pkg_req.ignore_rust_version {
         cmd.arg("--ignore-rust-version");
         log::trace!("`--ignore-rust-version` arg added.");
     }
@@ -162,28 +140,28 @@ fn install(
         log::trace!("`--force` arg added.");
     }
 
-    if frozen {
+    if pkg_req.frozen {
         cmd.arg("--frozen");
         log::trace!("`--frozen` arg added.");
     }
 
-    if locked {
+    if pkg_req.locked {
         cmd.arg("--locked");
         log::trace!("`--locked` arg added.");
     }
 
-    if offline {
+    if pkg_req.offline {
         cmd.arg("--offline");
         log::trace!("`--offline` arg added.");
     }
 
     // This should be kept here: after all other options and before the `--`.
-    if !extra_arguments.is_empty() {
-        cmd.args(extra_arguments);
-        log::trace!("Extra arguments added: {:#?}", extra_arguments);
+    if !pkg_req.extra_arguments.is_empty() {
+        cmd.args(&pkg_req.extra_arguments);
+        log::trace!("Extra arguments added: {:#?}", pkg_req.extra_arguments);
     }
 
-    cmd.args(["--", name]);
+    cmd.args(["--", pkg_name]);
     log_cmd(&cmd);
 
     cmd.status()
@@ -198,7 +176,7 @@ fn install(
 /// Returns `Ok(report)` when `keep_going` is `true`, otherwise `Err(err)` of
 /// the first error `err` encountered.
 pub fn install_all(
-    packages: &BTreeMap<String, PackageRequirement>,
+    packages: &BTreeMap<String, DetailedPackageReq>,
     installed: &BTreeSet<String>,
     keep_going: bool,
     force: bool,
@@ -217,65 +195,40 @@ pub fn install_all(
             if is_installed { "Updat" } else { "Install" }
         );
 
-        if let Err(err) = install(
-            pkg_name,
-            &pkg.version().to_string(),
-            !pkg.default_features(),
-            pkg.all_features(),
-            pkg.features(),
-            pkg.index(),
-            pkg.registry(),
-            pkg.git(),
-            pkg.branch(),
-            pkg.tag(),
-            pkg.rev(),
-            pkg.path(),
-            pkg.bins(),
-            pkg.all_bins(),
-            pkg.examples(),
-            pkg.all_examples(),
-            pkg.ignore_rust_version(),
-            pkg.frozen(),
-            pkg.locked(),
-            pkg.offline(),
-            pkg.extra_arguments(),
-            &pkg.environment(),
-            force || pkg.force(),
-            color,
-            verbosity,
-        )
-        .and_then(|status| {
-            status.success().then_some(()).ok_or_else(|| {
-                let err = eyre!("Cargo process finished unsuccessfully: {status}")
-                    .note("This can happen for many reasons.")
-                    .suggestion("Read Cargo's output.");
+        if let Err(err) = install(pkg_name, pkg, force || pkg.force, color, verbosity)
+            .and_then(|status| {
+                status.success().then_some(()).ok_or_else(|| {
+                    let err = eyre!("Cargo process finished unsuccessfully: {status}")
+                        .note("This can happen for many reasons.")
+                        .suggestion("Read Cargo's output.");
 
-                if keep_going {
-                    err
-                } else {
-                    err.suggestion(
+                    if keep_going {
+                        err
+                    } else {
+                        err.suggestion(
                         "Use `--keep-going` to ignore this and continue on with other packages.",
                     )
-                }
+                    }
+                })
             })
-        })
-        .inspect(|()| {
-            rep.insert(
-                pkg_name.clone(),
-                if is_installed {
-                    InstallStatus::Updated
-                } else {
-                    InstallStatus::Installed
-                },
-            );
-        })
-        .wrap_err_with(|| {
-            rep.insert(pkg_name.clone(), InstallStatus::Failed);
-            format!(
-                "Failed to {} {pkg_name:?}.",
-                if is_installed { "update" } else { "install" }
-            )
-        }) {
+            .inspect(|()| {
+                rep.insert(
+                    pkg_name.clone(),
+                    if is_installed {
+                        InstallStatus::Updated
+                    } else {
+                        InstallStatus::Installed
+                    },
+                );
+            })
+            .wrap_err_with(|| {
+                rep.insert(pkg_name.clone(), InstallStatus::Failed);
+                format!(
+                    "Failed to {} {pkg_name:?}.",
+                    if is_installed { "update" } else { "install" }
+                )
+            })
+        {
             if keep_going {
                 // Can't use `Option::map_or` for ownership reasons.
                 err_rep = Some(match err_rep {
@@ -404,7 +357,7 @@ fn finish_search_exact(pkg: &str, proc: Child) -> Result<Version> {
 /// Runs `*_search_exact` for all packages in the given map and returns the
 /// thus fetched versions in the collected map.
 pub fn search_exact_all(
-    pkgs: &BTreeMap<String, PackageRequirement>,
+    pkgs: &BTreeMap<String, DetailedPackageReq>,
 ) -> Result<BTreeMap<String, Version>> {
     log::info!("Fetching latest package versions...");
     let mut procs = Vec::new();
@@ -504,6 +457,7 @@ mod tests {
     use once_cell::sync::Lazy;
 
     use super::*;
+    use crate::config::PackageRequirement;
     use crate::testing;
 
     const SELF: &str = clap::crate_name!();
@@ -588,7 +542,7 @@ mod tests {
         for (pkg, ver) in search_exact_all(
             &[SELF, "cargo-expand", "cargo-tarpaulin", "bat"]
                 .into_iter()
-                .map(|pkg| (pkg.to_owned(), PackageRequirement::SIMPLE_STAR))
+                .map(|pkg| (pkg.to_owned(), PackageRequirement::SIMPLE_STAR.into()))
                 .collect(),
         )? {
             assert_eq!(
@@ -613,7 +567,7 @@ mod tests {
         testing::set_env();
 
         assert!(search_exact_all(
-            &[(NONE.to_owned(), PackageRequirement::SIMPLE_STAR)]
+            &[(NONE.to_owned(), PackageRequirement::SIMPLE_STAR.into())]
                 .into_iter()
                 .collect()
         )

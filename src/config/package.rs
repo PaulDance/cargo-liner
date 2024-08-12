@@ -19,75 +19,119 @@ const fn serde_default_true() -> bool {
 #[serde(rename_all = "kebab-case")]
 pub struct DetailedPackageReq {
     // Options from the Cargo Install CLI.
-    version: VersionReq,
+    pub version: VersionReq,
 
     #[serde(default = "serde_default_true")]
-    default_features: bool,
+    pub default_features: bool,
 
     #[serde(default)]
-    all_features: bool,
+    pub all_features: bool,
 
     #[serde(default)]
-    features: Vec<String>,
+    pub features: Vec<String>,
 
     #[serde(default)]
-    index: Option<String>,
+    pub index: Option<String>,
 
     #[serde(default)]
-    registry: Option<String>,
+    pub registry: Option<String>,
 
     #[serde(default)]
-    git: Option<String>,
+    pub git: Option<String>,
 
     #[serde(default)]
-    branch: Option<String>,
+    pub branch: Option<String>,
 
     #[serde(default)]
-    tag: Option<String>,
+    pub tag: Option<String>,
 
     #[serde(default)]
-    rev: Option<String>,
+    pub rev: Option<String>,
 
     #[serde(default)]
-    path: Option<String>,
+    pub path: Option<String>,
 
     #[serde(default)]
-    bins: Vec<String>,
+    pub bins: Vec<String>,
 
     #[serde(default)]
-    all_bins: bool,
+    pub all_bins: bool,
 
     #[serde(default)]
-    examples: Vec<String>,
+    pub examples: Vec<String>,
 
     #[serde(default)]
-    all_examples: bool,
+    pub all_examples: bool,
 
     #[serde(default)]
-    force: bool,
+    pub force: bool,
 
     #[serde(default)]
-    ignore_rust_version: bool,
+    pub ignore_rust_version: bool,
 
     #[serde(default)]
-    frozen: bool,
+    pub frozen: bool,
 
     #[serde(default)]
-    locked: bool,
+    pub locked: bool,
 
     #[serde(default)]
-    offline: bool,
+    pub offline: bool,
 
     // Additional options.
     /// Additional CLI arguments that must be passed onto the associated `cargo
     /// install` call between the last one set by proper options and the `--`
     /// separating the following fixed arguments.
     #[serde(default)]
-    extra_arguments: Vec<String>,
+    pub extra_arguments: Vec<String>,
 
     /// Environment variables that must be set for the `cargo install` process.
     #[serde(default)]
-    environment: BTreeMap<String, String>,
+    pub environment: BTreeMap<String, String>,
+}
+
+// Should be kept in-sync with the above definition with regards to Serde.
+impl Default for DetailedPackageReq {
+    fn default() -> Self {
+        Self {
+            // Manual defaults.
+            default_features: true,
+            // Usual defaults.
+            version: VersionReq::default(),
+            all_features: bool::default(),
+            features: Vec::default(),
+            index: Option::default(),
+            registry: Option::default(),
+            git: Option::default(),
+            branch: Option::default(),
+            tag: Option::default(),
+            rev: Option::default(),
+            path: Option::default(),
+            bins: Vec::default(),
+            all_bins: bool::default(),
+            examples: Vec::default(),
+            all_examples: bool::default(),
+            force: bool::default(),
+            ignore_rust_version: bool::default(),
+            frozen: bool::default(),
+            locked: bool::default(),
+            offline: bool::default(),
+            extra_arguments: Vec::default(),
+            environment: BTreeMap::default(),
+        }
+    }
+}
+
+impl From<PackageRequirement> for DetailedPackageReq {
+    fn from(pkg: PackageRequirement) -> Self {
+        match pkg {
+            PackageRequirement::Simple(pkg_ver) => Self {
+                version: pkg_ver,
+                ..Default::default()
+            },
+            PackageRequirement::Detailed(det_pkg) => det_pkg,
+        }
+    }
 }
 
 /// Represents the requirement setting configured for a package.
@@ -106,206 +150,4 @@ pub enum PackageRequirement {
 impl PackageRequirement {
     /// Convenience shortcut for simple and star version requirement package.
     pub const SIMPLE_STAR: Self = Self::Simple(VersionReq::STAR);
-
-    /// Returns the version requirement of the package.
-    pub fn version(&self) -> &VersionReq {
-        match self {
-            Self::Simple(v) => v,
-            Self::Detailed(pkg_req) => &pkg_req.version,
-        }
-    }
-
-    /// Returns whether or not all features were required for the package,
-    /// defaulting to `false` when the package is simple.
-    pub fn all_features(&self) -> bool {
-        matches!(
-            self,
-            Self::Detailed(DetailedPackageReq {
-                all_features: true,
-                ..
-            })
-        )
-    }
-
-    /// Returns whether or not default features were required for the package,
-    /// defaulting to `true` when the package is simple.
-    pub fn default_features(&self) -> bool {
-        !matches!(
-            self,
-            Self::Detailed(DetailedPackageReq {
-                default_features: false,
-                ..
-            })
-        )
-    }
-
-    /// Returns a slice of the feature names required for the package,
-    /// defaulting to an empty one when the package is simple.
-    pub fn features(&self) -> &[String] {
-        match self {
-            Self::Simple(_) => &[],
-            Self::Detailed(pkg_req) => pkg_req.features.as_slice(),
-        }
-    }
-
-    /// Returns the index to use or `None` if either not configured or simple.
-    pub fn index(&self) -> Option<&str> {
-        match self {
-            Self::Simple(_) => None,
-            Self::Detailed(pkg_req) => pkg_req.index.as_deref(),
-        }
-    }
-
-    /// Returns the registry to use or `None` if either not configured or
-    /// simple.
-    pub fn registry(&self) -> Option<&str> {
-        match self {
-            Self::Simple(_) => None,
-            Self::Detailed(pkg_req) => pkg_req.registry.as_deref(),
-        }
-    }
-
-    /// Returns the Git URL to use or `None` if either not configured or simple.
-    pub fn git(&self) -> Option<&str> {
-        match self {
-            Self::Simple(_) => None,
-            Self::Detailed(pkg_req) => pkg_req.git.as_deref(),
-        }
-    }
-
-    /// Returns the Git branch to use or `None` if either not configured or
-    /// simple.
-    pub fn branch(&self) -> Option<&str> {
-        match self {
-            Self::Simple(_) => None,
-            Self::Detailed(pkg_req) => pkg_req.branch.as_deref(),
-        }
-    }
-
-    /// Returns the Git tag to use or `None` if either not configured or simple.
-    pub fn tag(&self) -> Option<&str> {
-        match self {
-            Self::Simple(_) => None,
-            Self::Detailed(pkg_req) => pkg_req.tag.as_deref(),
-        }
-    }
-
-    /// Returns the Git commit to use or `None` if either not configured or
-    /// simple.
-    pub fn rev(&self) -> Option<&str> {
-        match self {
-            Self::Simple(_) => None,
-            Self::Detailed(pkg_req) => pkg_req.rev.as_deref(),
-        }
-    }
-
-    /// Returns the file path to use or `None` if either not configured or
-    /// simple.
-    pub fn path(&self) -> Option<&str> {
-        match self {
-            Self::Simple(_) => None,
-            Self::Detailed(pkg_req) => pkg_req.path.as_deref(),
-        }
-    }
-
-    /// Returns the list of binary targets to install, empty if simple.
-    pub fn bins(&self) -> &[String] {
-        match self {
-            Self::Simple(_) => &[],
-            Self::Detailed(pkg_req) => &pkg_req.bins,
-        }
-    }
-
-    /// Returns `true` iff the package is detailed and `all-bins` was passed as
-    /// `true`.
-    pub fn all_bins(&self) -> bool {
-        matches!(
-            self,
-            Self::Detailed(DetailedPackageReq { all_bins: true, .. })
-        )
-    }
-
-    /// Returns the list of example targets to install, empty if simple.
-    pub fn examples(&self) -> &[String] {
-        match self {
-            Self::Simple(_) => &[],
-            Self::Detailed(pkg_req) => &pkg_req.examples,
-        }
-    }
-
-    /// Returns `true` iff the package is detailed and `all-examples` was
-    /// passed as `true`.
-    pub fn all_examples(&self) -> bool {
-        matches!(
-            self,
-            Self::Detailed(DetailedPackageReq {
-                all_examples: true,
-                ..
-            })
-        )
-    }
-
-    /// Returns `true` iff the package is detailed and `force` was passed as
-    /// `true`.
-    pub fn force(&self) -> bool {
-        matches!(self, Self::Detailed(DetailedPackageReq { force: true, .. }))
-    }
-
-    /// Returns `true` iff the package is detailed and `ignore-rust-version` was
-    /// passed as `true`.
-    pub fn ignore_rust_version(&self) -> bool {
-        matches!(
-            self,
-            Self::Detailed(DetailedPackageReq {
-                ignore_rust_version: true,
-                ..
-            })
-        )
-    }
-
-    /// Returns `true` iff the package is detailed and `frozen` was passed as
-    /// `true`.
-    pub fn frozen(&self) -> bool {
-        matches!(
-            self,
-            Self::Detailed(DetailedPackageReq { frozen: true, .. })
-        )
-    }
-
-    /// Returns `true` iff the package is detailed and `locked` was passed as
-    /// `true`.
-    pub fn locked(&self) -> bool {
-        matches!(
-            self,
-            Self::Detailed(DetailedPackageReq { locked: true, .. })
-        )
-    }
-
-    /// Returns `true` iff the package is detailed and `offline` was passed as
-    /// `true`.
-    pub fn offline(&self) -> bool {
-        matches!(
-            self,
-            Self::Detailed(DetailedPackageReq { offline: true, .. })
-        )
-    }
-
-    /// Returns a slice of the extra `cargo install` arguments required for the
-    /// package, defaulting to an empty one when the package is simple.
-    pub fn extra_arguments(&self) -> &[String] {
-        match self {
-            Self::Simple(_) => &[],
-            Self::Detailed(pkg_req) => pkg_req.extra_arguments.as_slice(),
-        }
-    }
-
-    /// Returns a clone of the environment variables that should be set for the
-    /// spawned `cargo install` process, defaulting to an empty map when the
-    /// package is simple.
-    pub fn environment(&self) -> BTreeMap<String, String> {
-        match self {
-            Self::Simple(_) => BTreeMap::new(),
-            Self::Detailed(pkg_req) => pkg_req.environment.clone(),
-        }
-    }
 }

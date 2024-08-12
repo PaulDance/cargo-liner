@@ -155,6 +155,7 @@ mod tests {
     use semver::VersionReq;
 
     use super::*;
+    use crate::config::DetailedPackageReq;
 
     #[test]
     fn test_deser_userconfig_empty_iserr() {
@@ -222,34 +223,6 @@ mod tests {
 
     #[test]
     fn test_deser_userconfig_detailed_requirements() {
-        /// Circumvent tuple restriction.
-        #[allow(clippy::struct_excessive_bools)]
-        #[derive(Debug, PartialEq, Eq)]
-        struct PkgInfo {
-            version: String,
-            features: Vec<String>,
-            all_features: bool,
-            default_features: bool,
-            index: Option<String>,
-            registry: Option<String>,
-            git: Option<String>,
-            branch: Option<String>,
-            tag: Option<String>,
-            rev: Option<String>,
-            path: Option<String>,
-            bins: Vec<String>,
-            all_bins: bool,
-            examples: Vec<String>,
-            all_examples: bool,
-            force: bool,
-            ignore_rust_version: bool,
-            frozen: bool,
-            locked: bool,
-            offline: bool,
-            extra_arguments: Vec<String>,
-            environment: BTreeMap<String, String>,
-        }
-
         let mut packages = toml::from_str::<UserConfig>(
             r#"
                 [packages]
@@ -283,43 +256,14 @@ mod tests {
         .unwrap()
         .packages
         .into_iter()
-        .map(|(name, req)| {
-            (
-                name,
-                PkgInfo {
-                    version: req.version().to_string(),
-                    features: req.features().to_owned(),
-                    all_features: req.all_features(),
-                    default_features: req.default_features(),
-                    index: req.index().map(ToOwned::to_owned),
-                    registry: req.registry().map(ToOwned::to_owned),
-                    git: req.git().map(ToOwned::to_owned),
-                    branch: req.branch().map(ToOwned::to_owned),
-                    tag: req.tag().map(ToOwned::to_owned),
-                    rev: req.rev().map(ToOwned::to_owned),
-                    path: req.path().map(ToOwned::to_owned),
-                    bins: req.bins().to_vec(),
-                    all_bins: req.all_bins(),
-                    examples: req.examples().to_vec(),
-                    all_examples: req.all_examples(),
-                    force: req.force(),
-                    ignore_rust_version: req.ignore_rust_version(),
-                    frozen: req.frozen(),
-                    locked: req.locked(),
-                    offline: req.offline(),
-                    extra_arguments: req.extra_arguments().to_owned(),
-                    environment: req.environment(),
-                },
-            )
-        })
-        .collect::<Vec<_>>();
+        .map(|(name, req)| (name, req.into()))
+        .collect::<Vec<(_, DetailedPackageReq)>>();
         packages.sort_by_key(|(k, _)| k.clone());
-
         let packages: Vec<_> = packages.into_iter().map(|(_, v)| v).collect();
 
         let expected = [
-            PkgInfo {
-                version: "^1.2.3".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2.3".parse().unwrap(),
                 features: vec![],
                 all_features: false,
                 default_features: true,
@@ -342,8 +286,8 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
             },
-            PkgInfo {
-                version: "^1.2".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
                 features: vec!["foo".to_owned()],
                 all_features: false,
                 default_features: true,
@@ -366,8 +310,8 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
             },
-            PkgInfo {
-                version: "^1.2".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
                 features: vec!["foo".to_owned()],
                 all_features: false,
                 default_features: false,
@@ -390,8 +334,8 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
             },
-            PkgInfo {
-                version: "^1.2".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
                 features: vec![],
                 all_features: true,
                 default_features: true,
@@ -414,8 +358,8 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
             },
-            PkgInfo {
-                version: "^1.2".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
                 features: vec![],
                 all_features: false,
                 default_features: true,
@@ -438,8 +382,8 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
             },
-            PkgInfo {
-                version: "^1.2".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
                 features: vec![],
                 all_features: false,
                 default_features: true,
@@ -462,8 +406,8 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
             },
-            PkgInfo {
-                version: "^1.2".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
                 features: vec![],
                 all_features: false,
                 default_features: true,
@@ -486,8 +430,8 @@ mod tests {
                 extra_arguments: vec!["--abc".to_owned(), "--def".to_owned()],
                 environment: BTreeMap::new(),
             },
-            PkgInfo {
-                version: "^1.2".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
                 features: vec![],
                 all_features: false,
                 default_features: true,
@@ -510,8 +454,8 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
             },
-            PkgInfo {
-                version: "^1.2".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
                 features: vec![],
                 all_features: false,
                 default_features: true,
@@ -537,8 +481,8 @@ mod tests {
                     .map(|(k, v)| (k.to_owned(), v.to_owned()))
                     .collect(),
             },
-            PkgInfo {
-                version: "^1.2".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
                 features: vec![],
                 all_features: false,
                 default_features: true,
@@ -561,8 +505,8 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
             },
-            PkgInfo {
-                version: "^1.2".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
                 features: vec![],
                 all_features: false,
                 default_features: true,
@@ -585,8 +529,8 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
             },
-            PkgInfo {
-                version: "^1.2".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
                 features: vec![],
                 all_features: false,
                 default_features: true,
@@ -609,8 +553,8 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
             },
-            PkgInfo {
-                version: "^1.2".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
                 features: vec![],
                 all_features: false,
                 default_features: true,
@@ -633,8 +577,8 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
             },
-            PkgInfo {
-                version: "^1.2".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
                 features: vec![],
                 all_features: false,
                 default_features: true,
@@ -657,8 +601,8 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
             },
-            PkgInfo {
-                version: "^1.2".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
                 features: vec![],
                 all_features: false,
                 default_features: true,
@@ -681,8 +625,8 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
             },
-            PkgInfo {
-                version: "^1.2".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
                 features: vec![],
                 all_features: false,
                 default_features: true,
@@ -705,8 +649,8 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
             },
-            PkgInfo {
-                version: "^1.2".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
                 features: vec![],
                 all_features: false,
                 default_features: true,
@@ -729,8 +673,8 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
             },
-            PkgInfo {
-                version: "^1.2".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
                 features: vec![],
                 all_features: false,
                 default_features: true,
@@ -753,8 +697,8 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
             },
-            PkgInfo {
-                version: "^1.2".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
                 features: vec![],
                 all_features: false,
                 default_features: true,
@@ -777,8 +721,8 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
             },
-            PkgInfo {
-                version: "^1.2".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
                 features: vec![],
                 all_features: false,
                 default_features: true,
@@ -801,8 +745,8 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
             },
-            PkgInfo {
-                version: "^1.2".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
                 features: vec![],
                 all_features: false,
                 default_features: true,
@@ -825,8 +769,8 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
             },
-            PkgInfo {
-                version: "^1.2".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
                 features: vec![],
                 all_features: false,
                 default_features: true,
@@ -849,8 +793,8 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
             },
-            PkgInfo {
-                version: "^1.2".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
                 features: vec![],
                 all_features: false,
                 default_features: true,
@@ -873,8 +817,8 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
             },
-            PkgInfo {
-                version: "^1.2".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
                 features: vec![],
                 all_features: false,
                 default_features: true,
@@ -897,8 +841,8 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
             },
-            PkgInfo {
-                version: "^1.2".to_owned(),
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
                 features: vec![],
                 all_features: false,
                 default_features: true,

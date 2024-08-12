@@ -9,5 +9,5 @@ mod package;
 mod user_config;
 
 pub use cargo_crates_toml::CargoCratesToml;
-pub use package::PackageRequirement;
+pub use package::{DetailedPackageReq, PackageRequirement};
 pub use user_config::UserConfig;

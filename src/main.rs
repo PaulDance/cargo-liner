@@ -27,7 +27,7 @@ use cargo::InstallStatus;
 mod cli;
 use cli::{LinerArgs, LinerCommands};
 mod config;
-use config::{CargoCratesToml, PackageRequirement, UserConfig};
+use config::{CargoCratesToml, DetailedPackageReq, UserConfig};
 #[cfg(test)]
 #[path = "../tests/common/mod.rs"]
 mod testing;
@@ -154,11 +154,17 @@ fn try_main(args: &LinerArgs) -> Result<()> {
                     .update_others(!ship_args.only_self);
             }
 
+            let detailed_packages = config
+                .packages
+                .into_iter()
+                .map(|(pkg_name, pkg)| (pkg_name, pkg.into()))
+                .collect::<BTreeMap<String, DetailedPackageReq>>();
+
             let (inst_res, old_vers, new_vers) = if skip_check {
                 // Don't parse `.crates.toml` here: can be used as a workaround.
                 (
                     cargo::install_all(
-                        &config.packages,
+                        &detailed_packages,
                         &BTreeSet::new(),
                         keep_going,
                         force,
@@ -172,13 +178,13 @@ fn try_main(args: &LinerArgs) -> Result<()> {
                 let cct = CargoCratesToml::parse_file()
                     .wrap_err("Failed to parse Cargo's .crates.toml file.")?;
                 let old_vers = cct.clone().into_name_versions();
-                let new_vers = cargo::search_exact_all(&config.packages)
+                let new_vers = cargo::search_exact_all(&detailed_packages)
                     .wrap_err("Failed to fetch the latest versions of the configured packages.")?;
                 log_version_check_summary(&colorizer, &new_vers, &old_vers);
 
                 (
                     cargo::install_all(
-                        &needing_install(&config.packages, &new_vers, &old_vers),
+                        &needing_install(&detailed_packages, &new_vers, &old_vers),
                         &cct.into_names(),
                         keep_going,
                         force,
@@ -250,10 +256,10 @@ fn init_logger(args: &LinerArgs) -> Result<()> {
 
 /// Returns the packages that do indeed need an install or update.
 fn needing_install(
-    pkgs: &BTreeMap<String, PackageRequirement>,
+    pkgs: &BTreeMap<String, DetailedPackageReq>,
     new_vers: &BTreeMap<String, Version>,
     old_vers: &BTreeMap<String, Version>,
-) -> BTreeMap<String, PackageRequirement> {
+) -> BTreeMap<String, DetailedPackageReq> {
     let mut to_install = BTreeMap::new();
     log::debug!("Filtering packages by versions...");
 
