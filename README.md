@@ -248,6 +248,14 @@ where:
    concerned package will be. It can be used in order to get the best out of
    both modes of execution: if a package reveals problematic somehow, the
    option can be used for it while the other packages remain as-is.
+ * `no-fail-fast` (optional): boolean that, when `true`, makes the operation
+   proceed as though `--no-fail-fast` was given, but only for the associated
+   package: in case of an error of the call to `cargo install` for it, the
+   operation will not stop here and continue on with the next package, but if
+   the next package does not have the option set in its configuration and fails
+   to install somehow, the operation will still abruptly fail there. The CLI
+   option keeps the priority: if set, it is as though the configuration option
+   was set for all listed packages.
 
 with the following constraints, mostly enforced by Cargo, but also by TOML:
  * `package-name-*` must be a valid [package name], i.e. match
