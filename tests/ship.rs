@@ -1555,3 +1555,177 @@ fn validate_ship_partialandglobal_skipcheck() {
         ]);
     assert_installed_all(["p1", "p2", "p3", "p4", "p5", "p6"]);
 }
+
+#[cargo_test]
+fn validate_ship_partial_nofailfast_allerrnoff_isenderr() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish_all([("p1", "0.0.0"), ("p3", "0.0.0"), ("p5", "0.0.0")]);
+    write_user_config(&[
+        "[packages]",
+        "p1 = '*'",
+        "p2 = { version = '*', no-fail-fast = true }",
+        "p3 = '*'",
+        "p4 = { version = '*', no-fail-fast = true }",
+        "p5 = '*'",
+    ]);
+
+    cargo_liner()
+        .args(["ship", "--no-self", "--skip-check"])
+        .assert()
+        .failure()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_partial_nofailfast_allerrnoff_isenderr.stderr"
+        ]);
+    assert_installed_all(["p1", "p3", "p5"]);
+    assert_not_installed("p2");
+    assert_not_installed("p4");
+}
+
+#[cargo_test]
+fn validate_ship_partial_nofailfast_oneerrnoff_oneerrff_isfasterr() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish_all([("p1", "0.0.0"), ("p3", "0.0.0"), ("p5", "0.0.0")]);
+    write_user_config(&[
+        "[packages]",
+        "p1 = '*'",
+        "p2 = { version = '*', no-fail-fast = true }",
+        "p3 = '*'",
+        "p4 = { version = '*', no-fail-fast = false }",
+        "p5 = '*'",
+    ]);
+
+    cargo_liner()
+        .args(["ship", "--no-self", "--skip-check"])
+        .assert()
+        .failure()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_partial_nofailfast_oneerrnoff_oneerrff_isfasterr.stderr"
+        ]);
+    assert_installed_all(["p1", "p3"]);
+    assert_not_installed("p2");
+    assert_not_installed("p4");
+    assert_not_installed("p5");
+}
+
+#[cargo_test]
+fn validate_ship_partial_nofailfast_allok_isok() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish_all([
+        ("p1", "0.0.0"),
+        ("p2", "0.0.0"),
+        ("p3", "0.0.0"),
+        ("p4", "0.0.0"),
+        ("p5", "0.0.0"),
+    ]);
+    write_user_config(&[
+        "[packages]",
+        "p1 = '*'",
+        "p2 = { version = '*', no-fail-fast = true }",
+        "p3 = '*'",
+        "p4 = { version = '*', no-fail-fast = true }",
+        "p5 = '*'",
+    ]);
+
+    cargo_liner()
+        .args(["ship", "--no-self", "--skip-check"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_partial_nofailfast_allok_isok.stderr"
+        ]);
+    assert_installed_all(["p1", "p2", "p3", "p4", "p5"]);
+}
+
+// Same as the above, but with the option globally enabled in order to check it
+// has precedence.
+#[cargo_test]
+fn validate_ship_partialandglobal_nofailfast_allerrnoff_isenderr() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish_all([("p1", "0.0.0"), ("p3", "0.0.0"), ("p5", "0.0.0")]);
+    write_user_config(&[
+        "[packages]",
+        "p1 = '*'",
+        "p2 = { version = '*', no-fail-fast = true }",
+        "p3 = '*'",
+        "p4 = { version = '*', no-fail-fast = true }",
+        "p5 = '*'",
+    ]);
+
+    cargo_liner()
+        .args(["ship", "--no-self", "--skip-check", "--no-fail-fast"])
+        .assert()
+        .failure()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_partialandglobal_nofailfast_allerrnoff_isenderr.stderr"
+        ]);
+    assert_installed_all(["p1", "p3", "p5"]);
+    assert_not_installed("p2");
+    assert_not_installed("p4");
+}
+
+#[cargo_test]
+fn validate_ship_partialandglobal_nofailfast_oneerrnoff_oneerrff_isenderr() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish_all([("p1", "0.0.0"), ("p3", "0.0.0"), ("p5", "0.0.0")]);
+    write_user_config(&[
+        "[packages]",
+        "p1 = '*'",
+        "p2 = { version = '*', no-fail-fast = true }",
+        "p3 = '*'",
+        "p4 = { version = '*', no-fail-fast = false }",
+        "p5 = '*'",
+    ]);
+
+    cargo_liner()
+        .args(["ship", "--no-self", "--skip-check", "--no-fail-fast"])
+        .assert()
+        .failure()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_partialandglobal_nofailfast_oneerrnoff_oneerrff_isenderr.stderr"
+        ]);
+    assert_installed_all(["p1", "p3", "p5"]);
+    assert_not_installed("p2");
+    assert_not_installed("p4");
+}
+
+#[cargo_test]
+fn validate_ship_partialandglobal_nofailfast_allok_isok() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish_all([
+        ("p1", "0.0.0"),
+        ("p2", "0.0.0"),
+        ("p3", "0.0.0"),
+        ("p4", "0.0.0"),
+        ("p5", "0.0.0"),
+    ]);
+    write_user_config(&[
+        "[packages]",
+        "p1 = '*'",
+        "p2 = { version = '*', no-fail-fast = true }",
+        "p3 = '*'",
+        "p4 = { version = '*', no-fail-fast = true }",
+        "p5 = '*'",
+    ]);
+
+    cargo_liner()
+        .args(["ship", "--no-self", "--skip-check", "--no-fail-fast"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            // Same as above.
+            "fixtures/ship/validate_ship_partial_nofailfast_allok_isok.stderr"
+        ]);
+    assert_installed_all(["p1", "p2", "p3", "p4", "p5"]);
+}
