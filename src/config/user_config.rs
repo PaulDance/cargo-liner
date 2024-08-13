@@ -252,6 +252,7 @@ mod tests {
                 c6 = { version = "1.2", locked = true }
                 c7 = { version = "1.2", offline = true }
                 c8 = { version = "1.2", skip-check = true }
+                c9 = { version = "1.2", no-fail-fast = true }
             "#,
         )
         .unwrap()
@@ -287,6 +288,7 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -312,6 +314,7 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -337,6 +340,7 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -362,6 +366,7 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -387,6 +392,7 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -412,6 +418,7 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -437,6 +444,7 @@ mod tests {
                 extra_arguments: vec!["--abc".to_owned(), "--def".to_owned()],
                 environment: BTreeMap::new(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -462,6 +470,7 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -490,6 +499,7 @@ mod tests {
                     .map(|(k, v)| (k.to_owned(), v.to_owned()))
                     .collect(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -515,6 +525,7 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -540,6 +551,7 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -565,6 +577,7 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -590,6 +603,7 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -615,6 +629,7 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -640,6 +655,7 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -665,6 +681,7 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -690,6 +707,7 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -715,6 +733,7 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -740,6 +759,7 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -765,6 +785,7 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -790,6 +811,7 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -815,6 +837,7 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -840,6 +863,7 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -865,6 +889,7 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -890,6 +915,7 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
                 skip_check: false,
+                no_fail_fast: false,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -915,6 +941,33 @@ mod tests {
                 extra_arguments: vec![],
                 environment: BTreeMap::new(),
                 skip_check: true,
+                no_fail_fast: false,
+            },
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
+                features: vec![],
+                all_features: false,
+                default_features: true,
+                index: None,
+                registry: None,
+                git: None,
+                branch: None,
+                tag: None,
+                rev: None,
+                path: None,
+                bins: vec![],
+                all_bins: false,
+                examples: vec![],
+                all_examples: false,
+                force: false,
+                ignore_rust_version: false,
+                frozen: false,
+                locked: false,
+                offline: false,
+                extra_arguments: vec![],
+                environment: BTreeMap::new(),
+                skip_check: false,
+                no_fail_fast: true,
             },
         ]
         .into_iter()

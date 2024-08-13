@@ -92,6 +92,10 @@ pub struct DetailedPackageReq {
     /// Do the same as the global `--skip-check` but only for this package.
     #[serde(default)]
     pub skip_check: bool,
+
+    /// Do the same as the global `--no-fail-fast` but only for this package.
+    #[serde(default)]
+    pub no_fail_fast: bool,
 }
 
 // Should be kept in-sync with the above definition with regards to Serde.
@@ -123,6 +127,7 @@ impl Default for DetailedPackageReq {
             extra_arguments: Vec::default(),
             environment: BTreeMap::default(),
             skip_check: bool::default(),
+            no_fail_fast: bool::default(),
         }
     }
 }

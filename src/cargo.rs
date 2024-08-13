@@ -202,7 +202,7 @@ pub fn install_all(
                         .note("This can happen for many reasons.")
                         .suggestion("Read Cargo's output.");
 
-                    if no_fail_fast {
+                    if no_fail_fast || pkg.no_fail_fast {
                         err
                     } else {
                         err.suggestion(
@@ -230,7 +230,7 @@ pub fn install_all(
                 )
             })
         {
-            if no_fail_fast {
+            if no_fail_fast || pkg.no_fail_fast {
                 // Can't use `Option::map_or` for ownership reasons.
                 err_rep = Some(match err_rep {
                     Some(err_rep) => err_rep.wrap_err(err),
