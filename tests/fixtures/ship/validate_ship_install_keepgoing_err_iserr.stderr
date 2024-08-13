@@ -16,8 +16,8 @@ warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run 
 ┌──────┬─────────────┬─────────────┬────────┐
 │ Name │ Old version │ New version │ Status │
 ├──────┼─────────────┼─────────────┼────────┤
-│ abc  │ ø           │ ø           │ ✘      │
-│ def  │ ø           │ ø           │ +      │
+│ abc  │ ø           │ ?           │ ✘      │
+│ def  │ ø           │ ?           │ +      │
 └──────┴─────────────┴─────────────┴────────┘
 Error: 
    0: Failed to install or update some of the configured packages.

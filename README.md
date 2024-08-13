@@ -400,6 +400,8 @@ and new versions, along with the result of the call to `cargo install`.
 
 Status icons are optionally colored in the output and stand for the following:
  * `ø`: when nothing to display or needs to be done: already up-to-date.
+ * `?`: when the element could not be determined, for example the new version
+        of a package if `skip-check` is used.
  * `🛈`: when something needs to be performed: installation or update of a
    package.
  * `+`: when something was successfully added: new installation of a package.

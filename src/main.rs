@@ -343,7 +343,7 @@ fn log_install_report(
                         .map_or_else(|| colorizer.none_icon().to_string(), ToString::to_string),
                     new_ver: new_vers
                         .get(pkg_name)
-                        .map_or_else(|| colorizer.none_icon().to_string(), ToString::to_string),
+                        .map_or_else(|| colorizer.unknown_icon().to_string(), ToString::to_string),
                     status: match status {
                         InstallStatus::Installed => colorizer.new_icon().to_string(),
                         InstallStatus::Updated => colorizer.ok_icon().to_string(),
@@ -360,6 +360,9 @@ fn log_install_report(
 mod icons {
     /// When nothing to display or needs to be done: already up-to-date.
     pub(super) const NONE: char = 'ø';
+    /// When the element could not be determined, for example the new version
+    /// of a package if `skip-check` is used.
+    pub(super) const UNKNOWN: char = '?';
     /// When something needs to be performed: installation or update of a
     /// package.
     pub(super) const TODO: char = '🛈';
@@ -419,14 +422,19 @@ impl Colorizer {
         icons::NONE
     }
 
+    /// Returns the colorized version of [`icons::UNKNOWN`].
+    pub fn unknown_icon(&self) -> impl Display {
+        self.colorize_with(&icons::UNKNOWN, |icon| icon.bold().yellow().to_string())
+    }
+
     /// Returns the colorized version of [`icons::TODO`].
     pub fn todo_icon(&self) -> impl Display {
-        self.colorize_with(&icons::TODO, |s| s.bold().blue().to_string())
+        self.colorize_with(&icons::TODO, |icon| icon.bold().blue().to_string())
     }
 
     /// Returns the colorized version of [`icons::NEW`].
     pub fn new_icon(&self) -> impl Display {
-        self.colorize_with(&icons::NEW, |s| s.bold().green().to_string())
+        self.colorize_with(&icons::NEW, |icon| icon.bold().green().to_string())
     }
 
     /// Returns the colorized version of [`icons::ERR`].
