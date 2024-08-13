@@ -206,8 +206,8 @@ pub fn install_all(
                         err
                     } else {
                         err.suggestion(
-                        "Use `--keep-going` to ignore this and continue on with other packages.",
-                    )
+                            "Use `--keep-going` to ignore this and continue on with other packages.",
+                        )
                     }
                 })
             })
