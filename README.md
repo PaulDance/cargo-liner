@@ -464,7 +464,7 @@ Options:
           requests to the registry. These operations will thus be
           entirely skipped.
 
-  -k, --keep-going
+  -k, --no-fail-fast
           Disable the default fail-fast execution of `cargo
           install`s.
           

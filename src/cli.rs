@@ -190,8 +190,8 @@ pub struct ShipArgs {
     /// fails to install and the option is used, an error will still be
     /// reported at the end, containing an indication of all the packages that
     /// failed to install.
-    #[arg(short, long)]
-    pub keep_going: bool,
+    #[arg(short = 'k', long)]
+    pub no_fail_fast: bool,
 
     /// Force overwriting existing crates or binaries.
     ///
@@ -371,7 +371,7 @@ mod tests {
                     no_self: false,
                     only_self: false,
                     skip_check: false,
-                    keep_going: false,
+                    no_fail_fast: false,
                     force: false,
                 })),
                 verbose: 0,
@@ -390,7 +390,7 @@ mod tests {
                     no_self: true,
                     only_self: false,
                     skip_check: false,
-                    keep_going: false,
+                    no_fail_fast: false,
                     force: false,
                 })),
                 verbose: 0,
@@ -409,7 +409,7 @@ mod tests {
                     no_self: false,
                     only_self: true,
                     skip_check: false,
-                    keep_going: false,
+                    no_fail_fast: false,
                     force: false,
                 })),
                 verbose: 0,
@@ -428,7 +428,7 @@ mod tests {
                     no_self: false,
                     only_self: false,
                     skip_check: true,
-                    keep_going: false,
+                    no_fail_fast: false,
                     force: false,
                 })),
                 verbose: 0,
@@ -439,15 +439,15 @@ mod tests {
     }
 
     #[test]
-    fn test_ship_keepgoing() {
+    fn test_ship_nofailfast() {
         assert_eq!(
-            CargoArgs::try_parse_from(["cargo", "liner", "ship", "--keep-going"]).unwrap(),
+            CargoArgs::try_parse_from(["cargo", "liner", "ship", "--no-fail-fast"]).unwrap(),
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Ship(ShipArgs {
                     no_self: false,
                     only_self: false,
                     skip_check: false,
-                    keep_going: true,
+                    no_fail_fast: true,
                     force: false,
                 })),
                 verbose: 0,
@@ -466,7 +466,7 @@ mod tests {
                     no_self: false,
                     only_self: false,
                     skip_check: false,
-                    keep_going: false,
+                    no_fail_fast: false,
                     force: true,
                 })),
                 verbose: 0,

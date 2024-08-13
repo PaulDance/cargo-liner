@@ -1066,38 +1066,38 @@ fn validate_ship_install_failfast() {
 }
 
 #[cargo_test]
-fn validate_ship_install_keepgoing_err_iserr() {
+fn validate_ship_install_nofailfast_err_iserr() {
     let _reg = init_registry();
     fake_install_self();
     fake_publish("def", "0.0.0");
     write_user_config(&["[packages]", "abc = '*'", "def = '*'"]);
 
     cargo_liner()
-        .args(["ship", "--skip-check", "--no-self", "--keep-going"])
+        .args(["ship", "--skip-check", "--no-self", "--no-fail-fast"])
         .assert()
         .failure()
         .stdout_eq("".into_data().raw())
         .stderr_eq(snapbox::file![
-            "fixtures/ship/validate_ship_install_keepgoing_err_iserr.stderr"
+            "fixtures/ship/validate_ship_install_nofailfast_err_iserr.stderr"
         ]);
     assert_not_installed("abc");
     assert_installed("def");
 }
 
 #[cargo_test]
-fn validate_ship_install_keepgoing_ok_isok() {
+fn validate_ship_install_nofailfast_ok_isok() {
     let _reg = init_registry();
     fake_install_self();
     fake_publish_all([("abc", "0.0.0"), ("def", "0.0.0")]);
     write_user_config(&["[packages]", "abc = '*'", "def = '*'"]);
 
     cargo_liner()
-        .args(["ship", "--skip-check", "--no-self", "--keep-going"])
+        .args(["ship", "--skip-check", "--no-self", "--no-fail-fast"])
         .assert()
         .success()
         .stdout_eq("".into_data().raw())
         .stderr_eq(snapbox::file![
-            "fixtures/ship/validate_ship_install_keepgoing_ok_isok.stderr"
+            "fixtures/ship/validate_ship_install_nofailfast_ok_isok.stderr"
         ]);
     assert_installed("abc");
     assert_installed("def");

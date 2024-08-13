@@ -173,19 +173,19 @@ fn install(
 /// Runs `cargo install` for all packages listed in the given user
 /// configuration and returns a per-package installation report.
 ///
-/// Returns `Ok(report)` when `keep_going` is `true`, otherwise `Err(err)` of
+/// Returns `Ok(report)` when `no_fail_fast` is `true`, otherwise `Err(err)` of
 /// the first error `err` encountered.
 pub fn install_all(
     packages: &BTreeMap<String, DetailedPackageReq>,
     installed: &BTreeSet<String>,
-    keep_going: bool,
+    no_fail_fast: bool,
     force: bool,
     color: ColorChoice,
     verbosity: i8,
 ) -> Result<InstallReport> {
     // Returned installation report.
     let mut rep = BTreeMap::new();
-    // Aggregation of errors when `keep_going` is enabled.
+    // Aggregation of errors when `no_fail_fast` is enabled.
     let mut err_rep = None::<eyre::Report>;
 
     for (pkg_name, pkg) in packages {
@@ -202,11 +202,11 @@ pub fn install_all(
                         .note("This can happen for many reasons.")
                         .suggestion("Read Cargo's output.");
 
-                    if keep_going {
+                    if no_fail_fast {
                         err
                     } else {
                         err.suggestion(
-                            "Use `--keep-going` to ignore this and continue on with other packages.",
+                            "Use `--no-fail-fast` to ignore this and continue on with other packages.",
                         )
                     }
                 })
@@ -229,7 +229,7 @@ pub fn install_all(
                 )
             })
         {
-            if keep_going {
+            if no_fail_fast {
                 // Can't use `Option::map_or` for ownership reasons.
                 err_rep = Some(match err_rep {
                     Some(err_rep) => err_rep.wrap_err(err),

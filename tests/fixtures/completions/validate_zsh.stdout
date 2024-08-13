@@ -43,7 +43,7 @@ _arguments "${_arguments_options[@]}" : \
 '-c[Skip the summary version check and directly call \`cargo install\` on each configured package]' \
 '--skip-check[Skip the summary version check and directly call \`cargo install\` on each configured package]' \
 '-k[Disable the default fail-fast execution of \`cargo install\`s]' \
-'--keep-going[Disable the default fail-fast execution of \`cargo install\`s]' \
+'--no-fail-fast[Disable the default fail-fast execution of \`cargo install\`s]' \
 '-f[Force overwriting existing crates or binaries]' \
 '--force[Force overwriting existing crates or binaries]' \
 '(-q --quiet)*-v[Be more verbose. Use multiple times to be more and more so each time]' \

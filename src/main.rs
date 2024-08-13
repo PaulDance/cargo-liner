@@ -134,7 +134,7 @@ fn try_main(args: &LinerArgs) -> Result<()> {
         }
         cmd @ (None | Some(LinerCommands::Ship(_))) => {
             let mut skip_check = false;
-            let mut keep_going = false;
+            let mut no_fail_fast = false;
             let mut force = false;
             let mut config =
                 UserConfig::parse_file().wrap_err("Failed to parse the user configuration.")?;
@@ -147,7 +147,7 @@ fn try_main(args: &LinerArgs) -> Result<()> {
 
             if let Some(LinerCommands::Ship(ship_args)) = cmd {
                 skip_check = ship_args.skip_check;
-                keep_going = ship_args.keep_going;
+                no_fail_fast = ship_args.no_fail_fast;
                 force = ship_args.force;
                 config = config
                     .self_update(!ship_args.no_self)
@@ -166,7 +166,7 @@ fn try_main(args: &LinerArgs) -> Result<()> {
                     cargo::install_all(
                         &detailed_packages,
                         &BTreeSet::new(),
-                        keep_going,
+                        no_fail_fast,
                         force,
                         args.color,
                         cargo_verbosity,
@@ -186,7 +186,7 @@ fn try_main(args: &LinerArgs) -> Result<()> {
                     cargo::install_all(
                         &needing_install(&detailed_packages, &new_vers, &old_vers),
                         &cct.into_names(),
-                        keep_going,
+                        no_fail_fast,
                         force,
                         args.color,
                         cargo_verbosity,
@@ -206,7 +206,7 @@ fn try_main(args: &LinerArgs) -> Result<()> {
                 Err(err).wrap_err_with(|| {
                     format!(
                         "Failed to install or update {} of the configured packages.",
-                        if keep_going { "some" } else { "one" }
+                        if no_fail_fast { "some" } else { "one" }
                     )
                 })?;
             }
