@@ -226,32 +226,32 @@ mod tests {
         let mut packages = toml::from_str::<UserConfig>(
             r#"
                 [packages]
-                a = "1.2.3"
-                b = { version = "1.2", features = [ "foo" ] }
-                c = { version = "1.2", features = [ "foo" ], default-features = false }
-                d = { version = "1.2", all-features = true }
-                e = { version = "1.2" }
-                f = { version = "1.2", extra-arguments = [] }
-                g = { version = "1.2", extra-arguments = [ "--abc", "--def" ] }
-                h = { version = "1.2", environment = {} }
-                i = { version = "1.2", environment = { ABC = "def", XYZ = "123" } }
-                j = { version = "1.2", index = "http://abc123.com" }
-                k = { version = "1.2", registry = "abc123" }
-                l = { version = "1.2", git = "https://mygit.com/abc/123" }
-                m = { version = "1.2", branch = "master-and-servant" }
-                n = { version = "1.2", tag = "tig-tag" }
-                o = { version = "1.2", rev = "fakesha1" }
-                p = { version = "1.2", path = "/a/b/c" }
-                q = { version = "1.2", bins = ["bin1", "bin2"] }
-                r = { version = "1.2", all-bins = true }
-                s = { version = "1.2", examples = ["ex1", "ex2"] }
-                t = { version = "1.2", all-examples = true }
-                u = { version = "1.2", force = true }
-                v = { version = "1.2", ignore-rust-version = true }
-                w = { version = "1.2", frozen = true }
-                x = { version = "1.2", locked = true }
-                y = { version = "1.2", offline = true }
-                z = { version = "1.2", skip-check = true }
+                a1 = "1.2.3"
+                a2 = { version = "1.2", features = [ "foo" ] }
+                a3 = { version = "1.2", features = [ "foo" ], default-features = false }
+                a4 = { version = "1.2", all-features = true }
+                a5 = { version = "1.2" }
+                a6 = { version = "1.2", extra-arguments = [] }
+                a7 = { version = "1.2", extra-arguments = [ "--abc", "--def" ] }
+                a8 = { version = "1.2", environment = {} }
+                a9 = { version = "1.2", environment = { ABC = "def", XYZ = "123" } }
+                b1 = { version = "1.2", index = "http://abc123.com" }
+                b2 = { version = "1.2", registry = "abc123" }
+                b3 = { version = "1.2", git = "https://mygit.com/abc/123" }
+                b4 = { version = "1.2", branch = "master-and-servant" }
+                b5 = { version = "1.2", tag = "tig-tag" }
+                b6 = { version = "1.2", rev = "fakesha1" }
+                b7 = { version = "1.2", path = "/a/b/c" }
+                b8 = { version = "1.2", bins = ["bin1", "bin2"] }
+                b9 = { version = "1.2", all-bins = true }
+                c1 = { version = "1.2", examples = ["ex1", "ex2"] }
+                c2 = { version = "1.2", all-examples = true }
+                c3 = { version = "1.2", force = true }
+                c4 = { version = "1.2", ignore-rust-version = true }
+                c5 = { version = "1.2", frozen = true }
+                c6 = { version = "1.2", locked = true }
+                c7 = { version = "1.2", offline = true }
+                c8 = { version = "1.2", skip-check = true }
             "#,
         )
         .unwrap()
