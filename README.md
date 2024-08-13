@@ -247,7 +247,10 @@ where:
    from the version check and the configuration's is partial as only the
    concerned package will be. It can be used in order to get the best out of
    both modes of execution: if a package reveals problematic somehow, the
-   option can be used for it while the other packages remain as-is.
+   option can be used for it while the other packages remain as-is. The CLI
+   option keeps the priority: if set, any version checking step is still
+   entirely skipped, which should prove a bit more forceful than if the
+   configuration option was set for all listed packages.
  * `no-fail-fast` (optional): boolean that, when `true`, makes the operation
    proceed as though `--no-fail-fast` was given, but only for the associated
    package: in case of an error of the call to `cargo install` for it, the
