@@ -480,6 +480,14 @@ Options:
           used, an error will still be reported at the end,
           containing an indication of all the packages that failed to
           install.
+          
+          This is not to be confused with Cargo's `--keep-going`
+          build option: it disables fast-failing between crate
+          compilations, while the current one disables fast-failing
+          between entire calls to `cargo install`; in fact,
+          `--keep-going` is never passed onto Cargo. It is neither to
+          be confused with `cargo test --no-fail-fast` since `cargo
+          test` is never used.
 
   -f, --force
           Force overwriting existing crates or binaries.
