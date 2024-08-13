@@ -364,7 +364,10 @@ pub fn search_exact_all(
     let mut vers = BTreeMap::new();
 
     log::debug!("Spawning search child processes in parallel...");
-    for pkg in pkgs.keys() {
+    for pkg in pkgs
+        .iter()
+        .filter_map(|(pkg_name, pkg_req)| (!pkg_req.skip_check).then_some(pkg_name))
+    {
         procs.push(
             spawn_search_exact(pkg)
                 .wrap_err_with(|| format!("Failed to spawn search for {pkg:?}."))?,
@@ -373,7 +376,11 @@ pub fn search_exact_all(
 
     log::debug!("Waiting for each search child processes to finish...");
     // Key traversal order is stable because sorted.
-    for (pkg, proc) in pkgs.keys().zip(procs.into_iter()) {
+    for (pkg, proc) in pkgs
+        .iter()
+        .filter_map(|(pkg_name, pkg_req)| (!pkg_req.skip_check).then_some(pkg_name))
+        .zip(procs.into_iter())
+    {
         vers.insert(
             pkg.clone(),
             finish_search_exact(pkg, proc)

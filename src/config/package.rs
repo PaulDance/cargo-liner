@@ -88,6 +88,10 @@ pub struct DetailedPackageReq {
     /// Environment variables that must be set for the `cargo install` process.
     #[serde(default)]
     pub environment: BTreeMap<String, String>,
+
+    /// Do the same as the global `--skip-check` but only for this package.
+    #[serde(default)]
+    pub skip_check: bool,
 }
 
 // Should be kept in-sync with the above definition with regards to Serde.
@@ -118,6 +122,7 @@ impl Default for DetailedPackageReq {
             offline: bool::default(),
             extra_arguments: Vec::default(),
             environment: BTreeMap::default(),
+            skip_check: bool::default(),
         }
     }
 }

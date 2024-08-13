@@ -180,7 +180,7 @@ fn try_main(args: &LinerArgs) -> Result<()> {
                 let old_vers = cct.clone().into_name_versions();
                 let new_vers = cargo::search_exact_all(&detailed_packages)
                     .wrap_err("Failed to fetch the latest versions of the configured packages.")?;
-                log_version_check_summary(&colorizer, &new_vers, &old_vers);
+                log_version_check_summary(&colorizer, &detailed_packages, &new_vers, &old_vers);
 
                 (
                     cargo::install_all(
@@ -264,9 +264,11 @@ fn needing_install(
     log::debug!("Filtering packages by versions...");
 
     for (pkg_name, pkg) in pkgs {
-        if old_vers
-            .get(pkg_name)
-            .map_or(true, |ver| ver < new_vers.get(pkg_name).unwrap())
+        if pkg.skip_check
+            || old_vers
+                .get(pkg_name)
+                // UNWRAP: `pkg.skip_check` was just checked for.
+                .map_or(true, |ver| ver < new_vers.get(pkg_name).unwrap())
         {
             to_install.insert(pkg_name.clone(), pkg.clone());
             log::trace!("{pkg_name:?} is selected to be installed or updated.");
@@ -294,6 +296,7 @@ struct PackageStatus {
 /// Displays whether each package needs an update or not.
 fn log_version_check_summary(
     colorizer: &Colorizer,
+    pkg_reqs: &BTreeMap<String, DetailedPackageReq>,
     new_vers: &BTreeMap<String, Version>,
     old_vers: &BTreeMap<String, Version>,
 ) {
@@ -302,20 +305,33 @@ fn log_version_check_summary(
     } else {
         log::info!(
             "Results:\n{}",
-            Table::new(new_vers.iter().map(|(name, new_ver)| {
-                let old_ver = old_vers.get(name);
+            // Iterate on `pkg_reqs` in order to get the package names: due to
+            // the possibility of a partial `skip-check`, `old_vers U new_vers`
+            // may not contain every one of them.
+            Table::new(pkg_reqs.keys().map(|pkg_name| {
+                let old_ver = old_vers.get(pkg_name);
+                let new_ver = new_vers.get(pkg_name);
                 PackageStatus {
-                    name: name.clone(),
+                    name: pkg_name.clone(),
                     old_ver: old_ver
                         .map_or_else(|| colorizer.none_icon().to_string(), ToString::to_string),
-                    new_ver: old_ver
-                        .and_then(|old_ver| {
-                            (old_ver >= new_ver).then(|| colorizer.none_icon().to_string())
-                        })
-                        .unwrap_or_else(|| new_ver.to_string()),
-                    status: old_ver
-                        .and_then(|old_ver| {
-                            (old_ver >= new_ver).then(|| colorizer.ok_icon().to_string())
+                    // This should be equivalent to checking `pkg_req.skip_check`:
+                    // a new version is unavailable only if not fetched.
+                    new_ver: new_ver.map_or_else(
+                        || colorizer.unknown_icon().to_string(),
+                        |new_ver| {
+                            old_ver
+                                .and_then(|old_ver| {
+                                    (old_ver >= new_ver).then(|| colorizer.none_icon().to_string())
+                                })
+                                .unwrap_or_else(|| new_ver.to_string())
+                        },
+                    ),
+                    status: new_ver
+                        .and_then(|new_ver| {
+                            old_ver.and_then(|old_ver| {
+                                (old_ver >= new_ver).then(|| colorizer.ok_icon().to_string())
+                            })
                         })
                         .unwrap_or_else(|| colorizer.todo_icon().to_string()),
                 }
