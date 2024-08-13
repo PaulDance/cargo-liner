@@ -184,6 +184,8 @@ package-name-2 = "version-req-2"
     offline = boolean
     extra-arguments = ["--arg1", "--arg2"]
     environment = { ENV1 = "abc", ENV2 = "def" }
+    skip-check = boolean
+    no-fail-fast = boolean
 #...
 ```
 
