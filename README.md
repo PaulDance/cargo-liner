@@ -240,6 +240,14 @@ where:
    using a Cargo Liner version that does not yet implement the desired option.
  * `environment` (optional): map of string to strings specifying which and how
    environment variables should be set for the spawned `cargo install` process.
+ * `skip-check` (optional): boolean that, when `true`, excludes the associated
+   package from the version check and always includes it in the packages to be
+   installed or updated. This is the direct equivalent of `--skip-check` from
+   the CLI, except that the CLI's is global as all packages will be excluded
+   from the version check and the configuration's is partial as only the
+   concerned package will be. It can be used in order to get the best out of
+   both modes of execution: if a package reveals problematic somehow, the
+   option can be used for it while the other packages remain as-is.
 
 with the following constraints, mostly enforced by Cargo, but also by TOML:
  * `package-name-*` must be a valid [package name], i.e. match
