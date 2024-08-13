@@ -1061,8 +1061,7 @@ fn validate_ship_install_failfast() {
         .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_install_failfast.stderr"
         ]);
-    assert_not_installed("abc");
-    assert_not_installed("def");
+    assert_not_installed_all(["abc", "def"]);
 }
 
 #[cargo_test]
@@ -1579,8 +1578,7 @@ fn validate_ship_partial_nofailfast_allerrnoff_isenderr() {
             "fixtures/ship/validate_ship_partial_nofailfast_allerrnoff_isenderr.stderr"
         ]);
     assert_installed_all(["p1", "p3", "p5"]);
-    assert_not_installed("p2");
-    assert_not_installed("p4");
+    assert_not_installed_all(["p2", "p4"]);
 }
 
 #[cargo_test]
@@ -1606,9 +1604,7 @@ fn validate_ship_partial_nofailfast_oneerrnoff_oneerrff_isfasterr() {
             "fixtures/ship/validate_ship_partial_nofailfast_oneerrnoff_oneerrff_isfasterr.stderr"
         ]);
     assert_installed_all(["p1", "p3"]);
-    assert_not_installed("p2");
-    assert_not_installed("p4");
-    assert_not_installed("p5");
+    assert_not_installed_all(["p2", "p4", "p5"]);
 }
 
 #[cargo_test]
@@ -1667,8 +1663,7 @@ fn validate_ship_partialandglobal_nofailfast_allerrnoff_isenderr() {
             "fixtures/ship/validate_ship_partialandglobal_nofailfast_allerrnoff_isenderr.stderr"
         ]);
     assert_installed_all(["p1", "p3", "p5"]);
-    assert_not_installed("p2");
-    assert_not_installed("p4");
+    assert_not_installed_all(["p2", "p4"]);
 }
 
 #[cargo_test]
@@ -1694,8 +1689,7 @@ fn validate_ship_partialandglobal_nofailfast_oneerrnoff_oneerrff_isenderr() {
             "fixtures/ship/validate_ship_partialandglobal_nofailfast_oneerrnoff_oneerrff_isenderr.stderr"
         ]);
     assert_installed_all(["p1", "p3", "p5"]);
-    assert_not_installed("p2");
-    assert_not_installed("p4");
+    assert_not_installed_all(["p2", "p4"]);
 }
 
 #[cargo_test]

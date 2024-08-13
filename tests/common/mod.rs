@@ -286,6 +286,14 @@ pub fn assert_not_installed(pkg: &'static str) {
     );
 }
 
+/// Runs [`assert_not_installed`] on all the packages yielded by the given
+/// iterator.
+pub fn assert_not_installed_all(pkgs: impl IntoIterator<Item = &'static str>) {
+    for pkg in pkgs {
+        assert_not_installed(pkg);
+    }
+}
+
 /// Publishes the given package name and version to the local fake registry
 /// with minimal contents.
 pub fn fake_publish(pkg: &str, ver: &str) {
