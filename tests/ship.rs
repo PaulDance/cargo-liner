@@ -1463,3 +1463,95 @@ fn validate_ship_offline() {
         .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_offline.stderr"]);
     assert_not_installed("abc");
 }
+
+#[cargo_test]
+fn validate_ship_partial_skipcheck() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish_all([
+        ("p1", "0.0.0"),
+        ("p2", "0.0.0"),
+        ("p3", "0.0.1"),
+        ("p4", "0.0.0"),
+        ("p5", "0.0.0"),
+        ("p6", "0.0.1"),
+    ]);
+    fake_install_all([
+        ("p2", "0.0.0", false),
+        ("p3", "0.0.0", false),
+        ("p5", "0.0.0", false),
+        ("p6", "0.0.0", false),
+    ]);
+    write_user_config(&[
+        "[packages]",
+        // Verify normal cases with the version check enabled still work
+        // unchanged even when other packages have the check disabled.
+        "p1 = '*'",
+        "p2 = '*'",
+        "p3 = '*'",
+        // Not yet installed: install to perform.
+        "p4 = { version = '*', skip-check = true }",
+        // Installed and up-to-date: nothing to do, but still perform install
+        // that ends up doing nothing since `skip-check` is used.
+        "p5 = { version = '*', skip-check = true }",
+        // Installed and not up-to-date: perform update.
+        "p6 = { version = '*', skip-check = true }",
+    ]);
+
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_partial_skipcheck.stderr"
+        ]);
+    assert_installed_all(["p1", "p2", "p3", "p4", "p5", "p6"]);
+}
+
+/// Same cases at the previous test, but with `--skip-check` globally given in
+/// order to assert it has priority over the package-local equivalent.
+#[cargo_test]
+fn validate_ship_partialandglobal_skipcheck() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish_all([
+        ("p1", "0.0.0"),
+        ("p2", "0.0.0"),
+        ("p3", "0.0.1"),
+        ("p4", "0.0.0"),
+        ("p5", "0.0.0"),
+        ("p6", "0.0.1"),
+    ]);
+    fake_install_all([
+        ("p2", "0.0.0", false),
+        ("p3", "0.0.0", false),
+        ("p5", "0.0.0", false),
+        ("p6", "0.0.0", false),
+    ]);
+    write_user_config(&[
+        "[packages]",
+        // Verify normal cases with the version check enabled still work
+        // unchanged even when other packages have the check disabled.
+        "p1 = '*'",
+        "p2 = '*'",
+        "p3 = '*'",
+        // Not yet installed: install to perform.
+        "p4 = { version = '*', skip-check = true }",
+        // Installed and up-to-date: nothing to do, but still perform install
+        // that ends up doing nothing since `skip-check` is used.
+        "p5 = { version = '*', skip-check = true }",
+        // Installed and not up-to-date: perform update.
+        "p6 = { version = '*', skip-check = true }",
+    ]);
+
+    cargo_liner()
+        .args(["ship", "--no-self", "--skip-check"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_partialandglobal_skipcheck.stderr"
+        ]);
+    assert_installed_all(["p1", "p2", "p3", "p4", "p5", "p6"]);
+}
