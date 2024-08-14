@@ -16,12 +16,13 @@ pub struct EffectiveConfig {
     /// The name-to-setting map derived from the [`UserConfig`].
     pub packages: BTreeMap<String, DetailedPackageReq>,
     /// Effective arguments to use for the `ship` CLI command.
-    pub ship_args: ShipArgs,
+    pub ship_args: EffectiveShipArgs,
 }
 
 impl EffectiveConfig {
     /// Merges all given sources and exports the result as public fields.
     pub fn new(user_config: UserConfig, ship_args: ShipArgs) -> Self {
+        let ship_args = EffectiveShipArgs::new(ship_args);
         Self {
             packages: user_config
                 .self_update(!ship_args.no_self)
@@ -32,5 +33,58 @@ impl EffectiveConfig {
                 .collect::<BTreeMap<String, DetailedPackageReq>>(),
             ship_args,
         }
+    }
+}
+
+/// Effective merge of all configuration sources regarding [`ShipArgs`].
+#[derive(Debug)]
+#[cfg_attr(test, derive(Default))]
+#[allow(clippy::struct_excessive_bools)]
+pub struct EffectiveShipArgs {
+    pub no_self: bool,
+    pub only_self: bool,
+    pub skip_check: bool,
+    pub no_fail_fast: bool,
+    pub force: bool,
+}
+
+impl EffectiveShipArgs {
+    #[allow(clippy::needless_pass_by_value)]
+    fn new(ship_args: ShipArgs) -> Self {
+        Self {
+            no_self: ship_args.no_self.unwrap_or_default(),
+            only_self: ship_args.only_self.unwrap_or_default(),
+            skip_check: ship_args.skip_check.unwrap_or_default(),
+            no_fail_fast: ship_args.no_fail_fast.unwrap_or_default(),
+            force: ship_args.force.unwrap_or_default(),
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::fmt::Debug;
+
+    use super::*;
+
+    /// Refactor safe-guard: check that both [`crate::cli::ShipArgs`] and
+    /// [`EffectiveShipArgs`] have the exact same fields.
+    #[test]
+    fn test_effectiveshipargs_haswholecli() {
+        // HACK: exploit the `Debug` implementation in order to get the field
+        // names. Use `Default` in order to get a value to feed into `Debug`.
+        fn debug_struct_fields<T: Debug + Default>() -> Vec<String> {
+            format!("{:#?}", T::default())
+                .lines()
+                .skip(1)
+                .filter(|line| line.starts_with("    "))
+                .map(|line| line.trim_start().split(':').next().unwrap().to_owned())
+                .collect()
+        }
+
+        assert_eq!(
+            debug_struct_fields::<crate::cli::ShipArgs>(),
+            debug_struct_fields::<EffectiveShipArgs>()
+        );
     }
 }
