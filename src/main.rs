@@ -27,7 +27,7 @@ use cargo::InstallStatus;
 mod cli;
 use cli::{LinerArgs, LinerCommands};
 mod config;
-use config::{CargoCratesToml, DetailedPackageReq, UserConfig};
+use config::{CargoCratesToml, DetailedPackageReq, EffectiveConfig, UserConfig};
 #[cfg(test)]
 #[path = "../tests/common/mod.rs"]
 mod testing;
@@ -154,17 +154,13 @@ fn try_main(args: &LinerArgs) -> Result<()> {
                     .update_others(!ship_args.only_self);
             }
 
-            let detailed_packages = config
-                .packages
-                .into_iter()
-                .map(|(pkg_name, pkg)| (pkg_name, pkg.into()))
-                .collect::<BTreeMap<String, DetailedPackageReq>>();
+            let config = EffectiveConfig::new(config);
 
             let (inst_res, old_vers, new_vers) = if skip_check {
                 // Don't parse `.crates.toml` here: can be used as a workaround.
                 (
                     cargo::install_all(
-                        &detailed_packages,
+                        &config.packages,
                         &BTreeSet::new(),
                         no_fail_fast,
                         force,
@@ -178,13 +174,13 @@ fn try_main(args: &LinerArgs) -> Result<()> {
                 let cct = CargoCratesToml::parse_file()
                     .wrap_err("Failed to parse Cargo's .crates.toml file.")?;
                 let old_vers = cct.clone().into_name_versions();
-                let new_vers = cargo::search_exact_all(&detailed_packages)
+                let new_vers = cargo::search_exact_all(&config.packages)
                     .wrap_err("Failed to fetch the latest versions of the configured packages.")?;
-                log_version_check_summary(&colorizer, &detailed_packages, &new_vers, &old_vers);
+                log_version_check_summary(&colorizer, &config.packages, &new_vers, &old_vers);
 
                 (
                     cargo::install_all(
-                        &needing_install(&detailed_packages, &new_vers, &old_vers),
+                        &needing_install(&config.packages, &new_vers, &old_vers),
                         &cct.into_names(),
                         no_fail_fast,
                         force,
