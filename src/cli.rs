@@ -142,7 +142,7 @@ pub enum LinerCommands {
 }
 
 /// Arguments for the `ship` subcommand.
-#[derive(clap::Args, Debug, PartialEq, Eq)]
+#[derive(clap::Args, Debug, Default, Clone, PartialEq, Eq)]
 #[command(long_about = None)]
 pub struct ShipArgs {
     /// Disable self-updating.

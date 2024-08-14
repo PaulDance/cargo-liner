@@ -25,7 +25,7 @@ use trycmd as _;
 mod cargo;
 use cargo::InstallStatus;
 mod cli;
-use cli::{LinerArgs, LinerCommands};
+use cli::{LinerArgs, LinerCommands, ShipArgs};
 mod config;
 use config::{CargoCratesToml, DetailedPackageReq, EffectiveConfig, UserConfig};
 #[cfg(test)]
@@ -133,9 +133,6 @@ fn try_main(args: &LinerArgs) -> Result<()> {
             .wrap_err("Failed to save the configuration file.")?;
         }
         cmd @ (None | Some(LinerCommands::Ship(_))) => {
-            let mut skip_check = false;
-            let mut no_fail_fast = false;
-            let mut force = false;
             let mut config =
                 UserConfig::parse_file().wrap_err("Failed to parse the user configuration.")?;
             let cargo_verbosity = match args.verbosity() {
@@ -146,24 +143,28 @@ fn try_main(args: &LinerArgs) -> Result<()> {
             };
 
             if let Some(LinerCommands::Ship(ship_args)) = cmd {
-                skip_check = ship_args.skip_check;
-                no_fail_fast = ship_args.no_fail_fast;
-                force = ship_args.force;
                 config = config
                     .self_update(!ship_args.no_self)
                     .update_others(!ship_args.only_self);
             }
 
-            let config = EffectiveConfig::new(config);
+            let config = EffectiveConfig::new(
+                config,
+                if let Some(LinerCommands::Ship(ship_args)) = cmd {
+                    ship_args.clone()
+                } else {
+                    ShipArgs::default()
+                },
+            );
 
-            let (inst_res, old_vers, new_vers) = if skip_check {
+            let (inst_res, old_vers, new_vers) = if config.ship_args.skip_check {
                 // Don't parse `.crates.toml` here: can be used as a workaround.
                 (
                     cargo::install_all(
                         &config.packages,
                         &BTreeSet::new(),
-                        no_fail_fast,
-                        force,
+                        config.ship_args.no_fail_fast,
+                        config.ship_args.force,
                         args.color,
                         cargo_verbosity,
                     ),
@@ -182,8 +183,8 @@ fn try_main(args: &LinerArgs) -> Result<()> {
                     cargo::install_all(
                         &needing_install(&config.packages, &new_vers, &old_vers),
                         &cct.into_names(),
-                        no_fail_fast,
-                        force,
+                        config.ship_args.no_fail_fast,
+                        config.ship_args.force,
                         args.color,
                         cargo_verbosity,
                     ),
@@ -202,7 +203,11 @@ fn try_main(args: &LinerArgs) -> Result<()> {
                 Err(err).wrap_err_with(|| {
                     format!(
                         "Failed to install or update {} of the configured packages.",
-                        if no_fail_fast { "some" } else { "one" }
+                        if config.ship_args.no_fail_fast {
+                            "some"
+                        } else {
+                            "one"
+                        }
                     )
                 })?;
             }

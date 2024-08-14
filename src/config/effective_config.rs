@@ -8,23 +8,27 @@
 use std::collections::BTreeMap;
 
 use super::{DetailedPackageReq, UserConfig};
+use crate::cli::ShipArgs;
 
 /// Effective merge of all configuration sources.
 #[derive(Debug)]
 pub struct EffectiveConfig {
     /// The name-to-setting map derived from the [`UserConfig`].
     pub packages: BTreeMap<String, DetailedPackageReq>,
+    /// Effective arguments to use for the `ship` CLI command.
+    pub ship_args: ShipArgs,
 }
 
 impl EffectiveConfig {
     /// Merges all given sources and exports the result as public fields.
-    pub fn new(user_config: UserConfig) -> Self {
+    pub fn new(user_config: UserConfig, ship_args: ShipArgs) -> Self {
         Self {
             packages: user_config
                 .packages
                 .into_iter()
                 .map(|(pkg_name, pkg)| (pkg_name, pkg.into()))
                 .collect::<BTreeMap<String, DetailedPackageReq>>(),
+            ship_args,
         }
     }
 }
