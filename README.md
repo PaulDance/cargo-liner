@@ -450,12 +450,20 @@ Options:
           Cannot be used in conjunction with `--only-self`. Default:
           `false`, i.e. self-update.
 
+      --with-self
+          Negation of `--no-self` that overrides it and restores the
+          default behavior as if absent
+
   -s, --only-self
           Only self-update and do not install or update any other
           package.
           
           Cannot be used in conjunction with `--no-self`. Default:
           `false`, i.e. install or update other packages as well.
+
+      --no-only-self
+          Negation of `--only-self` that overrides it and restores
+          the default behavior as if absent
 
   -c, --skip-check
           Skip the summary version check and directly call `cargo
@@ -476,6 +484,10 @@ Options:
           `$CARGO_HOME` or `$CARGO_INSTALL_ROOT` directory or making
           requests to the registry. These operations will thus be
           entirely skipped.
+
+      --no-skip-check
+          Negation of `--skip-check` that overrides it and restores
+          the default behavior as if absent
 
   -k, --no-fail-fast
           Disable the default fail-fast execution of `cargo
@@ -502,6 +514,10 @@ Options:
           be confused with `cargo test --no-fail-fast` since `cargo
           test` is never used.
 
+      --fail-fast
+          Negation of `--no-fail-fast` that overrides it and restores
+          the default behavior as if absent
+
   -f, --force
           Force overwriting existing crates or binaries.
           
@@ -509,6 +525,10 @@ Options:
           It will, for example, redownload, recompile and reinstall
           every configured package when used in conjunction with
           `--skip-check`.
+
+      --no-force
+          Negation of `--force` that overrides it and restores the
+          default behavior as if absent
 
   -v, --verbose...
           Be more verbose. Use multiple times to be more and more so

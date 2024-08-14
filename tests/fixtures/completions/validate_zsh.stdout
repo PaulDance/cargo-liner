@@ -46,6 +46,11 @@ _arguments "${_arguments_options[@]}" : \
 '--no-fail-fast[Disable the default fail-fast execution of \`cargo install\`s]' \
 '-f[Force overwriting existing crates or binaries]' \
 '--force[Force overwriting existing crates or binaries]' \
+'--with-self[Negation of \`--no-self\` that overrides it and restores the default behavior as if absent]' \
+'--no-only-self[Negation of \`--only-self\` that overrides it and restores the default behavior as if absent]' \
+'--no-skip-check[Negation of \`--skip-check\` that overrides it and restores the default behavior as if absent]' \
+'--fail-fast[Negation of \`--no-fail-fast\` that overrides it and restores the default behavior as if absent]' \
+'--no-force[Negation of \`--force\` that overrides it and restores the default behavior as if absent]' \
 '(-q --quiet)*-v[Be more verbose. Use multiple times to be more and more so each time]' \
 '(-q --quiet)*--verbose[Be more verbose. Use multiple times to be more and more so each time]' \
 '(-v --verbose)*-q[Be quieter. Use multiple times to be more and more so each time]' \

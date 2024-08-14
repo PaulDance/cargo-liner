@@ -3,6 +3,7 @@
 //! See [`LinerArgs::parse_env`] in order to retrieve such arguments from the
 //! environment.
 #![allow(clippy::struct_excessive_bools)]
+use clap::builder::ArgPredicate;
 use clap::{ArgAction, ColorChoice, Parser};
 use clap_complete::Shell;
 
@@ -124,7 +125,7 @@ pub enum LinerCommands {
     /// The default command if omitted: install and update configured packages.
     ///
     /// Self-updating is enabled by default.
-    Ship(ShipArgs),
+    Ship(ShipArgsWithNegations),
 
     /// Import the `$CARGO_HOME/.crates.toml` Cargo-edited save file as a new
     /// Liner configuration file.
@@ -149,14 +150,30 @@ pub struct ShipArgs {
     ///
     /// Cannot be used in conjunction with `--only-self`. Default: `false`,
     /// i.e. self-update.
-    #[arg(short, long, conflicts_with("only_self"))]
+    #[arg(
+        short,
+        long,
+        num_args = 0,
+        default_missing_value = "true",
+        default_value_if("_with_self", ArgPredicate::IsPresent, "false"),
+        conflicts_with("only_self"),
+        display_order = 1
+    )]
     pub no_self: bool,
 
     /// Only self-update and do not install or update any other package.
     ///
     /// Cannot be used in conjunction with `--no-self`. Default: `false`, i.e.
     /// install or update other packages as well.
-    #[arg(short = 's', long, conflicts_with("no_self"))]
+    #[arg(
+        short = 's',
+        long,
+        num_args = 0,
+        default_missing_value = "true",
+        default_value_if("_no_only_self", ArgPredicate::IsPresent, "false"),
+        conflicts_with("no_self"),
+        display_order = 3
+    )]
     pub only_self: bool,
 
     /// Skip the summary version check and directly call `cargo install` on
@@ -175,7 +192,14 @@ pub struct ShipArgs {
     /// under the `$CARGO_HOME` or `$CARGO_INSTALL_ROOT` directory or making
     /// requests to the registry. These operations will thus be entirely
     /// skipped.
-    #[arg(short = 'c', long)]
+    #[arg(
+        short = 'c',
+        long,
+        num_args = 0,
+        default_missing_value = "true",
+        default_value_if("_no_skip_check", ArgPredicate::IsPresent, "false"),
+        display_order = 5
+    )]
     pub skip_check: bool,
 
     /// Disable the default fail-fast execution of `cargo install`s.
@@ -196,7 +220,14 @@ pub struct ShipArgs {
     /// disables fast-failing between entire calls to `cargo install`; in fact,
     /// `--keep-going` is never passed onto Cargo. It is neither to be confused
     /// with `cargo test --no-fail-fast` since `cargo test` is never used.
-    #[arg(short = 'k', long)]
+    #[arg(
+        short = 'k',
+        long,
+        num_args = 0,
+        default_missing_value = "true",
+        default_value_if("_fail_fast", ArgPredicate::IsPresent, "false"),
+        display_order = 7
+    )]
     pub no_fail_fast: bool,
 
     /// Force overwriting existing crates or binaries.
@@ -204,8 +235,85 @@ pub struct ShipArgs {
     /// Passes the option flag onto each call of `cargo install`. It will, for
     /// example, redownload, recompile and reinstall every configured package
     /// when used in conjunction with `--skip-check`.
-    #[arg(short, long)]
+    #[arg(
+        short,
+        long,
+        num_args = 0,
+        default_missing_value = "true",
+        default_value_if("_no_force", ArgPredicate::IsPresent, "false"),
+        display_order = 9
+    )]
     pub force: bool,
+}
+
+/// Regroupement of flags from [`ShipArgs`] with their negated couterparts.
+#[derive(clap::Args, Debug, Default, Clone, PartialEq, Eq)]
+pub struct ShipArgsWithNegations {
+    /// The actual arguments.
+    #[command(flatten)]
+    inner: ShipArgs,
+
+    /// Negation of `--no-self` that overrides it and restores the default
+    /// behavior as if absent.
+    #[arg(
+        long,
+        required = false,
+        num_args = 0,
+        overrides_with = "no_self",
+        display_order = 2
+    )]
+    _with_self: (),
+
+    /// Negation of `--only-self` that overrides it and restores the default
+    /// behavior as if absent.
+    #[arg(
+        long,
+        required = false,
+        num_args = 0,
+        overrides_with = "only_self",
+        display_order = 4
+    )]
+    _no_only_self: (),
+
+    /// Negation of `--skip-check` that overrides it and restores the default
+    /// behavior as if absent.
+    #[arg(
+        long,
+        required = false,
+        num_args = 0,
+        overrides_with = "skip_check",
+        display_order = 6
+    )]
+    _no_skip_check: (),
+
+    /// Negation of `--no-fail-fast` that overrides it and restores the default
+    /// behavior as if absent.
+    #[arg(
+        long,
+        required = false,
+        num_args = 0,
+        overrides_with = "no_fail_fast",
+        display_order = 8
+    )]
+    _fail_fast: (),
+
+    /// Negation of `--force` that overrides it and restores the default
+    /// behavior as if absent.
+    #[arg(
+        long,
+        required = false,
+        num_args = 0,
+        overrides_with = "force",
+        display_order = 10
+    )]
+    _no_force: (),
+}
+
+impl ShipArgsWithNegations {
+    /// Consumes the wrapped arguments and returns the inner [`ShipArgs`].
+    pub fn into_inner(self) -> ShipArgs {
+        self.inner
+    }
 }
 
 #[derive(clap::Args, Debug, PartialEq, Eq)]
@@ -373,12 +481,19 @@ mod tests {
         assert_eq!(
             CargoArgs::try_parse_from(["cargo", "liner", "ship"]).unwrap(),
             CargoArgs::Liner(LinerArgs {
-                command: Some(LinerCommands::Ship(ShipArgs {
-                    no_self: false,
-                    only_self: false,
-                    skip_check: false,
-                    no_fail_fast: false,
-                    force: false,
+                command: Some(LinerCommands::Ship(ShipArgsWithNegations {
+                    inner: ShipArgs {
+                        no_self: false,
+                        only_self: false,
+                        skip_check: false,
+                        no_fail_fast: false,
+                        force: false,
+                    },
+                    _with_self: (),
+                    _no_only_self: (),
+                    _no_skip_check: (),
+                    _fail_fast: (),
+                    _no_force: (),
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -392,12 +507,19 @@ mod tests {
         assert_eq!(
             CargoArgs::try_parse_from(["cargo", "liner", "ship", "--no-self"]).unwrap(),
             CargoArgs::Liner(LinerArgs {
-                command: Some(LinerCommands::Ship(ShipArgs {
-                    no_self: true,
-                    only_self: false,
-                    skip_check: false,
-                    no_fail_fast: false,
-                    force: false,
+                command: Some(LinerCommands::Ship(ShipArgsWithNegations {
+                    inner: ShipArgs {
+                        no_self: true,
+                        only_self: false,
+                        skip_check: false,
+                        no_fail_fast: false,
+                        force: false,
+                    },
+                    _with_self: (),
+                    _no_only_self: (),
+                    _no_skip_check: (),
+                    _fail_fast: (),
+                    _no_force: (),
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -411,12 +533,19 @@ mod tests {
         assert_eq!(
             CargoArgs::try_parse_from(["cargo", "liner", "ship", "--only-self"]).unwrap(),
             CargoArgs::Liner(LinerArgs {
-                command: Some(LinerCommands::Ship(ShipArgs {
-                    no_self: false,
-                    only_self: true,
-                    skip_check: false,
-                    no_fail_fast: false,
-                    force: false,
+                command: Some(LinerCommands::Ship(ShipArgsWithNegations {
+                    inner: ShipArgs {
+                        no_self: false,
+                        only_self: true,
+                        skip_check: false,
+                        no_fail_fast: false,
+                        force: false,
+                    },
+                    _with_self: (),
+                    _no_only_self: (),
+                    _no_skip_check: (),
+                    _fail_fast: (),
+                    _no_force: (),
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -430,12 +559,19 @@ mod tests {
         assert_eq!(
             CargoArgs::try_parse_from(["cargo", "liner", "ship", "--skip-check"]).unwrap(),
             CargoArgs::Liner(LinerArgs {
-                command: Some(LinerCommands::Ship(ShipArgs {
-                    no_self: false,
-                    only_self: false,
-                    skip_check: true,
-                    no_fail_fast: false,
-                    force: false,
+                command: Some(LinerCommands::Ship(ShipArgsWithNegations {
+                    inner: ShipArgs {
+                        no_self: false,
+                        only_self: false,
+                        skip_check: true,
+                        no_fail_fast: false,
+                        force: false,
+                    },
+                    _with_self: (),
+                    _no_only_self: (),
+                    _no_skip_check: (),
+                    _fail_fast: (),
+                    _no_force: (),
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -449,12 +585,19 @@ mod tests {
         assert_eq!(
             CargoArgs::try_parse_from(["cargo", "liner", "ship", "--no-fail-fast"]).unwrap(),
             CargoArgs::Liner(LinerArgs {
-                command: Some(LinerCommands::Ship(ShipArgs {
-                    no_self: false,
-                    only_self: false,
-                    skip_check: false,
-                    no_fail_fast: true,
-                    force: false,
+                command: Some(LinerCommands::Ship(ShipArgsWithNegations {
+                    inner: ShipArgs {
+                        no_self: false,
+                        only_self: false,
+                        skip_check: false,
+                        no_fail_fast: true,
+                        force: false,
+                    },
+                    _with_self: (),
+                    _no_only_self: (),
+                    _no_skip_check: (),
+                    _fail_fast: (),
+                    _no_force: (),
                 })),
                 verbose: 0,
                 quiet: 0,
@@ -468,12 +611,19 @@ mod tests {
         assert_eq!(
             CargoArgs::try_parse_from(["cargo", "liner", "ship", "--force"]).unwrap(),
             CargoArgs::Liner(LinerArgs {
-                command: Some(LinerCommands::Ship(ShipArgs {
-                    no_self: false,
-                    only_self: false,
-                    skip_check: false,
-                    no_fail_fast: false,
-                    force: true,
+                command: Some(LinerCommands::Ship(ShipArgsWithNegations {
+                    inner: ShipArgs {
+                        no_self: false,
+                        only_self: false,
+                        skip_check: false,
+                        no_fail_fast: false,
+                        force: true,
+                    },
+                    _with_self: (),
+                    _no_only_self: (),
+                    _no_skip_check: (),
+                    _fail_fast: (),
+                    _no_force: (),
                 })),
                 verbose: 0,
                 quiet: 0,

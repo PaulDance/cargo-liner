@@ -142,7 +142,7 @@ fn try_main(args: &LinerArgs) -> Result<()> {
             let config = EffectiveConfig::new(
                 UserConfig::parse_file().wrap_err("Failed to parse the user configuration.")?,
                 if let Some(LinerCommands::Ship(ship_args)) = cmd {
-                    ship_args.clone()
+                    ship_args.clone().into_inner()
                 } else {
                     ShipArgs::default()
                 },
