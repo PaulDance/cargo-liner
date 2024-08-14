@@ -993,6 +993,81 @@ mod tests {
     }
 
     #[test]
+    fn test_userconfig_defaults_none() {
+        assert!(toml::from_str::<UserConfig>(
+            r#"
+                [packages]
+                abc = "*"
+            "#
+        )
+        .unwrap()
+        .defaults
+        .is_none());
+    }
+
+    #[test]
+    fn test_userconfig_defaults_empty() {
+        assert!(toml::from_str::<UserConfig>(
+            r#"
+                [packages]
+                abc = "*"
+                [defaults]
+            "#
+        )
+        .unwrap()
+        .defaults
+        .is_some());
+    }
+
+    #[test]
+    fn test_userconfig_defaults_empty_equals_semiempty() {
+        assert_eq!(
+            toml::from_str::<UserConfig>(
+                r#"
+                    [packages]
+                    abc = "*"
+                    [defaults]
+                "#
+            ),
+            toml::from_str::<UserConfig>(
+                r#"
+                    [packages]
+                    abc = "*"
+                    [defaults.ship]
+                "#
+            )
+        );
+    }
+
+    #[test]
+    fn test_userconfig_defaults_ship() {
+        assert_eq!(
+            toml::from_str::<UserConfig>(
+                r#"
+                    [packages]
+                    abc = "*"
+                    [defaults.ship]
+                    no-self = true
+                    no-fail-fast = true
+                    skip-check = true
+                    force = false
+                "#
+            )
+            .unwrap()
+            .defaults
+            .unwrap()
+            .ship_cmd,
+            ShipArgs {
+                only_self: None,
+                no_self: Some(true),
+                no_fail_fast: Some(true),
+                skip_check: Some(true),
+                force: Some(false),
+            }
+        );
+    }
+
+    #[test]
     fn test_userconfig_tostringpretty_no_packages() {
         assert_eq!(
             UserConfig::default().to_string_pretty().unwrap(),
