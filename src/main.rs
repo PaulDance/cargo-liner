@@ -133,23 +133,14 @@ fn try_main(args: &LinerArgs) -> Result<()> {
             .wrap_err("Failed to save the configuration file.")?;
         }
         cmd @ (None | Some(LinerCommands::Ship(_))) => {
-            let mut config =
-                UserConfig::parse_file().wrap_err("Failed to parse the user configuration.")?;
             let cargo_verbosity = match args.verbosity() {
                 -2..=1 => 0,
                 v if v > 1 => v - 1,
                 q if q < -2 => q + 2,
                 _ => unreachable!(),
             };
-
-            if let Some(LinerCommands::Ship(ship_args)) = cmd {
-                config = config
-                    .self_update(!ship_args.no_self)
-                    .update_others(!ship_args.only_self);
-            }
-
             let config = EffectiveConfig::new(
-                config,
+                UserConfig::parse_file().wrap_err("Failed to parse the user configuration.")?,
                 if let Some(LinerCommands::Ship(ship_args)) = cmd {
                     ship_args.clone()
                 } else {

@@ -24,6 +24,8 @@ impl EffectiveConfig {
     pub fn new(user_config: UserConfig, ship_args: ShipArgs) -> Self {
         Self {
             packages: user_config
+                .self_update(!ship_args.no_self)
+                .update_others(!ship_args.only_self)
                 .packages
                 .into_iter()
                 .map(|(pkg_name, pkg)| (pkg_name, pkg.into()))
