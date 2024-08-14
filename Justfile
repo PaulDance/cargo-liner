@@ -30,7 +30,7 @@ clippy *args:
     cargo clippy --all-targets --all-features {{ args }}
 
 alias d := doc
-# Runs `cargo check` with some default flags.
+# Runs `cargo doc` with some default flags.
 doc *args:
     cargo doc --all-features --document-private-items {{ args }}
 
