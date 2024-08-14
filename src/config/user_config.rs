@@ -10,12 +10,27 @@ use serde::{Deserialize, Serialize};
 
 use super::PackageRequirement;
 use crate::cargo;
+use crate::cli::ShipArgs;
 
 /// Represents the user's configuration deserialized from its file.
 #[derive(Serialize, Deserialize, Debug, Default, Clone, PartialEq, Eq)]
 pub struct UserConfig {
     /// The name-to-setting map for the `packages` section of the config.
     pub packages: BTreeMap<String, PackageRequirement>,
+    /// The option defaults section.
+    #[serde(default)]
+    // Use an option to have it be removed during serialization when `None`.
+    pub defaults: Option<DefaultsSection>,
+}
+
+/// Represents the section of the configuration dedicated to setting CLI option
+/// defaults.
+#[derive(Serialize, Deserialize, Debug, Default, Clone, PartialEq, Eq)]
+#[serde(default)]
+pub struct DefaultsSection {
+    /// The sub-section supporting the `ship` command options.
+    #[serde(rename = "ship")]
+    pub ship_cmd: ShipArgs,
 }
 
 impl UserConfig {
@@ -217,6 +232,7 @@ mod tests {
                     PackageRequirement::Simple(VersionReq::parse(version).unwrap()),
                 ))
                 .collect::<BTreeMap<_, _>>(),
+                defaults: None,
             }
         );
     }
@@ -1004,6 +1020,7 @@ mod tests {
                     PackageRequirement::Simple(VersionReq::parse(version).unwrap()),
                 ))
                 .collect::<BTreeMap<_, _>>(),
+                defaults: None,
             }
             .to_string_pretty()
             .unwrap(),
@@ -1043,6 +1060,7 @@ mod tests {
         assert_eq!(
             UserConfig {
                 packages: pkgs.clone(),
+                defaults: None,
             }
             .self_update(true)
             .packages,
@@ -1070,6 +1088,7 @@ mod tests {
                     PackageRequirement::Simple(VersionReq::parse("1.2.3").unwrap()),
                 ))
                 .collect::<BTreeMap<_, _>>(),
+                defaults: None,
             }
             .self_update(false)
             .packages,
@@ -1121,6 +1140,7 @@ mod tests {
         assert_eq!(
             UserConfig {
                 packages: pkgs.clone(),
+                defaults: None,
             }
             .update_others(false)
             .packages,

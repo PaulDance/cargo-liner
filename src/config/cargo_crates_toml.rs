@@ -111,6 +111,7 @@ impl CargoCratesToml {
                 })
                 .map(pkg_map)
                 .collect(),
+            defaults: None,
         }
     }
 
@@ -390,6 +391,7 @@ mod tests {
                         PackageRequirement::Simple(VersionReq::parse(version).unwrap()),
                     ))
                     .collect::<BTreeMap<_, _>>(),
+                defaults: None,
             },
         );
     }
@@ -424,6 +426,7 @@ mod tests {
                         PackageRequirement::Simple(VersionReq::parse(version).unwrap()),
                     ))
                     .collect::<BTreeMap<_, _>>(),
+                defaults: None,
             },
         );
     }
@@ -458,6 +461,7 @@ mod tests {
                         PackageRequirement::Simple(VersionReq::parse(version).unwrap()),
                     ))
                     .collect::<BTreeMap<_, _>>(),
+                defaults: None,
             },
         );
     }
@@ -492,6 +496,7 @@ mod tests {
                         PackageRequirement::Simple(VersionReq::parse(version).unwrap()),
                     ))
                     .collect::<BTreeMap<_, _>>(),
+                defaults: None,
             },
         );
     }
@@ -534,6 +539,7 @@ mod tests {
                         PackageRequirement::Simple(VersionReq::parse(version).unwrap()),
                     ))
                     .collect::<BTreeMap<_, _>>(),
+                defaults: None,
             },
         );
     }
@@ -550,6 +556,7 @@ mod tests {
                         PackageRequirement::Simple(VersionReq::parse(version).unwrap()),
                     ))
                     .collect::<BTreeMap<_, _>>(),
+                defaults: None,
             },
         );
     }
@@ -571,6 +578,7 @@ mod tests {
                     PackageRequirement::Simple(VersionReq::parse(version).unwrap()),
                 ))
                 .collect::<BTreeMap<_, _>>(),
+                defaults: None,
             },
         );
     }
@@ -609,6 +617,7 @@ mod tests {
                     PackageRequirement::Simple(VersionReq::parse(version).unwrap()),
                 ))
                 .collect::<BTreeMap<_, _>>(),
+                defaults: None,
             },
         );
     }
@@ -647,6 +656,7 @@ mod tests {
                     PackageRequirement::Simple(VersionReq::parse(version).unwrap()),
                 ))
                 .collect::<BTreeMap<_, _>>(),
+                defaults: None,
             },
         );
     }
@@ -685,6 +695,7 @@ mod tests {
                     PackageRequirement::Simple(VersionReq::parse(version).unwrap()),
                 ))
                 .collect::<BTreeMap<_, _>>(),
+                defaults: None,
             },
         );
     }

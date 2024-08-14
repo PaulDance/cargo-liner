@@ -6,6 +6,7 @@
 use clap::builder::ArgPredicate;
 use clap::{ArgAction, ColorChoice, Parser};
 use clap_complete::Shell;
+use serde::{Deserialize, Serialize};
 
 /// Cargo entry point for `cargo-liner`.
 ///
@@ -143,8 +144,9 @@ pub enum LinerCommands {
 }
 
 /// Arguments for the `ship` subcommand.
-#[derive(clap::Args, Debug, Default, Clone, PartialEq, Eq)]
+#[derive(clap::Args, Serialize, Deserialize, Debug, Default, Clone, PartialEq, Eq)]
 #[command(long_about = None)]
+#[serde(default, rename_all = "kebab-case")]
 pub struct ShipArgs {
     /// Disable self-updating.
     ///
