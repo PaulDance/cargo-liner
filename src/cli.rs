@@ -503,7 +503,7 @@ mod tests {
     }
 
     #[test]
-    fn test_ship_noselfupdate() {
+    fn test_ship_noself() {
         assert_eq!(
             CargoArgs::try_parse_from(["cargo", "liner", "ship", "--no-self"]).unwrap(),
             CargoArgs::Liner(LinerArgs {
@@ -529,7 +529,34 @@ mod tests {
     }
 
     #[test]
-    fn test_ship_onlyselfupdate() {
+    fn test_ship_noself_negation() {
+        assert_eq!(
+            CargoArgs::try_parse_from(["cargo", "liner", "ship", "--no-self", "--with-self"])
+                .unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Ship(ShipArgsWithNegations {
+                    inner: ShipArgs {
+                        no_self: Some(false),
+                        only_self: None,
+                        skip_check: None,
+                        no_fail_fast: None,
+                        force: None,
+                    },
+                    _with_self: (),
+                    _no_only_self: (),
+                    _no_skip_check: (),
+                    _fail_fast: (),
+                    _no_force: (),
+                })),
+                verbose: 0,
+                quiet: 0,
+                color: ColorChoice::Auto,
+            }),
+        );
+    }
+
+    #[test]
+    fn test_ship_onlyself() {
         assert_eq!(
             CargoArgs::try_parse_from(["cargo", "liner", "ship", "--only-self"]).unwrap(),
             CargoArgs::Liner(LinerArgs {
@@ -537,6 +564,33 @@ mod tests {
                     inner: ShipArgs {
                         no_self: None,
                         only_self: Some(true),
+                        skip_check: None,
+                        no_fail_fast: None,
+                        force: None,
+                    },
+                    _with_self: (),
+                    _no_only_self: (),
+                    _no_skip_check: (),
+                    _fail_fast: (),
+                    _no_force: (),
+                })),
+                verbose: 0,
+                quiet: 0,
+                color: ColorChoice::Auto,
+            }),
+        );
+    }
+
+    #[test]
+    fn test_ship_onlyself_negation() {
+        assert_eq!(
+            CargoArgs::try_parse_from(["cargo", "liner", "ship", "--only-self", "--no-only-self"])
+                .unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Ship(ShipArgsWithNegations {
+                    inner: ShipArgs {
+                        no_self: None,
+                        only_self: Some(false),
                         skip_check: None,
                         no_fail_fast: None,
                         force: None,
@@ -581,6 +635,39 @@ mod tests {
     }
 
     #[test]
+    fn test_ship_skipcheck_negation() {
+        assert_eq!(
+            CargoArgs::try_parse_from([
+                "cargo",
+                "liner",
+                "ship",
+                "--skip-check",
+                "--no-skip-check",
+            ])
+            .unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Ship(ShipArgsWithNegations {
+                    inner: ShipArgs {
+                        no_self: None,
+                        only_self: None,
+                        skip_check: Some(false),
+                        no_fail_fast: None,
+                        force: None,
+                    },
+                    _with_self: (),
+                    _no_only_self: (),
+                    _no_skip_check: (),
+                    _fail_fast: (),
+                    _no_force: (),
+                })),
+                verbose: 0,
+                quiet: 0,
+                color: ColorChoice::Auto,
+            }),
+        );
+    }
+
+    #[test]
     fn test_ship_nofailfast() {
         assert_eq!(
             CargoArgs::try_parse_from(["cargo", "liner", "ship", "--no-fail-fast"]).unwrap(),
@@ -591,6 +678,33 @@ mod tests {
                         only_self: None,
                         skip_check: None,
                         no_fail_fast: Some(true),
+                        force: None,
+                    },
+                    _with_self: (),
+                    _no_only_self: (),
+                    _no_skip_check: (),
+                    _fail_fast: (),
+                    _no_force: (),
+                })),
+                verbose: 0,
+                quiet: 0,
+                color: ColorChoice::Auto,
+            }),
+        );
+    }
+
+    #[test]
+    fn test_ship_nofailfast_negation() {
+        assert_eq!(
+            CargoArgs::try_parse_from(["cargo", "liner", "ship", "--no-fail-fast", "--fail-fast"])
+                .unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Ship(ShipArgsWithNegations {
+                    inner: ShipArgs {
+                        no_self: None,
+                        only_self: None,
+                        skip_check: None,
+                        no_fail_fast: Some(false),
                         force: None,
                     },
                     _with_self: (),
@@ -618,6 +732,32 @@ mod tests {
                         skip_check: None,
                         no_fail_fast: None,
                         force: Some(true),
+                    },
+                    _with_self: (),
+                    _no_only_self: (),
+                    _no_skip_check: (),
+                    _fail_fast: (),
+                    _no_force: (),
+                })),
+                verbose: 0,
+                quiet: 0,
+                color: ColorChoice::Auto,
+            }),
+        );
+    }
+
+    #[test]
+    fn test_ship_force_negation() {
+        assert_eq!(
+            CargoArgs::try_parse_from(["cargo", "liner", "ship", "--force", "--no-force"]).unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Ship(ShipArgsWithNegations {
+                    inner: ShipArgs {
+                        no_self: None,
+                        only_self: None,
+                        skip_check: None,
+                        no_fail_fast: None,
+                        force: Some(false),
                     },
                     _with_self: (),
                     _no_only_self: (),
