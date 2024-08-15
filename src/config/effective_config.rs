@@ -21,8 +21,8 @@ pub struct EffectiveConfig {
 
 impl EffectiveConfig {
     /// Merges all given sources and exports the result as public fields.
-    pub fn new(user_config: UserConfig, ship_args: ShipArgs) -> Self {
-        let ship_args = EffectiveShipArgs::new(&user_config, ship_args);
+    pub fn new(user_config: UserConfig, env_args: ShipArgs, cli_args: ShipArgs) -> Self {
+        let ship_args = EffectiveShipArgs::new(&user_config, env_args, cli_args);
         Self {
             packages: user_config
                 .self_update(!ship_args.no_self)
@@ -50,27 +50,32 @@ pub struct EffectiveShipArgs {
 
 impl EffectiveShipArgs {
     #[allow(clippy::needless_pass_by_value)]
-    fn new(user_config: &UserConfig, ship_args: ShipArgs) -> Self {
+    fn new(user_config: &UserConfig, env_args: ShipArgs, cli_args: ShipArgs) -> Self {
         let cfg_defs = user_config.defaults.as_ref();
         Self {
-            no_self: ship_args
+            no_self: cli_args
                 .no_self
+                .or(env_args.no_self)
                 .or_else(|| cfg_defs.and_then(|defs| defs.ship_cmd.no_self.as_ref().copied()))
                 .unwrap_or_default(),
-            only_self: ship_args
+            only_self: cli_args
                 .only_self
+                .or(env_args.only_self)
                 .or_else(|| cfg_defs.and_then(|defs| defs.ship_cmd.only_self.as_ref().copied()))
                 .unwrap_or_default(),
-            skip_check: ship_args
+            skip_check: cli_args
                 .skip_check
+                .or(env_args.skip_check)
                 .or_else(|| cfg_defs.and_then(|defs| defs.ship_cmd.skip_check.as_ref().copied()))
                 .unwrap_or_default(),
-            no_fail_fast: ship_args
+            no_fail_fast: cli_args
                 .no_fail_fast
+                .or(env_args.no_fail_fast)
                 .or_else(|| cfg_defs.and_then(|defs| defs.ship_cmd.no_fail_fast.as_ref().copied()))
                 .unwrap_or_default(),
-            force: ship_args
+            force: cli_args
                 .force
+                .or(env_args.force)
                 .or_else(|| cfg_defs.and_then(|defs| defs.ship_cmd.force.as_ref().copied()))
                 .unwrap_or_default(),
         }
@@ -113,7 +118,8 @@ mod tests {
                     packages: BTreeMap::new(),
                     defaults: None,
                 },
-                ShipArgs::default()
+                ShipArgs::default(),
+                ShipArgs::default(),
             ),
             EffectiveShipArgs::default(),
         );
@@ -129,14 +135,15 @@ mod tests {
                         ship_cmd: ShipArgs::default()
                     }),
                 },
-                ShipArgs::default()
+                ShipArgs::default(),
+                ShipArgs::default(),
             ),
             EffectiveShipArgs::default(),
         );
     }
 
     #[test]
-    fn test_effectiveshipargs_configset_noargs_isconfig() {
+    fn test_effectiveshipargs_configset_noenv_noargs_isconfig() {
         assert_eq!(
             EffectiveShipArgs::new(
                 &UserConfig {
@@ -149,7 +156,8 @@ mod tests {
                         }
                     }),
                 },
-                ShipArgs::default()
+                ShipArgs::default(),
+                ShipArgs::default(),
             ),
             EffectiveShipArgs {
                 force: false,
@@ -160,7 +168,7 @@ mod tests {
     }
 
     #[test]
-    fn test_effectiveshipargs_noconfig_argsset_isargs() {
+    fn test_effectiveshipargs_noconfig_noenv_argsset_isargs() {
         assert_eq!(
             EffectiveShipArgs::new(
                 &UserConfig {
@@ -169,11 +177,12 @@ mod tests {
                         ship_cmd: ShipArgs::default()
                     }),
                 },
+                ShipArgs::default(),
                 ShipArgs {
                     no_fail_fast: Some(true),
                     skip_check: Some(false),
                     ..Default::default()
-                }
+                },
             ),
             EffectiveShipArgs {
                 no_fail_fast: true,
@@ -184,7 +193,7 @@ mod tests {
     }
 
     #[test]
-    fn test_effectiveshipargs_configset_argsset_nointersection_isunion() {
+    fn test_effectiveshipargs_configset_noenv_argsset_nointersection_isunion() {
         assert_eq!(
             EffectiveShipArgs::new(
                 &UserConfig {
@@ -197,11 +206,12 @@ mod tests {
                         }
                     }),
                 },
+                ShipArgs::default(),
                 ShipArgs {
                     no_fail_fast: Some(true),
                     skip_check: Some(false),
                     ..Default::default()
-                }
+                },
             ),
             EffectiveShipArgs {
                 force: true,
@@ -214,7 +224,7 @@ mod tests {
     }
 
     #[test]
-    fn test_effectiveshipargs_configset_argsset_withintersection_argshaveprecedence() {
+    fn test_effectiveshipargs_configset_noenv_argsset_withintersection_argshaveprecedence() {
         assert_eq!(
             EffectiveShipArgs::new(
                 &UserConfig {
@@ -229,13 +239,14 @@ mod tests {
                         }
                     }),
                 },
+                ShipArgs::default(),
                 ShipArgs {
                     force: Some(false),
                     no_self: Some(true),
                     no_fail_fast: Some(true),
                     skip_check: Some(false),
                     ..Default::default()
-                }
+                },
             ),
             EffectiveShipArgs {
                 force: false,
