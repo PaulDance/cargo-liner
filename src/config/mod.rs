@@ -6,6 +6,7 @@
 
 mod cargo_crates_toml;
 mod effective_config;
+pub mod env;
 mod package;
 mod user_config;
 
