@@ -84,6 +84,7 @@ impl EffectiveShipArgs {
 
 #[cfg(test)]
 mod tests {
+    #![allow(clippy::needless_update)]
     use std::fmt::Debug;
 
     use super::*;
@@ -168,6 +169,31 @@ mod tests {
     }
 
     #[test]
+    fn test_effectiveshipargs_noconfig_envset_noargs_isenv() {
+        assert_eq!(
+            EffectiveShipArgs::new(
+                &UserConfig {
+                    packages: BTreeMap::new(),
+                    defaults: Some(DefaultsSection {
+                        ship_cmd: ShipArgs::default()
+                    }),
+                },
+                ShipArgs {
+                    force: Some(false),
+                    no_self: Some(true),
+                    ..Default::default()
+                },
+                ShipArgs::default(),
+            ),
+            EffectiveShipArgs {
+                force: false,
+                no_self: true,
+                ..Default::default()
+            },
+        );
+    }
+
+    #[test]
     fn test_effectiveshipargs_noconfig_noenv_argsset_isargs() {
         assert_eq!(
             EffectiveShipArgs::new(
@@ -193,7 +219,7 @@ mod tests {
     }
 
     #[test]
-    fn test_effectiveshipargs_configset_noenv_argsset_nointersection_isunion() {
+    fn test_effectiveshipargs_configset_envset_argsset_nointersection_isunion() {
         assert_eq!(
             EffectiveShipArgs::new(
                 &UserConfig {
@@ -206,7 +232,10 @@ mod tests {
                         }
                     }),
                 },
-                ShipArgs::default(),
+                ShipArgs {
+                    only_self: Some(true),
+                    ..Default::default()
+                },
                 ShipArgs {
                     no_fail_fast: Some(true),
                     skip_check: Some(false),
@@ -216,6 +245,75 @@ mod tests {
             EffectiveShipArgs {
                 force: true,
                 no_self: false,
+                no_fail_fast: true,
+                skip_check: false,
+                only_self: true,
+                ..Default::default()
+            },
+        );
+    }
+
+    #[test]
+    fn test_effectiveshipargs_configset_envset_noargs_withintersection_envhasprecedence() {
+        assert_eq!(
+            EffectiveShipArgs::new(
+                &UserConfig {
+                    packages: BTreeMap::new(),
+                    defaults: Some(DefaultsSection {
+                        ship_cmd: ShipArgs {
+                            force: Some(true),
+                            no_self: Some(false),
+                            no_fail_fast: Some(true),
+                            skip_check: Some(false),
+                            ..Default::default()
+                        }
+                    }),
+                },
+                ShipArgs {
+                    force: Some(false),
+                    no_self: Some(true),
+                    no_fail_fast: Some(true),
+                    skip_check: Some(false),
+                    ..Default::default()
+                },
+                ShipArgs::default(),
+            ),
+            EffectiveShipArgs {
+                force: false,
+                no_self: true,
+                no_fail_fast: true,
+                skip_check: false,
+                ..Default::default()
+            },
+        );
+    }
+
+    #[test]
+    fn test_effectiveshipargs_noconfig_envset_argsset_withintersection_argshaveprecedence() {
+        assert_eq!(
+            EffectiveShipArgs::new(
+                &UserConfig {
+                    packages: BTreeMap::new(),
+                    defaults: None,
+                },
+                ShipArgs {
+                    force: Some(true),
+                    no_self: Some(false),
+                    no_fail_fast: Some(true),
+                    skip_check: Some(false),
+                    ..Default::default()
+                },
+                ShipArgs {
+                    force: Some(false),
+                    no_self: Some(true),
+                    no_fail_fast: Some(true),
+                    skip_check: Some(false),
+                    ..Default::default()
+                },
+            ),
+            EffectiveShipArgs {
+                force: false,
+                no_self: true,
                 no_fail_fast: true,
                 skip_check: false,
                 ..Default::default()
@@ -253,6 +351,46 @@ mod tests {
                 no_self: true,
                 no_fail_fast: true,
                 skip_check: false,
+                ..Default::default()
+            },
+        );
+    }
+
+    #[test]
+    fn test_effectiveshipargs_configset_envset_argsset_withintersection_argshaveprecedence() {
+        assert_eq!(
+            EffectiveShipArgs::new(
+                &UserConfig {
+                    packages: BTreeMap::new(),
+                    defaults: Some(DefaultsSection {
+                        ship_cmd: ShipArgs {
+                            force: Some(true),
+                            no_self: Some(false),
+                            no_fail_fast: Some(true),
+                            skip_check: Some(false),
+                            ..Default::default()
+                        }
+                    }),
+                },
+                ShipArgs {
+                    only_self: Some(false),
+                    ..Default::default()
+                },
+                ShipArgs {
+                    force: Some(false),
+                    no_self: Some(true),
+                    no_fail_fast: Some(true),
+                    skip_check: Some(false),
+                    only_self: Some(true),
+                    ..Default::default()
+                },
+            ),
+            EffectiveShipArgs {
+                force: false,
+                no_self: true,
+                no_fail_fast: true,
+                skip_check: false,
+                only_self: true,
                 ..Default::default()
             },
         );
