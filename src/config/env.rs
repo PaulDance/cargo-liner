@@ -32,3 +32,65 @@ pub fn ship_env_args() -> Result<ShipArgs> {
         force: get_ship_flag("FORCE")?,
     })
 }
+
+#[cfg(test)]
+mod tests {
+    use std::sync::Mutex;
+
+    use once_cell::sync::Lazy;
+
+    use super::*;
+
+    static LOCK: Lazy<Mutex<()>> = Lazy::new(|| Mutex::new(()));
+
+    fn set_vars<'a>(var_vals: impl IntoIterator<Item = &'a (&'static str, &'static str)>) {
+        for (var, val) in var_vals {
+            env::set_var(var, val);
+        }
+    }
+
+    fn remove_vars<'a>(var_vals: impl IntoIterator<Item = &'a (&'static str, &'static str)>) {
+        for (var, _val) in var_vals {
+            env::remove_var(var);
+        }
+    }
+
+    #[test]
+    fn test_singlethreaded_ship_ok() {
+        let _lk = LOCK.lock().unwrap();
+        let var_vals = [
+            ("CARGO_LINER_SHIP_NO_SELF", "true"),
+            ("CARGO_LINER_SHIP_FORCE", "false"),
+        ];
+        set_vars(&var_vals);
+
+        assert_eq!(
+            ship_env_args().unwrap(),
+            ShipArgs {
+                no_self: Some(true),
+                force: Some(false),
+                ..Default::default()
+            }
+        );
+
+        remove_vars(&var_vals);
+    }
+
+    #[test]
+    fn test_singlethreaded_ship_errs() {
+        let _lk = LOCK.lock().unwrap();
+
+        for (var, val) in [
+            ("CARGO_LINER_SHIP_ONLY_SELF", ""),
+            ("CARGO_LINER_SHIP_NO_FAIL_FAST", " "),
+            ("CARGO_LINER_SHIP_SKIP_CHECK", "123"),
+            ("CARGO_LINER_SHIP_NO_SELF", "abc"),
+            ("CARGO_LINER_SHIP_FORCE", "\x01"),
+        ] {
+            assert_eq!(ship_env_args().unwrap(), ShipArgs::default());
+            set_vars(&[(var, val)]);
+            assert!(ship_env_args().is_err());
+            remove_vars(&[(var, val)]);
+        }
+    }
+}
