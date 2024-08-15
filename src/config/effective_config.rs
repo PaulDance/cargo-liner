@@ -22,7 +22,7 @@ pub struct EffectiveConfig {
 impl EffectiveConfig {
     /// Merges all given sources and exports the result as public fields.
     pub fn new(user_config: UserConfig, ship_args: ShipArgs) -> Self {
-        let ship_args = EffectiveShipArgs::new(ship_args);
+        let ship_args = EffectiveShipArgs::new(&user_config, ship_args);
         Self {
             packages: user_config
                 .self_update(!ship_args.no_self)
@@ -50,13 +50,29 @@ pub struct EffectiveShipArgs {
 
 impl EffectiveShipArgs {
     #[allow(clippy::needless_pass_by_value)]
-    fn new(ship_args: ShipArgs) -> Self {
+    fn new(user_config: &UserConfig, ship_args: ShipArgs) -> Self {
+        let cfg_defs = user_config.defaults.as_ref();
         Self {
-            no_self: ship_args.no_self.unwrap_or_default(),
-            only_self: ship_args.only_self.unwrap_or_default(),
-            skip_check: ship_args.skip_check.unwrap_or_default(),
-            no_fail_fast: ship_args.no_fail_fast.unwrap_or_default(),
-            force: ship_args.force.unwrap_or_default(),
+            no_self: ship_args
+                .no_self
+                .or_else(|| cfg_defs.and_then(|defs| defs.ship_cmd.no_self.as_ref().copied()))
+                .unwrap_or_default(),
+            only_self: ship_args
+                .only_self
+                .or_else(|| cfg_defs.and_then(|defs| defs.ship_cmd.only_self.as_ref().copied()))
+                .unwrap_or_default(),
+            skip_check: ship_args
+                .skip_check
+                .or_else(|| cfg_defs.and_then(|defs| defs.ship_cmd.skip_check.as_ref().copied()))
+                .unwrap_or_default(),
+            no_fail_fast: ship_args
+                .no_fail_fast
+                .or_else(|| cfg_defs.and_then(|defs| defs.ship_cmd.no_fail_fast.as_ref().copied()))
+                .unwrap_or_default(),
+            force: ship_args
+                .force
+                .or_else(|| cfg_defs.and_then(|defs| defs.ship_cmd.force.as_ref().copied()))
+                .unwrap_or_default(),
         }
     }
 }
