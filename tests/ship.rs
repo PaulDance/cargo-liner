@@ -1723,3 +1723,209 @@ fn validate_ship_partialandglobal_nofailfast_allok_isok() {
         ]);
     assert_installed_all(["p1", "p2", "p3", "p4", "p5"]);
 }
+
+#[cargo_test]
+fn validate_ship_cliwithself_noupdate() {
+    let _reg = init_registry();
+    fake_publish("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
+    assert_installed("cargo-liner");
+    write_user_config(&["[packages]"]);
+
+    cargo_liner()
+        .args(["ship", "--with-self"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        // Same as above.
+        .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_noupdate.stderr"].raw());
+    assert_installed("cargo-liner");
+}
+
+#[cargo_test]
+fn validate_ship_envnoself_nothing() {
+    let _reg = init_registry();
+    fake_publish("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
+    assert_installed("cargo-liner");
+    write_user_config(&["[packages]"]);
+
+    cargo_liner()
+        .env("CARGO_LINER_SHIP_NO_SELF", "true")
+        .arg("ship")
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        // Same as above.
+        .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_noself_nothing.stderr"].raw());
+    assert_installed("cargo-liner");
+}
+
+#[cargo_test]
+fn validate_ship_envnoself_cliwithself_noupdate() {
+    let _reg = init_registry();
+    fake_publish("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
+    assert_installed("cargo-liner");
+    write_user_config(&["[packages]"]);
+
+    cargo_liner()
+        .env("CARGO_LINER_SHIP_NO_SELF", "true")
+        .args(["ship", "--with-self"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        // Same as above.
+        .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_noupdate.stderr"].raw());
+    assert_installed("cargo-liner");
+}
+
+#[cargo_test]
+fn validate_ship_confignoself_nothing() {
+    let _reg = init_registry();
+    fake_publish("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
+    assert_installed("cargo-liner");
+    write_user_config(&["[packages]", "[defaults]", "ship.no-self = true"]);
+
+    cargo_liner()
+        .arg("ship")
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        // Same as above.
+        .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_noself_nothing.stderr"].raw());
+    assert_installed("cargo-liner");
+}
+
+#[cargo_test]
+fn validate_ship_confignoself_envwithself_noupdate() {
+    let _reg = init_registry();
+    fake_publish("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
+    assert_installed("cargo-liner");
+    write_user_config(&["[packages]", "[defaults]", "ship.no-self = true"]);
+
+    cargo_liner()
+        .env("CARGO_LINER_SHIP_NO_SELF", "false")
+        .arg("ship")
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        // Same as above.
+        .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_noupdate.stderr"].raw());
+    assert_installed("cargo-liner");
+}
+
+#[cargo_test]
+fn validate_ship_confignoself_cliwithself_noupdate() {
+    let _reg = init_registry();
+    fake_publish("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
+    assert_installed("cargo-liner");
+    write_user_config(&["[packages]", "[defaults]", "ship.no-self = true"]);
+
+    cargo_liner()
+        .args(["ship", "--with-self"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        // Same as above.
+        .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_noupdate.stderr"].raw());
+    assert_installed("cargo-liner");
+}
+
+#[cargo_test]
+fn validate_ship_confignoself_envnoself_cliwithself_noupdate() {
+    let _reg = init_registry();
+    fake_publish("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
+    assert_installed("cargo-liner");
+    write_user_config(&["[packages]", "[defaults]", "ship.no-self = true"]);
+
+    cargo_liner()
+        .env("CARGO_LINER_SHIP_NO_SELF", "true")
+        .args(["ship", "--with-self"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        // Same as above.
+        .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_noupdate.stderr"].raw());
+    assert_installed("cargo-liner");
+}
+
+#[cargo_test]
+fn validate_ship_confignoself_envnoself_clinoself_nothing() {
+    let _reg = init_registry();
+    fake_publish("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
+    assert_installed("cargo-liner");
+    write_user_config(&["[packages]", "[defaults]", "ship.no-self = true"]);
+
+    cargo_liner()
+        .env("CARGO_LINER_SHIP_NO_SELF", "true")
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        // Same as above.
+        .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_noself_nothing.stderr"].raw());
+    assert_installed("cargo-liner");
+}
+
+#[cargo_test]
+fn validate_ship_configwithself_envnoself_clinoself_nothing() {
+    let _reg = init_registry();
+    fake_publish("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
+    assert_installed("cargo-liner");
+    write_user_config(&["[packages]", "[defaults]", "ship.no-self = false"]);
+
+    cargo_liner()
+        .env("CARGO_LINER_SHIP_NO_SELF", "true")
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        // Same as above.
+        .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_noself_nothing.stderr"].raw());
+    assert_installed("cargo-liner");
+}
+
+#[cargo_test]
+fn validate_ship_configwithself_envwithself_clinoself_nothing() {
+    let _reg = init_registry();
+    fake_publish("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
+    assert_installed("cargo-liner");
+    write_user_config(&["[packages]", "[defaults]", "ship.no-self = false"]);
+
+    cargo_liner()
+        .env("CARGO_LINER_SHIP_NO_SELF", "false")
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        // Same as above.
+        .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_noself_nothing.stderr"].raw());
+    assert_installed("cargo-liner");
+}
+
+#[cargo_test]
+fn validate_ship_confignoself_envwithself_clinoself_noupdate() {
+    let _reg = init_registry();
+    fake_publish("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
+    assert_installed("cargo-liner");
+    write_user_config(&["[packages]", "[defaults]", "ship.no-self = true"]);
+
+    cargo_liner()
+        .env("CARGO_LINER_SHIP_NO_SELF", "false")
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        // Same as above.
+        .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_noself_nothing.stderr"].raw());
+    assert_installed("cargo-liner");
+}
