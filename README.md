@@ -450,6 +450,10 @@ Options:
           Cannot be used in conjunction with `--only-self`.
           
           [default: false]
+          
+          [env: `CARGO_LINER_SHIP_NO_SELF`]
+          
+          [config: `defaults.ship.no-self`]
 
       --with-self
           Negation of `--no-self` that overrides it and restores the
@@ -462,6 +466,10 @@ Options:
           Cannot be used in conjunction with `--no-self`.
           
           [default: false]
+          
+          [env: `CARGO_LINER_SHIP_ONLY_SELF`]
+          
+          [config: `defaults.ship.only-self`]
 
       --no-only-self
           Negation of `--only-self` that overrides it and restores
@@ -489,6 +497,10 @@ Options:
           entirely skipped.
           
           [default: false]
+          
+          [env: `CARGO_LINER_SHIP_SKIP_CHECK`]
+          
+          [config: `defaults.ship.skip-check`]
 
       --no-skip-check
           Negation of `--skip-check` that overrides it and restores
@@ -521,6 +533,10 @@ Options:
           test` is never used.
           
           [default: false]
+          
+          [env: `CARGO_LINER_SHIP_NO_FAIL_FAST`]
+          
+          [config: `defaults.ship.no-fail-fast`]
 
       --fail-fast
           Negation of `--no-fail-fast` that overrides it and restores
@@ -536,6 +552,10 @@ Options:
           `--skip-check`.
           
           [default: false]
+          
+          [env: `CARGO_LINER_SHIP_FORCE`]
+          
+          [config: `defaults.ship.force`]
 
       --no-force
           Negation of `--force` that overrides it and restores the

@@ -153,6 +153,10 @@ pub struct ShipArgs {
     /// Cannot be used in conjunction with `--only-self`.
     ///
     /// [default: false]
+    ///
+    /// [env: `CARGO_LINER_SHIP_NO_SELF`]
+    ///
+    /// [config: `defaults.ship.no-self`]
     #[arg(
         short,
         long,
@@ -169,6 +173,10 @@ pub struct ShipArgs {
     /// Cannot be used in conjunction with `--no-self`.
     ///
     /// [default: false]
+    ///
+    /// [env: `CARGO_LINER_SHIP_ONLY_SELF`]
+    ///
+    /// [config: `defaults.ship.only-self`]
     #[arg(
         short = 's',
         long,
@@ -198,6 +206,10 @@ pub struct ShipArgs {
     /// skipped.
     ///
     /// [default: false]
+    ///
+    /// [env: `CARGO_LINER_SHIP_SKIP_CHECK`]
+    ///
+    /// [config: `defaults.ship.skip-check`]
     #[arg(
         short = 'c',
         long,
@@ -228,6 +240,10 @@ pub struct ShipArgs {
     /// with `cargo test --no-fail-fast` since `cargo test` is never used.
     ///
     /// [default: false]
+    ///
+    /// [env: `CARGO_LINER_SHIP_NO_FAIL_FAST`]
+    ///
+    /// [config: `defaults.ship.no-fail-fast`]
     #[arg(
         short = 'k',
         long,
@@ -245,6 +261,10 @@ pub struct ShipArgs {
     /// when used in conjunction with `--skip-check`.
     ///
     /// [default: false]
+    ///
+    /// [env: `CARGO_LINER_SHIP_FORCE`]
+    ///
+    /// [config: `defaults.ship.force`]
     #[arg(
         short,
         long,
