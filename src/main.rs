@@ -141,7 +141,8 @@ fn try_main(args: &LinerArgs) -> Result<()> {
             };
             let config = EffectiveConfig::new(
                 UserConfig::parse_file().wrap_err("Failed to parse the user configuration.")?,
-                config::env::ship_env_args()?,
+                config::env::ship_env_args()
+                    .wrap_err("Failed to get one of the environment variables.")?,
                 if let Some(LinerCommands::Ship(ship_args)) = cmd {
                     ship_args.clone().into_inner()
                 } else {

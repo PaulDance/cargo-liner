@@ -2,7 +2,8 @@
 
 use std::env::{self, VarError};
 
-use color_eyre::eyre::Result;
+use color_eyre::eyre::{Context, Result};
+use color_eyre::Section;
 
 use crate::cli::ShipArgs;
 
@@ -15,10 +16,30 @@ fn ship_var_name(suffix: &str) -> String {
 }
 
 fn get_ship_flag(suffix: &str) -> Result<Option<bool>> {
-    match env::var(ship_var_name(suffix)) {
-        Ok(val) => Ok(Some(val.parse()?)),
+    let var_name = ship_var_name(suffix);
+
+    match env::var(&var_name) {
+        Ok(val) => Ok(Some(
+            val.parse()
+                .wrap_err_with(|| {
+                    format!(
+                        "Could not parse an argument value from the {} environment variable.",
+                        &var_name
+                    )
+                })
+                .note("Only the `true` or `false` values are accepted here.")
+                .suggestion("Analyze you environment variables and correct the value.")?,
+        )),
         Err(VarError::NotPresent) => Ok(None),
-        Err(err) => Err(err.into()),
+        Err(err) => Err(err)
+            .wrap_err_with(|| {
+                format!(
+                    "Could not fetch a value from the {} environment variable.",
+                    &var_name
+                )
+            })
+            .note("Only valid UTF-8 values are accepted here.")
+            .suggestion("Analyze you environment variables and correct the value."),
     }
 }
 
