@@ -191,76 +191,82 @@ package-name-2 = "version-req-2"
 
 where:
  * `packages` (mandatory): map of package name to package details instructing
-   which and how packages should be installed or updated.
- * `version` (mandatory): version requirement string to use when installing or
-   updating the associated package; this is the detailed field set when only
-   using the simple configuration style.
- * `all-features` (optional): boolean that, when set to `true`, enables the
-   `--all-features` flag of `cargo install`.
- * `default-features` (optional): boolean that, when set to `false`, enables
-   the `--no-default-features` flag of `cargo install`.
- * `features` (optional): list of strings instructing which of the associated
-   crate's Cargo features should be enabled when building it.
- * `index` (optional): string specifying the registry index to install from.
- * `registry` (optional): string specifying the registry to use.
- * `git` (optional): string specifying the Git URL to install from.
- * `branch` (optional): string specifying the branch to use when installing
-   from Git.
- * `tag` (optional): string specifying the tag to use when installing from Git.
- * `rev` (optional): string specifying the commit to use when installing from
-   Git.
- * `path` (optional): string specifying the filesystem path to local crate to
-   install from.
- * `bins` (optional): list of strings specifying the binaries to install among
-   the targeted crate's binary targets, passed onto Cargo as a repetition of
-   its `--bin` option.
- * `all-bins` (optional): boolean that, when `true`, passes the `--bins` CLI
-   option to Cargo, thus installing all binaries of the package.
- * `examples` (optional): list of strings specifying the examples to install
-   among the targeted crate's example targets, passed onto Cargo as a
-   repetition of its `--example` option.
- * `all-examples` (optional): boolean that, when `true`, passes the `--examples`
-   CLI option to Cargo, thus installing all examples of the package.
- * `force` (optional): boolean that, when `true`, passes `--force` to Cargo,
-   thus potentially overwriting existing binaries or examples; only useful if
-   `--skip-check` is passed as well.
- * `ignore-rust-version` (optional): boolean that, when `true`, passes the
-   `--ignore-rust-version` CLI option to Cargo, thus ignoring `rust-version`
-   specifications in packages.
- * `frozen` (optional): boolean that, when `true`, passes the `--frozen` CLI
-   option to Cargo, thus requiring the package's `Cargo.lock` and Cargo's cache
-   to be both up-to-date.
- * `locked` (optional): boolean that, when `true`, passes the `--locked` CLI
-   option to Cargo, thus requiring the package's `Cargo.lock` to be up-to-date.
- * `offline` (optional): boolean that, when `true`, passes the `--offline` CLI
-   option to Cargo, thus requiring Cargo to run without accessing the network;
-   can only be of use if `--skip-check` is passed as well.
- * `extra-arguments` (optional): list of strings given as additional arguments
-   to `cargo install` for the associated package and located between the last
-   one given by Cargo Liner and the following `--` seperating options from
-   fixed arguments. This can be used in order to successfully manage a package
-   using a Cargo Liner version that does not yet implement the desired option.
- * `environment` (optional): map of string to strings specifying which and how
-   environment variables should be set for the spawned `cargo install` process.
- * `skip-check` (optional): boolean that, when `true`, excludes the associated
-   package from the version check and always includes it in the packages to be
-   installed or updated. This is the direct equivalent of `--skip-check` from
-   the CLI, except that the CLI's is global as all packages will be excluded
-   from the version check and the configuration's is partial as only the
-   concerned package will be. It can be used in order to get the best out of
-   both modes of execution: if a package reveals problematic somehow, the
-   option can be used for it while the other packages remain as-is. The CLI
-   option keeps the priority: if set, any version checking step is still
-   entirely skipped, which should prove a bit more forceful than if the
-   configuration option was set for all listed packages.
- * `no-fail-fast` (optional): boolean that, when `true`, makes the operation
-   proceed as though `--no-fail-fast` was given, but only for the associated
-   package: in case of an error of the call to `cargo install` for it, the
-   operation will not stop here and continue on with the next package, but if
-   the next package does not have the option set in its configuration and fails
-   to install somehow, the operation will still abruptly fail there. The CLI
-   option keeps the priority: if set, it is as though the configuration option
-   was set for all listed packages.
+   which and how packages should be installed or updated:
+   * `version` (mandatory): version requirement string to use when installing
+     or updating the associated package; this is the detailed field set when
+     only using the simple configuration style.
+   * `all-features` (optional): boolean that, when set to `true`, enables the
+     `--all-features` flag of `cargo install`.
+   * `default-features` (optional): boolean that, when set to `false`, enables
+     the `--no-default-features` flag of `cargo install`.
+   * `features` (optional): list of strings instructing which of the associated
+     crate's Cargo features should be enabled when building it.
+   * `index` (optional): string specifying the registry index to install from.
+   * `registry` (optional): string specifying the registry to use.
+   * `git` (optional): string specifying the Git URL to install from.
+   * `branch` (optional): string specifying the branch to use when installing
+     from Git.
+   * `tag` (optional): string specifying the tag to use when installing from
+     Git.
+   * `rev` (optional): string specifying the commit to use when installing from
+     Git.
+   * `path` (optional): string specifying the filesystem path to local crate to
+     install from.
+   * `bins` (optional): list of strings specifying the binaries to install
+     among the targeted crate's binary targets, passed onto Cargo as a
+     repetition of its `--bin` option.
+   * `all-bins` (optional): boolean that, when `true`, passes the `--bins` CLI
+     option to Cargo, thus installing all binaries of the package.
+   * `examples` (optional): list of strings specifying the examples to install
+     among the targeted crate's example targets, passed onto Cargo as a
+     repetition of its `--example` option.
+   * `all-examples` (optional): boolean that, when `true`, passes the
+     `--examples` CLI option to Cargo, thus installing all examples of the
+     package.
+   * `force` (optional): boolean that, when `true`, passes `--force` to Cargo,
+     thus potentially overwriting existing binaries or examples; only useful if
+     `--skip-check` is passed as well.
+   * `ignore-rust-version` (optional): boolean that, when `true`, passes the
+     `--ignore-rust-version` CLI option to Cargo, thus ignoring `rust-version`
+     specifications in packages.
+   * `frozen` (optional): boolean that, when `true`, passes the `--frozen` CLI
+     option to Cargo, thus requiring the package's `Cargo.lock` and Cargo's
+     cache to be both up-to-date.
+   * `locked` (optional): boolean that, when `true`, passes the `--locked` CLI
+     option to Cargo, thus requiring the package's `Cargo.lock` to be
+     up-to-date.
+   * `offline` (optional): boolean that, when `true`, passes the `--offline`
+     CLI option to Cargo, thus requiring Cargo to run without accessing the
+     network; can only be of use if `--skip-check` is passed as well.
+   * `extra-arguments` (optional): list of strings given as additional
+     arguments to `cargo install` for the associated package and located
+     between the last one given by Cargo Liner and the following `--`
+     seperating options from fixed arguments. This can be used in order to
+     successfully manage a package using a Cargo Liner version that does not
+     yet implement the desired option.
+   * `environment` (optional): map of string to strings specifying which and
+     how environment variables should be set for the spawned `cargo install`
+     process.
+   * `skip-check` (optional): boolean that, when `true`, excludes the
+     associated package from the version check and always includes it in the
+     packages to be installed or updated. This is the direct equivalent of
+     `--skip-check` from the CLI, except that the CLI's is global as all
+     packages will be excluded from the version check and the configuration's
+     is partial as only the concerned package will be. It can be used in order
+     to get the best out of both modes of execution: if a package reveals
+     problematic somehow, the option can be used for it while the other
+     packages remain as-is. The CLI option keeps the priority: if set, any
+     version checking step is still entirely skipped, which should prove a bit
+     more forceful than if the configuration option was set for all listed
+     packages.
+   * `no-fail-fast` (optional): boolean that, when `true`, makes the operation
+     proceed as though `--no-fail-fast` was given, but only for the associated
+     package: in case of an error of the call to `cargo install` for it, the
+     operation will not stop here and continue on with the next package, but if
+     the next package does not have the option set in its configuration and
+     fails to install somehow, the operation will still abruptly fail there.
+     The CLI option keeps the priority: if set, it is as though the
+     configuration option was set for all listed packages.
 
 with the following constraints, mostly enforced by Cargo, but also by TOML:
  * `package-name-*` must be a valid [package name], i.e. match
