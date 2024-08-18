@@ -150,8 +150,9 @@ pub enum LinerCommands {
 pub struct ShipArgs {
     /// Disable self-updating.
     ///
-    /// Cannot be used in conjunction with `--only-self`. Default: `false`,
-    /// i.e. self-update.
+    /// Cannot be used in conjunction with `--only-self`.
+    ///
+    /// [default: false]
     #[arg(
         short,
         long,
@@ -165,8 +166,9 @@ pub struct ShipArgs {
 
     /// Only self-update and do not install or update any other package.
     ///
-    /// Cannot be used in conjunction with `--no-self`. Default: `false`, i.e.
-    /// install or update other packages as well.
+    /// Cannot be used in conjunction with `--no-self`.
+    ///
+    /// [default: false]
     #[arg(
         short = 's',
         long,
@@ -194,6 +196,8 @@ pub struct ShipArgs {
     /// under the `$CARGO_HOME` or `$CARGO_INSTALL_ROOT` directory or making
     /// requests to the registry. These operations will thus be entirely
     /// skipped.
+    ///
+    /// [default: false]
     #[arg(
         short = 'c',
         long,
@@ -222,6 +226,8 @@ pub struct ShipArgs {
     /// disables fast-failing between entire calls to `cargo install`; in fact,
     /// `--keep-going` is never passed onto Cargo. It is neither to be confused
     /// with `cargo test --no-fail-fast` since `cargo test` is never used.
+    ///
+    /// [default: false]
     #[arg(
         short = 'k',
         long,
@@ -237,6 +243,8 @@ pub struct ShipArgs {
     /// Passes the option flag onto each call of `cargo install`. It will, for
     /// example, redownload, recompile and reinstall every configured package
     /// when used in conjunction with `--skip-check`.
+    ///
+    /// [default: false]
     #[arg(
         short,
         long,
@@ -256,7 +264,7 @@ pub struct ShipArgsWithNegations {
     inner: ShipArgs,
 
     /// Negation of `--no-self` that overrides it and restores the default
-    /// behavior as if absent.
+    /// behavior as if absent, i.e. self-update.
     #[arg(
         long,
         required = false,
@@ -267,7 +275,7 @@ pub struct ShipArgsWithNegations {
     _with_self: (),
 
     /// Negation of `--only-self` that overrides it and restores the default
-    /// behavior as if absent.
+    /// behavior as if absent, i.e. install or update other packages as well.
     #[arg(
         long,
         required = false,
@@ -278,7 +286,7 @@ pub struct ShipArgsWithNegations {
     _no_only_self: (),
 
     /// Negation of `--skip-check` that overrides it and restores the default
-    /// behavior as if absent.
+    /// behavior as if absent, i.e. perform the usual version check.
     #[arg(
         long,
         required = false,
@@ -289,7 +297,7 @@ pub struct ShipArgsWithNegations {
     _no_skip_check: (),
 
     /// Negation of `--no-fail-fast` that overrides it and restores the default
-    /// behavior as if absent.
+    /// behavior as if absent, i.e. stop as soon as the first error occurs.
     #[arg(
         long,
         required = false,
@@ -300,7 +308,7 @@ pub struct ShipArgsWithNegations {
     _fail_fast: (),
 
     /// Negation of `--force` that overrides it and restores the default
-    /// behavior as if absent.
+    /// behavior as if absent, i.e. don't pass the argument onto Cargo.
     #[arg(
         long,
         required = false,
