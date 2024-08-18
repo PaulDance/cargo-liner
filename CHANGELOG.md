@@ -7,6 +7,83 @@
 ## Miscellaneous
 -->
 
+# [Version 0.8.0 (18/08/2024)](https://crates.io/crates/cargo-liner/0.8.0)
+## Features
+
+ * The version check result table now has its status icons also colorized so
+   that relevant information may be more easily be visible to the observer. Its
+   actual colorization can be controlled through the usual means, just as the
+   logging.
+
+ * This same table now has its `Status` column split into three: `Old version`,
+   `New version`, and `Status` that now only contains the colored icon. This
+   should help make things clearer instead of cramping everything into a single
+   column.
+
+ * At the end of its run, the `ship` command now displays an installation
+   report. It consists of a table summarizing what was done for each package
+   that ended up being selected for installation. This should help to more
+   easily get an understanding of what was performed after all installations
+   were done as they can output quite a lot of lines. It is not displayed if
+   nothing was performed at all. It also respects the effects of the
+   `--skip-check` and `--no-fail-fast` flags.
+
+ * An much more important part of the `cargo install` CLI is now available
+   through dedicated package configuration items. This should enable supporting
+   many more use cases.
+
+ * The configuration now enables setting the `--skip-check` and `--no-fail-fast`
+   CLI flags of the `ship` command on a package-per-package basis instead of
+   necessarily on a global basis. The CLI flags keep precedence, however. See
+   their documentation for more details.
+
+ * Flag negations have been implemented for the `ship` command. They override
+   with their non-default counterpart. This should enable more script-friendly
+   usage.
+
+ * A new `defaults` configuration section has been added. It enables setting
+   CLI flags to be used by default without having to specify them manually
+   every time. The CLI keeps precedence, however. See its documentation for
+   more details.
+
+ * These defaults can also be set through dedicated environment variables using
+   the `true` or `false` values, just as the configuration. They have
+   precedence over the configuration, but the CLI keeps the general precedence.
+   This completes the usual CLI + environment + configuration triptych.
+
+## Testing
+
+ * Coverage for the new features.
+ * The test fixtures now use the new `[ROOT]` and `[ELAPSED]` meta variables of
+   the latest versions of Snapbox in order to reduce the amount of manual
+   intervention required when updating fixtures so flakiness may be kept away.
+ * In these same fixtures, the source file redaction has been unified similar
+   reasons.
+ * The `cargo-test-*` dev-dependencies are now taken from crates.io instead of
+   Cargo's repository, which removes all the peculiar warnings that there were.
+
+## Documentation
+
+ * The displayed tables and the meaning of their status icons is now documented.
+ * The example configurations have been fixed as they were actually not valid.
+ * The new configuration capabilities have been added to the specification and
+   examples.
+ * The distinction between our `--no-fail-fast` and Cargo equivalents has been
+   clarified in order to ensure no confusion could exist.
+ * The configuration specification is now indented by object depth for clarity.
+
+## Miscellaneous
+
+ * New development lints have been manually added.
+ * `backtrace` is now always built with optimizations, even when not building
+   with `--release`, so that the performance issues that occur with the debug
+   build may not impact development as much anymore.
+ * The dependencies have been updated.
+ * The `ship` flag `--keep-going` has been renamed to `--no-fail-fast` in order
+   to clarify the distinction with Cargo's flag and enable easier consistency
+   with the new configuration item without adding useless confusion.
+
+
 # [Version 0.7.0 (26/05/2024)](https://crates.io/crates/cargo-liner/0.7.0)
 ## Features
 
