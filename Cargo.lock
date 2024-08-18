@@ -232,7 +232,7 @@ checksum = "5ce89b21cab1437276d2650d57e971f9d548a2d9037cc231abdc0562b97498ce"
 
 [[package]]
 name = "cargo-liner"
-version = "0.7.0"
+version = "0.8.0"
 dependencies = [
  "cargo-test-macro",
  "cargo-test-support",
