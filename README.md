@@ -187,6 +187,14 @@ package-name-2 = "version-req-2"
     skip-check = boolean
     no-fail-fast = boolean
 #...
+
+[defaults]
+    [defaults.ship]
+    no-self = boolean
+    only-self = boolean
+    skip-check = boolean
+    no-fail-fast = boolean
+    force = boolean
 ```
 
 where:
@@ -268,6 +276,21 @@ where:
      The CLI option keeps the priority: if set, it is as though the
      configuration option was set for all listed packages.
 
+  * `defaults` (optional): map of maps that enables setting values to use by
+    default when running some operations; they are grouped by CLI command:
+    * `ship` (optional): map of string to booleans corresponding to the
+      eponymous CLI command:
+      * `no-self` (optional): boolean that, when `true`, enables the
+        `--no-self` flag by default.
+      * `only-self` (optional): boolean that, when `true`, enables the
+        `--only-self` flag by default.
+      * `skip-check` (optional): boolean that, when `true`, enables the
+        `--skip-check` flag by default.
+      * `no-fail-fast` (optional): boolean that, when `true`, enables the
+        `--no-fail-fast` flag by default.
+      * `force` (optional): boolean that, when `true`, enables the `--force`
+        flag by default.
+
 with the following constraints, mostly enforced by Cargo, but also by TOML:
  * `package-name-*` must be a valid [package name], i.e. match
    `[a-zA-Z][a-zA-Z0-9_-]*` or something like that.
@@ -280,6 +303,10 @@ with the following constraints, mostly enforced by Cargo, but also by TOML:
  * `--arg*` must be the name of a [`cargo install` CLI argument].
  * `ENV*` should be the name of a [`cargo install` environment variable].
  * `boolean` is a [TOML boolean], either `true` or `false`.
+
+See the below CLI documentation for the association between CLI flags,
+environment variables and configuration items. The CLI has precedence over the
+environment and the environment over the configuration.
 
 [package name]: https://doc.rust-lang.org/cargo/reference/manifest.html#the-name-field
 [SemVer]: https://semver.org/
