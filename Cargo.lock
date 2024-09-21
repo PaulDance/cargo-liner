@@ -248,7 +248,6 @@ dependencies = [
  "home",
  "indoc",
  "log",
- "once_cell",
  "pretty_env_logger",
  "regex",
  "semver",

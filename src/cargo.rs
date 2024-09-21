@@ -459,10 +459,9 @@ fn log_cmd(cmd: &Command) {
 
 #[cfg(test)]
 mod tests {
-    use std::sync::Mutex;
+    use std::sync::{LazyLock, Mutex};
 
     use cargo_test_macro::cargo_test;
-    use once_cell::sync::Lazy;
 
     use super::*;
     use crate::config::PackageRequirement;
@@ -470,7 +469,7 @@ mod tests {
 
     const SELF: &str = clap::crate_name!();
     const NONE: &str = "azertyuiop-qsdfghjklm_wxcvbn";
-    static LOCK: Lazy<Mutex<()>> = Lazy::new(|| Mutex::new(()));
+    static LOCK: LazyLock<Mutex<()>> = LazyLock::new(|| Mutex::new(()));
 
     #[cargo_test]
     fn test_singlethreaded_searchspawn_self_isok() -> Result<()> {

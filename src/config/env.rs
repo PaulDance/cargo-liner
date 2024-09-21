@@ -56,13 +56,11 @@ pub fn ship_env_args() -> Result<ShipArgs> {
 
 #[cfg(test)]
 mod tests {
-    use std::sync::Mutex;
-
-    use once_cell::sync::Lazy;
+    use std::sync::{LazyLock, Mutex};
 
     use super::*;
 
-    static LOCK: Lazy<Mutex<()>> = Lazy::new(|| Mutex::new(()));
+    static LOCK: LazyLock<Mutex<()>> = LazyLock::new(|| Mutex::new(()));
 
     fn set_vars<'a>(var_vals: impl IntoIterator<Item = &'a (&'static str, &'static str)>) {
         for (var, val) in var_vals {
