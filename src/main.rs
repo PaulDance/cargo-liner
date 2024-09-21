@@ -37,6 +37,8 @@ pub const OPEN_ISSUE_MSG: &str =
 
 /// Wrap the desired main and let `color-eyre` display errors.
 fn main() -> Result<()> {
+    // More user-guiding panics in release builds.
+    human_panic::setup_panic!();
     // Logging and error reporting are controlled by the CLI arguments, so they
     // must be parsed first.
     let args = LinerArgs::parse_env();
