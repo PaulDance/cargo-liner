@@ -10,11 +10,15 @@ check *args:
     cargo check --all-targets --all-features {{ args }}
 
 alias b := build
+# Alias for `build --release`.
+br *args: (build "--release" args)
 # Runs `cargo build` with some default flags.
 build *args:
     cargo build --all-targets --all-features {{ args }}
 
 alias r := run
+# Alias for `run --release`.
+rr *args: (run "--release" args)
 # Runs `cargo run` with some default flags.
 run *args:
     cargo run --all-features {{ args }}
