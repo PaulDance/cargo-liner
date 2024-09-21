@@ -308,6 +308,15 @@ See the below CLI documentation for the association between CLI flags,
 environment variables and configuration items. The CLI has precedence over the
 environment and the environment over the configuration.
 
+This configuration can serve in particular for customizing the way Cargo Liner
+itself is updated. Indeed, when self-updating is enabled, which is the case by
+default, then Cargo Liner is added to the list of packages just as if it
+actually were in the configuration file with a simple `"*"` version requirement,
+but only if it is not there yet. This enables treating Cargo Liner just like
+any other package, which it is after the configuration is parsed. Therefore,
+simply add an entry under `cargo-liner` in order to pass non-default options to
+`cargo install` when self-updating.
+
 [package name]: https://doc.rust-lang.org/cargo/reference/manifest.html#the-name-field
 [SemVer]: https://semver.org/
 [Cargo style]: https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html
