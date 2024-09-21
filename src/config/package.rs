@@ -5,7 +5,10 @@ use serde::{Deserialize, Serialize};
 
 /// Small helper function that returns true to work around
 /// <https://github.com/serde-rs/serde/issues/368>.
-#[allow(clippy::inline_always)]
+#[expect(
+    clippy::inline_always,
+    reason = "A simple literal is a perfect candidate for inlining."
+)]
 #[inline(always)]
 const fn serde_default_true() -> bool {
     true
@@ -14,7 +17,10 @@ const fn serde_default_true() -> bool {
 /// Package requirement with additional options set.
 ///
 /// See <https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html>.
-#[allow(clippy::struct_excessive_bools)]
+#[expect(
+    clippy::struct_excessive_bools,
+    reason = "This is configuration, so needs to represent all possible items, which includes flags."
+)]
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub struct DetailedPackageReq {
@@ -150,7 +156,10 @@ impl From<PackageRequirement> for DetailedPackageReq {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum PackageRequirement {
-    #[allow(clippy::doc_markdown)]
+    #[expect(
+        clippy::doc_markdown,
+        reason = "SemVer is not a Rust type here, but a proper noun."
+    )]
     /// Simple form: only a SemVer requirement string.
     Simple(VersionReq),
     /// Detailed form: all supported options made available.

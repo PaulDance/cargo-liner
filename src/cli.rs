@@ -2,7 +2,10 @@
 //!
 //! See [`LinerArgs::parse_env`] in order to retrieve such arguments from the
 //! environment.
-#![allow(clippy::struct_excessive_bools)]
+#![expect(
+    clippy::struct_excessive_bools,
+    reason = "This is the CLI module, so contains types handling all supported boolean flags."
+)]
 use clap::builder::ArgPredicate;
 use clap::{ArgAction, ColorChoice, Parser};
 use clap_complete::Shell;
@@ -436,7 +439,10 @@ mod tests {
         assert_eq!(args.liner().verbosity(), 0);
     }
 
-    #[allow(clippy::cast_possible_truncation)]
+    #[expect(
+        clippy::cast_possible_truncation,
+        reason = "The concerned integers are too small for any truncation to ever be possible."
+    )]
     #[test]
     fn test_verbose() {
         for i in 1..=5 {
@@ -459,7 +465,10 @@ mod tests {
         }
     }
 
-    #[allow(clippy::cast_possible_truncation)]
+    #[expect(
+        clippy::cast_possible_truncation,
+        reason = "The concerned integers are too small for any truncation to ever be possible."
+    )]
     #[test]
     fn test_quiet() {
         for i in 1..=5 {

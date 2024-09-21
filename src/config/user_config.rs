@@ -163,7 +163,10 @@ impl UserConfig {
 
 #[cfg(test)]
 mod tests {
-    #![allow(clippy::too_many_lines)]
+    #![expect(
+        clippy::too_many_lines,
+        reason = "Some tests here explicitly detail all tested cases, which can be long."
+    )]
     use std::iter;
 
     use indoc::indoc;

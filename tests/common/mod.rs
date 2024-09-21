@@ -1,5 +1,7 @@
-#![allow(unused)]
-#![allow(clippy::missing_panics_doc)]
+#![expect(
+    unused,
+    reason = "This is testing-only code, so is allowed to be saved \"just in case\"."
+)]
 
 use std::collections::HashMap;
 use std::ffi::OsStr;

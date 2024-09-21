@@ -2,7 +2,10 @@
 //!
 //! See [`UserConfig::parse_file`] in order to retrieve such configuration
 //! settings from the default file.
-#![allow(clippy::module_name_repetitions)]
+#![expect(
+    clippy::module_name_repetitions,
+    reason = "Sub-parts of the global configuration are still configuration in themselves."
+)]
 
 mod cargo_crates_toml;
 mod effective_config;

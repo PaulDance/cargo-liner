@@ -78,7 +78,10 @@ fn install_error_hook(args: &LinerArgs) -> Result<()> {
 }
 
 /// Actual main operation.
-#[allow(clippy::too_many_lines)]
+#[expect(
+    clippy::too_many_lines,
+    reason = "This the main part, so contains all supported commands and their respective processing."
+)]
 fn try_main(args: &LinerArgs) -> Result<()> {
     init_logger(args)?;
     let colorizer = Colorizer::new(&std::io::stderr(), args.color);
@@ -427,7 +430,10 @@ impl Colorizer {
     }
 
     /// Returns the colorized version of [`icons::NONE`].
-    #[allow(clippy::unused_self)] // so refactors may be easier.
+    #[expect(
+        clippy::unused_self,
+        reason = "So refactors may be easier by keeping an API identical to the other icons."
+    )]
     pub fn none_icon(&self) -> impl Display {
         icons::NONE
     }

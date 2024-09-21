@@ -39,7 +39,10 @@ impl EffectiveConfig {
 /// Effective merge of all configuration sources regarding [`ShipArgs`].
 #[derive(Debug)]
 #[cfg_attr(test, derive(Default, PartialEq, Eq))]
-#[allow(clippy::struct_excessive_bools)]
+#[expect(
+    clippy::struct_excessive_bools,
+    reason = "This includes all the `ship` CLI boolean flags, which are not in small number."
+)]
 pub struct EffectiveShipArgs {
     pub no_self: bool,
     pub only_self: bool,
@@ -49,7 +52,10 @@ pub struct EffectiveShipArgs {
 }
 
 impl EffectiveShipArgs {
-    #[allow(clippy::needless_pass_by_value)]
+    #[expect(
+        clippy::needless_pass_by_value,
+        reason = "Ensures the original arguments cannot be used by mistake anymore by consuming them."
+    )]
     fn new(user_config: &UserConfig, env_args: ShipArgs, cli_args: ShipArgs) -> Self {
         let cfg_defs = user_config.defaults.as_ref();
         Self {
@@ -84,7 +90,10 @@ impl EffectiveShipArgs {
 
 #[cfg(test)]
 mod tests {
-    #![allow(clippy::needless_update)]
+    #![expect(
+        clippy::needless_update,
+        reason = "Forward-compatibility and symmetry."
+    )]
     use std::fmt::Debug;
 
     use super::*;

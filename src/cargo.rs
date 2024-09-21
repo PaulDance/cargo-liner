@@ -26,7 +26,10 @@ use crate::config::DetailedPackageReq;
 /// corresponding program. See the [Cargo reference] for more details.
 ///
 /// [Cargo reference]: https://doc.rust-lang.org/cargo/reference/external-tools.html#custom-subcommands
-#[allow(clippy::too_many_lines)]
+#[expect(
+    clippy::too_many_lines,
+    reason = "This is just a long list of options to apply."
+)]
 fn install(
     pkg_name: &str,
     pkg_req: &DetailedPackageReq,
