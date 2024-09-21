@@ -1,7 +1,7 @@
 Error: 
    0: Failed to parse the user configuration.
    1: Failed to read the configuration file.
-   2: No such file or directory (os error 2)
+   2: [NOT_FOUND]
 
 Location:
    src/[..].rs:[..]

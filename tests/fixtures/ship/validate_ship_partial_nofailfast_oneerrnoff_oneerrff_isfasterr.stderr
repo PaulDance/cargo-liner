@@ -29,7 +29,7 @@ error: could not find `p4` in registry `crates-io` with version `*`
 Error: 
    0: Failed to install or update one of the configured packages.
    1: Failed to install "p4".
-   2: Cargo process finished unsuccessfully: exit status: 101
+   2: Cargo process finished unsuccessfully: [EXIT_STATUS]: 101
 
 Location:
    src/[..].rs:[..]

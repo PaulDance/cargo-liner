@@ -20,7 +20,7 @@ error: failed to download replaced source registry `crates-io`
 Error: 
    0: Failed to install or update one of the configured packages.
    1: Failed to install "--pkg".
-   2: Cargo process finished unsuccessfully: exit status: 101
+   2: Cargo process finished unsuccessfully: [EXIT_STATUS]: 101
 
 Location:
    src/[..].rs:[..]

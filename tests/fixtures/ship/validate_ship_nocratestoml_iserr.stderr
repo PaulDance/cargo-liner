@@ -1,7 +1,7 @@
 Error: 
    0: Failed to parse Cargo's .crates.toml file.
    1: Failed to read Cargo's .crates.toml file.
-   2: No such file or directory (os error 2)
+   2: [NOT_FOUND]
 
 Location:
    src/[..].rs:[..]
