@@ -388,6 +388,30 @@ fn validate_ship_manynewer_update() {
     fixture_assert_installed();
 }
 
+/// Checks that configuration can indeed apply to ourselves too.
+#[cargo_test]
+fn validate_ship_selfupdate_customization() {
+    let _reg = init_registry();
+    fake_publish("cargo-liner", "0.0.3");
+    fake_install("cargo-liner", "0.0.3", false);
+    assert_installed("cargo-liner");
+    // Use `--force` for simplicity: just checking the flag is passed is enough.
+    write_user_config(&[
+        "[packages]",
+        "cargo-liner = { version = '*', force = true }",
+    ]);
+
+    cargo_liner()
+        .args(["ship", "--skip-check", "--only-self"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_skipcheck_force_update.stderr"
+        ]);
+    assert_installed("cargo-liner");
+}
+
 #[cargo_test]
 fn validate_ship_features_simple_none() {
     let _reg = init_registry();
