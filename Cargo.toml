@@ -30,6 +30,7 @@ include = [
 ]
 
 [dependencies]
+human-panic = "~2.0"
 clap = { version = "~4.5", features = [
     "derive",
     "cargo",
