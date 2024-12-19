@@ -1,5 +1,6 @@
  INFO  cargo_liner::cargo > Fetching latest package versions...
     Updating `dummy-registry` index
+note: to learn more about a package, run `cargo info <name>`
  INFO  cargo_liner        > Results:
 ┌───────┬─────────────┬─────────────┬────────┐
 │ Name  │ Old version │ New version │ Status │

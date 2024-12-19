@@ -1,5 +1,6 @@
 use cargo_test_macro::cargo_test;
 use cargo_test_support::registry::Package;
+use indoc::indoc;
 use snapbox::IntoData;
 use tempfile::TempDir;
 
@@ -939,7 +940,15 @@ fn validate_ship_verbosity_qqq() {
         .assert()
         .success()
         .stdout_eq("".into_data().raw())
-        .stderr_eq("    Updating `dummy-registry` index\n".raw());
+        .stderr_eq(
+            indoc!(
+                "
+                    Updating `dummy-registry` index
+                note: to learn more about a package, run `cargo info <name>`
+                "
+            )
+            .raw(),
+        );
     assert_installed("pkg");
 }
 
