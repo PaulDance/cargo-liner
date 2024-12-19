@@ -270,9 +270,9 @@ checksum = "82c6cbe0807294ca78d811d1e4995ddb6516c6c763c7a03493c4ba02b9e09215"
 
 [[package]]
 name = "cargo-test-support"
-version = "0.3.0"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a816b64664799fb248c06ca28b989ee22ef6d9f83c0495e28954a56d4e9a27ba"
+checksum = "74b6b88572f52991da0232b3c61dd23549bc6af06a2a3e2b8422df93fc36cbd1"
 dependencies = [
  "anstream",
  "anstyle",
@@ -295,7 +295,7 @@ dependencies = [
  "toml",
  "url",
  "walkdir",
- "windows-sys 0.52.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -1367,9 +1367,9 @@ dependencies = [
 
 [[package]]
 name = "pasetors"
-version = "0.6.8"
+version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6b36d47c66f2230dd1b7143d9afb2b4891879020210eddf2ccb624e529b96dba"
+checksum = "f2e0504622b293d583952413ab7c578c70a0101b8c0b7eff51ce23b111e986f2"
 dependencies = [
  "ct-codecs",
  "ed25519-compact",
@@ -1754,9 +1754,9 @@ checksum = "1de1d4f81173b03af4c0cbed3c898f6bff5b870e4a7f5d6f4057d62a7a4b686e"
 
 [[package]]
 name = "snapbox"
-version = "0.6.17"
+version = "0.6.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "840b73eb3148bc3cbc10ebe00ec9bc6d96033e658d022c4adcbf3f35596fd64a"
+checksum = "96dcfc4581e3355d70ac2ee14cfdf81dce3d85c85f1ed9e2c1d3013f53b3436b"
 dependencies = [
  "anstream",
  "anstyle",
@@ -1868,9 +1868,9 @@ dependencies = [
 
 [[package]]
 name = "tar"
-version = "0.4.41"
+version = "0.4.43"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cb797dad5fb5b76fcf519e702f4a589483b5ef06567f160c392832c1f5e44909"
+checksum = "c65998313f8e17d0d553d28f91a0df93e4dbbbf770279c7bc21ca0f09ea1a1f6"
 dependencies = [
  "filetime",
  "libc",

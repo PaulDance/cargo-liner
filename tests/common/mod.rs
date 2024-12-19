@@ -13,7 +13,7 @@ use std::{env, io, iter};
 use cargo_test_support::registry::{
     HttpServer, Package, RegistryBuilder, Request, Response, TestRegistry,
 };
-use cargo_test_support::{compare, TestEnv};
+use cargo_test_support::{compare, TestEnvCommandExt};
 use semver::Version;
 use snapbox::cmd::Command;
 
@@ -129,7 +129,7 @@ pub fn init_registry() -> TestRegistry {
 /// Applies Cargo's testing environment to the current process.
 pub fn set_env() {
     struct CurrentEnv;
-    impl TestEnv for CurrentEnv {
+    impl TestEnvCommandExt for CurrentEnv {
         fn current_dir<S: AsRef<Path>>(self, path: S) -> Self {
             env::set_current_dir(path).unwrap();
             self
@@ -160,7 +160,7 @@ pub fn read_user_config() -> String {
 /// Writes the given lines of content to the `$CARGO_HOME/liner.toml` user
 /// configuration.
 pub fn write_user_config(content_lines: &[&str]) {
-    let _ = fs::create_dir(cargo_test_support::install::cargo_home())
+    let _ = fs::create_dir(cargo_test_support::paths::cargo_home())
         .inspect_err(|err| assert_eq!(err.kind(), io::ErrorKind::AlreadyExists));
     fs::write(user_config_path(), content_lines.join("\n")).unwrap();
 }
@@ -263,7 +263,7 @@ pub fn fixture_fake_install() {
 /// Asserts that the given package is installed in the testing environment.
 pub fn assert_installed(pkg: &'static str) {
     cargo_test_support::install::assert_has_installed_exe(
-        cargo_test_support::install::cargo_home(),
+        cargo_test_support::paths::cargo_home(),
         pkg,
     );
 }
@@ -283,7 +283,7 @@ pub fn fixture_assert_installed() {
 /// Asserts that the given package is not installed in the testing environment.
 pub fn assert_not_installed(pkg: &'static str) {
     cargo_test_support::install::assert_has_not_installed_exe(
-        cargo_test_support::install::cargo_home(),
+        cargo_test_support::paths::cargo_home(),
         pkg,
     );
 }
