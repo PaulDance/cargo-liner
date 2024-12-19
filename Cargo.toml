@@ -65,6 +65,8 @@ opt-level = 3
 [lints.clippy]
 all = { level = "warn", priority = 0 }
 pedantic = { level = "warn", priority = 1 }
+allow-attributes = { level = "warn", priority = 2 }
+allow-attributes-without-reason = { level = "warn", priority = 2 }
 dbg-macro = { level = "warn", priority = 2 }
 str-to-string = { level = "warn", priority = 2 }
 string-to-string = { level = "warn", priority = 2 }
