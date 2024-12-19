@@ -66,5 +66,5 @@ opt-level = 3
 all = { level = "warn", priority = 0 }
 pedantic = { level = "warn", priority = 1 }
 dbg-macro = { level = "warn", priority = 2 }
-str_to_string = { level = "warn", priority = 2 }
-string_to_string = { level = "warn", priority = 2 }
+str-to-string = { level = "warn", priority = 2 }
+string-to-string = { level = "warn", priority = 2 }
