@@ -65,6 +65,11 @@ pub fn init_registry() -> TestRegistry {
             // Use the `dl` directory instead of the `registry` one in order to
             // easily test whether a packaged has previously been published or
             // not: test if a sub-directory of the package's name exists.
+            #[expect(
+                clippy::allow_attributes,
+                reason = "Unable to make `expect` work here."
+            )]
+            #[allow(clippy::print_stderr, reason = "Testing-only module.")]
             let (res_len, pkg_res) = dl_path
                 .join(req_pkg)
                 .read_dir()
