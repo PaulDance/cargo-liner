@@ -3,6 +3,8 @@ use std::collections::BTreeMap;
 use semver::VersionReq;
 use serde::{Deserialize, Serialize};
 
+use crate::cli::BinstallChoice;
+
 /// Small helper function that returns true to work around
 /// <https://github.com/serde-rs/serde/issues/368>.
 #[expect(
@@ -102,6 +104,10 @@ pub struct DetailedPackageReq {
     /// Do the same as the global `--no-fail-fast` but only for this package.
     #[serde(default)]
     pub no_fail_fast: bool,
+
+    /// Do the same as the global `--binstall` but only for this package.
+    #[serde(default)]
+    pub binstall: Option<BinstallChoice>,
 }
 
 // Should be kept in-sync with the above definition with regards to Serde.
@@ -134,6 +140,7 @@ impl Default for DetailedPackageReq {
             environment: BTreeMap::default(),
             skip_check: bool::default(),
             no_fail_fast: bool::default(),
+            binstall: Option::default(),
         }
     }
 }
