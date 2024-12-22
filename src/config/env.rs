@@ -66,6 +66,7 @@ mod tests {
     use std::sync::{LazyLock, Mutex};
 
     use super::*;
+    use crate::cli::BinstallChoice;
 
     static LOCK: LazyLock<Mutex<()>> = LazyLock::new(|| Mutex::new(()));
 
@@ -82,7 +83,7 @@ mod tests {
     }
 
     #[test]
-    fn test_singlethreaded_ship_ok() {
+    fn test_singlethreaded_ship_flags_ok() {
         let _lk = LOCK.lock().unwrap();
         let var_vals = [
             ("CARGO_LINER_SHIP_NO_SELF", "true"),
@@ -103,7 +104,7 @@ mod tests {
     }
 
     #[test]
-    fn test_singlethreaded_ship_errs() {
+    fn test_singlethreaded_ship_flags_errs() {
         let _lk = LOCK.lock().unwrap();
 
         for (var, val) in [
@@ -112,6 +113,45 @@ mod tests {
             ("CARGO_LINER_SHIP_SKIP_CHECK", "123"),
             ("CARGO_LINER_SHIP_NO_SELF", "abc"),
             ("CARGO_LINER_SHIP_FORCE", "\x01"),
+        ] {
+            assert_eq!(ship_env_args().unwrap(), ShipArgs::default());
+            set_vars(&[(var, val)]);
+            assert!(ship_env_args().is_err());
+            remove_vars(&[(var, val)]);
+        }
+    }
+
+    #[test]
+    fn test_singlethreaded_ship_binstall_ok() {
+        let _lk = LOCK.lock().unwrap();
+
+        for (var, val_str, val) in [
+            ("CARGO_LINER_SHIP_BINSTALL", "auto", BinstallChoice::Auto),
+            (
+                "CARGO_LINER_SHIP_BINSTALL",
+                "always",
+                BinstallChoice::Always,
+            ),
+            ("CARGO_LINER_SHIP_BINSTALL", "never", BinstallChoice::Never),
+        ] {
+            assert_eq!(ship_env_args().unwrap(), ShipArgs::default());
+            set_vars(&[(var, val_str)]);
+            assert_eq!(ship_env_args().unwrap().binstall.unwrap(), val);
+            remove_vars(&[(var, val_str)]);
+        }
+    }
+
+    #[test]
+    fn test_singlethreaded_ship_binstall_errs() {
+        let _lk = LOCK.lock().unwrap();
+
+        for (var, val) in [
+            ("CARGO_LINER_SHIP_BINSTALL", ""),
+            ("CARGO_LINER_SHIP_BINSTALL", " "),
+            ("CARGO_LINER_SHIP_BINSTALL", "a"),
+            ("CARGO_LINER_SHIP_BINSTALL", "abc"),
+            ("CARGO_LINER_SHIP_BINSTALL", "123"),
+            ("CARGO_LINER_SHIP_BINSTALL", "\x01"),
         ] {
             assert_eq!(ship_env_args().unwrap(), ShipArgs::default());
             set_vars(&[(var, val)]);
