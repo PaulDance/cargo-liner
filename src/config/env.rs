@@ -1,6 +1,8 @@
 //! Run arguments fetched from the environment.
 
 use std::env::{self, VarError};
+use std::error::Error;
+use std::str::FromStr;
 
 use color_eyre::eyre::{Context, Result};
 use color_eyre::Section;
@@ -15,7 +17,11 @@ fn ship_var_name(suffix: &str) -> String {
     format!("{SELF_ENV_PREFIX}_{SHIP_ENV_PREFIX}_{suffix}")
 }
 
-fn get_ship_flag(suffix: &str) -> Result<Option<bool>> {
+fn get_ship_flag<T>(suffix: &str) -> Result<Option<T>>
+where
+    T: FromStr,
+    <T as FromStr>::Err: Error + Send + Sync + 'static,
+{
     let var_name = ship_var_name(suffix);
 
     match env::var(&var_name) {
@@ -51,6 +57,7 @@ pub fn ship_env_args() -> Result<ShipArgs> {
         skip_check: get_ship_flag("SKIP_CHECK")?,
         no_fail_fast: get_ship_flag("NO_FAIL_FAST")?,
         force: get_ship_flag("FORCE")?,
+        binstall: get_ship_flag("BINSTALL")?,
     })
 }
 

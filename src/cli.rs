@@ -6,6 +6,8 @@
     clippy::struct_excessive_bools,
     reason = "This is the CLI module, so contains types handling all supported boolean flags."
 )]
+use std::str::FromStr;
+
 use clap::builder::ArgPredicate;
 use clap::{ArgAction, ColorChoice, Parser};
 use clap_complete::Shell;
@@ -318,6 +320,26 @@ pub enum BinstallChoice {
     Always,
     /// Completely disable the feature and only rely on Cargo.
     Never,
+}
+
+/// Clone of [`ColorChoice::from_str`].
+impl FromStr for BinstallChoice {
+    type Err = clap::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        use clap::ValueEnum;
+        for variant in Self::value_variants() {
+            // UNWRAP: no value is skipped.
+            if variant.to_possible_value().unwrap().matches(s, false) {
+                return Ok(*variant);
+            }
+        }
+        // HACK: use this to get `std::error::Error` for free.
+        Err(clap::Command::new(clap::crate_name!()).error(
+            clap::error::ErrorKind::InvalidValue,
+            format!("Invalid variant: {s:?}"),
+        ))
+    }
 }
 
 /// Regroupement of flags from [`ShipArgs`] with their negated couterparts.
