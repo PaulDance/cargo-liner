@@ -173,6 +173,7 @@ mod tests {
     use semver::VersionReq;
 
     use super::*;
+    use crate::cli::BinstallChoice;
     use crate::config::DetailedPackageReq;
 
     #[test]
@@ -1066,8 +1067,37 @@ mod tests {
                 no_fail_fast: Some(true),
                 skip_check: Some(true),
                 force: Some(false),
+                binstall: None,
             }
         );
+    }
+
+    #[test]
+    fn test_userconfig_defaults_ship_binstall() {
+        for (val_str, val) in [
+            ("auto", BinstallChoice::Auto),
+            ("always", BinstallChoice::Always),
+            ("never", BinstallChoice::Never),
+        ] {
+            assert_eq!(
+                toml::from_str::<UserConfig>(&format!(
+                    r#"
+                        [packages]
+                        abc = "*"
+                        [defaults.ship]
+                        binstall = "{val_str}"
+                    "#
+                ))
+                .unwrap()
+                .defaults
+                .unwrap()
+                .ship_cmd,
+                ShipArgs {
+                    binstall: Some(val),
+                    ..Default::default()
+                }
+            );
+        }
     }
 
     #[test]
