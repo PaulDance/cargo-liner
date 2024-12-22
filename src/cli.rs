@@ -568,6 +568,7 @@ mod tests {
                         skip_check: None,
                         no_fail_fast: None,
                         force: None,
+                        binstall: None,
                     },
                     _with_self: (),
                     _no_only_self: (),
@@ -594,6 +595,7 @@ mod tests {
                         skip_check: None,
                         no_fail_fast: None,
                         force: None,
+                        binstall: None,
                     },
                     _with_self: (),
                     _no_only_self: (),
@@ -621,6 +623,7 @@ mod tests {
                         skip_check: None,
                         no_fail_fast: None,
                         force: None,
+                        binstall: None,
                     },
                     _with_self: (),
                     _no_only_self: (),
@@ -647,6 +650,7 @@ mod tests {
                         skip_check: None,
                         no_fail_fast: None,
                         force: None,
+                        binstall: None,
                     },
                     _with_self: (),
                     _no_only_self: (),
@@ -674,6 +678,7 @@ mod tests {
                         skip_check: None,
                         no_fail_fast: None,
                         force: None,
+                        binstall: None,
                     },
                     _with_self: (),
                     _no_only_self: (),
@@ -700,6 +705,7 @@ mod tests {
                         skip_check: Some(true),
                         no_fail_fast: None,
                         force: None,
+                        binstall: None,
                     },
                     _with_self: (),
                     _no_only_self: (),
@@ -733,6 +739,7 @@ mod tests {
                         skip_check: Some(false),
                         no_fail_fast: None,
                         force: None,
+                        binstall: None,
                     },
                     _with_self: (),
                     _no_only_self: (),
@@ -759,6 +766,7 @@ mod tests {
                         skip_check: None,
                         no_fail_fast: Some(true),
                         force: None,
+                        binstall: None,
                     },
                     _with_self: (),
                     _no_only_self: (),
@@ -786,6 +794,7 @@ mod tests {
                         skip_check: None,
                         no_fail_fast: Some(false),
                         force: None,
+                        binstall: None,
                     },
                     _with_self: (),
                     _no_only_self: (),
@@ -812,6 +821,7 @@ mod tests {
                         skip_check: None,
                         no_fail_fast: None,
                         force: Some(true),
+                        binstall: None,
                     },
                     _with_self: (),
                     _no_only_self: (),
@@ -838,6 +848,88 @@ mod tests {
                         skip_check: None,
                         no_fail_fast: None,
                         force: Some(false),
+                        binstall: None,
+                    },
+                    _with_self: (),
+                    _no_only_self: (),
+                    _no_skip_check: (),
+                    _fail_fast: (),
+                    _no_force: (),
+                })),
+                verbose: 0,
+                quiet: 0,
+                color: ColorChoice::Auto,
+            }),
+        );
+    }
+
+    #[test]
+    fn test_ship_binstall_auto() {
+        assert_eq!(
+            CargoArgs::try_parse_from(["cargo", "liner", "ship", "--binstall", "auto"]).unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Ship(ShipArgsWithNegations {
+                    inner: ShipArgs {
+                        no_self: None,
+                        only_self: None,
+                        skip_check: None,
+                        no_fail_fast: None,
+                        force: None,
+                        binstall: Some(BinstallChoice::Auto),
+                    },
+                    _with_self: (),
+                    _no_only_self: (),
+                    _no_skip_check: (),
+                    _fail_fast: (),
+                    _no_force: (),
+                })),
+                verbose: 0,
+                quiet: 0,
+                color: ColorChoice::Auto,
+            }),
+        );
+    }
+
+    #[test]
+    fn test_ship_binstall_always() {
+        assert_eq!(
+            CargoArgs::try_parse_from(["cargo", "liner", "ship", "--binstall", "always"]).unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Ship(ShipArgsWithNegations {
+                    inner: ShipArgs {
+                        no_self: None,
+                        only_self: None,
+                        skip_check: None,
+                        no_fail_fast: None,
+                        force: None,
+                        binstall: Some(BinstallChoice::Always),
+                    },
+                    _with_self: (),
+                    _no_only_self: (),
+                    _no_skip_check: (),
+                    _fail_fast: (),
+                    _no_force: (),
+                })),
+                verbose: 0,
+                quiet: 0,
+                color: ColorChoice::Auto,
+            }),
+        );
+    }
+
+    #[test]
+    fn test_ship_binstall_never() {
+        assert_eq!(
+            CargoArgs::try_parse_from(["cargo", "liner", "ship", "--binstall", "never"]).unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Ship(ShipArgsWithNegations {
+                    inner: ShipArgs {
+                        no_self: None,
+                        only_self: None,
+                        skip_check: None,
+                        no_fail_fast: None,
+                        force: None,
+                        binstall: Some(BinstallChoice::Never),
                     },
                     _with_self: (),
                     _no_only_self: (),
