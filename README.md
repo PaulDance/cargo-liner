@@ -604,6 +604,27 @@ Options:
           default behavior as if absent, i.e. don't pass the argument
           onto Cargo
 
+  -b, --binstall <BINSTALL_WHEN>
+          Control the usage of `cargo-binstall`.
+          
+          This third-party tool has dedicated support here. It is
+          meant to be optional and easily pluggable, however, hence
+          the chosen default.
+          
+          [default: auto]
+          
+          [env: `CARGO_LINER_SHIP_BINSTALL`]
+          
+          [config: `defaults.ship.binstall`]
+
+          Possible values:
+          - auto:   The tool is heuristically detected and used if
+            available
+          - always: Always attempt to use it without trying to detect
+            it first
+          - never:  Completely disable the feature and only rely on
+            Cargo
+
   -v, --verbose...
           Be more verbose. Use multiple times to be more and more so
           each time.

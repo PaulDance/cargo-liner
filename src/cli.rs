@@ -277,6 +277,47 @@ pub struct ShipArgs {
         display_order = 9
     )]
     pub force: Option<bool>,
+
+    /// Control the usage of `cargo-binstall`.
+    ///
+    /// This third-party tool has dedicated support here. It is meant to be
+    /// optional and easily pluggable, however, hence the chosen default.
+    ///
+    /// [default: auto]
+    ///
+    /// [env: `CARGO_LINER_SHIP_BINSTALL`]
+    ///
+    /// [config: `defaults.ship.binstall`]
+    #[arg(
+        short,
+        long,
+        required = false,
+        value_enum,
+        value_name = "BINSTALL_WHEN",
+        display_order = 50
+    )]
+    pub binstall: Option<BinstallChoice>,
+}
+
+/// Choices for [`ShipArgs::binstall`].
+#[derive(Serialize, Deserialize, clap::ValueEnum, Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[serde(rename_all = "kebab-case")]
+pub enum BinstallChoice {
+    /// The tool is heuristically detected and used if available.
+    ///
+    /// Currently, the heuristics are the following:
+    ///  * if default options are used, then the tool is considered as available
+    ///    as soon as it is seen in the list of currently-installed packages
+    ///    that is read as part of the usual operation;
+    ///  * if `--skip-check` is used, then a direct call to the tool is
+    ///    attempted through Cargo and it is considered available if everything
+    ///    succeeds, since the list of installed packages is not read here.
+    #[default]
+    Auto,
+    /// Always attempt to use it without trying to detect it first.
+    Always,
+    /// Completely disable the feature and only rely on Cargo.
+    Never,
 }
 
 /// Regroupement of flags from [`ShipArgs`] with their negated couterparts.

@@ -35,6 +35,12 @@ _cargo-liner() {
         case $line[1] in
             (ship)
 _arguments "${_arguments_options[@]}" : \
+'-b+[Control the usage of \`cargo-binstall\`]:BINSTALL_WHEN:((auto\:"The tool is heuristically detected and used if available"
+always\:"Always attempt to use it without trying to detect it first"
+never\:"Completely disable the feature and only rely on Cargo"))' \
+'--binstall=[Control the usage of \`cargo-binstall\`]:BINSTALL_WHEN:((auto\:"The tool is heuristically detected and used if available"
+always\:"Always attempt to use it without trying to detect it first"
+never\:"Completely disable the feature and only rely on Cargo"))' \
 '--color=[Control the coloring of the logging output]:WHEN:(auto always never)' \
 '(-s --only-self)-n[Disable self-updating]' \
 '(-s --only-self)--no-self[Disable self-updating]' \
