@@ -742,6 +742,82 @@ mod tests {
         .is_err());
     }
 
+    #[ignore = "Long and online test."]
+    #[cargo_test]
+    fn test_singlethreaded_binstall() {
+        let _lk = LOCK.lock();
+        let _reg = testing::init_registry();
+        testing::fake_install_all([
+            (SELF, clap::crate_version!(), false),
+            ("bat", "0.23.0", false),
+        ]);
+        testing::fake_publish_all([(SELF, clap::crate_version!()), ("bat", "0.24.0")]);
+        testing::set_env();
+
+        binstall(
+            "bat",
+            &DetailedPackageReq {
+                version: "0.24.0".parse().unwrap(),
+                ..Default::default()
+            },
+            false,
+            0,
+        )
+        .unwrap();
+    }
+
+    #[cargo_test]
+    fn test_singlethreaded_binstallisavailable_yes() {
+        let _lk = LOCK.lock();
+        testing::fake_install("cargo-binstall", "0.0.0", false);
+        testing::set_env();
+
+        assert!(binstall_is_available(
+            &["cargo-binstall".to_owned()].into_iter().collect()
+        ));
+    }
+
+    #[ignore = "Fails if not actually installed."]
+    #[cargo_test]
+    fn test_singlethreaded_binstallisavailable_emptyset_yes() {
+        let _lk = LOCK.lock();
+        testing::fake_install("cargo-binstall", "0.0.0", false);
+        testing::set_env();
+
+        assert!(binstall_is_available(&BTreeSet::new()));
+    }
+
+    #[cargo_test]
+    fn test_singlethreaded_binstallisavailable_no() {
+        let _lk = LOCK.lock();
+        testing::fake_install("abc", "0.0.0", false);
+        testing::set_env();
+
+        assert!(!binstall_is_available(
+            &["abc".to_owned()].into_iter().collect()
+        ));
+    }
+
+    #[ignore = "Fails if actually installed."]
+    #[cargo_test]
+    fn test_singlethreaded_binstallisavailable_emptyset_no() {
+        let _lk = LOCK.lock();
+        testing::fake_install("abc", "0.0.0", false);
+        testing::set_env();
+
+        assert!(!binstall_is_available(&BTreeSet::new()));
+    }
+
+    #[ignore = "Fails if not actually installed in the precise version."]
+    #[cargo_test]
+    fn test_singlethreaded_binstallversion() {
+        let _lk = LOCK.lock();
+        testing::fake_install("cargo-binstall", "1.10.17", false);
+        testing::set_env();
+
+        assert_eq!(binstall_version().unwrap(), "1.10.17".parse().unwrap());
+    }
+
     #[test]
     fn test_configget_withenv_installroot() -> Result<()> {
         env::set_var("CARGO_INSTALL_ROOT", "/tmp");
