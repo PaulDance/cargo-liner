@@ -7,7 +7,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::ffi::OsStr;
 use std::path::PathBuf;
 use std::process::{Child, Command, ExitStatus, Stdio};
-use std::{env, iter};
+use std::{env, io, iter};
 
 use clap::ColorChoice;
 use color_eyre::eyre::{self, eyre, Result, WrapErr};
@@ -173,8 +173,160 @@ fn install(
         .suggestion("Read the underlying error message.")
 }
 
-/// Runs `cargo install` for all packages listed in the given user
-/// configuration and returns a per-package installation report.
+/// Equivalent of [`install`] using `cargo-binstall` as a backend.
+fn binstall(
+    pkg_name: &str,
+    pkg_req: &DetailedPackageReq,
+    force: bool,
+    verbosity: i8,
+) -> Result<ExitStatus> {
+    let mut cmd = Command::new(env_var()?);
+    // The tool emits to stdout by default and does not have an option to
+    // control that while only stderr is used here, so redirect instead.
+    cmd.stdout(io::stderr());
+
+    // Do the same regarding the custom environment variables and extra
+    // arguments: the backends are exclusive for a package, so this should not
+    // be too confusing, hopefully.
+    if !pkg_req.environment.is_empty() {
+        cmd.envs(&pkg_req.environment);
+        log::trace!("Environment set: {:#?}", pkg_req.environment);
+    }
+
+    cmd.args([
+        // What we want here.
+        "binstall",
+        // Telemetry is optional.
+        "--disable-telemetry",
+        // Non-interactive by design for now.
+        "--no-confirm",
+        // Also apply the verbosity.
+        "--log-level",
+        match verbosity {
+            i8::MIN..=-3 => "off",
+            -2 => "error",
+            -1 => "warn",
+            0 | 1 => "info",
+            2 => "debug",
+            3..=i8::MAX => "trace",
+        },
+        // The package version to install.
+        "--version",
+        &pkg_req.version.to_string(),
+    ]);
+
+    if let Some(index) = pkg_req.index.as_deref() {
+        cmd.args(["--index", index]);
+        log::trace!("`--index {}` args added.", index);
+    }
+
+    if let Some(registry) = pkg_req.registry.as_deref() {
+        cmd.args(["--registry", registry]);
+        log::trace!("`--registry {}` args added.", registry);
+    }
+
+    if let Some(git) = pkg_req.git.as_deref() {
+        cmd.args(["--git", git]);
+        log::trace!("`--git {}` args added.", git);
+    }
+
+    if force {
+        cmd.arg("--force");
+        log::trace!("`--force` arg added.");
+    }
+
+    if pkg_req.locked {
+        cmd.arg("--locked");
+        log::trace!("`--locked` arg added.");
+    }
+
+    // This should be kept here: after all other options and before the `--`.
+    if !pkg_req.extra_arguments.is_empty() {
+        cmd.args(&pkg_req.extra_arguments);
+        log::trace!("Extra arguments added: {:#?}", pkg_req.extra_arguments);
+    }
+
+    cmd.args(["--", pkg_name]);
+    log_cmd(&cmd);
+
+    cmd.status()
+        .wrap_err("Failed to execute Cargo.")
+        .note("This can happen for many reasons, but it should not happen easily at this point.")
+        .suggestion("Read the underlying error message.")
+}
+
+/// Heuristically determines whether `cargo-binstall` is installed or not.
+///
+/// Currently, it first tries to see if it is among the installed packages if
+/// they have been retrieved previously, and tries to call the program directly
+/// with some additional validation if not.
+fn binstall_is_available(installed: &BTreeSet<String>) -> bool {
+    // When `--skip-check` is used.
+    let res = if installed.is_empty() {
+        binstall_version()
+            .inspect(|ver| log::debug!("cargo-binstall successfully reports: {:?}", ver))
+            .inspect_err(|err| log::debug!("cargo-binstall automatic detection failed: {:?}", err))
+            .is_ok()
+    } else {
+        installed.contains("cargo-binstall")
+    };
+
+    log::debug!(
+        "Considering cargo-binstall as {}available.",
+        if res { "" } else { "not " },
+    );
+    res
+}
+
+/// Calls `cargo-binstall -V` and parses the returned version.
+fn binstall_version() -> Result<Version> {
+    let out = Command::new(env_var()?)
+        .env_clear()
+        .stdin(Stdio::null())
+        .stderr(Stdio::null())
+        .stdout(Stdio::piped())
+        .args(["binstall", "-V"])
+        .output()
+        .wrap_err("Failed to execute Cargo.")
+        .note("This can happen for many reasons, but it should not happen easily at this point.")
+        .suggestion("Read the underlying error message.")?;
+
+    if out.status.success() {
+        String::from_utf8(out.stdout)
+            .wrap_err("`cargo binstall -V` succeeded but returned a non-UTF8 output.")
+            .note("This is rather unexpected.")
+            .suggestion("Run it yourself to see if it behaves correctly.")?
+            .trim_end()
+            .parse()
+            .wrap_err("`cargo binstall -V` succeeded but returned something else than a version.")
+            .note("This is rather unexpected.")
+            .suggestion("Run it yourself to see if it behaves correctly.")
+    } else {
+        Err(eyre!("Cargo or `cargo binstall` failed.")
+            .note("This can simply be because it is not installed.")
+            .suggestion("Install and run it yourself to see if it behaves correctly."))
+    }
+}
+
+/// Runs `cargo install` or `binstall` for the given package depending on the
+/// current Cargo-wise environment, with priority for `binstall`.
+fn install_one(
+    installed: &BTreeSet<String>,
+    pkg_name: &str,
+    pkg_req: &DetailedPackageReq,
+    force: bool,
+    color: ColorChoice,
+    verbosity: i8,
+) -> Result<ExitStatus> {
+    if binstall_is_available(installed) {
+        binstall(pkg_name, pkg_req, force, verbosity)
+    } else {
+        install(pkg_name, pkg_req, force, color, verbosity)
+    }
+}
+
+/// Runs `cargo install` or `binstall` for all packages listed in the given
+/// user configuration and returns a per-package installation report.
 ///
 /// Returns `Ok(report)` when `no_fail_fast` is `true`, otherwise `Err(err)` of
 /// the first error `err` encountered.
@@ -198,41 +350,47 @@ pub fn install_all(
             if is_installed { "Updat" } else { "Install" }
         );
 
-        if let Err(err) = install(pkg_name, pkg, force || pkg.force, color, verbosity)
-            .and_then(|status| {
-                status.success().then_some(()).ok_or_else(|| {
-                    let err = eyre!("Cargo process finished unsuccessfully: {status}")
-                        .note("This can happen for many reasons.")
-                        .suggestion("Read Cargo's output.");
+        if let Err(err) = install_one(
+            installed,
+            pkg_name,
+            pkg,
+            force || pkg.force,
+            color,
+            verbosity,
+        )
+        .and_then(|status| {
+            status.success().then_some(()).ok_or_else(|| {
+                let err = eyre!("Cargo process finished unsuccessfully: {status}")
+                    .note("This can happen for many reasons.")
+                    .suggestion("Read Cargo's output.");
 
-                    if no_fail_fast || pkg.no_fail_fast {
-                        err
-                    } else {
-                        err.suggestion(
-                            "Use `--no-fail-fast` to ignore this \
+                if no_fail_fast || pkg.no_fail_fast {
+                    err
+                } else {
+                    err.suggestion(
+                        "Use `--no-fail-fast` to ignore this \
                             and continue on with other packages.",
-                        )
-                    }
-                })
+                    )
+                }
             })
-            .inspect(|()| {
-                rep.insert(
-                    pkg_name.clone(),
-                    if is_installed {
-                        InstallStatus::Updated
-                    } else {
-                        InstallStatus::Installed
-                    },
-                );
-            })
-            .wrap_err_with(|| {
-                rep.insert(pkg_name.clone(), InstallStatus::Failed);
-                format!(
-                    "Failed to {} {pkg_name:?}.",
-                    if is_installed { "update" } else { "install" }
-                )
-            })
-        {
+        })
+        .inspect(|()| {
+            rep.insert(
+                pkg_name.clone(),
+                if is_installed {
+                    InstallStatus::Updated
+                } else {
+                    InstallStatus::Installed
+                },
+            );
+        })
+        .wrap_err_with(|| {
+            rep.insert(pkg_name.clone(), InstallStatus::Failed);
+            format!(
+                "Failed to {} {pkg_name:?}.",
+                if is_installed { "update" } else { "install" }
+            )
+        }) {
             if no_fail_fast || pkg.no_fail_fast {
                 // Can't use `Option::map_or` for ownership reasons.
                 err_rep = Some(match err_rep {
