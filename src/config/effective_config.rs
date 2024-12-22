@@ -8,7 +8,7 @@
 use std::collections::BTreeMap;
 
 use super::{DetailedPackageReq, UserConfig};
-use crate::cli::ShipArgs;
+use crate::cli::{BinstallChoice, ShipArgs};
 
 /// Effective merge of all configuration sources.
 #[derive(Debug)]
@@ -49,6 +49,7 @@ pub struct EffectiveShipArgs {
     pub skip_check: bool,
     pub no_fail_fast: bool,
     pub force: bool,
+    pub binstall: BinstallChoice,
 }
 
 impl EffectiveShipArgs {
@@ -83,6 +84,11 @@ impl EffectiveShipArgs {
                 .force
                 .or(env_args.force)
                 .or_else(|| cfg_defs.and_then(|defs| defs.ship_cmd.force.as_ref().copied()))
+                .unwrap_or_default(),
+            binstall: cli_args
+                .binstall
+                .or(env_args.binstall)
+                .or_else(|| cfg_defs.and_then(|defs| defs.ship_cmd.binstall.as_ref().copied()))
                 .unwrap_or_default(),
         }
     }
