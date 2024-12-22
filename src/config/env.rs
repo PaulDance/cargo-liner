@@ -28,7 +28,7 @@ fn get_ship_flag(suffix: &str) -> Result<Option<bool>> {
                     )
                 })
                 .note("Only the `true` or `false` values are accepted here.")
-                .suggestion("Analyze you environment variables and correct the value.")?,
+                .suggestion("Analyze your environment variables and correct the value.")?,
         )),
         Err(VarError::NotPresent) => Ok(None),
         Err(err) => Err(err)
@@ -39,7 +39,7 @@ fn get_ship_flag(suffix: &str) -> Result<Option<bool>> {
                 )
             })
             .note("Only valid UTF-8 values are accepted here.")
-            .suggestion("Analyze you environment variables and correct the value."),
+            .suggestion("Analyze your environment variables and correct the value."),
     }
 }
 
