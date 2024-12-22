@@ -12,12 +12,16 @@ use crate::cli::ShipArgs;
 const SELF_ENV_PREFIX: &str = "CARGO_LINER";
 const SHIP_ENV_PREFIX: &str = "SHIP";
 
+/// Returns the full environment variable name from the given suffix to `ship`.
 #[inline]
 fn ship_var_name(suffix: &str) -> String {
     format!("{SELF_ENV_PREFIX}_{SHIP_ENV_PREFIX}_{suffix}")
 }
 
-fn get_ship_flag<T>(suffix: &str) -> Result<Option<T>>
+/// Retrieves a single argument value from the environment.
+///
+/// Supports any destination type that implements string parsing.
+fn get_ship_arg<T>(suffix: &str) -> Result<Option<T>>
 where
     T: FromStr,
     <T as FromStr>::Err: Error + Send + Sync + 'static,
@@ -33,7 +37,7 @@ where
                         &var_name
                     )
                 })
-                .note("Only the `true` or `false` values are accepted here.")
+                .note("Only the `true` or `false` values are accepted here, except for `binstall`.")
                 .suggestion("Analyze your environment variables and correct the value.")?,
         )),
         Err(VarError::NotPresent) => Ok(None),
@@ -52,12 +56,12 @@ where
 /// Returns the [`ShipArgs`] fetched from the environment.
 pub fn ship_env_args() -> Result<ShipArgs> {
     Ok(ShipArgs {
-        no_self: get_ship_flag("NO_SELF")?,
-        only_self: get_ship_flag("ONLY_SELF")?,
-        skip_check: get_ship_flag("SKIP_CHECK")?,
-        no_fail_fast: get_ship_flag("NO_FAIL_FAST")?,
-        force: get_ship_flag("FORCE")?,
-        binstall: get_ship_flag("BINSTALL")?,
+        no_self: get_ship_arg("NO_SELF")?,
+        only_self: get_ship_arg("ONLY_SELF")?,
+        skip_check: get_ship_arg("SKIP_CHECK")?,
+        no_fail_fast: get_ship_arg("NO_FAIL_FAST")?,
+        force: get_ship_arg("FORCE")?,
+        binstall: get_ship_arg("BINSTALL")?,
     })
 }
 
