@@ -16,6 +16,7 @@ use log::Level;
 use regex::Regex;
 use semver::Version;
 
+use crate::cli::BinstallChoice;
 use crate::config::DetailedPackageReq;
 
 /// Installs a package, by running `cargo install` passing the `name`, `version`
@@ -309,18 +310,24 @@ fn binstall_version() -> Result<Version> {
 }
 
 /// Runs `cargo install` or `binstall` for the given package depending on the
-/// current Cargo-wise environment, with priority for `binstall`.
+/// current Cargo-wise environment and specified choice strategy, with priority
+/// for `binstall` when in auto mode.
 fn install_one(
     installed: &BTreeSet<String>,
     pkg_name: &str,
     pkg_req: &DetailedPackageReq,
     force: bool,
+    binstall: BinstallChoice,
     color: ColorChoice,
     verbosity: i8,
 ) -> Result<ExitStatus> {
-    if binstall_is_available(installed) {
-        binstall(pkg_name, pkg_req, force, verbosity)
+    if binstall == BinstallChoice::Always
+        || binstall == BinstallChoice::Auto && binstall_is_available(installed)
+    {
+        log::debug!("Using `cargo-binstall` as the installation method.");
+        self::binstall(pkg_name, pkg_req, force, verbosity)
     } else {
+        log::debug!("Using `cargo install` as the installation method.");
         install(pkg_name, pkg_req, force, color, verbosity)
     }
 }
@@ -335,6 +342,7 @@ pub fn install_all(
     installed: &BTreeSet<String>,
     no_fail_fast: bool,
     force: bool,
+    binstall: BinstallChoice,
     color: ColorChoice,
     verbosity: i8,
 ) -> Result<InstallReport> {
@@ -355,6 +363,7 @@ pub fn install_all(
             pkg_name,
             pkg,
             force || pkg.force,
+            binstall,
             color,
             verbosity,
         )
