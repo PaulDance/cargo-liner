@@ -273,6 +273,9 @@ mod tests {
                 c7 = { version = "1.2", offline = true }
                 c8 = { version = "1.2", skip-check = true }
                 c9 = { version = "1.2", no-fail-fast = true }
+                d1 = { version = "1.2", binstall = "auto" }
+                d2 = { version = "1.2", binstall = "always" }
+                d3 = { version = "1.2", binstall = "never" }
             "#,
         )
         .unwrap()
@@ -309,6 +312,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -335,6 +339,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -361,6 +366,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -387,6 +393,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -413,6 +420,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -439,6 +447,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -465,6 +474,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -491,6 +501,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -520,6 +531,7 @@ mod tests {
                     .collect(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -546,6 +558,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -572,6 +585,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -598,6 +612,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -624,6 +639,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -650,6 +666,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -676,6 +693,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -702,6 +720,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -728,6 +747,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -754,6 +774,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -780,6 +801,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -806,6 +828,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -832,6 +855,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -858,6 +882,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -884,6 +909,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -910,6 +936,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -936,6 +963,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -962,6 +990,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: true,
                 no_fail_fast: false,
+                binstall: None,
             },
             DetailedPackageReq {
                 version: "^1.2".parse().unwrap(),
@@ -988,6 +1017,88 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: true,
+                binstall: None,
+            },
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
+                features: vec![],
+                all_features: false,
+                default_features: true,
+                index: None,
+                registry: None,
+                git: None,
+                branch: None,
+                tag: None,
+                rev: None,
+                path: None,
+                bins: vec![],
+                all_bins: false,
+                examples: vec![],
+                all_examples: false,
+                force: false,
+                ignore_rust_version: false,
+                frozen: false,
+                locked: false,
+                offline: false,
+                extra_arguments: vec![],
+                environment: BTreeMap::new(),
+                skip_check: false,
+                no_fail_fast: false,
+                binstall: Some(BinstallChoice::Auto),
+            },
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
+                features: vec![],
+                all_features: false,
+                default_features: true,
+                index: None,
+                registry: None,
+                git: None,
+                branch: None,
+                tag: None,
+                rev: None,
+                path: None,
+                bins: vec![],
+                all_bins: false,
+                examples: vec![],
+                all_examples: false,
+                force: false,
+                ignore_rust_version: false,
+                frozen: false,
+                locked: false,
+                offline: false,
+                extra_arguments: vec![],
+                environment: BTreeMap::new(),
+                skip_check: false,
+                no_fail_fast: false,
+                binstall: Some(BinstallChoice::Always),
+            },
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
+                features: vec![],
+                all_features: false,
+                default_features: true,
+                index: None,
+                registry: None,
+                git: None,
+                branch: None,
+                tag: None,
+                rev: None,
+                path: None,
+                bins: vec![],
+                all_bins: false,
+                examples: vec![],
+                all_examples: false,
+                force: false,
+                ignore_rust_version: false,
+                frozen: false,
+                locked: false,
+                offline: false,
+                extra_arguments: vec![],
+                environment: BTreeMap::new(),
+                skip_check: false,
+                no_fail_fast: false,
+                binstall: Some(BinstallChoice::Never),
             },
         ]
         .into_iter()
