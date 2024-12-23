@@ -321,8 +321,14 @@ fn install_one(
     color: ColorChoice,
     verbosity: i8,
 ) -> Result<ExitStatus> {
+    // HACK: disable the auto mode under testing to easily avoid bothersome
+    // hacks and maintenance there in order to avoid failing when the tool is
+    // installed locally compared to current CI. Tests targeting binstall have
+    // to explicitly enable the feature through the `always` setting.
     if binstall == BinstallChoice::Always
-        || binstall == BinstallChoice::Auto && binstall_is_available(installed)
+        || binstall == BinstallChoice::Auto
+            && !context_seems_testing()
+            && binstall_is_available(installed)
     {
         log::debug!("Using `cargo-binstall` as the installation method.");
         self::binstall(pkg_name, pkg_req, force, verbosity)
