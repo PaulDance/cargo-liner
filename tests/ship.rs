@@ -1962,3 +1962,113 @@ fn validate_ship_confignoself_envwithself_clinoself_noupdate() {
         .stderr_eq(snapbox::file!["fixtures/ship/validate_ship_noself_nothing.stderr"].raw());
     assert_installed("cargo-liner");
 }
+
+/// Test that the tool is at least called when using `always` globally.
+///
+/// Binstall seems to outright refuse http URLs, so it is rather incompatible
+/// with the execution context used here. Just at least validating the tool is
+/// indeed called seems to be the only possibility here.
+#[ignore = "cargo-binstall is not made available to CI yet."]
+#[cargo_test]
+fn validate_ship_binstall_globalalways_isused() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish("abc", "0.0.0");
+    write_user_config(&[
+        "[defaults]",
+        "ship.binstall = 'always'",
+        "[packages]",
+        // Explicitly passing the registry is necessary as otherwise crates.io
+        // is implicitly used by the tool that does not have the same hacks.
+        "abc = { version = '*', registry = 'dummy-registry' }",
+    ]);
+
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .failure()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_binstall_globalalways_isused.stderr"
+        ]);
+    assert_not_installed("abc");
+}
+
+/// Test that the tool is not used when using `never` globally.
+///
+/// This is the same as if only letting `auto` since it is disabled under tests.
+#[ignore = "cargo-binstall is not made available to CI yet."]
+#[cargo_test]
+fn validate_ship_binstall_globalnever_isunused() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish("abc", "0.0.0");
+    write_user_config(&[
+        "[defaults]",
+        "ship.binstall = 'never'",
+        "[packages]",
+        "abc = { version = '*', registry = 'dummy-registry' }",
+    ]);
+
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_binstall_globalnever_isunused.stderr"
+        ]);
+    assert_installed("abc");
+}
+
+/// Test that the per-package configuration has precedence over the global one.
+#[ignore = "cargo-binstall is not made available to CI yet."]
+#[cargo_test]
+fn validate_ship_binstall_globalnever_localalways_isused() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish("abc", "0.0.0");
+    write_user_config(&[
+        "[defaults]",
+        "ship.binstall = 'never'",
+        "[packages]",
+        "abc = { version = '*', binstall = 'always', registry = 'dummy-registry' }",
+    ]);
+
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .failure()
+        .stdout_eq("".into_data().raw())
+        // Same as above.
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_binstall_globalalways_isused.stderr"
+        ]);
+    assert_not_installed("abc");
+}
+
+/// Test that the per-package configuration has precedence over the global one.
+#[ignore = "cargo-binstall is not made available to CI yet."]
+#[cargo_test]
+fn validate_ship_binstall_globalalways_localnever_isunused() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish("abc", "0.0.0");
+    write_user_config(&[
+        "[defaults]",
+        "ship.binstall = 'always'",
+        "[packages]",
+        "abc = { version = '*', binstall = 'never', registry = 'dummy-registry' }",
+    ]);
+
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        // Same as above.
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_binstall_globalnever_isunused.stderr"
+        ]);
+    assert_installed("abc");
+}
