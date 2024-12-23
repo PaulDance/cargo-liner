@@ -363,7 +363,10 @@ pub fn install_all(
             pkg_name,
             pkg,
             force || pkg.force,
-            binstall,
+            // FIXME: this lets the per-package configuration have precedence
+            // over the global defaults, but over the CLI as well; optionals
+            // should be introduced in order to re-order things properly instead.
+            pkg.binstall.unwrap_or(binstall),
             color,
             verbosity,
         )
