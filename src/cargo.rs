@@ -446,8 +446,8 @@ pub enum InstallStatus {
 /// returns the corresponding child process handle to be used with
 /// [`finish_search_exact`].
 fn spawn_search_exact(pkg: &str) -> Result<Child> {
-    // HACK: detect test environment using some environment variable.
-    let is_test = env::var_os("__CARGO_TEST_ROOT").is_some();
+    // HACK: detect the test context in order to adapt the execution to it.
+    let is_test = context_seems_testing();
     let mut cmd = Command::new(env_var()?);
 
     cmd.stdin(Stdio::null());
@@ -617,6 +617,15 @@ fn env_var() -> Result<String> {
         .wrap_err("Failed to get the `CARGO` environment variable.")
         .note("This should not happen easily as it is set by Cargo.")
         .suggestion("Run the command through Cargo as intended.")
+}
+
+/// Heuristically detects whether the current execution context seems like a
+/// testing one or not.
+///
+/// It currently uses some environment variable that `cargo-test-support`'s
+/// `cargo_test` macro sets for invoked Cargo instances.
+fn context_seems_testing() -> bool {
+    env::var_os("__CARGO_TEST_ROOT").is_some()
 }
 
 /// Logs the program and arguments of the given command to DEBUG.
