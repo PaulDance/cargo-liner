@@ -625,7 +625,10 @@ fn env_var() -> Result<String> {
 /// It currently uses some environment variable that `cargo-test-support`'s
 /// `cargo_test` macro sets for invoked Cargo instances.
 fn context_seems_testing() -> bool {
-    env::var_os("__CARGO_TEST_ROOT").is_some()
+    env::var_os("__CARGO_TEST_ROOT").is_some_and(|var| {
+        let path = PathBuf::from(var);
+        path.is_absolute() && path.is_dir()
+    })
 }
 
 /// Logs the program and arguments of the given command to DEBUG.
