@@ -356,12 +356,15 @@ Options:
           only this crate are logged and error backtraces are shown
           (`RUST_BACKTRACE=1`). When used twice, DEBUG and above
           messages of all crates are logged, `-v` is given to Cargo
-          calls (details ran commands), and error backtraces are
+          calls (details ran commands), `--log-level debug` is given
+          to `cargo-binstall` when using it, and error backtraces are
           fully shown (`RUST_BACKTRACE=full`). When used three times
           or more, TRACE and above messages of all crates are logged,
-          `-vv` is given to Cargo calls (includes build output) and
-          error backtraces are fully shown (`RUST_BACKTRACE=full`).
-          This takes precedence over the environment.
+          `-vv` is given to Cargo calls (includes build output),
+          `--log-level trace` is given to `cargo-binstall` when using
+          it, and error backtraces are fully shown
+          (`RUST_BACKTRACE=full`). This takes precedence over the
+          environment.
 
   -q, --quiet...
           Be quieter. Use multiple times to be more and more so each
@@ -369,11 +372,14 @@ Options:
           
           When omitted, INFO and above messages of only this crate
           are logged. When used once, WARN and above messages of only
-          this crate are logged. When used twice, ERROR messages of
-          all crates are logged. When used three times or more, no
-          message will be logged, including Cargo's by passing `-q`
-          to it and error reports are silenced. This takes precedence
-          over the environment.
+          this crate are logged, and `--log-level warn` is given to
+          `cargo-binstall` when using it. When used twice, ERROR
+          messages of all crates are logged, and `--log-level error`
+          is given to `cargo-binstall` when using it. When used three
+          times or more, no message will be logged, including Cargo's
+          by passing `-q` to it and `cargo-binstall`'s by passing
+          `--log-level off` to it, and error reports are silenced.
+          This takes precedence over the environment.
 
       --color <WHEN>
           Control the coloring of the logging output.
@@ -381,7 +387,9 @@ Options:
           This enables one to manually specify when should the logs
           and error reports be colored or not, for example if the
           automatic detection is either not wished or not functional.
-          The value is also passed onto calls to Cargo.
+          The value is also passed onto calls to Cargo, but not
+          `cargo-binstall` when using it as it does not yet have any
+          similar option.
           
           [default: auto]
           [possible values: auto, always, never]
@@ -520,16 +528,16 @@ Options:
 
   -c, --skip-check
           Skip the summary version check and directly call `cargo
-          install` on each configured package.
+          install` or `cargo binstall` on each configured package.
           
           The version check is relatively quick and enables skipping
-          calls to `cargo install` when no update is required, which
-          saves quite a bit of time. However, if you wish, this
-          option is still available in order not to run the check:
-          doing so will probably take more time in the end most of
-          the time, except if you have a very small amount of
-          packages configured (e.g. one or two) or if all or almost
-          all packages are not already installed.
+          calls to `cargo install` or `cargo binstall` when no update
+          is required, which saves quite a bit of time. However, if
+          you wish, this option is still available in order not to
+          run the check: doing so will probably take more time in the
+          end most of the time, except if you have a very small
+          amount of packages configured (e.g. one or two) or if all
+          or almost all packages are not already installed.
           
           It can also be used as a workaround in case a certain
           operation fails in your particular environment, for
@@ -553,26 +561,26 @@ Options:
           Disable the default fail-fast execution of `cargo
           install`s.
           
-          By default, whenever a call to `cargo install` fails for
-          any reason, the overall operation is stopped as soon as
-          possible. In some cases, such as packages simply failing to
-          compile, this is a bit too restrictive as it prevents
-          installing the following packages. The option it therefore
-          provided in order to make the installation keep on going by
-          continuing to call `cargo install` on each configured
-          package, even if some previous one failed. However, in case
-          any of the packages fails to install and the option is
-          used, an error will still be reported at the end,
-          containing an indication of all the packages that failed to
-          install.
+          By default, whenever a call to `cargo install` or `cargo
+          binstall` fails for any reason, the overall operation is
+          stopped as soon as possible. In some cases, such as
+          packages simply failing to compile, this is a bit too
+          restrictive as it prevents installing the following
+          packages. The option it therefore provided in order to make
+          the installation keep on going by continuing to call `cargo
+          install` on each configured package, even if some previous
+          one failed. However, in case any of the packages fails to
+          install and the option is used, an error will still be
+          reported at the end, containing an indication of all the
+          packages that failed to install.
           
           This is not to be confused with Cargo's `--keep-going`
           build option: it disables fast-failing between crate
           compilations, while the current one disables fast-failing
-          between entire calls to `cargo install`; in fact,
-          `--keep-going` is never passed onto Cargo. It is neither to
-          be confused with `cargo test --no-fail-fast` since `cargo
-          test` is never used.
+          between entire calls to `cargo install` or `cargo
+          binstall`; in fact, `--keep-going` is never passed onto
+          Cargo. It is neither to be confused with `cargo test
+          --no-fail-fast` since `cargo test` is never used.
           
           [default: false]
           
@@ -588,10 +596,10 @@ Options:
   -f, --force
           Force overwriting existing crates or binaries.
           
-          Passes the option flag onto each call of `cargo install`.
-          It will, for example, redownload, recompile and reinstall
-          every configured package when used in conjunction with
-          `--skip-check`.
+          Passes the option flag onto each call of `cargo install` or
+          `cargo binstall`. It will, for example, redownload,
+          recompile and reinstall every configured package when used
+          in conjunction with `--skip-check`.
           
           [default: false]
           
@@ -609,7 +617,9 @@ Options:
           
           This third-party tool has dedicated support here. It is
           meant to be optional and easily pluggable, however, hence
-          the chosen default.
+          the chosen default. When it is enabled, it effectively
+          replaces `cargo install` entirely and all compatible
+          options are forwarded to it.
           
           [default: auto]
           
@@ -634,12 +644,15 @@ Options:
           only this crate are logged and error backtraces are shown
           (`RUST_BACKTRACE=1`). When used twice, DEBUG and above
           messages of all crates are logged, `-v` is given to Cargo
-          calls (details ran commands), and error backtraces are
+          calls (details ran commands), `--log-level debug` is given
+          to `cargo-binstall` when using it, and error backtraces are
           fully shown (`RUST_BACKTRACE=full`). When used three times
           or more, TRACE and above messages of all crates are logged,
-          `-vv` is given to Cargo calls (includes build output) and
-          error backtraces are fully shown (`RUST_BACKTRACE=full`).
-          This takes precedence over the environment.
+          `-vv` is given to Cargo calls (includes build output),
+          `--log-level trace` is given to `cargo-binstall` when using
+          it, and error backtraces are fully shown
+          (`RUST_BACKTRACE=full`). This takes precedence over the
+          environment.
 
   -q, --quiet...
           Be quieter. Use multiple times to be more and more so each
@@ -647,11 +660,14 @@ Options:
           
           When omitted, INFO and above messages of only this crate
           are logged. When used once, WARN and above messages of only
-          this crate are logged. When used twice, ERROR messages of
-          all crates are logged. When used three times or more, no
-          message will be logged, including Cargo's by passing `-q`
-          to it and error reports are silenced. This takes precedence
-          over the environment.
+          this crate are logged, and `--log-level warn` is given to
+          `cargo-binstall` when using it. When used twice, ERROR
+          messages of all crates are logged, and `--log-level error`
+          is given to `cargo-binstall` when using it. When used three
+          times or more, no message will be logged, including Cargo's
+          by passing `-q` to it and `cargo-binstall`'s by passing
+          `--log-level off` to it, and error reports are silenced.
+          This takes precedence over the environment.
 
       --color <WHEN>
           Control the coloring of the logging output.
@@ -659,7 +675,9 @@ Options:
           This enables one to manually specify when should the logs
           and error reports be colored or not, for example if the
           automatic detection is either not wished or not functional.
-          The value is also passed onto calls to Cargo.
+          The value is also passed onto calls to Cargo, but not
+          `cargo-binstall` when using it as it does not yet have any
+          similar option.
           
           [default: auto]
           [possible values: auto, always, never]
@@ -764,12 +782,15 @@ Options:
           only this crate are logged and error backtraces are shown
           (`RUST_BACKTRACE=1`). When used twice, DEBUG and above
           messages of all crates are logged, `-v` is given to Cargo
-          calls (details ran commands), and error backtraces are
+          calls (details ran commands), `--log-level debug` is given
+          to `cargo-binstall` when using it, and error backtraces are
           fully shown (`RUST_BACKTRACE=full`). When used three times
           or more, TRACE and above messages of all crates are logged,
-          `-vv` is given to Cargo calls (includes build output) and
-          error backtraces are fully shown (`RUST_BACKTRACE=full`).
-          This takes precedence over the environment.
+          `-vv` is given to Cargo calls (includes build output),
+          `--log-level trace` is given to `cargo-binstall` when using
+          it, and error backtraces are fully shown
+          (`RUST_BACKTRACE=full`). This takes precedence over the
+          environment.
 
   -q, --quiet...
           Be quieter. Use multiple times to be more and more so each
@@ -777,11 +798,14 @@ Options:
           
           When omitted, INFO and above messages of only this crate
           are logged. When used once, WARN and above messages of only
-          this crate are logged. When used twice, ERROR messages of
-          all crates are logged. When used three times or more, no
-          message will be logged, including Cargo's by passing `-q`
-          to it and error reports are silenced. This takes precedence
-          over the environment.
+          this crate are logged, and `--log-level warn` is given to
+          `cargo-binstall` when using it. When used twice, ERROR
+          messages of all crates are logged, and `--log-level error`
+          is given to `cargo-binstall` when using it. When used three
+          times or more, no message will be logged, including Cargo's
+          by passing `-q` to it and `cargo-binstall`'s by passing
+          `--log-level off` to it, and error reports are silenced.
+          This takes precedence over the environment.
 
       --color <WHEN>
           Control the coloring of the logging output.
@@ -789,7 +813,9 @@ Options:
           This enables one to manually specify when should the logs
           and error reports be colored or not, for example if the
           automatic detection is either not wished or not functional.
-          The value is also passed onto calls to Cargo.
+          The value is also passed onto calls to Cargo, but not
+          `cargo-binstall` when using it as it does not yet have any
+          similar option.
           
           [default: auto]
           [possible values: auto, always, never]
@@ -872,12 +898,15 @@ Options:
           only this crate are logged and error backtraces are shown
           (`RUST_BACKTRACE=1`). When used twice, DEBUG and above
           messages of all crates are logged, `-v` is given to Cargo
-          calls (details ran commands), and error backtraces are
+          calls (details ran commands), `--log-level debug` is given
+          to `cargo-binstall` when using it, and error backtraces are
           fully shown (`RUST_BACKTRACE=full`). When used three times
           or more, TRACE and above messages of all crates are logged,
-          `-vv` is given to Cargo calls (includes build output) and
-          error backtraces are fully shown (`RUST_BACKTRACE=full`).
-          This takes precedence over the environment.
+          `-vv` is given to Cargo calls (includes build output),
+          `--log-level trace` is given to `cargo-binstall` when using
+          it, and error backtraces are fully shown
+          (`RUST_BACKTRACE=full`). This takes precedence over the
+          environment.
 
   -q, --quiet...
           Be quieter. Use multiple times to be more and more so each
@@ -885,11 +914,14 @@ Options:
           
           When omitted, INFO and above messages of only this crate
           are logged. When used once, WARN and above messages of only
-          this crate are logged. When used twice, ERROR messages of
-          all crates are logged. When used three times or more, no
-          message will be logged, including Cargo's by passing `-q`
-          to it and error reports are silenced. This takes precedence
-          over the environment.
+          this crate are logged, and `--log-level warn` is given to
+          `cargo-binstall` when using it. When used twice, ERROR
+          messages of all crates are logged, and `--log-level error`
+          is given to `cargo-binstall` when using it. When used three
+          times or more, no message will be logged, including Cargo's
+          by passing `-q` to it and `cargo-binstall`'s by passing
+          `--log-level off` to it, and error reports are silenced.
+          This takes precedence over the environment.
 
       --color <WHEN>
           Control the coloring of the logging output.
@@ -897,7 +929,9 @@ Options:
           This enables one to manually specify when should the logs
           and error reports be colored or not, for example if the
           automatic detection is either not wished or not functional.
-          The value is also passed onto calls to Cargo.
+          The value is also passed onto calls to Cargo, but not
+          `cargo-binstall` when using it as it does not yet have any
+          similar option.
           
           [default: auto]
           [possible values: auto, always, never]
