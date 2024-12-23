@@ -154,6 +154,50 @@ them in some way, using Git for example.
 [`cargo install`]: https://doc.rust-lang.org/cargo/commands/cargo-install.html
 
 
+## `cargo-binstall` integration
+
+Cargo Liner has dedicated support for [`cargo-binstall`], a third-party tool
+that enables one to search for and install pre-built binaries of published
+crates. This is useful in order to potentially skip compilation entirely.
+
+For the tool to be used, in most cases it should be sufficient to simply
+install it as per the usual. Cargo Liner will attempt to detect its presence
+and automatically use it if deemed complete. This automatic detection is based
+on some heuristics: if default options are used, then the tool is considered as
+available as soon as it is seen in the list of currently-installed packages
+that is read as part of the usual operation; if `--skip-check` is used, then a
+direct call to the tool is attempted through Cargo and it is considered
+available if everything succeeds, since the list of installed packages is not
+read here. In case this automatic detection has some false positives or
+negatives or is simply unwanted, some options are available in order to control
+its usage: see below.
+
+When used, if effectively fills the role of `cargo install` in and replaces it
+entirely. As a consequence, some options are not available for it, only a
+subset of what `cargo install` has is supported: see below. Just like for Cargo
+itself, options are simply passed onto each call without much transformation,
+so care should be taken to adapt their values to the tool, especially when
+upgrading from a version of Cargo Liner that did not support it while having
+[`cargo-binstall`] already installed during the next use. Also, as Cargo Liner
+by design executes installation following the configuration's order and
+independent from one another regarding the installation method used, one can
+configure it as the first package of the list: it will be either installed or
+updated first and all the following installations should automatically use it
+if configured as such, even when it was installed during this execution.
+
+Currently, this integration is on a somewhat best-effort basis. Indeed, it has
+only been tested during development and automated tests for it are not included
+in CI, contrary to the rest of the features. However, a good part of the logic
+is shared with the usual operation that is already rather well tested and
+internals are tested in CI just as well as the usual operation's. Also, any
+undesirable behavior that should occur specifically due to Cargo Liner would
+still be considered a bug and should therefore be reported as such just like
+the usual. On another note, dedicated Binstall-compatible configuration and
+builds of Cargo Liner are not made available yet, but are planned to be so.
+
+[`cargo-binstall`]: https://crates.io/crates/cargo-binstall
+
+
 ## Usage
 ### Configuration
 
@@ -190,6 +234,7 @@ package-name-2 = "version-req-2"
     environment = { ENV1 = "abc", ENV2 = "def" }
     skip-check = boolean
     no-fail-fast = boolean
+    binstall = boolean
 #...
 
 [defaults]
@@ -199,6 +244,7 @@ package-name-2 = "version-req-2"
     skip-check = boolean
     no-fail-fast = boolean
     force = boolean
+    binstall = boolean
 ```
 
 where:
@@ -289,6 +335,10 @@ where:
      operation will still abruptly fail there. The CLI option keeps the
      priority: if set, it is as though the configuration option was set for all
      listed packages.
+   * `binstall` (optional, `cargo-binstall`-compatible: yes): choice
+     enumeration that, when set to a supported value, controls the use of the
+     optional tool. This is the per-package equivalent of the global option
+     from the `defaults` section.
 
   * `defaults` (optional, `cargo-binstall`-compatible: yes): map of maps that
     enables setting values to use by default when running some operations; they
@@ -305,6 +355,11 @@ where:
         that, when `true`, enables the `--no-fail-fast` flag by default.
       * `force` (optional, `cargo-binstall`-compatible: yes): boolean that,
         when `true`, enables the `--force` flag by default.
+      * `binstall` (optional, `cargo-binstall`-compatible: yes): choice
+        enumeration that, when set to a supported value, controls the use of
+        the optional tool. This is the global configuration equivalent of the
+        CLI option that keeps precedence: see its description for the available
+        supported values.
 
 with the following constraints, mostly enforced by Cargo, but also by TOML:
  * `package-name-*` must be a valid [package name], i.e. match
