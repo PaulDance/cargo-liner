@@ -70,8 +70,8 @@ them up-to-date by editing a small and stable configuration file located at
 Goals:
  * Simple and intuitive API.
  * Stable configuration file: avoid editing it automatically.
- * Actually use `cargo install`, `cargo search` or `cargo config get` and not
-   much else.
+ * Actually use `cargo install` or `cargo binstall`, `cargo search` or `cargo
+   config get` and not much else.
 
 Non-goals:
  * Super-duper stability guarantees.
@@ -118,7 +118,10 @@ them in some way, using Git for example.
 
 ## Installation
 
- * Run: `cargo install cargo-liner`.
+ * Run: `cargo install cargo-liner`. If you use `cargo-binstall` or
+   `cargo-quickinstall`, then it can also be installed using these tools, as
+   some [`quickinstall` builds] seem to be available, even though they tend to
+   lag a bit behind just like any other pre-built package repository.
  * Create the configuration file to be located at: `$CARGO_HOME/liner.toml`.
    * See the reference documentation about [Cargo Home] if you have trouble
      locating the directory.
@@ -146,6 +149,7 @@ them in some way, using Git for example.
    or use `cargo liner import` to do it automatically for you, see below for
    more detailed explanations.
 
+[`quickinstall` builds]: https://github.com/cargo-bins/cargo-quickinstall/releases?q=cargo-liner&expanded=true
 [Cargo Home]: https://doc.rust-lang.org/cargo/guide/cargo-home.html
 [`cargo install`]: https://doc.rust-lang.org/cargo/commands/cargo-install.html
 
@@ -198,98 +202,109 @@ package-name-2 = "version-req-2"
 ```
 
 where:
- * `packages` (mandatory): map of package name to package details instructing
-   which and how packages should be installed or updated:
-   * `version` (mandatory): version requirement string to use when installing
-     or updating the associated package; this is the detailed field set when
-     only using the simple configuration style.
-   * `all-features` (optional): boolean that, when set to `true`, enables the
-     `--all-features` flag of `cargo install`.
-   * `default-features` (optional): boolean that, when set to `false`, enables
-     the `--no-default-features` flag of `cargo install`.
-   * `features` (optional): list of strings instructing which of the associated
-     crate's Cargo features should be enabled when building it.
-   * `index` (optional): string specifying the registry index to install from.
-   * `registry` (optional): string specifying the registry to use.
-   * `git` (optional): string specifying the Git URL to install from.
-   * `branch` (optional): string specifying the branch to use when installing
-     from Git.
-   * `tag` (optional): string specifying the tag to use when installing from
-     Git.
-   * `rev` (optional): string specifying the commit to use when installing from
-     Git.
-   * `path` (optional): string specifying the filesystem path to local crate to
-     install from.
-   * `bins` (optional): list of strings specifying the binaries to install
-     among the targeted crate's binary targets, passed onto Cargo as a
-     repetition of its `--bin` option.
-   * `all-bins` (optional): boolean that, when `true`, passes the `--bins` CLI
-     option to Cargo, thus installing all binaries of the package.
-   * `examples` (optional): list of strings specifying the examples to install
-     among the targeted crate's example targets, passed onto Cargo as a
-     repetition of its `--example` option.
-   * `all-examples` (optional): boolean that, when `true`, passes the
-     `--examples` CLI option to Cargo, thus installing all examples of the
-     package.
-   * `force` (optional): boolean that, when `true`, passes `--force` to Cargo,
-     thus potentially overwriting existing binaries or examples; only useful if
-     `--skip-check` is passed as well.
-   * `ignore-rust-version` (optional): boolean that, when `true`, passes the
-     `--ignore-rust-version` CLI option to Cargo, thus ignoring `rust-version`
-     specifications in packages.
-   * `frozen` (optional): boolean that, when `true`, passes the `--frozen` CLI
-     option to Cargo, thus requiring the package's `Cargo.lock` and Cargo's
-     cache to be both up-to-date.
-   * `locked` (optional): boolean that, when `true`, passes the `--locked` CLI
-     option to Cargo, thus requiring the package's `Cargo.lock` to be
-     up-to-date.
-   * `offline` (optional): boolean that, when `true`, passes the `--offline`
-     CLI option to Cargo, thus requiring Cargo to run without accessing the
-     network; can only be of use if `--skip-check` is passed as well.
-   * `extra-arguments` (optional): list of strings given as additional
-     arguments to `cargo install` for the associated package and located
-     between the last one given by Cargo Liner and the following `--`
-     seperating options from fixed arguments. This can be used in order to
-     successfully manage a package using a Cargo Liner version that does not
-     yet implement the desired option.
-   * `environment` (optional): map of string to strings specifying which and
-     how environment variables should be set for the spawned `cargo install`
-     process.
-   * `skip-check` (optional): boolean that, when `true`, excludes the
-     associated package from the version check and always includes it in the
-     packages to be installed or updated. This is the direct equivalent of
-     `--skip-check` from the CLI, except that the CLI's is global as all
-     packages will be excluded from the version check and the configuration's
-     is partial as only the concerned package will be. It can be used in order
-     to get the best out of both modes of execution: if a package reveals
-     problematic somehow, the option can be used for it while the other
-     packages remain as-is. The CLI option keeps the priority: if set, any
-     version checking step is still entirely skipped, which should prove a bit
-     more forceful than if the configuration option was set for all listed
-     packages.
-   * `no-fail-fast` (optional): boolean that, when `true`, makes the operation
-     proceed as though `--no-fail-fast` was given, but only for the associated
-     package: in case of an error of the call to `cargo install` for it, the
-     operation will not stop here and continue on with the next package, but if
-     the next package does not have the option set in its configuration and
-     fails to install somehow, the operation will still abruptly fail there.
-     The CLI option keeps the priority: if set, it is as though the
-     configuration option was set for all listed packages.
+ * `packages` (mandatory, `cargo-binstall`-compatible: yes): map of package
+   name to package details instructing which and how packages should be
+   installed or updated:
+   * `version` (mandatory, `cargo-binstall`-compatible: yes): version
+     requirement string to use when installing or updating the associated
+     package; this is the detailed field set when only using the simple
+     configuration style.
+   * `all-features` (optional, `cargo-binstall`-compatible: no): boolean that,
+     when set to `true`, enables the `--all-features` flag of `cargo install`.
+   * `default-features` (optional, `cargo-binstall`-compatible: no): boolean
+     that, when set to `false`, enables the `--no-default-features` flag of
+     `cargo install`.
+   * `features` (optional, `cargo-binstall`-compatible: no): list of strings
+     instructing which of the associated crate's Cargo features should be
+     enabled when building it.
+   * `index` (optional, `cargo-binstall`-compatible: yes): string specifying
+     the registry index to install from.
+   * `registry` (optional, `cargo-binstall`-compatible: yes): string specifying
+     the registry to use.
+   * `git` (optional, `cargo-binstall`-compatible: yes): string specifying the
+     Git URL to install from.
+   * `branch` (optional, `cargo-binstall`-compatible: no): string specifying
+     the branch to use when installing from Git.
+   * `tag` (optional, `cargo-binstall`-compatible: no): string specifying the
+     tag to use when installing from Git.
+   * `rev` (optional, `cargo-binstall`-compatible: no): string specifying the
+     commit to use when installing from Git.
+   * `path` (optional, `cargo-binstall`-compatible: no): string specifying the
+     filesystem path to local crate to install from.
+   * `bins` (optional, `cargo-binstall`-compatible: no): list of strings
+     specifying the binaries to install among the targeted crate's binary
+     targets, passed onto Cargo as a repetition of its `--bin` option.
+   * `all-bins` (optional, `cargo-binstall`-compatible: no): boolean that, when
+     `true`, passes the `--bins` CLI option to Cargo, thus installing all
+     binaries of the package.
+   * `examples` (optional, `cargo-binstall`-compatible: no): list of strings
+     specifying the examples to install among the targeted crate's example
+     targets, passed onto Cargo as a repetition of its `--example` option.
+   * `all-examples` (optional, `cargo-binstall`-compatible: no): boolean that,
+     when `true`, passes the `--examples` CLI option to Cargo, thus installing
+     all examples of the package.
+   * `force` (optional, `cargo-binstall`-compatible: yes): boolean that, when
+     `true`, passes `--force` to Cargo, thus potentially overwriting existing
+     binaries or examples; only useful if `--skip-check` is passed as well.
+   * `ignore-rust-version` (optional, `cargo-binstall`-compatible: no): boolean
+     that, when `true`, passes the `--ignore-rust-version` CLI option to Cargo,
+     thus ignoring `rust-version` specifications in packages.
+   * `frozen` (optional, `cargo-binstall`-compatible: no): boolean that, when
+     `true`, passes the `--frozen` CLI option to Cargo, thus requiring the
+     package's `Cargo.lock` and Cargo's cache to be both up-to-date.
+   * `locked` (optional, `cargo-binstall`-compatible: yes): boolean that, when
+     `true`, passes the `--locked` CLI option to Cargo, thus requiring the
+     package's `Cargo.lock` to be up-to-date.
+   * `offline` (optional, `cargo-binstall`-compatible: no): boolean that, when
+     `true`, passes the `--offline` CLI option to Cargo, thus requiring Cargo
+     to run without accessing the network; can only be of use if `--skip-check`
+     is passed as well.
+   * `extra-arguments` (optional, `cargo-binstall`-compatible: yes): list of
+     strings given as additional arguments to `cargo install` or `cargo
+     binstall` for the associated package and located between the last one
+     given by Cargo Liner and the following `--` seperating options from fixed
+     arguments. This can be used in order to successfully manage a package
+     using a Cargo Liner version that does not yet implement the desired option.
+   * `environment` (optional, `cargo-binstall`-compatible: yes): map of string
+     to strings specifying which and how environment variables should be set
+     for the spawned `cargo install` or `cargo binstall` process.
+   * `skip-check` (optional, `cargo-binstall`-compatible: yes): boolean that,
+     when `true`, excludes the associated package from the version check and
+     always includes it in the packages to be installed or updated. This is the
+     direct equivalent of `--skip-check` from the CLI, except that the CLI's is
+     global as all packages will be excluded from the version check and the
+     configuration's is partial as only the concerned package will be. It can
+     be used in order to get the best out of both modes of execution: if a
+     package reveals problematic somehow, the option can be used for it while
+     the other packages remain as-is. The CLI option keeps the priority: if
+     set, any version checking step is still entirely skipped, which should
+     prove a bit more forceful than if the configuration option was set for all
+     listed packages.
+   * `no-fail-fast` (optional, `cargo-binstall`-compatible: yes): boolean that,
+     when `true`, makes the operation proceed as though `--no-fail-fast` was
+     given, but only for the associated package: in case of an error of the
+     call to `cargo install` for it, the operation will not stop here and
+     continue on with the next package, but if the next package does not have
+     the option set in its configuration and fails to install somehow, the
+     operation will still abruptly fail there. The CLI option keeps the
+     priority: if set, it is as though the configuration option was set for all
+     listed packages.
 
-  * `defaults` (optional): map of maps that enables setting values to use by
-    default when running some operations; they are grouped by CLI command:
-    * `ship` (optional): map of string to booleans corresponding to the
-      eponymous CLI command:
-      * `no-self` (optional): boolean that, when `true`, enables the
-        `--no-self` flag by default.
-      * `only-self` (optional): boolean that, when `true`, enables the
-        `--only-self` flag by default.
-      * `skip-check` (optional): boolean that, when `true`, enables the
-        `--skip-check` flag by default.
-      * `no-fail-fast` (optional): boolean that, when `true`, enables the
-        `--no-fail-fast` flag by default.
-      * `force` (optional): boolean that, when `true`, enables the `--force`
-        flag by default.
+  * `defaults` (optional, `cargo-binstall`-compatible: yes): map of maps that
+    enables setting values to use by default when running some operations; they
+    are grouped by CLI command:
+    * `ship` (optional, `cargo-binstall`-compatible: yes): map of string to
+      booleans corresponding to the eponymous CLI command:
+      * `no-self` (optional, `cargo-binstall`-compatible: yes): boolean that,
+        when `true`, enables the `--no-self` flag by default.
+      * `only-self` (optional, `cargo-binstall`-compatible: yes): boolean that,
+        when `true`, enables the `--only-self` flag by default.
+      * `skip-check` (optional, `cargo-binstall`-compatible: yes): boolean
+        that, when `true`, enables the `--skip-check` flag by default.
+      * `no-fail-fast` (optional, `cargo-binstall`-compatible: yes): boolean
+        that, when `true`, enables the `--no-fail-fast` flag by default.
+      * `force` (optional, `cargo-binstall`-compatible: yes): boolean that,
+        when `true`, enables the `--force` flag by default.
 
 with the following constraints, mostly enforced by Cargo, but also by TOML:
  * `package-name-*` must be a valid [package name], i.e. match
@@ -300,8 +315,10 @@ with the following constraints, mostly enforced by Cargo, but also by TOML:
  * `feature-*` must be the name of a [Cargo feature] defined by the package
    being installed, which has constraints similar to a package name; in
    particular, it shouldn't contain a comma.
- * `--arg*` must be the name of a [`cargo install` CLI argument].
- * `ENV*` should be the name of a [`cargo install` environment variable].
+ * `--arg*` must be the name of a [`cargo install` CLI argument] or from
+   `cargo-binstall`.
+ * `ENV*` should be the name of a [`cargo install` environment variable] or
+   from `cargo-binstall`.
  * `boolean` is a [TOML boolean], either `true` or `false`.
 
 See the below CLI documentation for the association between CLI flags,
@@ -315,7 +332,7 @@ actually were in the configuration file with a simple `"*"` version requirement,
 but only if it is not there yet. This enables treating Cargo Liner just like
 any other package, which it is after the configuration is parsed. Therefore,
 simply add an entry under `cargo-liner` in order to pass non-default options to
-`cargo install` when self-updating.
+`cargo install` or `cargo binstall` when self-updating.
 
 [package name]: https://doc.rust-lang.org/cargo/reference/manifest.html#the-name-field
 [SemVer]: https://semver.org/
@@ -467,7 +484,8 @@ $ cargo liner
 in which the first table displays each configured package's currently-installed
 and most recent versions, along with the action that will be performed; the
 second table shows an ending report displaying each touched package's previous
-and new versions, along with the result of the call to `cargo install`.
+and new versions, along with the result of the call to `cargo install` or
+`cargo binstall`.
 
 Status icons are optionally colored in the output and stand for the following:
  * `ø`: when nothing to display or needs to be done: already up-to-date.
@@ -700,8 +718,8 @@ Simply run `cargo liner ship` in order to:
    attempting the default, so use `-vv` to investiguate if your configuration
    seems not to be taken into account.
  * Check the latest available version for each of them using `cargo search`.
- * Run `cargo install` for each that needs an install or update, respecting
-   the version requirements.
+ * Run `cargo install` or `cargo binstall` for each that needs an install or
+   update, respecting the version requirements.
  * Self-update only if `--no-self` is not given.
 
 [`cargo install`](https://doc.rust-lang.org/cargo/commands/cargo-install.html)
