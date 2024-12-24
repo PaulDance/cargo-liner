@@ -481,7 +481,11 @@ Options:
 #### Default command
 
 When the subcommand is omitted, it will use the `ship` subcommand with default
-options. See its specific documentation for more details.
+options. In particular, this means its options are not made available globally
+and have to be given explicitly to the subcommand, even if the default command
+is a form of shortcut to it. For example, if `cargo liner` did not run as
+expected and `--no-fail-fast` is desired, then `cargo liner ship --no-fail-fast`
+needs to be used. See its specific documentation for more details.
 
 Simply run `cargo liner` in order to:
  * Read packages from the configuration file.
