@@ -121,7 +121,10 @@ them in some way, using Git for example.
  * Run: `cargo install cargo-liner`. If you use `cargo-binstall` or
    `cargo-quickinstall`, then it can also be installed using these tools, as
    some [`quickinstall` builds] seem to be available, even though they tend to
-   lag a bit behind just like any other pre-built package repository.
+   lag a bit behind just like any other pre-built package repository. You might
+   also want to consider using the `--locked` option here in order to ensure
+   the installed version is exactly the same as the one tested upon publication
+   for extra assurance or simply if the lastest build fails for some reason.
  * Create the configuration file to be located at: `$CARGO_HOME/liner.toml`.
    * See the reference documentation about [Cargo Home] if you have trouble
      locating the directory.
