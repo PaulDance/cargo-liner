@@ -1166,6 +1166,7 @@ mod tests {
                     no-fail-fast = true
                     skip-check = true
                     force = false
+                    dry-run = true
                 "#
             )
             .unwrap()
@@ -1178,6 +1179,7 @@ mod tests {
                 no_fail_fast: Some(true),
                 skip_check: Some(true),
                 force: Some(false),
+                dry_run: Some(true),
                 binstall: None,
             }
         );
