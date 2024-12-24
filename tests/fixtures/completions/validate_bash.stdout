@@ -167,7 +167,7 @@ _cargo-liner() {
             return 0
             ;;
         cargo__liner__ship)
-            opts="-n -s -c -k -f -b -v -q -h --no-self --only-self --skip-check --no-fail-fast --force --binstall --with-self --no-only-self --no-skip-check --fail-fast --no-force --verbose --quiet --color --help"
+            opts="-n -s -c -k -f -d -b -v -q -h --no-self --only-self --skip-check --no-fail-fast --force --dry-run --binstall --with-self --no-only-self --no-skip-check --fail-fast --no-force --no-dry-run --verbose --quiet --color --help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0

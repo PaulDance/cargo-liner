@@ -692,6 +692,25 @@ Options:
           default behavior as if absent, i.e. don't pass the argument
           onto Cargo
 
+  -d, --dry-run
+          Perform all operations without actually installing.
+          
+          This disables any installation step and replaces them with
+          simulations, but retains all the remaining operations. This
+          may be useful in order to observe what would be performed
+          without actually doing it. In particular, it may serve as a
+          quicker way to check if new versions are available or not.
+          
+          Currently, `cargo install --dry-run` is not stabilized yet,
+          so the option is not passed onto such calls. However,
+          `cargo-binstall` has such an option, so it is passed onto
+          its calls whenever it is used.
+
+      --no-dry-run
+          Negation of `--dry-run` that overrides it and restores the
+          default behavior as if absent, i.e. perform the
+          installations as per the usual
+
   -b, --binstall <BINSTALL_WHEN>
           Control the usage of `cargo-binstall`.
           

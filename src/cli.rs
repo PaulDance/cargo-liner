@@ -288,6 +288,27 @@ pub struct ShipArgs {
     )]
     pub force: Option<bool>,
 
+    /// Perform all operations without actually installing.
+    ///
+    /// This disables any installation step and replaces them with simulations,
+    /// but retains all the remaining operations. This may be useful in order
+    /// to observe what would be performed without actually doing it. In
+    /// particular, it may serve as a quicker way to check if new versions are
+    /// available or not.
+    ///
+    /// Currently, `cargo install --dry-run` is not stabilized yet, so the
+    /// option is not passed onto such calls. However, `cargo-binstall` has
+    /// such an option, so it is passed onto its calls whenever it is used.
+    #[arg(
+        short,
+        long,
+        num_args = 0,
+        default_missing_value = "true",
+        default_value_if("_no_dry_run", ArgPredicate::IsPresent, "false"),
+        display_order = 11
+    )]
+    pub dry_run: Option<bool>,
+
     /// Control the usage of `cargo-binstall`.
     ///
     /// This third-party tool has dedicated support here. It is meant to be
@@ -413,6 +434,17 @@ pub struct ShipArgsWithNegations {
         display_order = 10
     )]
     _no_force: (),
+
+    /// Negation of `--dry-run` that overrides it and restores the default
+    /// behavior as if absent, i.e. perform the installations as per the usual.
+    #[arg(
+        long,
+        required = false,
+        num_args = 0,
+        overrides_with = "dry_run",
+        display_order = 12
+    )]
+    _no_dry_run: (),
 }
 
 impl ShipArgsWithNegations {

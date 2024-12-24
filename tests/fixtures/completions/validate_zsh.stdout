@@ -52,11 +52,14 @@ never\:"Completely disable the feature and only rely on Cargo"))' \
 '--no-fail-fast[Disable the default fail-fast execution of \`cargo install\`s]' \
 '-f[Force overwriting existing crates or binaries]' \
 '--force[Force overwriting existing crates or binaries]' \
+'-d[Perform all operations without actually installing]' \
+'--dry-run[Perform all operations without actually installing]' \
 '--with-self[Negation of \`--no-self\` that overrides it and restores the default behavior as if absent, i.e. self-update]' \
 '--no-only-self[Negation of \`--only-self\` that overrides it and restores the default behavior as if absent, i.e. install or update other packages as well]' \
 '--no-skip-check[Negation of \`--skip-check\` that overrides it and restores the default behavior as if absent, i.e. perform the usual version check]' \
 '--fail-fast[Negation of \`--no-fail-fast\` that overrides it and restores the default behavior as if absent, i.e. stop as soon as the first error occurs]' \
 '--no-force[Negation of \`--force\` that overrides it and restores the default behavior as if absent, i.e. don'\''t pass the argument onto Cargo]' \
+'--no-dry-run[Negation of \`--dry-run\` that overrides it and restores the default behavior as if absent, i.e. perform the installations as per the usual]' \
 '(-q --quiet)*-v[Be more verbose. Use multiple times to be more and more so each time]' \
 '(-q --quiet)*--verbose[Be more verbose. Use multiple times to be more and more so each time]' \
 '(-v --verbose)*-q[Be quieter. Use multiple times to be more and more so each time]' \
