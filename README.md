@@ -214,8 +214,8 @@ package-name-2 = "version-req-2"
 
     [packages.package-name-3]
     version = "version-req-3"
-    all-features = boolean
-    default-features = boolean
+    all-features = true
+    default-features = false
     features = ["feature-1", "feature-2"]
     index = "http://example.com/"
     registry = "example-registry"
@@ -225,29 +225,29 @@ package-name-2 = "version-req-2"
     rev = "SHA1"
     path = "/a/b/c"
     bins = ["bin1", "bin2"]
-    all-bins = boolean
+    all-bins = true
     examples = ["ex1", "ex2"]
-    all-examples = boolean
-    force = boolean
-    ignore-rust-version = boolean
-    frozen = boolean
-    locked = boolean
-    offline = boolean
+    all-examples = false
+    force = true
+    ignore-rust-version = false
+    frozen = true
+    locked = false
+    offline = true
     extra-arguments = ["--arg1", "--arg2"]
     environment = { ENV1 = "abc", ENV2 = "def" }
-    skip-check = boolean
-    no-fail-fast = boolean
-    binstall = boolean
+    skip-check = false
+    no-fail-fast = true
+    binstall = false
 #...
 
 [defaults]
     [defaults.ship]
-    no-self = boolean
-    only-self = boolean
-    skip-check = boolean
-    no-fail-fast = boolean
-    force = boolean
-    binstall = boolean
+    no-self = true
+    only-self = false
+    skip-check = true
+    no-fail-fast = false
+    force = true
+    binstall = false
 ```
 
 where:
