@@ -28,7 +28,7 @@ Location:
 
 Note: This can happen for many reasons.
 Suggestion: Read Cargo's output.
-Suggestion: Use `--no-fail-fast` to ignore this and continue on with other packages.
+Suggestion: Use `ship --no-fail-fast` to ignore this and continue on with other packages.
 
 Backtrace omitted. Run with RUST_BACKTRACE=1 environment variable to display it.
 Run with RUST_BACKTRACE=full to include source snippets.

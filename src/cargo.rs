@@ -386,7 +386,7 @@ pub fn install_all(
                     err
                 } else {
                     err.suggestion(
-                        "Use `--no-fail-fast` to ignore this \
+                        "Use `ship --no-fail-fast` to ignore this \
                             and continue on with other packages.",
                     )
                 }
