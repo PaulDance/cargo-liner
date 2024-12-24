@@ -61,6 +61,7 @@ pub fn ship_env_args() -> Result<ShipArgs> {
         skip_check: get_ship_arg("SKIP_CHECK")?,
         no_fail_fast: get_ship_arg("NO_FAIL_FAST")?,
         force: get_ship_arg("FORCE")?,
+        dry_run: get_ship_arg("DRY_RUN")?,
         binstall: get_ship_arg("BINSTALL")?,
     })
 }
