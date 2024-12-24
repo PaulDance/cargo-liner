@@ -174,6 +174,7 @@ mod tests {
                         ship_cmd: ShipArgs {
                             force: Some(false),
                             no_self: Some(true),
+                            dry_run: Some(false),
                             binstall: Some(BinstallChoice::Always),
                             ..Default::default()
                         }
@@ -185,6 +186,7 @@ mod tests {
             EffectiveShipArgs {
                 force: false,
                 no_self: true,
+                dry_run: false,
                 binstall: BinstallChoice::Always,
                 ..Default::default()
             },
@@ -204,6 +206,7 @@ mod tests {
                 ShipArgs {
                     force: Some(false),
                     no_self: Some(true),
+                    dry_run: Some(false),
                     binstall: Some(BinstallChoice::Auto),
                     ..Default::default()
                 },
@@ -212,6 +215,7 @@ mod tests {
             EffectiveShipArgs {
                 force: false,
                 no_self: true,
+                dry_run: false,
                 binstall: BinstallChoice::Auto,
                 ..Default::default()
             },
@@ -232,6 +236,7 @@ mod tests {
                 ShipArgs {
                     no_fail_fast: Some(true),
                     skip_check: Some(false),
+                    dry_run: Some(true),
                     binstall: Some(BinstallChoice::Never),
                     ..Default::default()
                 },
@@ -239,6 +244,7 @@ mod tests {
             EffectiveShipArgs {
                 no_fail_fast: true,
                 skip_check: false,
+                dry_run: true,
                 binstall: BinstallChoice::Never,
                 ..Default::default()
             },
@@ -261,6 +267,7 @@ mod tests {
                 },
                 ShipArgs {
                     only_self: Some(true),
+                    dry_run: Some(false),
                     binstall: Some(BinstallChoice::Always),
                     ..Default::default()
                 },
@@ -276,6 +283,7 @@ mod tests {
                 no_fail_fast: true,
                 skip_check: false,
                 only_self: true,
+                dry_run: false,
                 binstall: BinstallChoice::Always,
                 ..Default::default()
             },
@@ -294,6 +302,7 @@ mod tests {
                             no_self: Some(false),
                             no_fail_fast: Some(true),
                             skip_check: Some(false),
+                            dry_run: Some(false),
                             binstall: Some(BinstallChoice::Always),
                             ..Default::default()
                         }
@@ -304,6 +313,7 @@ mod tests {
                     no_self: Some(true),
                     no_fail_fast: Some(true),
                     skip_check: Some(false),
+                    dry_run: Some(true),
                     binstall: Some(BinstallChoice::Auto),
                     ..Default::default()
                 },
@@ -314,6 +324,7 @@ mod tests {
                 no_self: true,
                 no_fail_fast: true,
                 skip_check: false,
+                dry_run: true,
                 binstall: BinstallChoice::Auto,
                 ..Default::default()
             },
@@ -333,6 +344,7 @@ mod tests {
                     no_self: Some(false),
                     no_fail_fast: Some(true),
                     skip_check: Some(false),
+                    dry_run: Some(true),
                     binstall: Some(BinstallChoice::Always),
                     ..Default::default()
                 },
@@ -341,6 +353,7 @@ mod tests {
                     no_self: Some(true),
                     no_fail_fast: Some(true),
                     skip_check: Some(false),
+                    dry_run: Some(false),
                     binstall: Some(BinstallChoice::Never),
                     ..Default::default()
                 },
@@ -350,6 +363,7 @@ mod tests {
                 no_self: true,
                 no_fail_fast: true,
                 skip_check: false,
+                dry_run: false,
                 binstall: BinstallChoice::Never,
                 ..Default::default()
             },
@@ -368,6 +382,7 @@ mod tests {
                             no_self: Some(false),
                             no_fail_fast: Some(true),
                             skip_check: Some(false),
+                            dry_run: Some(false),
                             binstall: Some(BinstallChoice::Auto),
                             ..Default::default()
                         }
@@ -379,6 +394,7 @@ mod tests {
                     no_self: Some(true),
                     no_fail_fast: Some(true),
                     skip_check: Some(false),
+                    dry_run: Some(true),
                     binstall: Some(BinstallChoice::Never),
                     ..Default::default()
                 },
@@ -388,6 +404,7 @@ mod tests {
                 no_self: true,
                 no_fail_fast: true,
                 skip_check: false,
+                dry_run: true,
                 binstall: BinstallChoice::Never,
                 ..Default::default()
             },
@@ -406,6 +423,7 @@ mod tests {
                             no_self: Some(false),
                             no_fail_fast: Some(true),
                             skip_check: Some(false),
+                            dry_run: Some(false),
                             binstall: Some(BinstallChoice::Never),
                             ..Default::default()
                         }
@@ -413,6 +431,7 @@ mod tests {
                 },
                 ShipArgs {
                     only_self: Some(false),
+                    dry_run: Some(true),
                     binstall: Some(BinstallChoice::Auto),
                     ..Default::default()
                 },
@@ -422,6 +441,7 @@ mod tests {
                     no_fail_fast: Some(true),
                     skip_check: Some(false),
                     only_self: Some(true),
+                    dry_run: Some(false),
                     binstall: Some(BinstallChoice::Always),
                     ..Default::default()
                 },
@@ -432,6 +452,7 @@ mod tests {
                 no_fail_fast: true,
                 skip_check: false,
                 only_self: true,
+                dry_run: false,
                 binstall: BinstallChoice::Always,
                 ..Default::default()
             },
