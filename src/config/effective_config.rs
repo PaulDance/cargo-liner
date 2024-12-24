@@ -49,6 +49,7 @@ pub struct EffectiveShipArgs {
     pub skip_check: bool,
     pub no_fail_fast: bool,
     pub force: bool,
+    pub dry_run: bool,
     pub binstall: BinstallChoice,
 }
 
@@ -84,6 +85,11 @@ impl EffectiveShipArgs {
                 .force
                 .or(env_args.force)
                 .or_else(|| cfg_defs.and_then(|defs| defs.ship_cmd.force.as_ref().copied()))
+                .unwrap_or_default(),
+            dry_run: cli_args
+                .dry_run
+                .or(env_args.dry_run)
+                .or_else(|| cfg_defs.and_then(|defs| defs.ship_cmd.dry_run.as_ref().copied()))
                 .unwrap_or_default(),
             binstall: cli_args
                 .binstall
