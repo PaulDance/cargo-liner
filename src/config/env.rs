@@ -93,6 +93,7 @@ mod tests {
         let var_vals = [
             ("CARGO_LINER_SHIP_NO_SELF", "true"),
             ("CARGO_LINER_SHIP_FORCE", "false"),
+            ("CARGO_LINER_SHIP_DRY_RUN", "true"),
         ];
         set_vars(&var_vals);
 
@@ -101,6 +102,7 @@ mod tests {
             ShipArgs {
                 no_self: Some(true),
                 force: Some(false),
+                dry_run: Some(true),
                 ..Default::default()
             }
         );
@@ -118,6 +120,7 @@ mod tests {
             ("CARGO_LINER_SHIP_SKIP_CHECK", "123"),
             ("CARGO_LINER_SHIP_NO_SELF", "abc"),
             ("CARGO_LINER_SHIP_FORCE", "\x01"),
+            ("CARGO_LINER_SHIP_DRY_RUN", "xyz"),
         ] {
             assert_eq!(ship_env_args().unwrap(), ShipArgs::default());
             set_vars(&[(var, val)]);
