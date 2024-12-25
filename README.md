@@ -247,7 +247,8 @@ package-name-2 = "version-req-2"
     skip-check = true
     no-fail-fast = false
     force = true
-    binstall = false
+    dry-run = false
+    binstall = true
 ```
 
 where:
@@ -358,6 +359,8 @@ where:
         that, when `true`, enables the `--no-fail-fast` flag by default.
       * `force` (optional, `cargo-binstall`-compatible: yes): boolean that,
         when `true`, enables the `--force` flag by default.
+      * `dry-run` (optional, `cargo-binstall`-compatible: yes): boolean that,
+        when `true`, enables the `--dry-run` flag by default.
       * `binstall` (optional, `cargo-binstall`-compatible: yes): choice
         enumeration that, when set to a supported value, controls the use of
         the optional tool. This is the global configuration equivalent of the
