@@ -20,9 +20,6 @@ The current development environment is relatively standard.
   outputs are exported in separate files living in the [`tests/fixtures/`]
   directory. They both have ways to automatically update their respective
   output files: see their docs or the comments included in this project.
-* The `cargo-test-*` dev-only Git dependencies currently make Cargo emit a
-  *lot* of false-positive warnings that cannot be disabled in any way. This
-  does not affect the build itself, however. A workaround is underway in Cargo.
 * The Rustfmt configuration used in CI uses unstable features, so a nightly
   toolchain will be required specifically for this.
 * A `Justfile` is provided in order to make a bunch of useful shortcuts
