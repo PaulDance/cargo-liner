@@ -1,0 +1,20 @@
+ INFO  cargo_liner::cargo > Fetching latest package versions...
+    Updating `dummy-registry` index
+note: to learn more about a package, run `cargo info <name>`
+ INFO  cargo_liner        > Results:
+┌──────┬─────────────┬─────────────┬────────┐
+│ Name │ Old version │ New version │ Status │
+├──────┼─────────────┼─────────────┼────────┤
+│ abc  │ ø           │ 0.0.0       │ 🛈      │
+└──────┴─────────────┴─────────────┴────────┘
+ INFO  cargo_liner::cargo > Installing `abc`...
+ WARN  cargo_liner::cargo > Dry run: would have run `cargo install` for `abc`.
+ INFO  cargo_liner::cargo > Bump verbosity if additional details are desired.
+ INFO  cargo_liner        > Installation report:
+┌──────┬─────────────┬─────────────┬────────┐
+│ Name │ Old version │ New version │ Status │
+├──────┼─────────────┼─────────────┼────────┤
+│ abc  │ ø           │ 0.0.0       │ +      │
+└──────┴─────────────┴─────────────┴────────┘
+ WARN  cargo_liner        > This is a dry run, so this report is simulated.
+ INFO  cargo_liner        > Done.

@@ -1963,6 +1963,25 @@ fn validate_ship_confignoself_envwithself_clinoself_noupdate() {
     assert_installed("cargo-liner");
 }
 
+/// Test `--dry-run` for the Install method.
+#[cargo_test]
+fn validate_ship_install_dryrun() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish("abc", "0.0.0");
+    write_user_config(&["[packages]", "abc = '*'"]);
+
+    cargo_liner()
+        .args(["ship", "--no-self", "--dry-run"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_install_dryrun.stderr"
+        ]);
+    assert_not_installed("abc");
+}
+
 /// Test that the tool is at least called when using `always` globally.
 ///
 /// Binstall seems to outright refuse http URLs, so it is rather incompatible
@@ -2071,4 +2090,30 @@ fn validate_ship_binstall_globalalways_localnever_isunused() {
             "fixtures/ship/validate_ship_binstall_globalnever_isunused.stderr"
         ]);
     assert_installed("abc");
+}
+
+/// Test `--dry-run` for the Binstall method.
+#[ignore = "cargo-binstall is not made available to CI yet."]
+#[cargo_test]
+fn validate_ship_binstall_dryrun() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish("abc", "0.0.0");
+    write_user_config(&[
+        "[defaults]",
+        "ship.binstall = 'always'",
+        "[packages]",
+        "abc = { version = '*', registry = 'dummy-registry' }",
+    ]);
+
+    // It fails here, but the logs show the option is passed.
+    cargo_liner()
+        .args(["ship", "--no-self", "--dry-run"])
+        .assert()
+        .failure()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_binstall_dryrun.stderr"
+        ]);
+    assert_not_installed("abc");
 }
