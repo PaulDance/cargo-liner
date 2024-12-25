@@ -705,6 +705,12 @@ Options:
           so the option is not passed onto such calls. However,
           `cargo-binstall` has such an option, so it is passed onto
           its calls whenever it is used.
+          
+          [default: false]
+          
+          [env: `CARGO_LINER_SHIP_DRY_RUN`]
+          
+          [config: `defaults.ship.dry-run`]
 
       --no-dry-run
           Negation of `--dry-run` that overrides it and restores the
