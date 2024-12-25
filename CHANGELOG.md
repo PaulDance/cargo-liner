@@ -7,6 +7,78 @@
 ## Miscellaneous
 -->
 
+# [Version 0.9.0 (25/12/2024)](https://crates.io/crates/cargo-liner/0.9.0)
+## Features
+
+ * [`human-panic`] has been integrated into the program. It should enable
+   getting clearer and more engaging panic messages. Even though they should
+   not occur in the first place and have never been observed as of yet, having
+   this should still be useful just in case and give a nice polish.
+
+ * Completed #16: [`cargo-binstall`] has been integrated into the `ship`
+   command. It effectively serves as an optional alternate installation method
+   replacing `cargo install` when used. The usual CLI, environment, defaults,
+   and per-package configuration controls are included. See its dedicated
+   section of the `README.md` for more details.
+
+ * Completed #26: a new `--dry-run` option has been added to the `ship`
+   command. It enables simulating most of the usual operation without going as
+   far as actually performing the installations. For now, it is also passed
+   onto `cargo-binstall` and so is instantiated as per the usual, but not to
+   `cargo install` that does not have it stabilized yet, so its calls are
+   entirely simulated with a simple log instead.
+
+[`human-panic`]: https://docs.rs/human-panic/latest/human_panic/
+[`cargo-binstall`]: https://crates.io/crates/cargo-binstall
+
+## Testing
+
+ * A test has been added in order to confirm self-update customization through
+   configuration works as expected so the documentation would not lie.
+ * The fixtures have been updated in order to be compatible with Cargo 1.83, so
+   is now the expected development version.
+ * Coverage for the new features. `cargo-binstall`'s is somewhat lightweight:
+   see the `README.md`'s section about it for more details.
+
+## Documentation
+
+ * `README.md`:
+   * A paragraph has been added to the configuration section in order to
+     clarify that it can also be used to customize self-updating.
+   * Documentation for the new features has been added, including for
+     `cargo-binstall` everywhere applicable and with a dedicated section.
+   * `--locked` is now mentioned in the installation instruction as a small
+     reminder in case a problem occurs purely due to the dependencies locking.
+   * The configuration semi-formal specification's boolean sites have been
+     replaced with actual `true` and `false` examples instead of `boolean`.
+     This enables proper parsing and syntax highlighting while the rest of the
+     specification already used examples, so a bit of unification as well.
+   * A comment has been added in order to clarify the distinction between the
+     default command and the `ship` sub-command with respect to options so #25
+     may be compensated a bit. Towards the same objective, the concerned error
+     message has been adjusted a bit in order to make it more explicit that the
+     option should be used with the sub-commmand so confusion could be reduced.
+   * A new section has been added for a (resemblance of an) MSRV policy.
+ * `CONTRIBUTING.md`: the comment about the `cargo-test-*` development-only
+   dependencies has been removed as it is not applicable anymore.
+ * `CHANGELOG.md`: this new version.
+
+## Miscellaneous
+
+ * The MSRV has been bumped to 1.81 for:
+   * [`LazyLock`] (1.80) in order to replace [`once_cell`] (testing only).
+   * The [`expect`] attribute and the [`reason`] parameter (1.81).
+ * A few more Clippy lints have been enabled.
+ * A typo has been fixed in an error message regarding the handling of
+   environment variables.
+ * The dependencies have been updated.
+
+[`LazyLock`]: https://doc.rust-lang.org/stable/std/sync/struct.LazyLock.html
+[`once_cell`]: https://docs.rs/once_cell/latest/once_cell/
+[`expect`]: https://doc.rust-lang.org/reference/attributes/diagnostics.html#the-expect-attribute
+[`reason`]: https://doc.rust-lang.org/reference/attributes/diagnostics.html#lint-reasons
+
+
 # [Version 0.8.0 (18/08/2024)](https://crates.io/crates/cargo-liner/0.8.0)
 ## Features
 
