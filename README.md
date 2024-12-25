@@ -1062,6 +1062,25 @@ Cargo Liner is indeed installed (that part may need to be adapted to your
 particular environment).
 
 
+## MSRV policy
+
+The precise minimum supported Rust version (MSRV) used can be obtained by
+inspecting the `Cargo.toml` that is regularly updated accordingly. For now, its
+update policy is rather fluctuating, but there are still some important
+elements that should stay valid in the near future:
+
+ * It is not yet tested in CI, so could get broken out of nowhere from
+   oversight without an adequate prior notice. Stable Rust is really what is
+   targeted here.
+
+ * It is updated whenever a new Rust or Cargo feature is used, meaning it
+   should also be a good indication of the minimum supported Cargo version, as
+   any backwards compatibility is not maintained.
+
+ * In case it is not bumped for a new specific feature soon enough, then it
+   will be bumped to be at most five releases behind stable Rust.
+
+
 ## Contributing
 
 See the [contributing guidelines]. Please also take note of the [code of
