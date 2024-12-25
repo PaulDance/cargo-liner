@@ -163,6 +163,7 @@ fn try_main(args: &LinerArgs) -> Result<()> {
                         &BTreeSet::new(),
                         config.ship_args.no_fail_fast,
                         config.ship_args.force,
+                        config.ship_args.dry_run,
                         config.ship_args.binstall,
                         args.color,
                         cargo_verbosity,
@@ -184,6 +185,7 @@ fn try_main(args: &LinerArgs) -> Result<()> {
                         &cct.into_names(),
                         config.ship_args.no_fail_fast,
                         config.ship_args.force,
+                        config.ship_args.dry_run,
                         config.ship_args.binstall,
                         args.color,
                         cargo_verbosity,
@@ -195,7 +197,13 @@ fn try_main(args: &LinerArgs) -> Result<()> {
 
             if let Some(err) = match inst_res {
                 Ok(rep) => {
-                    log_install_report(&colorizer, &rep.package_statuses, &new_vers, &old_vers);
+                    log_install_report(
+                        &colorizer,
+                        &rep.package_statuses,
+                        &new_vers,
+                        &old_vers,
+                        config.ship_args.dry_run,
+                    );
                     rep.error_report
                 }
                 Err(err) => Some(err),
@@ -348,6 +356,7 @@ fn log_install_report(
     install_report: &BTreeMap<String, InstallStatus>,
     new_vers: &BTreeMap<String, Version>,
     old_vers: &BTreeMap<String, Version>,
+    dry_run: bool,
 ) {
     if !install_report.is_empty() {
         log::info!(
@@ -370,6 +379,10 @@ fn log_install_report(
             }))
             .with(Style::sharp())
         );
+
+        if dry_run {
+            log::warn!("This is a dry run, so this report is simulated.");
+        }
     }
 }
 

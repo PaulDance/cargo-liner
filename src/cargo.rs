@@ -20,7 +20,7 @@ use crate::cli::BinstallChoice;
 use crate::config::DetailedPackageReq;
 
 /// Installs a package, by running `cargo install` passing the `name`, `version`
-/// and requested `features`, and returns the exit code of the process.
+/// and requested `features`, and returns the exit code of the process, if any.
 ///
 /// The launched process' path is determined using the `$CARGO` environment
 /// variable as it is set by Cargo when it calls an external subcommand's
@@ -35,9 +35,10 @@ fn install(
     pkg_name: &str,
     pkg_req: &DetailedPackageReq,
     force: bool,
+    dry_run: bool,
     color: ColorChoice,
     verbosity: i8,
-) -> Result<ExitStatus> {
+) -> Result<Option<ExitStatus>> {
     let mut cmd = Command::new(env_var()?);
 
     if !pkg_req.environment.is_empty() {
@@ -168,10 +169,22 @@ fn install(
     cmd.args(["--", pkg_name]);
     log_cmd(&cmd);
 
-    cmd.status()
-        .wrap_err("Failed to execute Cargo.")
-        .note("This can happen for many reasons, but it should not happen easily at this point.")
-        .suggestion("Read the underlying error message.")
+    // Keep it as late as possible for fidelity.
+    if dry_run {
+        // TODO: Pass `--dry-run` when stabilized.
+        log::warn!("Dry run: would have run `cargo install` for `{pkg_name}`.");
+        log::info!("Bump verbosity if additional details are desired.");
+        // TODO: Remove `Option` layer when passing `--dry-run`.
+        Ok(None)
+    } else {
+        cmd.status()
+            .map(Some)
+            .wrap_err("Failed to execute Cargo.")
+            .note(
+                "This can happen for many reasons, but it should not happen easily at this point.",
+            )
+            .suggestion("Read the underlying error message.")
+    }
 }
 
 /// Equivalent of [`install`] using `cargo-binstall` as a backend.
@@ -179,6 +192,7 @@ fn binstall(
     pkg_name: &str,
     pkg_req: &DetailedPackageReq,
     force: bool,
+    dry_run: bool,
     verbosity: i8,
 ) -> Result<ExitStatus> {
     let mut cmd = Command::new(env_var()?);
@@ -234,6 +248,13 @@ fn binstall(
     if force {
         cmd.arg("--force");
         log::trace!("`--force` arg added.");
+    }
+
+    if dry_run {
+        cmd.arg("--dry-run");
+        log::trace!("`--dry-run` arg added.");
+        log::warn!("Dry run enabled in call to `cargo binstall` for `{pkg_name}`.");
+        log::info!("Bump verbosity if additional details are desired.");
     }
 
     if pkg_req.locked {
@@ -312,15 +333,17 @@ fn binstall_version() -> Result<Version> {
 /// Runs `cargo install` or `binstall` for the given package depending on the
 /// current Cargo-wise environment and specified choice strategy, with priority
 /// for `binstall` when in auto mode.
+#[expect(clippy::too_many_arguments, reason = "Plumbing.")]
 fn install_one(
     installed: &BTreeSet<String>,
     pkg_name: &str,
     pkg_req: &DetailedPackageReq,
     force: bool,
+    dry_run: bool,
     binstall: BinstallChoice,
     color: ColorChoice,
     verbosity: i8,
-) -> Result<ExitStatus> {
+) -> Result<Option<ExitStatus>> {
     // HACK: disable the auto mode under testing to easily avoid bothersome
     // hacks and maintenance there in order to avoid failing when the tool is
     // installed locally compared to current CI. Tests targeting binstall have
@@ -331,10 +354,10 @@ fn install_one(
             && binstall_is_available(installed)
     {
         log::debug!("Using `cargo-binstall` as the installation method.");
-        self::binstall(pkg_name, pkg_req, force, verbosity)
+        self::binstall(pkg_name, pkg_req, force, dry_run, verbosity).map(Some)
     } else {
         log::debug!("Using `cargo install` as the installation method.");
-        install(pkg_name, pkg_req, force, color, verbosity)
+        install(pkg_name, pkg_req, force, dry_run, color, verbosity)
     }
 }
 
@@ -343,11 +366,13 @@ fn install_one(
 ///
 /// Returns `Ok(report)` when `no_fail_fast` is `true`, otherwise `Err(err)` of
 /// the first error `err` encountered.
+#[expect(clippy::too_many_arguments, reason = "Plumbing.")]
 pub fn install_all(
     packages: &BTreeMap<String, DetailedPackageReq>,
     installed: &BTreeSet<String>,
     no_fail_fast: bool,
     force: bool,
+    dry_run: bool,
     binstall: BinstallChoice,
     color: ColorChoice,
     verbosity: i8,
@@ -369,6 +394,7 @@ pub fn install_all(
             pkg_name,
             pkg,
             force || pkg.force,
+            dry_run,
             // FIXME: this lets the per-package configuration have precedence
             // over the global defaults, but over the CLI as well; optionals
             // should be introduced in order to re-order things properly instead.
@@ -377,19 +403,21 @@ pub fn install_all(
             verbosity,
         )
         .and_then(|status| {
-            status.success().then_some(()).ok_or_else(|| {
-                let err = eyre!("Cargo process finished unsuccessfully: {status}")
-                    .note("This can happen for many reasons.")
-                    .suggestion("Read Cargo's output.");
+            status.map_or(Ok(()), |status| {
+                status.success().then_some(()).ok_or_else(|| {
+                    let err = eyre!("Cargo process finished unsuccessfully: {status}")
+                        .note("This can happen for many reasons.")
+                        .suggestion("Read Cargo's output.");
 
-                if no_fail_fast || pkg.no_fail_fast {
-                    err
-                } else {
-                    err.suggestion(
-                        "Use `ship --no-fail-fast` to ignore this \
+                    if no_fail_fast || pkg.no_fail_fast {
+                        err
+                    } else {
+                        err.suggestion(
+                            "Use `ship --no-fail-fast` to ignore this \
                             and continue on with other packages.",
-                    )
-                }
+                        )
+                    }
+                })
             })
         })
         .inspect(|()| {
@@ -790,6 +818,7 @@ mod tests {
                 version: "0.24.0".parse().unwrap(),
                 ..Default::default()
             },
+            false,
             false,
             0,
         )
