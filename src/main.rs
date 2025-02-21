@@ -45,13 +45,16 @@ fn main() -> Result<()> {
 
     // Let the CLI verbosity have control over the backtraces displayed.
     if let verb @ 1.. = args.verbosity() {
-        env::set_var(
-            "RUST_BACKTRACE",
-            match verb {
-                1 => "1",
-                _ => "full",
-            },
-        );
+        // SAFETY: no other thread can exist at this early point.
+        unsafe {
+            env::set_var(
+                "RUST_BACKTRACE",
+                match verb {
+                    1 => "1",
+                    _ => "full",
+                },
+            );
+        }
     }
 
     install_error_hook(&args)?;

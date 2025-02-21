@@ -132,6 +132,12 @@ pub fn init_registry() -> TestRegistry {
 }
 
 /// Applies Cargo's testing environment to the current process.
+///
+/// # Safety
+///
+/// Should not be used in parallel of other test threads. This function is not
+/// marked as unsafe in order to avoid chore in testing-only code, but should
+/// still be considered as such.
 pub fn set_env() {
     struct CurrentEnv;
     impl TestEnvCommandExt for CurrentEnv {
@@ -140,11 +146,13 @@ pub fn set_env() {
             self
         }
         fn env<S: AsRef<OsStr>>(self, key: &str, value: S) -> Self {
-            env::set_var(key, value);
+            // SAFETY: upheld by caller.
+            unsafe { env::set_var(key, value) };
             self
         }
         fn env_remove(self, key: &str) -> Self {
-            env::remove_var(key);
+            // SAFETY: upheld by caller.
+            unsafe { env::remove_var(key) };
             self
         }
     }

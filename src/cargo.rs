@@ -879,9 +879,12 @@ mod tests {
 
     #[test]
     fn test_configget_withenv_installroot() -> Result<()> {
-        env::set_var("CARGO_INSTALL_ROOT", "/tmp");
+        let _lk = LOCK.lock();
+        // SAFETY: mutually-exclusive test execution.
+        unsafe { env::set_var("CARGO_INSTALL_ROOT", "/tmp") };
         assert_eq!(config_get("install.root")?, "/tmp");
-        env::remove_var("CARGO_INSTALL_ROOT");
+        // SAFETY: mutually-exclusive test execution.
+        unsafe { env::remove_var("CARGO_INSTALL_ROOT") };
         Ok(())
     }
 }
