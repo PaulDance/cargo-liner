@@ -55,8 +55,8 @@ indoc = "~2.0"
 tempfile = "~3.17"
 trycmd = "~0.15"
 snapbox = "~0.6"
-cargo-test-macro = "~0.3"
-cargo-test-support = "~0.5"
+cargo-test-macro = "~0.4"
+cargo-test-support = "~0.7"
 
 # See https://crates.io/crates/color-eyre: debug `backtrace` is slow.
 [profile.dev.package.backtrace]

@@ -264,15 +264,15 @@ dependencies = [
 
 [[package]]
 name = "cargo-test-macro"
-version = "0.3.2"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5d0676b4eaff9228eea5fb9e0eb8234424af7dd0e7ec8da875cb43286d8f6415"
+checksum = "4b508b230f753c4c6b032683aca3fe9a5941f78c7ea57527ab66fe0d787231d5"
 
 [[package]]
 name = "cargo-test-support"
-version = "0.5.0"
+version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "74b6b88572f52991da0232b3c61dd23549bc6af06a2a3e2b8422df93fc36cbd1"
+checksum = "8a46386869c72a5a9fe1d278a710ca77eb2f9d38e38352f1abbf12e27d50060b"
 dependencies = [
  "anstream",
  "anstyle",
