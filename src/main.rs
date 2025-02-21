@@ -280,7 +280,7 @@ fn needing_install(
             || old_vers
                 .get(pkg_name)
                 // UNWRAP: `pkg.skip_check` was just checked for.
-                .map_or(true, |ver| ver < new_vers.get(pkg_name).unwrap())
+                .is_none_or(|ver| ver < new_vers.get(pkg_name).unwrap())
         {
             to_install.insert(pkg_name.clone(), pkg.clone());
             log::trace!("{pkg_name:?} is selected to be installed or updated.");
