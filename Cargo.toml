@@ -52,7 +52,7 @@ home = "~0.5"
 
 [dev-dependencies]
 indoc = "~2.0"
-tempfile = "~3.14"
+tempfile = "~3.17"
 trycmd = "~0.15"
 snapbox = "~0.6"
 cargo-test-macro = "~0.3"
