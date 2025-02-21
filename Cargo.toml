@@ -65,6 +65,7 @@ opt-level = 3
 [lints.clippy]
 all = { level = "warn", priority = 0 }
 pedantic = { level = "warn", priority = 1 }
+
 allow-attributes = { level = "warn", priority = 2 }
 allow-attributes-without-reason = { level = "warn", priority = 2 }
 dbg-macro = { level = "warn", priority = 2 }
@@ -72,3 +73,7 @@ print-stdout = { level = "warn", priority = 2 }
 print-stderr = { level = "warn", priority = 2 }
 str-to-string = { level = "warn", priority = 2 }
 string-to-string = { level = "warn", priority = 2 }
+multiple-unsafe-ops-per-block = { level = "warn", priority = 2 }
+undocumented-unsafe-blocks = { level = "warn", priority = 2 }
+unnecessary-safety-comment = { level = "warn", priority = 2 }
+unnecessary-safety-doc = { level = "warn", priority = 2 }
