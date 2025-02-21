@@ -4,8 +4,8 @@ use std::env::{self, VarError};
 use std::error::Error;
 use std::str::FromStr;
 
-use color_eyre::eyre::{Context, Result};
 use color_eyre::Section;
+use color_eyre::eyre::{Context, Result};
 
 use crate::cli::ShipArgs;
 

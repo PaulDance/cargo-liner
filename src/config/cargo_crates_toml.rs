@@ -3,8 +3,8 @@ use std::fs;
 use std::path::PathBuf;
 use std::str::FromStr;
 
-use color_eyre::eyre::{self, eyre, Result, WrapErr};
 use color_eyre::Section;
+use color_eyre::eyre::{self, Result, WrapErr, eyre};
 use semver::{Op, Version, VersionReq};
 use serde::Deserialize;
 use serde_with::DeserializeFromStr;
@@ -363,20 +363,22 @@ mod tests {
 
     #[test]
     fn test_cargocrates_intostarcfg_noself() {
-        assert!(!CargoCratesToml {
-            package_bins: iter::once((
-                CargoCratesPackage {
-                    name: clap::crate_name!().to_owned(),
-                    version: "1.2.3".parse().unwrap(),
-                    source: PackageSource::crates_io(),
-                },
-                vec![],
-            ))
-            .collect()
-        }
-        .into_star_version_config(false, false)
-        .packages
-        .contains_key(clap::crate_name!()));
+        assert!(
+            !CargoCratesToml {
+                package_bins: iter::once((
+                    CargoCratesPackage {
+                        name: clap::crate_name!().to_owned(),
+                        version: "1.2.3".parse().unwrap(),
+                        source: PackageSource::crates_io(),
+                    },
+                    vec![],
+                ))
+                .collect()
+            }
+            .into_star_version_config(false, false)
+            .packages
+            .contains_key(clap::crate_name!())
+        );
     }
 
     #[test]
@@ -398,20 +400,22 @@ mod tests {
 
     #[test]
     fn test_cargocrates_intoexactcfg_noself() {
-        assert!(!CargoCratesToml {
-            package_bins: iter::once((
-                CargoCratesPackage {
-                    name: clap::crate_name!().to_owned(),
-                    version: "1.2.3".parse().unwrap(),
-                    source: PackageSource::crates_io(),
-                },
-                vec![],
-            ))
-            .collect()
-        }
-        .into_exact_version_config(false, false)
-        .packages
-        .contains_key(clap::crate_name!()));
+        assert!(
+            !CargoCratesToml {
+                package_bins: iter::once((
+                    CargoCratesPackage {
+                        name: clap::crate_name!().to_owned(),
+                        version: "1.2.3".parse().unwrap(),
+                        source: PackageSource::crates_io(),
+                    },
+                    vec![],
+                ))
+                .collect()
+            }
+            .into_exact_version_config(false, false)
+            .packages
+            .contains_key(clap::crate_name!())
+        );
     }
 
     #[test]
@@ -433,20 +437,22 @@ mod tests {
 
     #[test]
     fn test_cargocrates_intocompcfg_noself() {
-        assert!(!CargoCratesToml {
-            package_bins: iter::once((
-                CargoCratesPackage {
-                    name: clap::crate_name!().to_owned(),
-                    version: "1.2.3".parse().unwrap(),
-                    source: PackageSource::crates_io(),
-                },
-                vec![],
-            ))
-            .collect()
-        }
-        .into_comp_version_config(false, false)
-        .packages
-        .contains_key(clap::crate_name!()));
+        assert!(
+            !CargoCratesToml {
+                package_bins: iter::once((
+                    CargoCratesPackage {
+                        name: clap::crate_name!().to_owned(),
+                        version: "1.2.3".parse().unwrap(),
+                        source: PackageSource::crates_io(),
+                    },
+                    vec![],
+                ))
+                .collect()
+            }
+            .into_comp_version_config(false, false)
+            .packages
+            .contains_key(clap::crate_name!())
+        );
     }
 
     #[test]
@@ -468,20 +474,22 @@ mod tests {
 
     #[test]
     fn test_cargocrates_intopatchcfg_noself() {
-        assert!(!CargoCratesToml {
-            package_bins: iter::once((
-                CargoCratesPackage {
-                    name: clap::crate_name!().to_owned(),
-                    version: "1.2.3".parse().unwrap(),
-                    source: PackageSource::crates_io(),
-                },
-                vec![],
-            ))
-            .collect()
-        }
-        .into_patch_version_config(false, false)
-        .packages
-        .contains_key(clap::crate_name!()));
+        assert!(
+            !CargoCratesToml {
+                package_bins: iter::once((
+                    CargoCratesPackage {
+                        name: clap::crate_name!().to_owned(),
+                        version: "1.2.3".parse().unwrap(),
+                        source: PackageSource::crates_io(),
+                    },
+                    vec![],
+                ))
+                .collect()
+            }
+            .into_patch_version_config(false, false)
+            .packages
+            .contains_key(clap::crate_name!())
+        );
     }
 
     #[test]
@@ -511,20 +519,22 @@ mod tests {
 
     #[test]
     fn test_cargocrates_intostarcfg_keepself() {
-        assert!(CargoCratesToml {
-            package_bins: iter::once((
-                CargoCratesPackage {
-                    name: clap::crate_name!().to_owned(),
-                    version: "1.2.3".parse().unwrap(),
-                    source: PackageSource::crates_io(),
-                },
-                vec![],
-            ))
-            .collect()
-        }
-        .into_star_version_config(true, false)
-        .packages
-        .contains_key(clap::crate_name!()));
+        assert!(
+            CargoCratesToml {
+                package_bins: iter::once((
+                    CargoCratesPackage {
+                        name: clap::crate_name!().to_owned(),
+                        version: "1.2.3".parse().unwrap(),
+                        source: PackageSource::crates_io(),
+                    },
+                    vec![],
+                ))
+                .collect()
+            }
+            .into_star_version_config(true, false)
+            .packages
+            .contains_key(clap::crate_name!())
+        );
     }
 
     #[test]
@@ -585,20 +595,22 @@ mod tests {
 
     #[test]
     fn test_cargocrates_intoexactcfg_keepself() {
-        assert!(CargoCratesToml {
-            package_bins: iter::once((
-                CargoCratesPackage {
-                    name: clap::crate_name!().to_owned(),
-                    version: "1.2.3".parse().unwrap(),
-                    source: PackageSource::crates_io(),
-                },
-                vec![],
-            ))
-            .collect()
-        }
-        .into_exact_version_config(true, false)
-        .packages
-        .contains_key(clap::crate_name!()));
+        assert!(
+            CargoCratesToml {
+                package_bins: iter::once((
+                    CargoCratesPackage {
+                        name: clap::crate_name!().to_owned(),
+                        version: "1.2.3".parse().unwrap(),
+                        source: PackageSource::crates_io(),
+                    },
+                    vec![],
+                ))
+                .collect()
+            }
+            .into_exact_version_config(true, false)
+            .packages
+            .contains_key(clap::crate_name!())
+        );
     }
 
     #[test]
@@ -624,20 +636,22 @@ mod tests {
 
     #[test]
     fn test_cargocrates_intocompcfg_keepself() {
-        assert!(CargoCratesToml {
-            package_bins: iter::once((
-                CargoCratesPackage {
-                    name: clap::crate_name!().to_owned(),
-                    version: "1.2.3".parse().unwrap(),
-                    source: PackageSource::crates_io(),
-                },
-                vec![],
-            ))
-            .collect()
-        }
-        .into_comp_version_config(true, false)
-        .packages
-        .contains_key(clap::crate_name!()));
+        assert!(
+            CargoCratesToml {
+                package_bins: iter::once((
+                    CargoCratesPackage {
+                        name: clap::crate_name!().to_owned(),
+                        version: "1.2.3".parse().unwrap(),
+                        source: PackageSource::crates_io(),
+                    },
+                    vec![],
+                ))
+                .collect()
+            }
+            .into_comp_version_config(true, false)
+            .packages
+            .contains_key(clap::crate_name!())
+        );
     }
 
     #[test]
@@ -663,20 +677,22 @@ mod tests {
 
     #[test]
     fn test_cargocrates_intopatchcfg_keepself() {
-        assert!(CargoCratesToml {
-            package_bins: iter::once((
-                CargoCratesPackage {
-                    name: clap::crate_name!().to_owned(),
-                    version: "1.2.3".parse().unwrap(),
-                    source: PackageSource::crates_io(),
-                },
-                vec![],
-            ))
-            .collect()
-        }
-        .into_patch_version_config(true, false)
-        .packages
-        .contains_key(clap::crate_name!()));
+        assert!(
+            CargoCratesToml {
+                package_bins: iter::once((
+                    CargoCratesPackage {
+                        name: clap::crate_name!().to_owned(),
+                        version: "1.2.3".parse().unwrap(),
+                        source: PackageSource::crates_io(),
+                    },
+                    vec![],
+                ))
+                .collect()
+            }
+            .into_patch_version_config(true, false)
+            .packages
+            .contains_key(clap::crate_name!())
+        );
     }
 
     #[test]

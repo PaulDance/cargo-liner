@@ -8,10 +8,10 @@ use std::io::IsTerminal;
 use std::{env, io, process};
 
 use clap::{ColorChoice, CommandFactory};
+use color_eyre::Section;
 use color_eyre::config::{HookBuilder, Theme};
 use color_eyre::eyre::{self, Result, WrapErr};
 use color_eyre::owo_colors::OwoColorize;
-use color_eyre::Section;
 use log::LevelFilter;
 use pretty_env_logger::env_logger::WriteStyle;
 use semver::Version;

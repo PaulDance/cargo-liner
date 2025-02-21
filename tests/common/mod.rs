@@ -13,7 +13,7 @@ use std::{env, io, iter};
 use cargo_test_support::registry::{
     HttpServer, Package, RegistryBuilder, Request, Response, TestRegistry,
 };
-use cargo_test_support::{compare, TestEnvCommandExt};
+use cargo_test_support::{TestEnvCommandExt, compare};
 use semver::Version;
 use snapbox::cmd::Command;
 

@@ -10,8 +10,8 @@ use std::process::{Child, Command, ExitStatus, Stdio};
 use std::{env, io, iter};
 
 use clap::ColorChoice;
-use color_eyre::eyre::{self, eyre, Result, WrapErr};
 use color_eyre::Section;
+use color_eyre::eyre::{self, Result, WrapErr, eyre};
 use log::Level;
 use regex::Regex;
 use semver::Version;
@@ -792,12 +792,14 @@ mod tests {
         let _reg = testing::init_registry();
         testing::set_env();
 
-        assert!(search_exact_all(
-            &[(NONE.to_owned(), PackageRequirement::SIMPLE_STAR.into())]
-                .into_iter()
-                .collect()
-        )
-        .is_err());
+        assert!(
+            search_exact_all(
+                &[(NONE.to_owned(), PackageRequirement::SIMPLE_STAR.into())]
+                    .into_iter()
+                    .collect()
+            )
+            .is_err()
+        );
     }
 
     #[ignore = "Long and online test."]

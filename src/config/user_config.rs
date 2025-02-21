@@ -4,8 +4,8 @@ use std::io::Write;
 use std::iter;
 use std::path::PathBuf;
 
-use color_eyre::eyre::{Result, WrapErr};
 use color_eyre::Section;
+use color_eyre::eyre::{Result, WrapErr};
 use serde::{Deserialize, Serialize};
 
 use super::PackageRequirement;
@@ -183,15 +183,17 @@ mod tests {
 
     #[test]
     fn test_deser_userconfig_unknownfields_isok() {
-        assert!(toml::from_str::<UserConfig>(
-            r#"
+        assert!(
+            toml::from_str::<UserConfig>(
+                r#"
                 [packages]
                 abc = "1.2.3"
                 [unknown-section]
                 unknown-field = "unknown-value"
             "#
-        )
-        .is_ok());
+            )
+            .is_ok()
+        );
     }
 
     #[test]
@@ -1109,29 +1111,33 @@ mod tests {
 
     #[test]
     fn test_userconfig_defaults_none() {
-        assert!(toml::from_str::<UserConfig>(
-            r#"
+        assert!(
+            toml::from_str::<UserConfig>(
+                r#"
                 [packages]
                 abc = "*"
             "#
-        )
-        .unwrap()
-        .defaults
-        .is_none());
+            )
+            .unwrap()
+            .defaults
+            .is_none()
+        );
     }
 
     #[test]
     fn test_userconfig_defaults_empty() {
-        assert!(toml::from_str::<UserConfig>(
-            r#"
+        assert!(
+            toml::from_str::<UserConfig>(
+                r#"
                 [packages]
                 abc = "*"
                 [defaults]
             "#
-        )
-        .unwrap()
-        .defaults
-        .is_some());
+            )
+            .unwrap()
+            .defaults
+            .is_some()
+        );
     }
 
     #[test]
