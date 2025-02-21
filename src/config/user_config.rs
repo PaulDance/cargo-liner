@@ -186,11 +186,11 @@ mod tests {
         assert!(
             toml::from_str::<UserConfig>(
                 r#"
-                [packages]
-                abc = "1.2.3"
-                [unknown-section]
-                unknown-field = "unknown-value"
-            "#
+                    [packages]
+                    abc = "1.2.3"
+                    [unknown-section]
+                    unknown-field = "unknown-value"
+                "#
             )
             .is_ok()
         );
@@ -1114,9 +1114,9 @@ mod tests {
         assert!(
             toml::from_str::<UserConfig>(
                 r#"
-                [packages]
-                abc = "*"
-            "#
+                    [packages]
+                    abc = "*"
+                "#
             )
             .unwrap()
             .defaults
@@ -1129,10 +1129,10 @@ mod tests {
         assert!(
             toml::from_str::<UserConfig>(
                 r#"
-                [packages]
-                abc = "*"
-                [defaults]
-            "#
+                    [packages]
+                    abc = "*"
+                    [defaults]
+                "#
             )
             .unwrap()
             .defaults
