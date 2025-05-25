@@ -51,7 +51,7 @@ fn install(
     match verbosity.cmp(&0) {
         Ordering::Greater => {
             let opt = iter::once('-')
-                .chain(iter::repeat('v').take(verbosity.try_into().unwrap()))
+                .chain(iter::repeat_n('v', verbosity.try_into().unwrap()))
                 .collect::<String>();
             cmd.arg(&opt);
             log::trace!("`{opt}` arg added.");
