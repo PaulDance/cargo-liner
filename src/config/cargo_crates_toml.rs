@@ -42,8 +42,7 @@ impl CargoCratesToml {
                 .join(Self::FILE_NAME)),
             Err(err) => {
                 log::debug!(
-                    "Failed to retrieve `{}` from Cargo's configuration on error: {err:#?}.",
-                    INSTALL_ROOT_CONFIG_KEY,
+                    "Failed to retrieve `{INSTALL_ROOT_CONFIG_KEY}` from Cargo's configuration on error: {err:#?}.",
                 );
                 log::debug!("Defaulting to Cargo's home directory...");
                 Ok(cargo::home()?.join(Self::FILE_NAME))

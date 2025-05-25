@@ -82,42 +82,42 @@ fn install(
 
     if let Some(index) = pkg_req.index.as_deref() {
         cmd.args(["--index", index]);
-        log::trace!("`--index {}` args added.", index);
+        log::trace!("`--index {index}` args added.");
     }
 
     if let Some(registry) = pkg_req.registry.as_deref() {
         cmd.args(["--registry", registry]);
-        log::trace!("`--registry {}` args added.", registry);
+        log::trace!("`--registry {registry}` args added.");
     }
 
     if let Some(git) = pkg_req.git.as_deref() {
         cmd.args(["--git", git]);
-        log::trace!("`--git {}` args added.", git);
+        log::trace!("`--git {git}` args added.");
     }
 
     if let Some(branch) = pkg_req.branch.as_deref() {
         cmd.args(["--branch", branch]);
-        log::trace!("`--branch {}` args added.", branch);
+        log::trace!("`--branch {branch}` args added.");
     }
 
     if let Some(tag) = pkg_req.tag.as_deref() {
         cmd.args(["--tag", tag]);
-        log::trace!("`--tag {}` args added.", tag);
+        log::trace!("`--tag {tag}` args added.");
     }
 
     if let Some(rev) = pkg_req.rev.as_deref() {
         cmd.args(["--rev", rev]);
-        log::trace!("`--rev {}` args added.", rev);
+        log::trace!("`--rev {rev}` args added.");
     }
 
     if let Some(path) = pkg_req.path.as_deref() {
         cmd.args(["--path", path]);
-        log::trace!("`--path {}` args added.", path);
+        log::trace!("`--path {path}` args added.");
     }
 
     for bin in &pkg_req.bins {
         cmd.args(["--bin", bin]);
-        log::trace!("`--bin {}` args added.", bin);
+        log::trace!("`--bin {bin}` args added.");
     }
 
     if pkg_req.all_bins {
@@ -127,7 +127,7 @@ fn install(
 
     for example in &pkg_req.examples {
         cmd.args(["--example", example]);
-        log::trace!("`--example {}` args added.", example);
+        log::trace!("`--example {example}` args added.");
     }
 
     if pkg_req.all_examples {
@@ -232,17 +232,17 @@ fn binstall(
 
     if let Some(index) = pkg_req.index.as_deref() {
         cmd.args(["--index", index]);
-        log::trace!("`--index {}` args added.", index);
+        log::trace!("`--index {index}` args added.");
     }
 
     if let Some(registry) = pkg_req.registry.as_deref() {
         cmd.args(["--registry", registry]);
-        log::trace!("`--registry {}` args added.", registry);
+        log::trace!("`--registry {registry}` args added.");
     }
 
     if let Some(git) = pkg_req.git.as_deref() {
         cmd.args(["--git", git]);
-        log::trace!("`--git {}` args added.", git);
+        log::trace!("`--git {git}` args added.");
     }
 
     if force {
@@ -286,8 +286,8 @@ fn binstall_is_available(installed: &BTreeSet<String>) -> bool {
     // When `--skip-check` is used.
     let res = if installed.is_empty() {
         binstall_version()
-            .inspect(|ver| log::debug!("cargo-binstall successfully reports: {:?}", ver))
-            .inspect_err(|err| log::debug!("cargo-binstall automatic detection failed: {:?}", err))
+            .inspect(|ver| log::debug!("cargo-binstall successfully reports: {ver:?}"))
+            .inspect_err(|err| log::debug!("cargo-binstall automatic detection failed: {err:?}"))
             .is_ok()
     } else {
         installed.contains("cargo-binstall")
