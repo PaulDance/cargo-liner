@@ -152,7 +152,7 @@ impl From<PackageRequirement> for DetailedPackageReq {
                 version: pkg_ver,
                 ..Default::default()
             },
-            PackageRequirement::Detailed(det_pkg) => det_pkg,
+            PackageRequirement::Detailed(det_pkg) => *det_pkg,
         }
     }
 }
@@ -170,7 +170,7 @@ pub enum PackageRequirement {
     /// Simple form: only a SemVer requirement string.
     Simple(VersionReq),
     /// Detailed form: all supported options made available.
-    Detailed(DetailedPackageReq),
+    Detailed(Box<DetailedPackageReq>),
 }
 
 impl PackageRequirement {
