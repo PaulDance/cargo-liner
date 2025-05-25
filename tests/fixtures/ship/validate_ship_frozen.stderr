@@ -1,6 +1,15 @@
-    Updating `dummy-registry` index
-error: failed to query replaced source registry `crates-io`
+error: could not find `abc` in registry `crates-io` with version `*`
+Error: 
+   0: Failed to install or update one of the configured packages.
+   1: Failed to install "abc".
+   2: Cargo process finished unsuccessfully: [EXIT_STATUS]: 101
 
-Caused by:
-  attempting to make an HTTP request, but --frozen was specified
-...
+Location:
+   src/[..].rs:[..]
+
+Note: This can happen for many reasons.
+Suggestion: Read Cargo's output.
+Suggestion: Use `ship --no-fail-fast` to ignore this and continue on with other packages.
+
+Backtrace omitted. Run with RUST_BACKTRACE=1 environment variable to display it.
+Run with RUST_BACKTRACE=full to include source snippets.

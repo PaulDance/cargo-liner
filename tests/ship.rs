@@ -1445,6 +1445,8 @@ fn validate_ship_frozen() {
     fake_install_self();
     fake_publish("abc", "0.0.0");
     // HACK: observe the error to confirm the argument is passed.
+    // Instead of a message naming the parameter, now Cargo fails on finding
+    // the package as if it did not exist because it will not download info.
     write_user_config(&["[packages]", "abc = { version = '*', frozen = true }"]);
 
     cargo_liner()
