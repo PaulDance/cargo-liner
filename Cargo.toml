@@ -77,3 +77,5 @@ multiple-unsafe-ops-per-block = { level = "warn", priority = 2 }
 undocumented-unsafe-blocks = { level = "warn", priority = 2 }
 unnecessary-safety-comment = { level = "warn", priority = 2 }
 unnecessary-safety-doc = { level = "warn", priority = 2 }
+
+unnecessary-debug-formatting = { level = "allow", priority = 3 }
