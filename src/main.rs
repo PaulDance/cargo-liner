@@ -319,8 +319,8 @@ fn log_version_check_summary(
     new_vers: &BTreeMap<String, Version>,
     old_vers: &BTreeMap<String, Version>,
 ) {
-    if new_vers.is_empty() {
-        log::info!("No packages installed.");
+    if pkg_reqs.is_empty() {
+        log::info!("No package to install: none was configured and self was skipped.");
     } else {
         log::info!(
             "Results:\n{}",
