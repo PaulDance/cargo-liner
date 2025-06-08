@@ -276,10 +276,10 @@ fn needing_install(
     log::debug!("Filtering packages by versions...");
 
     for (pkg_name, pkg) in pkgs {
-        if pkg.skip_check
+        if pkg.effective_skip_check()
             || old_vers
                 .get(pkg_name)
-                // UNWRAP: `pkg.skip_check` was just checked for.
+                // UNWRAP: `pkg.effective_skip_check()` was just checked for.
                 .is_none_or(|ver| ver < new_vers.get(pkg_name).unwrap())
         {
             to_install.insert(pkg_name.clone(), pkg.clone());
@@ -327,7 +327,7 @@ fn log_version_check_summary(
                     name: pkg_name.clone(),
                     old_ver: old_ver
                         .map_or_else(|| colorizer.none_icon().to_string(), ToString::to_string),
-                    // This should be equivalent to checking `pkg_req.skip_check`:
+                    // This should be equivalent to checking `effective_skip_check`:
                     // a new version is unavailable only if not fetched.
                     new_ver: new_ver.map_or_else(
                         || colorizer.unknown_icon().to_string(),

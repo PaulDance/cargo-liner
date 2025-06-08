@@ -574,7 +574,7 @@ pub fn search_exact_all(
     log::debug!("Spawning search child processes in parallel...");
     for pkg in pkgs
         .iter()
-        .filter_map(|(pkg_name, pkg_req)| (!pkg_req.skip_check).then_some(pkg_name))
+        .filter_map(|(pkg_name, pkg_req)| (!pkg_req.effective_skip_check()).then_some(pkg_name))
     {
         procs.push(
             spawn_search_exact(pkg)
@@ -586,7 +586,7 @@ pub fn search_exact_all(
     // Key traversal order is stable because sorted.
     for (pkg, proc) in pkgs
         .iter()
-        .filter_map(|(pkg_name, pkg_req)| (!pkg_req.skip_check).then_some(pkg_name))
+        .filter_map(|(pkg_name, pkg_req)| (!pkg_req.effective_skip_check()).then_some(pkg_name))
         .zip(procs.into_iter())
     {
         vers.insert(
