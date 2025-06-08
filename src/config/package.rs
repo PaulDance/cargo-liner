@@ -190,3 +190,103 @@ impl PackageRequirement {
     /// Convenience shortcut for simple and star version requirement package.
     pub const SIMPLE_STAR: Self = Self::Simple(VersionReq::STAR);
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_detailedpackagereq_effectiveskipcheck_default() {
+        assert!(!DetailedPackageReq::default().effective_skip_check());
+    }
+
+    #[test]
+    fn test_detailedpackagereq_effectiveskipcheck_skipcheck() {
+        assert!(
+            DetailedPackageReq {
+                skip_check: true,
+                ..Default::default()
+            }
+            .effective_skip_check()
+        );
+    }
+
+    #[test]
+    fn test_detailedpackagereq_effectiveskipcheck_path() {
+        assert!(
+            DetailedPackageReq {
+                path: Some("/a/b/c".to_owned()),
+                ..Default::default()
+            }
+            .effective_skip_check()
+        );
+    }
+
+    #[test]
+    fn test_detailedpackagereq_effectiveskipcheck_git() {
+        assert!(
+            DetailedPackageReq {
+                git: Some("ssh://git@example.com/user/repo.git".to_owned()),
+                ..Default::default()
+            }
+            .effective_skip_check()
+        );
+    }
+
+    #[test]
+    fn test_detailedpackagereq_effectiveskipcheck_branch() {
+        assert!(
+            DetailedPackageReq {
+                branch: Some("example".to_owned()),
+                ..Default::default()
+            }
+            .effective_skip_check()
+        );
+    }
+
+    #[test]
+    fn test_detailedpackagereq_effectiveskipcheck_tag() {
+        assert!(
+            DetailedPackageReq {
+                tag: Some("example".to_owned()),
+                ..Default::default()
+            }
+            .effective_skip_check()
+        );
+    }
+
+    #[test]
+    fn test_detailedpackagereq_effectiveskipcheck_rev() {
+        assert!(
+            DetailedPackageReq {
+                rev: Some("1337133713371337133713371337133713371337".to_owned()),
+                ..Default::default()
+            }
+            .effective_skip_check()
+        );
+    }
+
+    #[test]
+    fn test_detailedpackagereq_effectiveskipcheck_combination_1() {
+        assert!(
+            DetailedPackageReq {
+                skip_check: true,
+                path: Some("/a/b/c".to_owned()),
+                ..Default::default()
+            }
+            .effective_skip_check()
+        );
+    }
+
+    #[test]
+    fn test_detailedpackagereq_effectiveskipcheck_combination_2() {
+        assert!(
+            DetailedPackageReq {
+                git: Some("ssh://git@example.com/user/repo.git".to_owned()),
+                branch: Some("example".to_owned()),
+                ..Default::default()
+            }
+            .effective_skip_check()
+        );
+    }
+}
