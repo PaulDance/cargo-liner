@@ -157,6 +157,19 @@ impl From<PackageRequirement> for DetailedPackageReq {
     }
 }
 
+impl DetailedPackageReq {
+    /// Returns whether the package should be version-checked beyond only the
+    /// raw `skip_check` element by taking other fields into consideration.
+    pub fn effective_skip_check(&self) -> bool {
+        self.skip_check
+            || self.path.is_some()
+            || self.git.is_some()
+            || self.branch.is_some()
+            || self.tag.is_some()
+            || self.rev.is_some()
+    }
+}
+
 /// Represents the requirement setting configured for a package.
 ///
 /// The enumeration is deserialized from an untagged form.
