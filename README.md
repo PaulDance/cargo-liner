@@ -272,15 +272,15 @@ where:
    * `registry` (optional, `cargo-binstall`-compatible: yes): string specifying
      the registry to use.
    * `git` (optional, `cargo-binstall`-compatible: yes): string specifying the
-     Git URL to install from.
+     Git URL to install from. This implies `skip-check`.
    * `branch` (optional, `cargo-binstall`-compatible: no): string specifying
-     the branch to use when installing from Git.
+     the branch to use when installing from Git. This implies `skip-check`.
    * `tag` (optional, `cargo-binstall`-compatible: no): string specifying the
-     tag to use when installing from Git.
+     tag to use when installing from Git. This implies `skip-check`.
    * `rev` (optional, `cargo-binstall`-compatible: no): string specifying the
-     commit to use when installing from Git.
+     commit to use when installing from Git. This implies `skip-check`.
    * `path` (optional, `cargo-binstall`-compatible: no): string specifying the
-     filesystem path to local crate to install from.
+     filesystem path to local crate to install from. This implies `skip-check`.
    * `bins` (optional, `cargo-binstall`-compatible: no): list of strings
      specifying the binaries to install among the targeted crate's binary
      targets, passed onto Cargo as a repetition of its `--bin` option.
@@ -329,7 +329,7 @@ where:
      the other packages remain as-is. The CLI option keeps the priority: if
      set, any version checking step is still entirely skipped, which should
      prove a bit more forceful than if the configuration option was set for all
-     listed packages.
+     listed packages. Note that this option is implied by some of the others.
    * `no-fail-fast` (optional, `cargo-binstall`-compatible: yes): boolean that,
      when `true`, makes the operation proceed as though `--no-fail-fast` was
      given, but only for the associated package: in case of an error of the
