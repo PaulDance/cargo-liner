@@ -562,20 +562,15 @@ fn finish_search_exact(pkg: &str, proc: Child) -> Result<Version> {
     Ok(ver)
 }
 
-/// Runs `*_search_exact` for all packages in the given map and returns the
+/// Runs `*_search_exact` for all packages in the given list and returns the
 /// thus fetched versions in the collected map.
-pub fn search_exact_all(
-    pkgs: &BTreeMap<String, DetailedPackageReq>,
-) -> Result<BTreeMap<String, Version>> {
+pub fn search_exact_all(pkgs: &[impl AsRef<str>]) -> Result<BTreeMap<String, Version>> {
     log::info!("Fetching latest package versions...");
     let mut procs = Vec::new();
     let mut vers = BTreeMap::new();
 
     log::debug!("Spawning search child processes in parallel...");
-    for pkg in pkgs
-        .iter()
-        .filter_map(|(pkg_name, pkg_req)| (!pkg_req.effective_skip_check()).then_some(pkg_name))
-    {
+    for pkg in pkgs.iter().map(AsRef::as_ref) {
         procs.push(
             spawn_search_exact(pkg)
                 .wrap_err_with(|| format!("Failed to spawn search for {pkg:?}."))?,
@@ -583,14 +578,9 @@ pub fn search_exact_all(
     }
 
     log::debug!("Waiting for each search child processes to finish...");
-    // Key traversal order is stable because sorted.
-    for (pkg, proc) in pkgs
-        .iter()
-        .filter_map(|(pkg_name, pkg_req)| (!pkg_req.effective_skip_check()).then_some(pkg_name))
-        .zip(procs.into_iter())
-    {
+    for (pkg, proc) in pkgs.iter().map(AsRef::as_ref).zip(procs.into_iter()) {
         vers.insert(
-            pkg.clone(),
+            pkg.to_owned(),
             finish_search_exact(pkg, proc)
                 .wrap_err_with(|| format!("Failed to finish search for {pkg:?}."))?,
         );
@@ -683,7 +673,6 @@ mod tests {
     use cargo_test_macro::cargo_test;
 
     use super::*;
-    use crate::config::PackageRequirement;
     use crate::testing;
 
     const SELF: &str = clap::crate_name!();
@@ -765,12 +754,7 @@ mod tests {
         ]);
         testing::set_env();
 
-        for (pkg, ver) in search_exact_all(
-            &[SELF, "cargo-expand", "cargo-tarpaulin", "bat"]
-                .into_iter()
-                .map(|pkg| (pkg.to_owned(), PackageRequirement::SIMPLE_STAR.into()))
-                .collect(),
-        )? {
+        for (pkg, ver) in search_exact_all(&[SELF, "cargo-expand", "cargo-tarpaulin", "bat"])? {
             assert_eq!(
                 ver,
                 match &*pkg {
@@ -792,14 +776,7 @@ mod tests {
         let _reg = testing::init_registry();
         testing::set_env();
 
-        assert!(
-            search_exact_all(
-                &[(NONE.to_owned(), PackageRequirement::SIMPLE_STAR.into())]
-                    .into_iter()
-                    .collect()
-            )
-            .is_err()
-        );
+        assert!(search_exact_all(&[NONE]).is_err());
     }
 
     #[ignore = "Long and online test."]

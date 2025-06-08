@@ -178,8 +178,15 @@ fn try_main(args: &LinerArgs) -> Result<()> {
                 let cct = CargoCratesToml::parse_file()
                     .wrap_err("Failed to parse Cargo's .crates.toml file.")?;
                 let old_vers = cct.clone().into_name_versions();
-                let new_vers = cargo::search_exact_all(&config.packages)
-                    .wrap_err("Failed to fetch the latest versions of the configured packages.")?;
+                let new_vers = cargo::search_exact_all(
+                    &config
+                        .packages
+                        .iter()
+                        .filter(|(_, pkg)| !pkg.effective_skip_check())
+                        .map(|(name, _)| name.clone())
+                        .collect::<Vec<_>>(),
+                )
+                .wrap_err("Failed to fetch the latest versions of the configured packages.")?;
                 log_version_check_summary(&colorizer, &config.packages, &new_vers, &old_vers);
 
                 (
