@@ -1984,6 +1984,49 @@ fn validate_ship_install_dryrun() {
     assert_not_installed("abc");
 }
 
+/// See #27.
+#[cargo_test]
+fn validate_ship_path_is_skipcheck() {
+    let _reg = init_registry();
+    fake_install("abc", "0.0.0", true);
+    fake_publish("abc", "0.0.1");
+    write_user_config(&["[packages]", "abc = { version = '*', path = '/a' }"]);
+
+    // HACK: validate that the error reveals the intended behavior.
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .failure()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_path_is_skipcheck.stderr"
+        ]);
+    assert_installed("abc");
+}
+
+/// See #27.
+#[cargo_test]
+fn validate_ship_git_is_skipcheck() {
+    let _reg = init_registry();
+    fake_install("abc", "0.0.0", true);
+    fake_publish("abc", "0.0.1");
+    write_user_config(&[
+        "[packages]",
+        "abc = { version = '*', git = 'git@example.com:user/repo.git' }",
+    ]);
+
+    // HACK: validate that the error reveals the intended behavior.
+    cargo_liner()
+        .args(["ship", "--no-self"])
+        .assert()
+        .failure()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_git_is_skipcheck.stderr"
+        ]);
+    assert_installed("abc");
+}
+
 /// Test that the tool is at least called when using `always` globally.
 ///
 /// Binstall seems to outright refuse http URLs, so it is rather incompatible
