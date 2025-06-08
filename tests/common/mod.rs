@@ -75,7 +75,8 @@ pub fn init_registry() -> TestRegistry {
                 .read_dir()
                 .inspect_err(|err| {
                     eprintln!(
-                        "Error when reading directory `{req_pkg}` under `{dl_path:?}`: {err:#?}"
+                        "Error when reading directory `{req_pkg}` under `{}`: {err:#?}",
+                        dl_path.display(),
                     );
                 })
                 // Sub-directories have versions as names: take the max.
