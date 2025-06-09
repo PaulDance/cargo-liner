@@ -2,3 +2,4 @@
 
 pub mod completions;
 pub mod import;
+pub mod ship;

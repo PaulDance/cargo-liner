@@ -28,6 +28,11 @@ impl Colorizer {
         }
     }
 
+    /// Returns the [`ColorChoice`] given to [`Self::new`].
+    pub fn color(&self) -> &ColorChoice {
+        &self.color_choice
+    }
+
     /// Returns `input` or `color_fn(input)` depending on the current color
     /// preference and whether a terminal is used.
     fn colorize_with<'i, 'o, I, F, O>(&self, input: &'i I, color_fn: F) -> Box<dyn Display + 'o>

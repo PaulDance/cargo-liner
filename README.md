@@ -503,7 +503,7 @@ Example output if `bat` and `cargo-expand` are required:
 $ cargo liner
  INFO  cargo_liner::cargo > Fetching latest package versions...
 ...
- INFO  cargo_liner        > Results:
+ INFO  cargo_liner::commands::ship > Results:
 ┌──────────────┬─────────────┬─────────────┬────────┐
 │ Name         │ Old version │ New version │ Status │
 ├──────────────┼─────────────┼─────────────┼────────┤
@@ -511,7 +511,7 @@ $ cargo liner
 │ cargo-expand │ 1.0.78      │ 1.0.79      │ 🛈      │
 │ cargo-liner  │ 0.0.0       │ ø           │ ✔      │
 └──────────────┴─────────────┴─────────────┴────────┘
- INFO  cargo_liner::cargo > Installing `bat`...
+ INFO  cargo_liner::cargo          > Installing `bat`...
     Updating [..] index
  Downloading crates ...
   Downloaded bat v0.24.0 (registry [..])
@@ -523,7 +523,7 @@ $ cargo liner
   Installing [..]/.cargo/bin/bat
    Installed package `bat v0.24.0` (executable `bat`)
 ...
- INFO  cargo_liner::cargo > Updating `cargo-expand`...
+ INFO  cargo_liner::cargo          > Updating `cargo-expand`...
     Updating [..] index
  Downloading crates ...
   Downloaded cargo-expand v1.0.79 (registry [..])
@@ -535,14 +535,14 @@ $ cargo liner
    Replacing [..]/.cargo/bin/cargo-expand
     Replaced package `cargo-expand v1.0.78` with `cargo-expand v1.0.79` (executable `cargo-expand`)
 ...
- INFO  cargo_liner        > Installation report:
+ INFO  cargo_liner::commands::ship > Installation report:
 ┌──────────────┬─────────────┬─────────────┬────────┐
 │ Name         │ Old version │ New version │ Status │
 ├──────────────┼─────────────┼─────────────┼────────┤
 │ bat          │ ø           │ 0.24.0      │ +      │
 │ cargo-expand │ 1.0.78      │ 1.0.79      │ ✔      │
 └──────────────┴─────────────┴─────────────┴────────┘
- INFO  cargo_liner        > Done.
+ INFO  cargo_liner                 > Done.
 
 ```
 

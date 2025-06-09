@@ -1,8 +1,8 @@
  INFO  cargo_liner::cargo > Installing `abc`...
- INFO  cargo_liner        > Installation report:
+ INFO  cargo_liner::commands::ship > Installation report:
 ┌──────┬─────────────┬─────────────┬────────┐
 │ Name │ Old version │ New version │ Status │
 ├──────┼─────────────┼─────────────┼────────┤
 │ abc  │ ø           │ ?           │ +      │
 └──────┴─────────────┴─────────────┴────────┘
- INFO  cargo_liner        > Done.
+ INFO  cargo_liner                 > Done.

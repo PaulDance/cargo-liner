@@ -1,13 +1,13 @@
  INFO  cargo_liner::cargo > Fetching latest package versions...
     Updating `dummy-registry` index
 note: to learn more about a package, run `cargo info <name>`
- INFO  cargo_liner        > Results:
+ INFO  cargo_liner::commands::ship > Results:
 ┌──────┬─────────────┬─────────────┬────────┐
 │ Name │ Old version │ New version │ Status │
 ├──────┼─────────────┼─────────────┼────────┤
 │ pkg  │ ø           │ 0.0.0       │ 🛈      │
 └──────┴─────────────┴─────────────┴────────┘
- INFO  cargo_liner::cargo > Installing `pkg`...
+ INFO  cargo_liner::cargo          > Installing `pkg`...
     Updating `dummy-registry` index
  Downloading crates ...
   Downloaded pkg v0.0.0 (registry `dummy-registry`)
@@ -18,10 +18,10 @@ note: to learn more about a package, run `cargo info <name>`
   Installing /tmp/[..]/bin/pkg
    Installed package `pkg v0.0.0` (executable `pkg`)
 warning: be sure to add `/tmp/[..]/bin` to your PATH to be able to run the installed binaries
- INFO  cargo_liner        > Installation report:
+ INFO  cargo_liner::commands::ship > Installation report:
 ┌──────┬─────────────┬─────────────┬────────┐
 │ Name │ Old version │ New version │ Status │
 ├──────┼─────────────┼─────────────┼────────┤
 │ pkg  │ ø           │ 0.0.0       │ +      │
 └──────┴─────────────┴─────────────┴────────┘
- INFO  cargo_liner        > Done.
+ INFO  cargo_liner                 > Done.

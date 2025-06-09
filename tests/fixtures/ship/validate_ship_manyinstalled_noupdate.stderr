@@ -1,6 +1,6 @@
  INFO  cargo_liner::cargo > Fetching latest package versions...
 ...
- INFO  cargo_liner        > Results:
+ INFO  cargo_liner::commands::ship > Results:
 ┌─────────────┬─────────────┬─────────────┬────────┐
 │ Name        │ Old version │ New version │ Status │
 ├─────────────┼─────────────┼─────────────┼────────┤
@@ -8,4 +8,4 @@
 │ cargo-liner │ 0.0.3       │ ø           │ ✔      │
 │ def         │ 0.0.2       │ ø           │ ✔      │
 └─────────────┴─────────────┴─────────────┴────────┘
- INFO  cargo_liner        > Done.
+ INFO  cargo_liner                 > Done.
