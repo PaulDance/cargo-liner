@@ -21,7 +21,7 @@ impl Colorizer {
     ///  * `out`: the descriptor that will be used in order to write the output
     ///    of [`Self::colorize_with`].
     ///  * `color_choice`: color preference to apply.
-    pub fn new<D: IsTerminal>(out: &D, color_choice: ColorChoice) -> Self {
+    pub fn new(out: &impl IsTerminal, color_choice: ColorChoice) -> Self {
         Self {
             is_terminal: out.is_terminal(),
             color_choice,

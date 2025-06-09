@@ -96,10 +96,12 @@ impl CargoCratesToml {
     ///
     /// All locally-installed packages are kept if `keep_local` is
     /// `true`, otherwise they will be filtered out.
-    fn into_config<F>(self, pkg_map: F, keep_self: bool, keep_local: bool) -> UserConfig
-    where
-        F: FnMut((CargoCratesPackage, Vec<String>)) -> (String, PackageRequirement),
-    {
+    fn into_config(
+        self,
+        pkg_map: impl FnMut((CargoCratesPackage, Vec<String>)) -> (String, PackageRequirement),
+        keep_self: bool,
+        keep_local: bool,
+    ) -> UserConfig {
         UserConfig {
             packages: self
                 .package_bins
