@@ -3,9 +3,9 @@
 #![warn(unused_crate_dependencies)]
 
 use std::collections::{BTreeMap, BTreeSet};
-use std::{env, io, process};
+use std::{env, process};
 
-use clap::{ColorChoice, CommandFactory};
+use clap::ColorChoice;
 use color_eyre::Section;
 use color_eyre::config::{HookBuilder, Theme};
 use color_eyre::eyre::{self, Result, WrapErr};
@@ -27,6 +27,7 @@ mod config;
 use config::{CargoCratesToml, DetailedPackageReq, EffectiveConfig, UserConfig};
 mod coloring;
 use coloring::Colorizer;
+mod commands;
 #[cfg(test)]
 #[path = "../tests/common/mod.rs"]
 mod testing;
@@ -93,16 +94,7 @@ fn try_main(args: &LinerArgs) -> Result<()> {
     // CLI command dispatch.
     match &args.command {
         Some(LinerCommands::Completions(comp_args)) => {
-            log::info!(
-                "Generating auto-completion script for {:?}...",
-                comp_args.shell,
-            );
-            clap_complete::generate(
-                comp_args.shell,
-                &mut LinerArgs::command(),
-                clap::crate_name!(),
-                &mut io::stdout(),
-            );
+            commands::completions::run(comp_args);
         }
         Some(LinerCommands::Import(import_args)) => {
             if UserConfig::file_path()
