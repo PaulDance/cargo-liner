@@ -3,15 +3,12 @@
 #![warn(unused_crate_dependencies)]
 
 use std::collections::{BTreeMap, BTreeSet};
-use std::fmt::Display;
-use std::io::IsTerminal;
 use std::{env, io, process};
 
 use clap::{ColorChoice, CommandFactory};
 use color_eyre::Section;
 use color_eyre::config::{HookBuilder, Theme};
 use color_eyre::eyre::{self, Result, WrapErr};
-use color_eyre::owo_colors::OwoColorize;
 use log::LevelFilter;
 use pretty_env_logger::env_logger::WriteStyle;
 use semver::Version;
@@ -28,6 +25,8 @@ mod cli;
 use cli::{LinerArgs, LinerCommands, ShipArgs};
 mod config;
 use config::{CargoCratesToml, DetailedPackageReq, EffectiveConfig, UserConfig};
+mod coloring;
+use coloring::Colorizer;
 #[cfg(test)]
 #[path = "../tests/common/mod.rs"]
 mod testing;
@@ -393,100 +392,5 @@ fn log_install_report(
         if dry_run {
             log::warn!("This is a dry run, so this report is simulated.");
         }
-    }
-}
-
-/// Collection of adequate characters to be used as display icons.
-mod icons {
-    /// When nothing to display or needs to be done: already up-to-date.
-    pub(super) const NONE: char = 'ø';
-    /// When the element could not be determined, for example the new version
-    /// of a package if `skip-check` is used.
-    pub(super) const UNKNOWN: char = '?';
-    /// When something needs to be performed: installation or update of a
-    /// package.
-    pub(super) const TODO: char = '🛈';
-    /// When something was successfully added: new installation of a package.
-    pub(super) const NEW: char = '+';
-    /// When something failed.
-    pub(super) const ERR: char = '✘';
-    /// When things went right: already up-to-date or successful update.
-    pub(super) const OK: char = '✔';
-}
-
-/// Assembles both an output stream's color capacity and a color preference in
-/// order to condtionally emit colorized content.
-struct Colorizer {
-    is_terminal: bool,
-    color_choice: ColorChoice,
-}
-
-impl Colorizer {
-    /// Builds a new colorizer.
-    ///
-    ///  * `out`: the descriptor that will be used in order to write the output
-    ///    of [`Self::colorize_with`].
-    ///  * `color_choice`: color preference to apply.
-    pub fn new<D: IsTerminal>(out: &D, color_choice: ColorChoice) -> Self {
-        Self {
-            is_terminal: out.is_terminal(),
-            color_choice,
-        }
-    }
-
-    /// Returns `input` or `color_fn(input)` depending on the current color
-    /// preference and whether a terminal is used.
-    pub fn colorize_with<'i, 'o, I, F, O>(&self, input: &'i I, color_fn: F) -> Box<dyn Display + 'o>
-    where
-        'i: 'o,
-        I: Display + ?Sized,
-        O: Display + 'o,
-        F: Fn(&'i I) -> O,
-    {
-        match self.color_choice {
-            ColorChoice::Never => Box::new(input),
-            ColorChoice::Always => Box::new(color_fn(input)),
-            ColorChoice::Auto => {
-                if self.is_terminal {
-                    Box::new(color_fn(input))
-                } else {
-                    Box::new(input)
-                }
-            }
-        }
-    }
-
-    /// Returns the colorized version of [`icons::NONE`].
-    #[expect(
-        clippy::unused_self,
-        reason = "So refactors may be easier by keeping an API identical to the other icons."
-    )]
-    pub fn none_icon(&self) -> impl Display {
-        icons::NONE
-    }
-
-    /// Returns the colorized version of [`icons::UNKNOWN`].
-    pub fn unknown_icon(&self) -> impl Display {
-        self.colorize_with(&icons::UNKNOWN, |icon| icon.bold().yellow().to_string())
-    }
-
-    /// Returns the colorized version of [`icons::TODO`].
-    pub fn todo_icon(&self) -> impl Display {
-        self.colorize_with(&icons::TODO, |icon| icon.bold().blue().to_string())
-    }
-
-    /// Returns the colorized version of [`icons::NEW`].
-    pub fn new_icon(&self) -> impl Display {
-        self.colorize_with(&icons::NEW, |icon| icon.bold().green().to_string())
-    }
-
-    /// Returns the colorized version of [`icons::ERR`].
-    pub fn err_icon(&self) -> impl Display {
-        self.colorize_with(&icons::ERR, char::red)
-    }
-
-    /// Returns the colorized version of [`icons::OK`].
-    pub fn ok_icon(&self) -> impl Display {
-        self.colorize_with(&icons::OK, char::green)
     }
 }
