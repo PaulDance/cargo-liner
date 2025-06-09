@@ -1,3 +1,3 @@
- WARN  cargo_liner > Configuration file will be overwritten.
- INFO  cargo_liner > Importing Cargo installed crates as a new configuration file...
- INFO  cargo_liner > Done.
+ WARN  cargo_liner::commands::import > Configuration file will be overwritten.
+ INFO  cargo_liner::commands::import > Importing Cargo installed crates as a new configuration file...
+ INFO  cargo_liner                   > Done.

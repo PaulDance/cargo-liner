@@ -8,7 +8,7 @@ use std::{env, process};
 use clap::ColorChoice;
 use color_eyre::Section;
 use color_eyre::config::{HookBuilder, Theme};
-use color_eyre::eyre::{self, Result, WrapErr};
+use color_eyre::eyre::{Result, WrapErr};
 use log::LevelFilter;
 use pretty_env_logger::env_logger::WriteStyle;
 use semver::Version;
@@ -83,10 +83,6 @@ fn install_error_hook(args: &LinerArgs) -> Result<()> {
 }
 
 /// Actual main operation.
-#[expect(
-    clippy::too_many_lines,
-    reason = "This the main part, so contains all supported commands and their respective processing."
-)]
 fn try_main(args: &LinerArgs) -> Result<()> {
     init_logger(args)?;
     let colorizer = Colorizer::new(&std::io::stderr(), args.color);
@@ -97,39 +93,7 @@ fn try_main(args: &LinerArgs) -> Result<()> {
             commands::completions::run(comp_args);
         }
         Some(LinerCommands::Import(import_args)) => {
-            if UserConfig::file_path()
-                .wrap_err("Failed to build the configuration file path.")?
-                .try_exists()
-                .wrap_err("Failed to check if the configuration file exists.")
-                .suggestion("Check the permissions of the Cargo home directory.")?
-            {
-                if import_args.force {
-                    log::warn!("Configuration file will be overwritten.");
-                } else {
-                    eyre::bail!("Configuration file already exists, use -f/--force to overwrite.");
-                }
-            }
-            log::info!("Importing Cargo installed crates as a new configuration file...");
-            // Clap conflict settings ensure the options are mutually exclusive.
-            (if import_args.force {
-                UserConfig::overwrite_file
-            } else {
-                UserConfig::save_file
-            })(&(if import_args.exact {
-                CargoCratesToml::into_exact_version_config
-            } else if import_args.compatible {
-                CargoCratesToml::into_comp_version_config
-            } else if import_args.patch {
-                CargoCratesToml::into_patch_version_config
-            } else {
-                CargoCratesToml::into_star_version_config
-            })(
-                CargoCratesToml::parse_file()
-                    .wrap_err("Failed to parse Cargo's .crates.toml file.")?,
-                import_args.keep_self,
-                import_args.keep_local,
-            ))
-            .wrap_err("Failed to save the configuration file.")?;
+            commands::import::run(import_args)?;
         }
         cmd @ (None | Some(LinerCommands::Ship(_))) => {
             let cargo_verbosity = match args.verbosity() {
