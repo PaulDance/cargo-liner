@@ -258,7 +258,7 @@ pub fn fake_install(pkg: &str, ver: &str, locally_installed: bool) {
 /// the package and a default version.
 pub fn fake_install_self() {
     fake_install(clap::crate_name!(), "0.0.0", false);
-    assert_installed(clap::crate_name!());
+    assert_installed_self();
 }
 
 /// Runs [`fake_install`] for each package name and version pair yielded by the
@@ -280,6 +280,11 @@ pub fn assert_installed(pkg: &'static str) {
         cargo_test_support::paths::cargo_home(),
         pkg,
     );
+}
+
+/// Asserts that the current package is installed.
+pub fn assert_installed_self() {
+    assert_installed(clap::crate_name!());
 }
 
 /// Runs [`assert_installed`] on all the packages yielded by the given iterator.
