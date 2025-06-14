@@ -480,8 +480,9 @@ pub enum InstallStatus {
 }
 
 /// Runs `cargo uninstall` with the given package name.
-fn uninstall(pkg_name: &str) -> Result<()> {
+fn uninstall(pkg_name: &str, verbosity: i8) -> Result<()> {
     let mut cmd = Command::new(env_var()?);
+    add_verbosity_arg(&mut cmd, verbosity);
     cmd.args(["uninstall", "--", pkg_name]);
 
     log_cmd(&cmd);
@@ -499,11 +500,15 @@ fn uninstall(pkg_name: &str) -> Result<()> {
 }
 
 /// Uninstalls all the packages given by name.
-pub fn uninstall_all(pkg_names: impl IntoIterator<Item = impl AsRef<str>>) -> Result<()> {
+pub fn uninstall_all(
+    pkg_names: impl IntoIterator<Item = impl AsRef<str>>,
+    verbosity: i8,
+) -> Result<()> {
     for pkg_name in pkg_names {
         let pkg_name = pkg_name.as_ref();
         log::info!("Uninstalling {pkg_name:?}...");
-        uninstall(pkg_name).wrap_err_with(|| format!("Failed to uninstall {pkg_name:?}."))?;
+        uninstall(pkg_name, verbosity)
+            .wrap_err_with(|| format!("Failed to uninstall {pkg_name:?}."))?;
     }
 
     Ok(())
