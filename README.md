@@ -816,6 +816,78 @@ Simply run `cargo liner ship` in order to:
 [`cargo install`](https://doc.rust-lang.org/cargo/commands/cargo-install.html)
 
 
+#### `jettison` subcommand
+
+This command enables one to clean their environment up a bit: it uninstalls
+with [`cargo uninstall`] all packages that are currently installed, but not put
+in the Liner configuration. It is in effect a form of "shrink to fit".
+
+```console
+$ cargo liner help jettison
+Uninstall not-configured packages.
+
+This will remove all packages that are currently installed according
+to Cargo, but that are not part of the Liner configuration. Use with
+care!
+
+Usage: cargo liner jettison [OPTIONS]
+
+Options:
+  -v, --verbose...
+          Be more verbose. Use multiple times to be more and more so
+          each time.
+          
+          When omitted, INFO and above messages of only this crate
+          are logged. When used once, DEBUG and above messages of
+          only this crate are logged and error backtraces are shown
+          (`RUST_BACKTRACE=1`). When used twice, DEBUG and above
+          messages of all crates are logged, `-v` is given to Cargo
+          calls (details ran commands), `--log-level debug` is given
+          to `cargo-binstall` when using it, and error backtraces are
+          fully shown (`RUST_BACKTRACE=full`). When used three times
+          or more, TRACE and above messages of all crates are logged,
+          `-vv` is given to Cargo calls (includes build output),
+          `--log-level trace` is given to `cargo-binstall` when using
+          it, and error backtraces are fully shown
+          (`RUST_BACKTRACE=full`). This takes precedence over the
+          environment.
+
+  -q, --quiet...
+          Be quieter. Use multiple times to be more and more so each
+          time.
+          
+          When omitted, INFO and above messages of only this crate
+          are logged. When used once, WARN and above messages of only
+          this crate are logged, and `--log-level warn` is given to
+          `cargo-binstall` when using it. When used twice, ERROR
+          messages of all crates are logged, and `--log-level error`
+          is given to `cargo-binstall` when using it. When used three
+          times or more, no message will be logged, including Cargo's
+          by passing `-q` to it and `cargo-binstall`'s by passing
+          `--log-level off` to it, and error reports are silenced.
+          This takes precedence over the environment.
+
+      --color <WHEN>
+          Control the coloring of the logging output.
+          
+          This enables one to manually specify when should the logs
+          and error reports be colored or not, for example if the
+          automatic detection is either not wished or not functional.
+          The value is also passed onto calls to Cargo, but not
+          `cargo-binstall` when using it as it does not yet have any
+          similar option.
+          
+          [default: auto]
+          [possible values: auto, always, never]
+
+  -h, --help
+          Print help (see a summary with '-h')
+
+```
+
+[`cargo uninstall`](https://doc.rust-lang.org/cargo/commands/cargo-uninstall.html)
+
+
 #### `import` subcommand
 
 This command is meant to be used upon installing the tool and using it for the
