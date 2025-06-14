@@ -106,3 +106,22 @@ fn validate_jettison_uninstall_some() {
     assert_not_installed_all(["abc", "def", "ghi"]);
     assert_installed_all(["jkl", "mno", "pqr"]);
 }
+
+#[cargo_test]
+fn validate_jettison_verbosity_and_color() {
+    fake_install_self();
+    fake_install("abc", "0.0.0", false);
+    assert_installed("abc");
+    write_user_config(&["[packages]"]);
+
+    // HACK: use the debug output to observe their being passed down.
+    cargo_liner()
+        .args(["jettison", "-vvv", "--color=never"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/jettison/validate_jettison_verbosity_and_color.stderr"
+        ]);
+    assert_not_installed("abc");
+}
