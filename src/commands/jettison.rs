@@ -1,5 +1,6 @@
 use std::collections::{BTreeMap, BTreeSet};
 
+use clap::ColorChoice;
 use color_eyre::Result;
 use color_eyre::eyre::Context;
 
@@ -7,13 +8,14 @@ use crate::cargo;
 use crate::cli::JettisonArgs;
 use crate::config::{CargoCratesToml, PackageRequirement, UserConfig};
 
-pub fn run(_args: &JettisonArgs, cargo_verbosity: i8) -> Result<()> {
+pub fn run(_args: &JettisonArgs, cargo_color: ColorChoice, cargo_verbosity: i8) -> Result<()> {
     let config = UserConfig::parse_file().wrap_err("Failed to parse the user configuration.")?;
     let cct =
         CargoCratesToml::parse_file().wrap_err("Failed to parse Cargo's .crates.toml file.")?;
 
     cargo::uninstall_all(
         needing_uninstall(cct.into_names(), &config.packages),
+        cargo_color,
         cargo_verbosity,
     )
     .wrap_err("Some package failed to uninstall.")?;
