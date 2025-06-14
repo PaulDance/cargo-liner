@@ -3,11 +3,11 @@ use std::collections::{BTreeMap, BTreeSet};
 use color_eyre::Result;
 use color_eyre::eyre::Context;
 use semver::Version;
-use tabled::settings::Style;
-use tabled::{Table, Tabled};
+use tabled::Tabled;
 
 use crate::cargo::{self, InstallStatus};
 use crate::coloring::Colorizer;
+use crate::commands::styled_table;
 use crate::config::{CargoCratesToml, DetailedPackageReq, EffectiveConfig};
 
 pub fn run(config: &EffectiveConfig, colorizer: &Colorizer, cargo_verbosity: i8) -> Result<()> {
@@ -127,7 +127,7 @@ fn log_version_check_summary(
             // Iterate on `pkg_reqs` in order to get the package names: due to
             // the possibility of a partial `skip-check`, `old_vers U new_vers`
             // may not contain every one of them.
-            Table::new(pkg_reqs.keys().map(|pkg_name| {
+            styled_table(pkg_reqs.keys().map(|pkg_name| {
                 let old_ver = old_vers.get(pkg_name);
                 let new_ver = new_vers.get(pkg_name);
                 PackageStatus {
@@ -154,8 +154,7 @@ fn log_version_check_summary(
                         })
                         .unwrap_or_else(|| colorizer.todo_icon().to_string()),
                 }
-            }))
-            .with(Style::sharp())
+            })),
         );
     }
 }
@@ -171,7 +170,7 @@ fn log_install_report(
     if !install_report.is_empty() {
         log::info!(
             "Installation report:\n{}",
-            Table::new(install_report.iter().map(|(pkg_name, status)| {
+            styled_table(install_report.iter().map(|(pkg_name, status)| {
                 PackageStatus {
                     name: pkg_name.clone(),
                     old_ver: old_vers
@@ -186,8 +185,7 @@ fn log_install_report(
                         InstallStatus::Failed => colorizer.err_icon().to_string(),
                     },
                 }
-            }))
-            .with(Style::sharp())
+            })),
         );
 
         if dry_run {
