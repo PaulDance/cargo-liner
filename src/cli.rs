@@ -139,6 +139,12 @@ pub enum LinerCommands {
     /// Self-updating is enabled by default.
     Ship(ShipArgsWithNegations),
 
+    /// Uninstall not-configured packages.
+    ///
+    /// This will remove all packages that are currently installed according to
+    /// Cargo, but that are not part of the Liner configuration. Use with care!
+    Jettison(JettisonArgs),
+
     /// Import the `$CARGO_HOME/.crates.toml` Cargo-edited save file as a new
     /// Liner configuration file.
     ///
@@ -457,6 +463,10 @@ impl ShipArgsWithNegations {
         self.inner
     }
 }
+
+/// Arguments for the `jettison` subcommand.
+#[derive(clap::Args, Debug, PartialEq, Eq)]
+pub struct JettisonArgs {}
 
 /// Arguments for the `import` subcommand.
 #[derive(clap::Args, Debug, PartialEq, Eq)]

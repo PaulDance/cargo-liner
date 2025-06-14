@@ -418,6 +418,7 @@ Usage: cargo liner [OPTIONS] [COMMAND]
 Commands:
   ship         The default command if omitted: install and update
                configured packages
+  jettison     Uninstall not-configured packages
   import       Import the `$CARGO_HOME/.crates.toml` Cargo-edited
                save file as a new Liner configuration file
   completions  Generate an auto-completion script for the given shell
