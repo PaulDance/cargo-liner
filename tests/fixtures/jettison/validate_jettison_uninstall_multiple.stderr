@@ -1,7 +1,15 @@
- INFO  cargo_liner::cargo > Uninstalling "abc"...
+ INFO  cargo_liner::commands::jettison > Will uninstall:
+┌──────┬─────────┐
+│ Name │ Version │
+├──────┼─────────┤
+│ abc  │ 0.0.0   │
+│ def  │ 0.0.0   │
+│ ghi  │ 0.0.0   │
+└──────┴─────────┘
+ INFO  cargo_liner::cargo              > Uninstalling "abc"...
     Removing [ROOT]/home/.cargo/bin/abc
- INFO  cargo_liner::cargo > Uninstalling "def"...
+ INFO  cargo_liner::cargo              > Uninstalling "def"...
     Removing [ROOT]/home/.cargo/bin/def
- INFO  cargo_liner::cargo > Uninstalling "ghi"...
+ INFO  cargo_liner::cargo              > Uninstalling "ghi"...
     Removing [ROOT]/home/.cargo/bin/ghi
- INFO  cargo_liner        > Done.
+ INFO  cargo_liner                     > Done.

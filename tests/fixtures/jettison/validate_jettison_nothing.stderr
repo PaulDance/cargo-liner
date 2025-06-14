@@ -1,1 +1,2 @@
- INFO  cargo_liner > Done.
+ INFO  cargo_liner::commands::jettison > No package to uninstall: all installed are configured as well.
+ INFO  cargo_liner                     > Done.
