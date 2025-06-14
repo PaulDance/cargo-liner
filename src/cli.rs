@@ -458,6 +458,7 @@ impl ShipArgsWithNegations {
     }
 }
 
+/// Arguments for the `import` subcommand.
 #[derive(clap::Args, Debug, PartialEq, Eq)]
 pub struct ImportArgs {
     /// Import package versions as "exact versions", i.e. prepended with
@@ -513,6 +514,7 @@ pub struct ImportArgs {
     pub keep_local: bool,
 }
 
+/// Arguments for the `completions` subcommand.
 #[derive(clap::Args, Debug, PartialEq, Eq)]
 pub struct CompletionsArgs {
     /// The shell flavor to use when generating the completions.
