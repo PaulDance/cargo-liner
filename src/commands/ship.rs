@@ -112,18 +112,6 @@ fn needing_install(
     to_install
 }
 
-#[derive(Tabled)]
-struct PackageStatus {
-    #[tabled(rename = "Name")]
-    name: String,
-    #[tabled(rename = "Old version")]
-    old_ver: String,
-    #[tabled(rename = "New version")]
-    new_ver: String,
-    #[tabled(rename = "Status")]
-    status: String,
-}
-
 /// Displays whether each package needs an update or not.
 fn log_version_check_summary(
     colorizer: &Colorizer,
@@ -206,4 +194,17 @@ fn log_install_report(
             log::warn!("This is a dry run, so this report is simulated.");
         }
     }
+}
+
+/// [`Tabled`] for logging package statuses.
+#[derive(Tabled)]
+struct PackageStatus {
+    #[tabled(rename = "Name")]
+    name: String,
+    #[tabled(rename = "Old version")]
+    old_ver: String,
+    #[tabled(rename = "New version")]
+    new_ver: String,
+    #[tabled(rename = "Status")]
+    status: String,
 }
