@@ -9,7 +9,7 @@
 use std::str::FromStr;
 
 use clap::builder::ArgPredicate;
-use clap::{ArgAction, ColorChoice, Parser};
+use clap::{ArgAction, ColorChoice, Parser, ValueEnum};
 use clap_complete::Shell;
 use serde::{Deserialize, Serialize};
 
@@ -364,7 +364,6 @@ impl FromStr for BinstallChoice {
     type Err = clap::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        use clap::ValueEnum;
         for variant in Self::value_variants() {
             // UNWRAP: no value is skipped.
             if variant.to_possible_value().unwrap().matches(s, false) {
