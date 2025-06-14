@@ -81,6 +81,12 @@ fn install_error_hook(args: &LinerArgs) -> Result<()> {
 fn try_main(args: &LinerArgs) -> Result<()> {
     init_logger(args)?;
     let colorizer = Colorizer::new(&std::io::stderr(), args.color);
+    let cargo_verbosity = match args.verbosity() {
+        -2..=1 => 0,
+        v if v > 1 => v - 1,
+        q if q < -2 => q + 2,
+        _ => unreachable!(),
+    };
 
     // CLI command dispatch.
     match &args.command {
@@ -94,12 +100,6 @@ fn try_main(args: &LinerArgs) -> Result<()> {
             commands::jettison::run(jettison_args)?;
         }
         cmd @ (None | Some(LinerCommands::Ship(_))) => {
-            let cargo_verbosity = match args.verbosity() {
-                -2..=1 => 0,
-                v if v > 1 => v - 1,
-                q if q < -2 => q + 2,
-                _ => unreachable!(),
-            };
             let config = EffectiveConfig::new(
                 UserConfig::parse_file().wrap_err("Failed to parse the user configuration.")?,
                 config::env::ship_env_args()
