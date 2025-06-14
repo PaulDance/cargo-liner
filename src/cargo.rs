@@ -47,22 +47,7 @@ fn install(
     }
 
     cmd.args(["--color", &color.to_string()]);
-
-    match verbosity.cmp(&0) {
-        Ordering::Greater => {
-            let opt = iter::once('-')
-                .chain(iter::repeat_n('v', verbosity.try_into().unwrap()))
-                .collect::<String>();
-            cmd.arg(&opt);
-            log::trace!("`{opt}` arg added.");
-        }
-        Ordering::Less => {
-            cmd.arg("-q");
-            log::trace!("`-q` arg added.");
-        }
-        Ordering::Equal => {}
-    }
-
+    add_verbosity_arg(&mut cmd, verbosity);
     cmd.args(["install", "--version", &pkg_req.version.to_string()]);
 
     if !pkg_req.default_features {
@@ -184,6 +169,24 @@ fn install(
                 "This can happen for many reasons, but it should not happen easily at this point.",
             )
             .suggestion("Read the underlying error message.")
+    }
+}
+
+/// Adds the adequate verbosity argument to the given Cargo [`Command`].
+fn add_verbosity_arg(cmd: &mut Command, verbosity: i8) {
+    match verbosity.cmp(&0) {
+        Ordering::Greater => {
+            let opt = iter::once('-')
+                .chain(iter::repeat_n('v', verbosity.try_into().unwrap()))
+                .collect::<String>();
+            cmd.arg(&opt);
+            log::trace!("`{opt}` arg added.");
+        }
+        Ordering::Less => {
+            cmd.arg("-q");
+            log::trace!("`-q` arg added.");
+        }
+        Ordering::Equal => {}
     }
 }
 
