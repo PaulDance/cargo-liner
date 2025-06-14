@@ -2,4 +2,5 @@
 
 pub mod completions;
 pub mod import;
+pub mod jettison;
 pub mod ship;

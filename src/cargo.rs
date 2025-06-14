@@ -476,6 +476,36 @@ pub enum InstallStatus {
     Failed,
 }
 
+/// Runs `cargo uninstall` with the given package name.
+fn uninstall(pkg_name: &str) -> Result<()> {
+    let mut cmd = Command::new(env_var()?);
+    cmd.args(["uninstall", "--", pkg_name]);
+
+    log_cmd(&cmd);
+    let status = cmd
+        .status()
+        .wrap_err("Failed to execute Cargo.")
+        .note("This can happen for many reasons, but it should not happen easily at this point.")
+        .suggestion("Read the underlying error message.")?;
+
+    status.success().then_some(()).ok_or_else(|| {
+        eyre!("Cargo process finished unsuccessfully: {status}")
+            .note("This can happen for many reasons.")
+            .suggestion("Read Cargo's output.")
+    })
+}
+
+/// Uninstalls all the packages given by name.
+pub fn uninstall_all(pkg_names: impl IntoIterator<Item = impl AsRef<str>>) -> Result<()> {
+    for pkg_name in pkg_names {
+        let pkg_name = pkg_name.as_ref();
+        log::info!("Uninstalling {pkg_name:?}...");
+        uninstall(pkg_name).wrap_err_with(|| format!("Failed to uninstall {pkg_name:?}."))?;
+    }
+
+    Ok(())
+}
+
 /// Spawns `cargo search` for the given package with only stdout piped and
 /// returns the corresponding child process handle to be used with
 /// [`finish_search_exact`].

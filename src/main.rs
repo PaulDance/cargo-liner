@@ -90,6 +90,9 @@ fn try_main(args: &LinerArgs) -> Result<()> {
         Some(LinerCommands::Import(import_args)) => {
             commands::import::run(import_args)?;
         }
+        Some(LinerCommands::Jettison(jettison_args)) => {
+            commands::jettison::run(jettison_args)?;
+        }
         cmd @ (None | Some(LinerCommands::Ship(_))) => {
             let cargo_verbosity = match args.verbosity() {
                 -2..=1 => 0,
