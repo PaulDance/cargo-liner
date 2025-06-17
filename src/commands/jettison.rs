@@ -1,8 +1,9 @@
 use std::collections::BTreeMap;
+use std::io::{self, BufRead};
 
 use clap::ColorChoice;
-use color_eyre::Result;
 use color_eyre::eyre::Context;
+use color_eyre::{Result, Section};
 use semver::Version;
 use tabled::Tabled;
 
@@ -18,6 +19,13 @@ pub fn run(_args: &JettisonArgs, cargo_color: ColorChoice, cargo_verbosity: i8) 
 
     let to_uninstall = needing_uninstall(cct.into_name_versions(), &config.packages);
     log_uninstallation_plan(&to_uninstall);
+
+    if !to_uninstall.is_empty()
+        && ask_confirmation().wrap_err("Failed to ask for interactive confirmation.")?
+    {
+        log::info!("Aborting.");
+        return Ok(());
+    }
 
     cargo::uninstall_all(to_uninstall.into_keys(), cargo_color, cargo_verbosity)
         .wrap_err("Some package failed to uninstall.")?;
@@ -61,4 +69,35 @@ struct PackageEntry {
     name: String,
     #[tabled(rename = "Version")]
     version: String,
+}
+
+/// Interactively asks for user confirmation of this operation.
+///
+/// Returns whether the operation should be aborted or not, defaulting to not.
+fn ask_confirmation() -> Result<bool> {
+    log_confirmation();
+    let stdin = io::stdin().lock();
+
+    for line in stdin.lines() {
+        let line = line
+            .wrap_err("Failed to read from stdin.")
+            .note("This shouldn't happen easily at this point.")
+            .suggestion("Read the underlying error message.")?;
+
+        if line.is_empty() || line == "y" {
+            return Ok(false);
+        } else if line == "n" {
+            return Ok(true);
+        }
+
+        log_confirmation();
+    }
+
+    Ok(false)
+}
+
+/// Question used in [`ask_confirmation`].
+#[inline]
+fn log_confirmation() {
+    log::warn!("This will remove all the packages listed above: do you confirm? [Y/n]");
 }
