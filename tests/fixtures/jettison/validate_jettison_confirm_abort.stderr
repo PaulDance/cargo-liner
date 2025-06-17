@@ -1,0 +1,9 @@
+ INFO  cargo_liner::commands::jettison > Will uninstall:
+┌──────┬─────────┐
+│ Name │ Version │
+├──────┼─────────┤
+│ abc  │ 0.0.0   │
+└──────┴─────────┘
+ WARN  cargo_liner::commands::jettison > This will remove all the packages listed above: do you confirm? [Y/n]
+ INFO  cargo_liner::commands::jettison > Aborting.
+ INFO  cargo_liner                     > Done.
