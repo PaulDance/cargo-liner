@@ -1,0 +1,19 @@
+ INFO  cargo_liner::commands::jettison > Will uninstall:
+┌──────┬─────────┐
+│ Name │ Version │
+├──────┼─────────┤
+│ abc  │ 0.0.0   │
+│ def  │ 0.0.0   │
+│ ghi  │ 0.0.0   │
+└──────┴─────────┘
+ WARN  cargo_liner::commands::jettison > Skipping interactive confirmation, as requested with `--dry-run`.
+ INFO  cargo_liner::cargo              > Uninstalling "abc"...
+ WARN  cargo_liner::cargo              > Dry run: would have run `cargo uninstall` for `abc`.
+ INFO  cargo_liner::cargo              > Bump verbosity if additional details are desired.
+ INFO  cargo_liner::cargo              > Uninstalling "def"...
+ WARN  cargo_liner::cargo              > Dry run: would have run `cargo uninstall` for `def`.
+ INFO  cargo_liner::cargo              > Bump verbosity if additional details are desired.
+ INFO  cargo_liner::cargo              > Uninstalling "ghi"...
+ WARN  cargo_liner::cargo              > Dry run: would have run `cargo uninstall` for `ghi`.
+ INFO  cargo_liner::cargo              > Bump verbosity if additional details are desired.
+ INFO  cargo_liner                     > Done.

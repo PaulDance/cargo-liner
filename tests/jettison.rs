@@ -238,3 +238,25 @@ fn validate_jettison_noconfirm() {
         ]);
     assert_not_installed("abc");
 }
+
+#[cargo_test]
+fn validate_jettison_dryrun() {
+    fake_install_self();
+    fake_install_all([
+        ("abc", "0.0.0", false),
+        ("def", "0.0.0", false),
+        ("ghi", "0.0.0", false),
+    ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+    write_user_config(&["[packages]"]);
+
+    cargo_liner()
+        .args(["jettison", "--dry-run"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/jettison/validate_jettison_dryrun.stderr"
+        ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+}
