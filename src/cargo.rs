@@ -6,7 +6,7 @@ use std::cmp::Ordering;
 use std::collections::{BTreeMap, BTreeSet};
 use std::ffi::OsStr;
 use std::path::PathBuf;
-use std::process::{Child, Command, ExitStatus, Stdio};
+use std::process::{Child, Command, Stdio};
 use std::{env, io, iter};
 
 use clap::ColorChoice;
@@ -38,7 +38,7 @@ fn install(
     dry_run: bool,
     color: ColorChoice,
     verbosity: i8,
-) -> Result<Option<ExitStatus>> {
+) -> Result<()> {
     let mut cmd = Command::new(env_var()?);
 
     if !pkg_req.environment.is_empty() {
@@ -159,16 +159,21 @@ fn install(
         // TODO: Pass `--dry-run` when stabilized.
         log::warn!("Dry run: would have run `cargo install` for `{pkg_name}`.");
         log::info!("Bump verbosity if additional details are desired.");
-        // TODO: Remove `Option` layer when passing `--dry-run`.
-        Ok(None)
+        // TODO: Don't forget to check status here as well when passing `--dry-run`.
+        Ok(())
     } else {
-        cmd.status()
-            .map(Some)
+        let status = cmd
+            .status()
             .wrap_err("Failed to execute Cargo.")
             .note(
                 "This can happen for many reasons, but it should not happen easily at this point.",
             )
-            .suggestion("Read the underlying error message.")
+            .suggestion("Read the underlying error message.")?;
+        status.success().then_some(()).ok_or_else(|| {
+            eyre!("Cargo process finished unsuccessfully: {status}")
+                .note("This can happen for many reasons.")
+                .suggestion("Read Cargo's output.")
+        })
     }
 }
 
@@ -197,7 +202,7 @@ fn binstall(
     force: bool,
     dry_run: bool,
     verbosity: i8,
-) -> Result<ExitStatus> {
+) -> Result<()> {
     let mut cmd = Command::new(env_var()?);
     // The tool emits to stdout by default and does not have an option to
     // control that while only stderr is used here, so redirect instead.
@@ -274,10 +279,16 @@ fn binstall(
     cmd.args(["--", pkg_name]);
     log_cmd(&cmd);
 
-    cmd.status()
+    let status = cmd
+        .status()
         .wrap_err("Failed to execute Cargo.")
         .note("This can happen for many reasons, but it should not happen easily at this point.")
-        .suggestion("Read the underlying error message.")
+        .suggestion("Read the underlying error message.")?;
+    status.success().then_some(()).ok_or_else(|| {
+        eyre!("Cargo-Binstall process finished unsuccessfully: {status}")
+            .note("This can happen for many reasons.")
+            .suggestion("Read Cargo-Binstall's output.")
+    })
 }
 
 /// Heuristically determines whether `cargo-binstall` is installed or not.
@@ -346,7 +357,7 @@ fn install_one(
     binstall: BinstallChoice,
     color: ColorChoice,
     verbosity: i8,
-) -> Result<Option<ExitStatus>> {
+) -> Result<()> {
     // HACK: disable the auto mode under testing to easily avoid bothersome
     // hacks and maintenance there in order to avoid failing when the tool is
     // installed locally compared to current CI. Tests targeting binstall have
@@ -357,7 +368,7 @@ fn install_one(
             && binstall_is_available(installed)
     {
         log::debug!("Using `cargo-binstall` as the installation method.");
-        self::binstall(pkg_name, pkg_req, force, dry_run, verbosity).map(Some)
+        self::binstall(pkg_name, pkg_req, force, dry_run, verbosity)
     } else {
         log::debug!("Using `cargo install` as the installation method.");
         install(pkg_name, pkg_req, force, dry_run, color, verbosity)
@@ -405,24 +416,6 @@ pub fn install_all(
             color,
             verbosity,
         )
-        .and_then(|status| {
-            status.map_or(Ok(()), |status| {
-                status.success().then_some(()).ok_or_else(|| {
-                    let err = eyre!("Cargo process finished unsuccessfully: {status}")
-                        .note("This can happen for many reasons.")
-                        .suggestion("Read Cargo's output.");
-
-                    if no_fail_fast || pkg.no_fail_fast {
-                        err
-                    } else {
-                        err.suggestion(
-                            "Use `ship --no-fail-fast` to ignore this \
-                            and continue on with other packages.",
-                        )
-                    }
-                })
-            })
-        })
         .inspect(|()| {
             rep.insert(
                 pkg_name.clone(),
@@ -447,7 +440,9 @@ pub fn install_all(
                     None => err,
                 });
             } else {
-                return Err(err);
+                return Err(err.suggestion(
+                    "Use `ship --no-fail-fast` to ignore this and continue on with other packages.",
+                ));
             }
         }
     }
