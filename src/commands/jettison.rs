@@ -41,11 +41,21 @@ pub fn run(args: &JettisonArgs, cargo_color: ColorChoice, cargo_verbosity: i8) -
 
     cargo::uninstall_all(
         to_uninstall.into_keys(),
+        args.no_fail_fast,
         args.dry_run,
         cargo_color,
         cargo_verbosity,
     )
-    .wrap_err("Some package failed to uninstall.")?;
+    .wrap_err_with(|| {
+        format!(
+            "{} package failed to uninstall.",
+            if args.no_fail_fast {
+                "At least one"
+            } else {
+                "Some"
+            }
+        )
+    })?;
     Ok(())
 }
 

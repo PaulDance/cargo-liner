@@ -508,18 +508,35 @@ fn uninstall(pkg_name: &str, dry_run: bool, color: ColorChoice, verbosity: i8) -
 /// Uninstalls all the packages given by name.
 pub fn uninstall_all(
     pkg_names: impl IntoIterator<Item = impl AsRef<str>>,
+    no_fail_fast: bool,
     dry_run: bool,
     color: ColorChoice,
     verbosity: i8,
 ) -> Result<()> {
+    // Aggregation of errors when `no_fail_fast` is enabled.
+    let mut err_rep = None::<eyre::Report>;
+
     for pkg_name in pkg_names {
         let pkg_name = pkg_name.as_ref();
         log::info!("Uninstalling {pkg_name:?}...");
 
-        uninstall(pkg_name, dry_run, color, verbosity)
-            .wrap_err_with(|| format!("Failed to uninstall {pkg_name:?}."))?;
+        if let Err(err) = uninstall(pkg_name, dry_run, color, verbosity)
+            .wrap_err_with(|| format!("Failed to uninstall {pkg_name:?}."))
+        {
+            if no_fail_fast {
+                err_rep = Some(match err_rep {
+                    Some(err_rep) => err_rep.wrap_err(err),
+                    None => err,
+                });
+            } else {
+                return Err(err.suggestion(
+                    "Use `-k/--no-fail-fast` to ignore this and continue on with other packages.",
+                ));
+            }
+        }
     }
-    Ok(())
+
+    err_rep.map_or(Ok(()), Err)
 }
 
 /// Spawns `cargo search` for the given package with only stdout piped and
