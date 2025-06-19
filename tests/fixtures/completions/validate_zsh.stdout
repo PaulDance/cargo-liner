@@ -71,6 +71,8 @@ never\:"Completely disable the feature and only rely on Cargo"))' \
 (jettison)
 _arguments "${_arguments_options[@]}" : \
 '--color=[Control the coloring of the logging output]:WHEN:(auto always never)' \
+'-y[Disable the confirmation of removal]' \
+'--no-confirm[Disable the confirmation of removal]' \
 '(-q --quiet)*-v[Be more verbose. Use multiple times to be more and more so each time]' \
 '(-q --quiet)*--verbose[Be more verbose. Use multiple times to be more and more so each time]' \
 '(-v --verbose)*-q[Be quieter. Use multiple times to be more and more so each time]' \

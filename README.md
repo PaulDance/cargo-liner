@@ -833,6 +833,17 @@ care!
 Usage: cargo liner jettison [OPTIONS]
 
 Options:
+  -y, --no-confirm
+          Disable the confirmation of removal.
+          
+          By default, an interactive confirmation is prompted to the
+          user in order to avoid hasty deletions, proceeding only
+          when either no input is given (enter key directly) or `y`
+          is entered. If no standard input is available, which should
+          for example be the case in CI or server environments where
+          there is no tty setup, then the confirmaton is immediately
+          passed. In any case, this flag always disables it entirely.
+
   -v, --verbose...
           Be more verbose. Use multiple times to be more and more so
           each time.
