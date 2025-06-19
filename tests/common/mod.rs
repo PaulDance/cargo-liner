@@ -315,6 +315,24 @@ pub fn assert_not_installed_all(pkgs: impl IntoIterator<Item = &'static str>) {
     }
 }
 
+/// Breaks the fake installation of the given package by removing its binary.
+pub fn break_fake_installation(pkg: &str) {
+    fs::remove_file(
+        cargo_test_support::paths::home()
+            .join(".cargo/bin")
+            .join(pkg),
+    )
+    .unwrap();
+}
+
+/// Runs [`break_fake_installation`] on all the packages yielded by the given
+/// iterator.
+pub fn break_fake_installation_all(pkgs: impl IntoIterator<Item = &'static str>) {
+    for pkg in pkgs {
+        break_fake_installation(pkg);
+    }
+}
+
 /// Publishes the given package name and version to the local fake registry
 /// with minimal contents.
 pub fn fake_publish(pkg: &str, ver: &str) {
