@@ -1,0 +1,35 @@
+ INFO  cargo_liner::commands::jettison > Will uninstall:
+┌──────┬─────────┐
+│ Name │ Version │
+├──────┼─────────┤
+│ abc  │ 0.0.0   │
+│ def  │ 0.0.0   │
+│ ghi  │ 0.0.0   │
+│ jkl  │ 0.0.0   │
+│ mno  │ 0.0.0   │
+└──────┴─────────┘
+ WARN  cargo_liner::commands::jettison > This will remove all the packages listed above: do you confirm? [Y/n]
+ INFO  cargo_liner::cargo              > Uninstalling "abc"...
+    Removing [ROOT]/home/.cargo/bin/abc
+ INFO  cargo_liner::cargo              > Uninstalling "def"...
+error: corrupt metadata, `[ROOT]/home/.cargo/bin/def` does not exist when it should
+ INFO  cargo_liner::cargo              > Uninstalling "ghi"...
+    Removing [ROOT]/home/.cargo/bin/ghi
+ INFO  cargo_liner::cargo              > Uninstalling "jkl"...
+error: corrupt metadata, `[ROOT]/home/.cargo/bin/jkl` does not exist when it should
+ INFO  cargo_liner::cargo              > Uninstalling "mno"...
+    Removing [ROOT]/home/.cargo/bin/mno
+Error: 
+   0: At least one package failed to uninstall.
+   1: Failed to uninstall "jkl".
+   2: Failed to uninstall "def".
+   3: Cargo process finished unsuccessfully: [EXIT_STATUS]: 101
+
+Location:
+   src/[..].rs:[..]
+
+Note: This can happen for many reasons.
+Suggestion: Read Cargo's output.
+
+Backtrace omitted. Run with RUST_BACKTRACE=1 environment variable to display it.
+Run with RUST_BACKTRACE=full to include source snippets.

@@ -260,3 +260,75 @@ fn validate_jettison_dryrun() {
         ]);
     assert_installed_all(["abc", "def", "ghi"]);
 }
+
+#[cargo_test]
+fn validate_jettison_failfast() {
+    fake_install_self();
+    fake_install_all([
+        ("abc", "0.0.0", false),
+        ("def", "0.0.0", false),
+        ("ghi", "0.0.0", false),
+    ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+    write_user_config(&["[packages]"]);
+    break_fake_installation("def");
+
+    cargo_liner()
+        .arg("jettison")
+        .assert()
+        .failure()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/jettison/validate_jettison_failfast.stderr"
+        ]);
+    // The assertion checks for the exe only, so counts as uninstalled here.
+    assert_not_installed_all(["abc", "def"]);
+    assert_installed("ghi");
+}
+
+#[cargo_test]
+fn validate_jettison_nofailfast_err_iserr() {
+    fake_install_self();
+    fake_install_all([
+        ("abc", "0.0.0", false),
+        ("def", "0.0.0", false),
+        ("ghi", "0.0.0", false),
+        ("jkl", "0.0.0", false),
+        ("mno", "0.0.0", false),
+    ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+    write_user_config(&["[packages]"]);
+    break_fake_installation_all(["def", "jkl"]);
+
+    cargo_liner()
+        .args(["jettison", "--no-fail-fast"])
+        .assert()
+        .failure()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/jettison/validate_jettison_nofailfast_err_iserr.stderr"
+        ]);
+    assert_not_installed_all(["abc", "def", "ghi", "jkl", "mno"]);
+}
+
+#[cargo_test]
+fn validate_jettison_nofailfast_ok_isok() {
+    fake_install_self();
+    fake_install_all([
+        ("abc", "0.0.0", false),
+        ("def", "0.0.0", false),
+        ("ghi", "0.0.0", false),
+    ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+    write_user_config(&["[packages]"]);
+
+    cargo_liner()
+        .args(["jettison", "--no-fail-fast"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/jettison/validate_jettison_uninstall_multiple.stderr"
+        ]);
+    assert_not_installed_all(["abc", "def", "ghi"]);
+}
