@@ -220,3 +220,21 @@ fn validate_jettison_confirm_retry_abort() {
         ]);
     assert_installed("abc");
 }
+
+#[cargo_test]
+fn validate_jettison_noconfirm() {
+    fake_install_self();
+    fake_install("abc", "0.0.0", false);
+    assert_installed("abc");
+    write_user_config(&["[packages]"]);
+
+    cargo_liner()
+        .args(["jettison", "--no-confirm"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/jettison/validate_jettison_noconfirm.stderr"
+        ]);
+    assert_not_installed("abc");
+}

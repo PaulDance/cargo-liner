@@ -1,0 +1,10 @@
+ INFO  cargo_liner::commands::jettison > Will uninstall:
+┌──────┬─────────┐
+│ Name │ Version │
+├──────┼─────────┤
+│ abc  │ 0.0.0   │
+└──────┴─────────┘
+ WARN  cargo_liner::commands::jettison > Skipping interactive confirmation, as requested.
+ INFO  cargo_liner::cargo              > Uninstalling "abc"...
+    Removing [ROOT]/home/.cargo/bin/abc
+ INFO  cargo_liner                     > Done.
