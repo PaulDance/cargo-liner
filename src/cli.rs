@@ -477,6 +477,14 @@ pub struct JettisonArgs {
     /// immediately passed. In any case, this flag always disables it entirely.
     #[arg(short = 'y', long)]
     pub no_confirm: bool,
+    /// Perform all operations without actually uninstalling.
+    ///
+    /// This disables any uninstallation step and replaces them with
+    /// simulations, but retains all the remaining operations. This may be
+    /// useful in order to observe what would be performed without actually
+    /// doing it. This implies `--no-confirm`.
+    #[arg(short = 'n', long)]
+    pub dry_run: bool,
 }
 
 /// Arguments for the `import` subcommand.

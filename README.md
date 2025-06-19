@@ -844,6 +844,15 @@ Options:
           there is no tty setup, then the confirmaton is immediately
           passed. In any case, this flag always disables it entirely.
 
+  -n, --dry-run
+          Perform all operations without actually uninstalling.
+          
+          This disables any uninstallation step and replaces them
+          with simulations, but retains all the remaining operations.
+          This may be useful in order to observe what would be
+          performed without actually doing it. This implies
+          `--no-confirm`.
+
   -v, --verbose...
           Be more verbose. Use multiple times to be more and more so
           each time.
