@@ -813,7 +813,7 @@ Simply run `cargo liner ship` in order to:
    update, respecting the version requirements.
  * Self-update only if `--no-self` is not given.
 
-[`cargo install`](https://doc.rust-lang.org/cargo/commands/cargo-install.html)
+[`cargo install`]: https://doc.rust-lang.org/cargo/commands/cargo-install.html
 
 
 #### `jettison` subcommand
@@ -921,7 +921,7 @@ Options:
 
 ```
 
-[`cargo uninstall`](https://doc.rust-lang.org/cargo/commands/cargo-uninstall.html)
+[`cargo uninstall`]: https://doc.rust-lang.org/cargo/commands/cargo-uninstall.html
 
 
 #### `import` subcommand
