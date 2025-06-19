@@ -12,7 +12,7 @@ use crate::cli::JettisonArgs;
 use crate::commands::styled_table;
 use crate::config::{CargoCratesToml, PackageRequirement, UserConfig};
 
-pub fn run(_args: &JettisonArgs, cargo_color: ColorChoice, cargo_verbosity: i8) -> Result<()> {
+pub fn run(args: &JettisonArgs, cargo_color: ColorChoice, cargo_verbosity: i8) -> Result<()> {
     let config = UserConfig::parse_file().wrap_err("Failed to parse the user configuration.")?;
     let cct =
         CargoCratesToml::parse_file().wrap_err("Failed to parse Cargo's .crates.toml file.")?;
@@ -20,9 +20,14 @@ pub fn run(_args: &JettisonArgs, cargo_color: ColorChoice, cargo_verbosity: i8) 
     let to_uninstall = needing_uninstall(cct.into_name_versions(), &config.packages);
     log_uninstallation_plan(&to_uninstall);
 
-    if !to_uninstall.is_empty()
-        && ask_confirmation().wrap_err("Failed to ask for interactive confirmation.")?
-    {
+    // Nothing to do in this case anyway, so cut short.
+    if to_uninstall.is_empty() {
+        return Ok(());
+    }
+
+    if args.no_confirm {
+        log::warn!("Skipping interactive confirmation, as requested.");
+    } else if ask_confirmation().wrap_err("Failed to ask for interactive confirmation.")? {
         log::info!("Aborting.");
         return Ok(());
     }
