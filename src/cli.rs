@@ -477,6 +477,21 @@ pub struct JettisonArgs {
     /// immediately passed. In any case, this flag always disables it entirely.
     #[arg(short = 'y', long)]
     pub no_confirm: bool,
+
+    /// Disable the default fail-fast execution of `cargo uninstall`s.
+    ///
+    /// By default, whenever a call to `cargo uninstall` fails for any reason,
+    /// the overall operation is stopped as soon as possible. In some cases,
+    /// this is a bit too restrictive as it prevents uninstalling the following
+    /// packages. The option it therefore provided in order to make the
+    /// uninstallation keep on going by continuing to call `cargo uninstall` on
+    /// each concerned package, even if some previous one failed. However, in
+    /// case any of the packages fails to uninstall and the option is used, an
+    /// error will still be reported at the end, containing an indication of all
+    /// the packages that failed to uninstall.
+    #[arg(short = 'k', long)]
+    pub no_fail_fast: bool,
+
     /// Perform all operations without actually uninstalling.
     ///
     /// This disables any uninstallation step and replaces them with

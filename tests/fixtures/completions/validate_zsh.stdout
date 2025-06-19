@@ -73,6 +73,8 @@ _arguments "${_arguments_options[@]}" : \
 '--color=[Control the coloring of the logging output]:WHEN:(auto always never)' \
 '-y[Disable the confirmation of removal]' \
 '--no-confirm[Disable the confirmation of removal]' \
+'-k[Disable the default fail-fast execution of \`cargo uninstall\`s]' \
+'--no-fail-fast[Disable the default fail-fast execution of \`cargo uninstall\`s]' \
 '-n[Perform all operations without actually uninstalling]' \
 '--dry-run[Perform all operations without actually uninstalling]' \
 '(-q --quiet)*-v[Be more verbose. Use multiple times to be more and more so each time]' \

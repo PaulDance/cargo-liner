@@ -844,6 +844,22 @@ Options:
           there is no tty setup, then the confirmaton is immediately
           passed. In any case, this flag always disables it entirely.
 
+  -k, --no-fail-fast
+          Disable the default fail-fast execution of `cargo
+          uninstall`s.
+          
+          By default, whenever a call to `cargo uninstall` fails for
+          any reason, the overall operation is stopped as soon as
+          possible. In some cases, this is a bit too restrictive as
+          it prevents uninstalling the following packages. The option
+          it therefore provided in order to make the uninstallation
+          keep on going by continuing to call `cargo uninstall` on
+          each concerned package, even if some previous one failed.
+          However, in case any of the packages fails to uninstall and
+          the option is used, an error will still be reported at the
+          end, containing an indication of all the packages that
+          failed to uninstall.
+
   -n, --dry-run
           Perform all operations without actually uninstalling.
           
