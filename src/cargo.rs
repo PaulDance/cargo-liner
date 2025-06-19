@@ -480,19 +480,24 @@ pub enum InstallStatus {
 }
 
 /// Runs `cargo uninstall` with the given package name.
-fn uninstall(pkg_name: &str, color: ColorChoice, verbosity: i8) -> Result<()> {
+fn uninstall(pkg_name: &str, dry_run: bool, color: ColorChoice, verbosity: i8) -> Result<()> {
     let mut cmd = Command::new(env_var()?);
     cmd.args(["--color", &color.to_string()]);
     add_verbosity_arg(&mut cmd, verbosity);
     cmd.args(["uninstall", "--", pkg_name]);
-
     log_cmd(&cmd);
+
+    if dry_run {
+        log::warn!("Dry run: would have run `cargo uninstall` for `{pkg_name}`.");
+        log::info!("Bump verbosity if additional details are desired.");
+        return Ok(());
+    }
+
     let status = cmd
         .status()
         .wrap_err("Failed to execute Cargo.")
         .note("This can happen for many reasons, but it should not happen easily at this point.")
         .suggestion("Read the underlying error message.")?;
-
     status.success().then_some(()).ok_or_else(|| {
         eyre!("Cargo process finished unsuccessfully: {status}")
             .note("This can happen for many reasons.")
@@ -503,6 +508,7 @@ fn uninstall(pkg_name: &str, color: ColorChoice, verbosity: i8) -> Result<()> {
 /// Uninstalls all the packages given by name.
 pub fn uninstall_all(
     pkg_names: impl IntoIterator<Item = impl AsRef<str>>,
+    dry_run: bool,
     color: ColorChoice,
     verbosity: i8,
 ) -> Result<()> {
@@ -510,7 +516,7 @@ pub fn uninstall_all(
         let pkg_name = pkg_name.as_ref();
         log::info!("Uninstalling {pkg_name:?}...");
 
-        uninstall(pkg_name, color, verbosity)
+        uninstall(pkg_name, dry_run, color, verbosity)
             .wrap_err_with(|| format!("Failed to uninstall {pkg_name:?}."))?;
     }
     Ok(())

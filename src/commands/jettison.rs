@@ -25,15 +25,27 @@ pub fn run(args: &JettisonArgs, cargo_color: ColorChoice, cargo_verbosity: i8) -
         return Ok(());
     }
 
-    if args.no_confirm {
-        log::warn!("Skipping interactive confirmation, as requested.");
+    if args.no_confirm || args.dry_run {
+        log::warn!(
+            "Skipping interactive confirmation, as requested with `{}`.",
+            if args.no_confirm {
+                "--no-confirm"
+            } else {
+                "--dry-run"
+            },
+        );
     } else if ask_confirmation().wrap_err("Failed to ask for interactive confirmation.")? {
         log::info!("Aborting.");
         return Ok(());
     }
 
-    cargo::uninstall_all(to_uninstall.into_keys(), cargo_color, cargo_verbosity)
-        .wrap_err("Some package failed to uninstall.")?;
+    cargo::uninstall_all(
+        to_uninstall.into_keys(),
+        args.dry_run,
+        cargo_color,
+        cargo_verbosity,
+    )
+    .wrap_err("Some package failed to uninstall.")?;
     Ok(())
 }
 

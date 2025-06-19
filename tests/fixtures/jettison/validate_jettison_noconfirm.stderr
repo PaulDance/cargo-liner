@@ -4,7 +4,7 @@
 ├──────┼─────────┤
 │ abc  │ 0.0.0   │
 └──────┴─────────┘
- WARN  cargo_liner::commands::jettison > Skipping interactive confirmation, as requested.
+ WARN  cargo_liner::commands::jettison > Skipping interactive confirmation, as requested with `--no-confirm`.
  INFO  cargo_liner::cargo              > Uninstalling "abc"...
     Removing [ROOT]/home/.cargo/bin/abc
  INFO  cargo_liner                     > Done.
