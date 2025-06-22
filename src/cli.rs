@@ -1224,6 +1224,147 @@ mod tests {
     }
 
     #[test]
+    fn test_jettison_noconfirm() {
+        assert_eq!(
+            CargoArgs::try_parse_from(["cargo", "liner", "jettison", "--no-confirm"]).unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Jettison(JettisonArgsWithNegations {
+                    inner: JettisonArgs {
+                        no_confirm: true,
+                        no_fail_fast: false,
+                        dry_run: false,
+                    },
+                    _confirm: (),
+                    _fail_fast: (),
+                    _no_dry_run: (),
+                })),
+                verbose: 0,
+                quiet: 0,
+                color: ColorChoice::Auto,
+            }),
+        );
+    }
+
+    #[test]
+    fn test_jettison_noconfirm_negation() {
+        assert_eq!(
+            CargoArgs::try_parse_from(["cargo", "liner", "jettison", "--no-confirm", "--confirm"])
+                .unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Jettison(JettisonArgsWithNegations {
+                    inner: JettisonArgs {
+                        no_confirm: false,
+                        no_fail_fast: false,
+                        dry_run: false,
+                    },
+                    _confirm: (),
+                    _fail_fast: (),
+                    _no_dry_run: (),
+                })),
+                verbose: 0,
+                quiet: 0,
+                color: ColorChoice::Auto,
+            }),
+        );
+    }
+
+    #[test]
+    fn test_jettison_nofailfast() {
+        assert_eq!(
+            CargoArgs::try_parse_from(["cargo", "liner", "jettison", "--no-fail-fast"]).unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Jettison(JettisonArgsWithNegations {
+                    inner: JettisonArgs {
+                        no_confirm: false,
+                        no_fail_fast: true,
+                        dry_run: false,
+                    },
+                    _confirm: (),
+                    _fail_fast: (),
+                    _no_dry_run: (),
+                })),
+                verbose: 0,
+                quiet: 0,
+                color: ColorChoice::Auto,
+            }),
+        );
+    }
+
+    #[test]
+    fn test_jettison_nofailfast_negation() {
+        assert_eq!(
+            CargoArgs::try_parse_from([
+                "cargo",
+                "liner",
+                "jettison",
+                "--no-fail-fast",
+                "--fail-fast"
+            ])
+            .unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Jettison(JettisonArgsWithNegations {
+                    inner: JettisonArgs {
+                        no_confirm: false,
+                        no_fail_fast: false,
+                        dry_run: false,
+                    },
+                    _confirm: (),
+                    _fail_fast: (),
+                    _no_dry_run: (),
+                })),
+                verbose: 0,
+                quiet: 0,
+                color: ColorChoice::Auto,
+            }),
+        );
+    }
+
+    #[test]
+    fn test_jettison_dryrun() {
+        assert_eq!(
+            CargoArgs::try_parse_from(["cargo", "liner", "jettison", "--dry-run"]).unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Jettison(JettisonArgsWithNegations {
+                    inner: JettisonArgs {
+                        no_confirm: false,
+                        no_fail_fast: false,
+                        dry_run: true,
+                    },
+                    _confirm: (),
+                    _fail_fast: (),
+                    _no_dry_run: (),
+                })),
+                verbose: 0,
+                quiet: 0,
+                color: ColorChoice::Auto,
+            }),
+        );
+    }
+
+    #[test]
+    fn test_jettison_dryrun_negation() {
+        assert_eq!(
+            CargoArgs::try_parse_from(["cargo", "liner", "jettison", "--dry-run", "--no-dry-run"])
+                .unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Jettison(JettisonArgsWithNegations {
+                    inner: JettisonArgs {
+                        no_confirm: false,
+                        no_fail_fast: false,
+                        dry_run: false,
+                    },
+                    _confirm: (),
+                    _fail_fast: (),
+                    _no_dry_run: (),
+                })),
+                verbose: 0,
+                quiet: 0,
+                color: ColorChoice::Auto,
+            }),
+        );
+    }
+
+    #[test]
     fn test_import() {
         assert_eq!(
             CargoArgs::try_parse_from(["cargo", "liner", "import"]).unwrap(),
