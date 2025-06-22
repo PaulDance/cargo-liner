@@ -7,15 +7,23 @@ use std::str::FromStr;
 use color_eyre::Section;
 use color_eyre::eyre::{Context, Result};
 
-use crate::cli::ShipArgs;
+use crate::cli::{JettisonArgs, ShipArgs};
 
 const SELF_ENV_PREFIX: &str = "CARGO_LINER";
 const SHIP_ENV_PREFIX: &str = "SHIP";
+const JETTISON_ENV_PREFIX: &str = "JETTISON";
 
 /// Returns the full environment variable name from the given suffix to `ship`.
 #[inline]
 fn ship_var_name(suffix: &str) -> String {
     format!("{SELF_ENV_PREFIX}_{SHIP_ENV_PREFIX}_{suffix}")
+}
+
+/// Returns the full environment variable name from the given suffix to
+/// `jettison`.
+#[inline]
+fn jettison_var_name(suffix: &str) -> String {
+    format!("{SELF_ENV_PREFIX}_{JETTISON_ENV_PREFIX}_{suffix}")
 }
 
 /// Retrieves a single `ship` argument value from the environment.
@@ -27,6 +35,17 @@ where
     <T as FromStr>::Err: Error + Send + Sync + 'static,
 {
     get_arg(&ship_var_name(suffix))
+}
+
+/// Retrieves a single `jettison` argument value from the environment.
+///
+/// Supports any destination type that implements string parsing.
+fn get_jettison_arg<T>(suffix: &str) -> Result<Option<T>>
+where
+    T: FromStr,
+    <T as FromStr>::Err: Error + Send + Sync + 'static,
+{
+    get_arg(&jettison_var_name(suffix))
 }
 
 /// Retrieves a single argument value from the given full environment variable.
@@ -70,6 +89,15 @@ pub fn ship_env_args() -> Result<ShipArgs> {
         force: get_ship_arg("FORCE")?,
         dry_run: get_ship_arg("DRY_RUN")?,
         binstall: get_ship_arg("BINSTALL")?,
+    })
+}
+
+/// Returns the [`JettisonArgs`] fetched from the environment.
+pub fn jettison_env_args() -> Result<JettisonArgs> {
+    Ok(JettisonArgs {
+        no_confirm: get_jettison_arg("NO_CONFIRM")?,
+        no_fail_fast: get_jettison_arg("NO_FAIL_FAST")?,
+        dry_run: get_jettison_arg("DRY_RUN")?,
     })
 }
 
