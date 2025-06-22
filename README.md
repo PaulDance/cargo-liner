@@ -366,6 +366,14 @@ where:
         the optional tool. This is the global configuration equivalent of the
         CLI option that keeps precedence: see its description for the available
         supported values.
+    * `jettison` (optional, `cargo-binstall`-compatible: N/A): map of string to
+      booleans corresponding to the eponymous CLI command:
+      * `no-confirm` (optional): boolean that, when `true`, enables the
+        `--no-confirm` flag by default.
+      * `no-fail-fast` (optional): boolean that, when `true`, enables the
+        `--no-fail-fast` flag by default.
+      * `dry-run` (optional): boolean that, when `true`, enables the
+        `--dry-run` flag by default.
 
 with the following constraints, mostly enforced by Cargo, but also by TOML:
  * `package-name-*` must be a valid [package name], i.e. match
