@@ -109,18 +109,20 @@ fn try_main(args: &LinerArgs) -> Result<()> {
             )?;
         }
         cmd @ (None | Some(LinerCommands::Ship(_))) => {
-            let config = EffectiveShipConfig::new(
-                UserConfig::parse_file().wrap_err("Failed to parse the user configuration.")?,
-                config::env::ship_env_args()
-                    .wrap_err("Failed to get one of the environment variables.")?,
-                if let Some(LinerCommands::Ship(ship_args)) = cmd {
-                    ship_args.as_ref().to_owned()
-                } else {
-                    ShipArgs::default()
-                },
-            );
-
-            commands::ship::run(&config, &colorizer, cargo_verbosity)?;
+            commands::ship::run(
+                &EffectiveShipConfig::new(
+                    UserConfig::parse_file().wrap_err("Failed to parse the user configuration.")?,
+                    config::env::ship_env_args()
+                        .wrap_err("Failed to get one of the environment variables.")?,
+                    if let Some(LinerCommands::Ship(ship_args)) = cmd {
+                        ship_args.as_ref().to_owned()
+                    } else {
+                        ShipArgs::default()
+                    },
+                ),
+                &colorizer,
+                cargo_verbosity,
+            )?;
         }
     }
 
