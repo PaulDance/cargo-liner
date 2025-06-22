@@ -8,7 +8,7 @@
 use std::collections::BTreeMap;
 
 use super::{DetailedPackageReq, UserConfig};
-use crate::cli::{BinstallChoice, ShipArgs};
+use crate::cli::{BinstallChoice, JettisonArgs, ShipArgs};
 
 /// Effective merge of all `ship` configuration sources.
 #[derive(Debug)]
@@ -100,6 +100,71 @@ impl EffectiveShipArgs {
     }
 }
 
+/// Effective merge of all `jettison` configuration sources.
+#[derive(Debug)]
+pub struct EffectiveJettisonConfig {
+    /// The name-to-setting map derived from the [`UserConfig`].
+    pub packages: BTreeMap<String, DetailedPackageReq>,
+    /// Effective arguments to use.
+    pub args: EffectiveJettisonArgs,
+}
+
+impl EffectiveJettisonConfig {
+    /// Merges all given sources and exports the result as public fields.
+    pub fn new(user_config: UserConfig, env_args: JettisonArgs, cli_args: JettisonArgs) -> Self {
+        let args = EffectiveJettisonArgs::new(&user_config, env_args, cli_args);
+        Self {
+            // Don't perform any particular filtering here: not needed.
+            packages: user_config
+                .packages
+                .into_iter()
+                .map(|(pkg_name, pkg)| (pkg_name, pkg.into()))
+                .collect::<BTreeMap<String, DetailedPackageReq>>(),
+            args,
+        }
+    }
+}
+
+/// Effective merge of all configuration sources regarding [`JettisonArgs`].
+#[derive(Debug)]
+#[cfg_attr(test, derive(Default, PartialEq, Eq))]
+pub struct EffectiveJettisonArgs {
+    pub no_confirm: bool,
+    pub no_fail_fast: bool,
+    pub dry_run: bool,
+}
+
+impl EffectiveJettisonArgs {
+    #[expect(
+        clippy::needless_pass_by_value,
+        reason = "Ensures the original arguments cannot be used by mistake anymore by consuming them."
+    )]
+    fn new(user_config: &UserConfig, env_args: JettisonArgs, cli_args: JettisonArgs) -> Self {
+        let cfg_defs = user_config.defaults.as_ref();
+        Self {
+            no_confirm: cli_args
+                .no_confirm
+                .or(env_args.no_confirm)
+                .or_else(|| {
+                    cfg_defs.and_then(|defs| defs.jettison_cmd.no_confirm.as_ref().copied())
+                })
+                .unwrap_or_default(),
+            no_fail_fast: cli_args
+                .no_fail_fast
+                .or(env_args.no_fail_fast)
+                .or_else(|| {
+                    cfg_defs.and_then(|defs| defs.jettison_cmd.no_fail_fast.as_ref().copied())
+                })
+                .unwrap_or_default(),
+            dry_run: cli_args
+                .dry_run
+                .or(env_args.dry_run)
+                .or_else(|| cfg_defs.and_then(|defs| defs.jettison_cmd.dry_run.as_ref().copied()))
+                .unwrap_or_default(),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     #![expect(
@@ -154,7 +219,8 @@ mod tests {
                 &UserConfig {
                     packages: BTreeMap::new(),
                     defaults: Some(DefaultsSection {
-                        ship_cmd: ShipArgs::default()
+                        ship_cmd: ShipArgs::default(),
+                        jettison_cmd: JettisonArgs::default(),
                     }),
                 },
                 ShipArgs::default(),
@@ -177,7 +243,8 @@ mod tests {
                             dry_run: Some(false),
                             binstall: Some(BinstallChoice::Always),
                             ..Default::default()
-                        }
+                        },
+                        jettison_cmd: JettisonArgs::default(),
                     }),
                 },
                 ShipArgs::default(),
@@ -200,7 +267,8 @@ mod tests {
                 &UserConfig {
                     packages: BTreeMap::new(),
                     defaults: Some(DefaultsSection {
-                        ship_cmd: ShipArgs::default()
+                        ship_cmd: ShipArgs::default(),
+                        jettison_cmd: JettisonArgs::default(),
                     }),
                 },
                 ShipArgs {
@@ -229,7 +297,8 @@ mod tests {
                 &UserConfig {
                     packages: BTreeMap::new(),
                     defaults: Some(DefaultsSection {
-                        ship_cmd: ShipArgs::default()
+                        ship_cmd: ShipArgs::default(),
+                        jettison_cmd: JettisonArgs::default(),
                     }),
                 },
                 ShipArgs::default(),
@@ -262,7 +331,8 @@ mod tests {
                             force: Some(true),
                             no_self: Some(false),
                             ..Default::default()
-                        }
+                        },
+                        jettison_cmd: JettisonArgs::default(),
                     }),
                 },
                 ShipArgs {
@@ -305,7 +375,8 @@ mod tests {
                             dry_run: Some(false),
                             binstall: Some(BinstallChoice::Always),
                             ..Default::default()
-                        }
+                        },
+                        jettison_cmd: JettisonArgs::default(),
                     }),
                 },
                 ShipArgs {
@@ -385,7 +456,8 @@ mod tests {
                             dry_run: Some(false),
                             binstall: Some(BinstallChoice::Auto),
                             ..Default::default()
-                        }
+                        },
+                        jettison_cmd: JettisonArgs::default(),
                     }),
                 },
                 ShipArgs::default(),
@@ -426,7 +498,8 @@ mod tests {
                             dry_run: Some(false),
                             binstall: Some(BinstallChoice::Never),
                             ..Default::default()
-                        }
+                        },
+                        jettison_cmd: JettisonArgs::default(),
                     }),
                 },
                 ShipArgs {
