@@ -8,16 +8,20 @@ use semver::Version;
 use tabled::Tabled;
 
 use crate::cargo;
-use crate::cli::JettisonArgs;
 use crate::commands::styled_table;
-use crate::config::{CargoCratesToml, PackageRequirement, UserConfig};
+use crate::config::{CargoCratesToml, DetailedPackageReq, EffectiveJettisonConfig};
 
-pub fn run(args: &JettisonArgs, cargo_color: ColorChoice, cargo_verbosity: i8) -> Result<()> {
-    let config = UserConfig::parse_file().wrap_err("Failed to parse the user configuration.")?;
-    let cct =
-        CargoCratesToml::parse_file().wrap_err("Failed to parse Cargo's .crates.toml file.")?;
-
-    let to_uninstall = needing_uninstall(cct.into_name_versions(), &config.packages);
+pub fn run(
+    config: &EffectiveJettisonConfig,
+    cargo_color: ColorChoice,
+    cargo_verbosity: i8,
+) -> Result<()> {
+    let to_uninstall = needing_uninstall(
+        CargoCratesToml::parse_file()
+            .wrap_err("Failed to parse Cargo's .crates.toml file.")?
+            .into_name_versions(),
+        &config.packages,
+    );
     log_uninstallation_plan(&to_uninstall);
 
     // Nothing to do in this case anyway, so cut short.
@@ -25,10 +29,10 @@ pub fn run(args: &JettisonArgs, cargo_color: ColorChoice, cargo_verbosity: i8) -
         return Ok(());
     }
 
-    if args.no_confirm || args.dry_run {
+    if config.args.no_confirm || config.args.dry_run {
         log::warn!(
             "Skipping interactive confirmation, as requested with `{}`.",
-            if args.no_confirm {
+            if config.args.no_confirm {
                 "--no-confirm"
             } else {
                 "--dry-run"
@@ -41,15 +45,15 @@ pub fn run(args: &JettisonArgs, cargo_color: ColorChoice, cargo_verbosity: i8) -
 
     cargo::uninstall_all(
         to_uninstall.into_keys(),
-        args.no_fail_fast,
-        args.dry_run,
+        config.args.no_fail_fast,
+        config.args.dry_run,
         cargo_color,
         cargo_verbosity,
     )
     .wrap_err_with(|| {
         format!(
             "{} package failed to uninstall.",
-            if args.no_fail_fast {
+            if config.args.no_fail_fast {
                 "At least one"
             } else {
                 "Some"
@@ -63,7 +67,7 @@ pub fn run(args: &JettisonArgs, cargo_color: ColorChoice, cargo_verbosity: i8) -
 /// but not part of the user-configured ones.
 fn needing_uninstall(
     mut installed: BTreeMap<String, Version>,
-    configured: &BTreeMap<String, PackageRequirement>,
+    configured: &BTreeMap<String, DetailedPackageReq>,
 ) -> BTreeMap<String, Version> {
     log::debug!("Computing uninstallation plan...");
     // Always exclude self from uninstallation.
