@@ -483,7 +483,7 @@ pub struct JettisonArgs {
         default_value_if("_confirm", ArgPredicate::IsPresent, "false"),
         display_order = 1
     )]
-    pub no_confirm: bool,
+    pub no_confirm: Option<bool>,
 
     /// Disable the default fail-fast execution of `cargo uninstall`s.
     ///
@@ -504,7 +504,7 @@ pub struct JettisonArgs {
         default_value_if("_fail_fast", ArgPredicate::IsPresent, "false"),
         display_order = 3
     )]
-    pub no_fail_fast: bool,
+    pub no_fail_fast: Option<bool>,
 
     /// Perform all operations without actually uninstalling.
     ///
@@ -520,7 +520,7 @@ pub struct JettisonArgs {
         default_value_if("_no_dry_run", ArgPredicate::IsPresent, "false"),
         display_order = 5
     )]
-    pub dry_run: bool,
+    pub dry_run: Option<bool>,
 }
 
 /// Regroupement of flags from [`JettisonArgs`] with their negated couterparts.
@@ -1230,9 +1230,9 @@ mod tests {
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Jettison(JettisonArgsWithNegations {
                     inner: JettisonArgs {
-                        no_confirm: true,
-                        no_fail_fast: false,
-                        dry_run: false,
+                        no_confirm: Some(true),
+                        no_fail_fast: None,
+                        dry_run: None,
                     },
                     _confirm: (),
                     _fail_fast: (),
@@ -1253,9 +1253,9 @@ mod tests {
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Jettison(JettisonArgsWithNegations {
                     inner: JettisonArgs {
-                        no_confirm: false,
-                        no_fail_fast: false,
-                        dry_run: false,
+                        no_confirm: Some(false),
+                        no_fail_fast: None,
+                        dry_run: None,
                     },
                     _confirm: (),
                     _fail_fast: (),
@@ -1275,9 +1275,9 @@ mod tests {
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Jettison(JettisonArgsWithNegations {
                     inner: JettisonArgs {
-                        no_confirm: false,
-                        no_fail_fast: true,
-                        dry_run: false,
+                        no_confirm: None,
+                        no_fail_fast: Some(true),
+                        dry_run: None,
                     },
                     _confirm: (),
                     _fail_fast: (),
@@ -1304,9 +1304,9 @@ mod tests {
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Jettison(JettisonArgsWithNegations {
                     inner: JettisonArgs {
-                        no_confirm: false,
-                        no_fail_fast: false,
-                        dry_run: false,
+                        no_confirm: None,
+                        no_fail_fast: Some(false),
+                        dry_run: None,
                     },
                     _confirm: (),
                     _fail_fast: (),
@@ -1326,9 +1326,9 @@ mod tests {
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Jettison(JettisonArgsWithNegations {
                     inner: JettisonArgs {
-                        no_confirm: false,
-                        no_fail_fast: false,
-                        dry_run: true,
+                        no_confirm: None,
+                        no_fail_fast: None,
+                        dry_run: Some(true),
                     },
                     _confirm: (),
                     _fail_fast: (),
@@ -1349,9 +1349,9 @@ mod tests {
             CargoArgs::Liner(LinerArgs {
                 command: Some(LinerCommands::Jettison(JettisonArgsWithNegations {
                     inner: JettisonArgs {
-                        no_confirm: false,
-                        no_fail_fast: false,
-                        dry_run: false,
+                        no_confirm: None,
+                        no_fail_fast: None,
+                        dry_run: Some(false),
                     },
                     _confirm: (),
                     _fail_fast: (),
