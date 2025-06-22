@@ -18,7 +18,7 @@ fn ship_var_name(suffix: &str) -> String {
     format!("{SELF_ENV_PREFIX}_{SHIP_ENV_PREFIX}_{suffix}")
 }
 
-/// Retrieves a single argument value from the environment.
+/// Retrieves a single `ship` argument value from the environment.
 ///
 /// Supports any destination type that implements string parsing.
 fn get_ship_arg<T>(suffix: &str) -> Result<Option<T>>
@@ -26,15 +26,23 @@ where
     T: FromStr,
     <T as FromStr>::Err: Error + Send + Sync + 'static,
 {
-    let var_name = ship_var_name(suffix);
+    get_arg(&ship_var_name(suffix))
+}
 
-    match env::var(&var_name) {
+/// Retrieves a single argument value from the given full environment variable.
+///
+/// Supports any destination type that implements string parsing.
+fn get_arg<T>(var_name: &str) -> Result<Option<T>>
+where
+    T: FromStr,
+    <T as FromStr>::Err: Error + Send + Sync + 'static,
+{
+    match env::var(var_name) {
         Ok(val) => Ok(Some(
             val.parse()
                 .wrap_err_with(|| {
                     format!(
-                        "Could not parse an argument value from the {} environment variable.",
-                        &var_name
+                        "Could not parse an argument value from the {var_name:?} environment variable."
                     )
                 })
                 .note("Only the `true` or `false` values are accepted here, except for `binstall`.")
@@ -44,8 +52,7 @@ where
         Err(err) => Err(err)
             .wrap_err_with(|| {
                 format!(
-                    "Could not fetch a value from the {} environment variable.",
-                    &var_name
+                    "Could not fetch a value from the {var_name:?} environment variable."
                 )
             })
             .note("Only valid UTF-8 values are accepted here.")
