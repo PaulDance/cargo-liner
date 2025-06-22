@@ -7,6 +7,50 @@
 ## Miscellaneous
 -->
 
+# [Version 0.10.0 (22/06/2025)](https://crates.io/crates/cargo-liner/0.10.0)
+## Features
+
+ * Completed #27: in order to support Git and path packages more natively, the
+   `ship` sub-command now considers any such package as if `skip-check` was set
+   for them in their configuration entry, therefore always passing them onto
+   Cargo that then performs the adequate checks and updates if need be, as
+   otherwise the version check could never succeed or be meaningful for them.
+
+ * Completed #28: a new `jettison` sub-command has been added; it enables one
+   to uninstall every package that is currently installed but that is not part
+   of the user configuration. This should help cleaning things up from time to
+   time and ensuring the configuration is fully applied, not just in an
+   additive fashion, but also in a subtractive one. A few different flags have
+   been added to it already, as well as the support for by-config, by-env and
+   by-CLI settings with negations and precedence, just like `ship`.
+
+## Testing
+
+ * Coverage for the new features.
+
+## Documentation
+
+ * `README.md`
+   * The implications between Git and path package variants and `skip-check`
+     have been added to the user configuration section.
+   * The `jettison` sub-command is now covered as well: a new dedicated section
+     and the associated configuration defaults part have been added.
+   * Some links have been fixed.
+ * `CHANGELOG.md`: this new version.
+
+## Miscellaneous
+
+ * The dependencies have been updated.
+ * The package has been transitioned to the Rust 2024 edition, therefore
+   necessarily bumping the MSRV to 1.85.
+ * Some new lints regarding safety have been enabled.
+ * The fixtures have been updated for the small changes in Cargo.
+ * The `main` module has been split into various command modules for clarity,
+   thus changing some log paths.
+ * The log indicating no package is to install or update with `ship` after its
+   version check has been changed in order to clarify the situation.
+
+
 # [Version 0.9.0 (25/12/2024)](https://crates.io/crates/cargo-liner/0.9.0)
 ## Features
 
