@@ -1223,6 +1223,31 @@ mod tests {
     }
 
     #[test]
+    fn test_userconfig_defaults_jettison() {
+        assert_eq!(
+            toml::from_str::<UserConfig>(
+                r#"
+                    [packages]
+                    abc = "*"
+                    [defaults.jettison]
+                    no-confirm = true
+                    no-fail-fast = false
+                    dry-run = true
+                "#
+            )
+            .unwrap()
+            .defaults
+            .unwrap()
+            .jettison_cmd,
+            JettisonArgs {
+                no_confirm: Some(true),
+                no_fail_fast: Some(false),
+                dry_run: Some(true),
+            }
+        );
+    }
+
+    #[test]
     fn test_userconfig_tostringpretty_no_packages() {
         assert_eq!(
             UserConfig::default().to_string_pretty().unwrap(),
