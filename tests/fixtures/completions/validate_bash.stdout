@@ -191,7 +191,7 @@ _cargo-liner() {
             return 0
             ;;
         cargo__liner__jettison)
-            opts="-y -k -n -v -q -h --no-confirm --no-fail-fast --dry-run --verbose --quiet --color --help"
+            opts="-y -k -n -v -q -h --no-confirm --no-fail-fast --dry-run --confirm --fail-fast --no-dry-run --verbose --quiet --color --help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0

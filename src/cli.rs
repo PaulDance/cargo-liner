@@ -143,7 +143,7 @@ pub enum LinerCommands {
     ///
     /// This will remove all packages that are currently installed according to
     /// Cargo, but that are not part of the Liner configuration. Use with care!
-    Jettison(JettisonArgs),
+    Jettison(JettisonArgsWithNegations),
 
     /// Import the `$CARGO_HOME/.crates.toml` Cargo-edited save file as a new
     /// Liner configuration file.
@@ -475,7 +475,14 @@ pub struct JettisonArgs {
     /// available, which should for example be the case in CI or server
     /// environments where there is no tty setup, then the confirmaton is
     /// immediately passed. In any case, this flag always disables it entirely.
-    #[arg(short = 'y', long)]
+    #[arg(
+        short = 'y',
+        long,
+        num_args = 0,
+        default_missing_value = "true",
+        default_value_if("_confirm", ArgPredicate::IsPresent, "false"),
+        display_order = 1
+    )]
     pub no_confirm: bool,
 
     /// Disable the default fail-fast execution of `cargo uninstall`s.
@@ -489,7 +496,14 @@ pub struct JettisonArgs {
     /// case any of the packages fails to uninstall and the option is used, an
     /// error will still be reported at the end, containing an indication of all
     /// the packages that failed to uninstall.
-    #[arg(short = 'k', long)]
+    #[arg(
+        short = 'k',
+        long,
+        num_args = 0,
+        default_missing_value = "true",
+        default_value_if("_fail_fast", ArgPredicate::IsPresent, "false"),
+        display_order = 3
+    )]
     pub no_fail_fast: bool,
 
     /// Perform all operations without actually uninstalling.
@@ -498,8 +512,64 @@ pub struct JettisonArgs {
     /// simulations, but retains all the remaining operations. This may be
     /// useful in order to observe what would be performed without actually
     /// doing it. This implies `--no-confirm`.
-    #[arg(short = 'n', long)]
+    #[arg(
+        short = 'n',
+        long,
+        num_args = 0,
+        default_missing_value = "true",
+        default_value_if("_no_dry_run", ArgPredicate::IsPresent, "false"),
+        display_order = 5
+    )]
     pub dry_run: bool,
+}
+
+/// Regroupement of flags from [`JettisonArgs`] with their negated couterparts.
+#[derive(clap::Args, Debug, PartialEq, Eq)]
+pub struct JettisonArgsWithNegations {
+    /// The actual arguments.
+    #[command(flatten)]
+    inner: JettisonArgs,
+
+    /// Negation of `--no-confirm` that overrides it and restores the default
+    /// behavior as if absent, i.e. ask for confirmation before proceeding.
+    #[arg(
+        long,
+        required = false,
+        num_args = 0,
+        overrides_with = "no_confirm",
+        display_order = 2
+    )]
+    _confirm: (),
+
+    /// Negation of `--no-fail-fast` that overrides it and restores the default
+    /// behavior as if absent, i.e. stop as soon as the first error occurs.
+    #[arg(
+        long,
+        required = false,
+        num_args = 0,
+        overrides_with = "no_fail_fast",
+        display_order = 4
+    )]
+    _fail_fast: (),
+
+    /// Negation of `--dry-run` that overrides it and restores the default
+    /// behavior as if absent, i.e. perform the uninstallations as per the
+    /// usual.
+    #[arg(
+        long,
+        required = false,
+        num_args = 0,
+        overrides_with = "dry_run",
+        display_order = 6
+    )]
+    _no_dry_run: (),
+}
+
+impl AsRef<JettisonArgs> for JettisonArgsWithNegations {
+    /// Returns a reference to the wrapped [`JettisonArgs`].
+    fn as_ref(&self) -> &JettisonArgs {
+        &self.inner
+    }
 }
 
 /// Arguments for the `import` subcommand.

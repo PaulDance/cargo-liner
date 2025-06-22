@@ -77,6 +77,9 @@ _arguments "${_arguments_options[@]}" : \
 '--no-fail-fast[Disable the default fail-fast execution of \`cargo uninstall\`s]' \
 '-n[Perform all operations without actually uninstalling]' \
 '--dry-run[Perform all operations without actually uninstalling]' \
+'--confirm[Negation of \`--no-confirm\` that overrides it and restores the default behavior as if absent, i.e. ask for confirmation before proceeding]' \
+'--fail-fast[Negation of \`--no-fail-fast\` that overrides it and restores the default behavior as if absent, i.e. stop as soon as the first error occurs]' \
+'--no-dry-run[Negation of \`--dry-run\` that overrides it and restores the default behavior as if absent, i.e. perform the uninstallations as per the usual]' \
 '(-q --quiet)*-v[Be more verbose. Use multiple times to be more and more so each time]' \
 '(-q --quiet)*--verbose[Be more verbose. Use multiple times to be more and more so each time]' \
 '(-v --verbose)*-q[Be quieter. Use multiple times to be more and more so each time]' \

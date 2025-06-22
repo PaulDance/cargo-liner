@@ -97,7 +97,7 @@ fn try_main(args: &LinerArgs) -> Result<()> {
             commands::import::run(import_args)?;
         }
         Some(LinerCommands::Jettison(jettison_args)) => {
-            commands::jettison::run(jettison_args, *colorizer.color(), cargo_verbosity)?;
+            commands::jettison::run(jettison_args.as_ref(), *colorizer.color(), cargo_verbosity)?;
         }
         cmd @ (None | Some(LinerCommands::Ship(_))) => {
             let config = EffectiveConfig::new(

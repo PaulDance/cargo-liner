@@ -844,6 +844,11 @@ Options:
           there is no tty setup, then the confirmaton is immediately
           passed. In any case, this flag always disables it entirely.
 
+      --confirm
+          Negation of `--no-confirm` that overrides it and restores
+          the default behavior as if absent, i.e. ask for
+          confirmation before proceeding
+
   -k, --no-fail-fast
           Disable the default fail-fast execution of `cargo
           uninstall`s.
@@ -860,6 +865,11 @@ Options:
           end, containing an indication of all the packages that
           failed to uninstall.
 
+      --fail-fast
+          Negation of `--no-fail-fast` that overrides it and restores
+          the default behavior as if absent, i.e. stop as soon as the
+          first error occurs
+
   -n, --dry-run
           Perform all operations without actually uninstalling.
           
@@ -868,6 +878,11 @@ Options:
           This may be useful in order to observe what would be
           performed without actually doing it. This implies
           `--no-confirm`.
+
+      --no-dry-run
+          Negation of `--dry-run` that overrides it and restores the
+          default behavior as if absent, i.e. perform the
+          uninstallations as per the usual
 
   -v, --verbose...
           Be more verbose. Use multiple times to be more and more so
