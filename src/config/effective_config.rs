@@ -1,4 +1,4 @@
-//! Mainly exports [`EffectiveConfig`]: a reunion of all configuration sources.
+//! Mainly exports `Effective*Config`s: reunions of all configuration sources.
 //!
 //! This is a bit the role of crates such as `twelf`, simply re-done here to be
 //! customized for the needs specific to the current project, which includes
@@ -10,28 +10,28 @@ use std::collections::BTreeMap;
 use super::{DetailedPackageReq, UserConfig};
 use crate::cli::{BinstallChoice, ShipArgs};
 
-/// Effective merge of all configuration sources.
+/// Effective merge of all `ship` configuration sources.
 #[derive(Debug)]
-pub struct EffectiveConfig {
+pub struct EffectiveShipConfig {
     /// The name-to-setting map derived from the [`UserConfig`].
     pub packages: BTreeMap<String, DetailedPackageReq>,
-    /// Effective arguments to use for the `ship` CLI command.
-    pub ship_args: EffectiveShipArgs,
+    /// Effective arguments to use.
+    pub args: EffectiveShipArgs,
 }
 
-impl EffectiveConfig {
+impl EffectiveShipConfig {
     /// Merges all given sources and exports the result as public fields.
     pub fn new(user_config: UserConfig, env_args: ShipArgs, cli_args: ShipArgs) -> Self {
-        let ship_args = EffectiveShipArgs::new(&user_config, env_args, cli_args);
+        let args = EffectiveShipArgs::new(&user_config, env_args, cli_args);
         Self {
             packages: user_config
-                .self_update(!ship_args.no_self)
-                .update_others(!ship_args.only_self)
+                .self_update(!args.no_self)
+                .update_others(!args.only_self)
                 .packages
                 .into_iter()
                 .map(|(pkg_name, pkg)| (pkg_name, pkg.into()))
                 .collect::<BTreeMap<String, DetailedPackageReq>>(),
-            ship_args,
+            args,
         }
     }
 }

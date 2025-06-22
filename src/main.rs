@@ -19,7 +19,7 @@ mod cargo;
 mod cli;
 use cli::{LinerArgs, LinerCommands, ShipArgs};
 mod config;
-use config::{EffectiveConfig, UserConfig};
+use config::{EffectiveShipConfig, UserConfig};
 mod coloring;
 use coloring::Colorizer;
 mod commands;
@@ -100,7 +100,7 @@ fn try_main(args: &LinerArgs) -> Result<()> {
             commands::jettison::run(jettison_args.as_ref(), *colorizer.color(), cargo_verbosity)?;
         }
         cmd @ (None | Some(LinerCommands::Ship(_))) => {
-            let config = EffectiveConfig::new(
+            let config = EffectiveShipConfig::new(
                 UserConfig::parse_file().wrap_err("Failed to parse the user configuration.")?,
                 config::env::ship_env_args()
                     .wrap_err("Failed to get one of the environment variables.")?,

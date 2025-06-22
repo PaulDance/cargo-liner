@@ -10,6 +10,6 @@ mod package;
 mod user_config;
 
 pub use cargo_crates_toml::CargoCratesToml;
-pub use effective_config::EffectiveConfig;
+pub use effective_config::EffectiveShipConfig;
 pub use package::{DetailedPackageReq, PackageRequirement};
 pub use user_config::UserConfig;

@@ -8,19 +8,19 @@ use tabled::Tabled;
 use crate::cargo::{self, InstallStatus};
 use crate::coloring::Colorizer;
 use crate::commands::styled_table;
-use crate::config::{CargoCratesToml, DetailedPackageReq, EffectiveConfig};
+use crate::config::{CargoCratesToml, DetailedPackageReq, EffectiveShipConfig};
 
-pub fn run(config: &EffectiveConfig, colorizer: &Colorizer, cargo_verbosity: i8) -> Result<()> {
-    let (inst_res, old_vers, new_vers) = if config.ship_args.skip_check {
+pub fn run(config: &EffectiveShipConfig, colorizer: &Colorizer, cargo_verbosity: i8) -> Result<()> {
+    let (inst_res, old_vers, new_vers) = if config.args.skip_check {
         // Don't parse `.crates.toml` here: can be used as a workaround.
         (
             cargo::install_all(
                 &config.packages,
                 &BTreeSet::new(),
-                config.ship_args.no_fail_fast,
-                config.ship_args.force,
-                config.ship_args.dry_run,
-                config.ship_args.binstall,
+                config.args.no_fail_fast,
+                config.args.force,
+                config.args.dry_run,
+                config.args.binstall,
                 *colorizer.color(),
                 cargo_verbosity,
             ),
@@ -46,10 +46,10 @@ pub fn run(config: &EffectiveConfig, colorizer: &Colorizer, cargo_verbosity: i8)
             cargo::install_all(
                 &needing_install(&config.packages, &new_vers, &old_vers),
                 &cct.into_names(),
-                config.ship_args.no_fail_fast,
-                config.ship_args.force,
-                config.ship_args.dry_run,
-                config.ship_args.binstall,
+                config.args.no_fail_fast,
+                config.args.force,
+                config.args.dry_run,
+                config.args.binstall,
                 *colorizer.color(),
                 cargo_verbosity,
             ),
@@ -65,7 +65,7 @@ pub fn run(config: &EffectiveConfig, colorizer: &Colorizer, cargo_verbosity: i8)
                 &rep.package_statuses,
                 &new_vers,
                 &old_vers,
-                config.ship_args.dry_run,
+                config.args.dry_run,
             );
             rep.error_report
         }
@@ -74,7 +74,7 @@ pub fn run(config: &EffectiveConfig, colorizer: &Colorizer, cargo_verbosity: i8)
         Err(err).wrap_err_with(|| {
             format!(
                 "Failed to install or update {} of the configured packages.",
-                if config.ship_args.no_fail_fast {
+                if config.args.no_fail_fast {
                     "some"
                 } else {
                     "one"
