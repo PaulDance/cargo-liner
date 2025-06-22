@@ -105,7 +105,7 @@ fn try_main(args: &LinerArgs) -> Result<()> {
                 config::env::ship_env_args()
                     .wrap_err("Failed to get one of the environment variables.")?,
                 if let Some(LinerCommands::Ship(ship_args)) = cmd {
-                    ship_args.clone().into_inner()
+                    ship_args.as_ref().to_owned()
                 } else {
                     ShipArgs::default()
                 },

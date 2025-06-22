@@ -457,10 +457,10 @@ pub struct ShipArgsWithNegations {
     _no_dry_run: (),
 }
 
-impl ShipArgsWithNegations {
-    /// Consumes the wrapped arguments and returns the inner [`ShipArgs`].
-    pub fn into_inner(self) -> ShipArgs {
-        self.inner
+impl AsRef<ShipArgs> for ShipArgsWithNegations {
+    /// Returns a reference to the wrapped [`ShipArgs`].
+    fn as_ref(&self) -> &ShipArgs {
+        &self.inner
     }
 }
 
