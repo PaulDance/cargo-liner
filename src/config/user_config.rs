@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 
 use super::PackageRequirement;
 use crate::cargo;
-use crate::cli::ShipArgs;
+use crate::cli::{JettisonArgs, ShipArgs};
 
 /// Represents the user's configuration deserialized from its file.
 #[derive(Serialize, Deserialize, Debug, Default, Clone, PartialEq, Eq)]
@@ -31,6 +31,9 @@ pub struct DefaultsSection {
     /// The sub-section supporting the `ship` command options.
     #[serde(rename = "ship")]
     pub ship_cmd: ShipArgs,
+    /// The sub-section supporting the `jettison` command options.
+    #[serde(rename = "jettison")]
+    pub jettison_cmd: JettisonArgs,
 }
 
 impl UserConfig {

@@ -465,7 +465,8 @@ impl AsRef<ShipArgs> for ShipArgsWithNegations {
 }
 
 /// Arguments for the `jettison` subcommand.
-#[derive(clap::Args, Debug, PartialEq, Eq)]
+#[derive(clap::Args, Serialize, Deserialize, Debug, Clone, Default, PartialEq, Eq)]
+#[serde(default, rename_all = "kebab-case")]
 pub struct JettisonArgs {
     /// Disable the confirmation of removal.
     ///
