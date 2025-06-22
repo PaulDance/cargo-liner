@@ -332,3 +332,278 @@ fn validate_jettison_nofailfast_ok_isok() {
         ]);
     assert_not_installed_all(["abc", "def", "ghi"]);
 }
+
+// Precedence testing.
+
+#[cargo_test]
+fn validate_jettison_configdryrun_isdryrun() {
+    fake_install_self();
+    fake_install_all([
+        ("abc", "0.0.0", false),
+        ("def", "0.0.0", false),
+        ("ghi", "0.0.0", false),
+    ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+    write_user_config(&["[packages]", "[defaults.jettison]", "dry-run = true"]);
+
+    cargo_liner()
+        .arg("jettison")
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/jettison/validate_jettison_dryrun.stderr"
+        ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+}
+
+#[cargo_test]
+fn validate_jettison_envdryrun_isdryrun() {
+    fake_install_self();
+    fake_install_all([
+        ("abc", "0.0.0", false),
+        ("def", "0.0.0", false),
+        ("ghi", "0.0.0", false),
+    ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+    write_user_config(&["[packages]"]);
+
+    cargo_liner()
+        .env("CARGO_LINER_JETTISON_DRY_RUN", "true")
+        .arg("jettison")
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/jettison/validate_jettison_dryrun.stderr"
+        ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+}
+
+#[cargo_test]
+fn validate_jettison_clidryrun_isdryrun() {
+    fake_install_self();
+    fake_install_all([
+        ("abc", "0.0.0", false),
+        ("def", "0.0.0", false),
+        ("ghi", "0.0.0", false),
+    ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+    write_user_config(&["[packages]"]);
+
+    cargo_liner()
+        .args(["jettison", "--dry-run"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/jettison/validate_jettison_dryrun.stderr"
+        ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+}
+
+#[cargo_test]
+fn validate_jettison_confignodryrun_envdryrun_isdryrun() {
+    fake_install_self();
+    fake_install_all([
+        ("abc", "0.0.0", false),
+        ("def", "0.0.0", false),
+        ("ghi", "0.0.0", false),
+    ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+    write_user_config(&["[packages]", "[defaults.jettison]", "dry-run = false"]);
+
+    cargo_liner()
+        .env("CARGO_LINER_JETTISON_DRY_RUN", "true")
+        .arg("jettison")
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/jettison/validate_jettison_dryrun.stderr"
+        ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+}
+
+#[cargo_test]
+fn validate_jettison_confignodryrun_clidryrun_isdryrun() {
+    fake_install_self();
+    fake_install_all([
+        ("abc", "0.0.0", false),
+        ("def", "0.0.0", false),
+        ("ghi", "0.0.0", false),
+    ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+    write_user_config(&["[packages]", "[defaults.jettison]", "dry-run = false"]);
+
+    cargo_liner()
+        .args(["jettison", "--dry-run"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/jettison/validate_jettison_dryrun.stderr"
+        ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+}
+
+#[cargo_test]
+fn validate_jettison_envnodryrun_clidryrun_isdryrun() {
+    fake_install_self();
+    fake_install_all([
+        ("abc", "0.0.0", false),
+        ("def", "0.0.0", false),
+        ("ghi", "0.0.0", false),
+    ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+    write_user_config(&["[packages]"]);
+
+    cargo_liner()
+        .env("CARGO_LINER_JETTISON_DRY_RUN", "false")
+        .args(["jettison", "--dry-run"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/jettison/validate_jettison_dryrun.stderr"
+        ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+}
+
+#[cargo_test]
+fn validate_jettison_confignodryrun_envnodryrun_clidryrun_isdryrun() {
+    fake_install_self();
+    fake_install_all([
+        ("abc", "0.0.0", false),
+        ("def", "0.0.0", false),
+        ("ghi", "0.0.0", false),
+    ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+    write_user_config(&["[packages]", "[defaults.jettison]", "dry-run = false"]);
+
+    cargo_liner()
+        .env("CARGO_LINER_JETTISON_DRY_RUN", "false")
+        .args(["jettison", "--dry-run"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/jettison/validate_jettison_dryrun.stderr"
+        ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+}
+
+#[cargo_test]
+fn validate_jettison_configdryrun_envnodryrun_clidryrun_isdryrun() {
+    fake_install_self();
+    fake_install_all([
+        ("abc", "0.0.0", false),
+        ("def", "0.0.0", false),
+        ("ghi", "0.0.0", false),
+    ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+    write_user_config(&["[packages]", "[defaults.jettison]", "dry-run = true"]);
+
+    cargo_liner()
+        .env("CARGO_LINER_JETTISON_DRY_RUN", "false")
+        .args(["jettison", "--dry-run"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/jettison/validate_jettison_dryrun.stderr"
+        ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+}
+
+#[cargo_test]
+fn validate_jettison_configdryrun_envdryrun_clidryrun_isdryrun() {
+    fake_install_self();
+    fake_install_all([
+        ("abc", "0.0.0", false),
+        ("def", "0.0.0", false),
+        ("ghi", "0.0.0", false),
+    ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+    write_user_config(&["[packages]", "[defaults.jettison]", "dry-run = true"]);
+
+    cargo_liner()
+        .env("CARGO_LINER_JETTISON_DRY_RUN", "true")
+        .args(["jettison", "--dry-run"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/jettison/validate_jettison_dryrun.stderr"
+        ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+}
+
+#[cargo_test]
+fn validate_jettison_configdryrun_envdryrun_clinodryrun_isnodryrun() {
+    fake_install_self();
+    fake_install_all([
+        ("abc", "0.0.0", false),
+        ("def", "0.0.0", false),
+        ("ghi", "0.0.0", false),
+    ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+    write_user_config(&["[packages]", "[defaults.jettison]", "dry-run = true"]);
+
+    cargo_liner()
+        .env("CARGO_LINER_JETTISON_DRY_RUN", "true")
+        .args(["jettison", "--no-dry-run"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/jettison/validate_jettison_uninstall_multiple.stderr"
+        ]);
+    assert_not_installed_all(["abc", "def", "ghi"]);
+}
+
+#[cargo_test]
+fn validate_jettison_confignodryrun_envdryrun_clinodryrun_isnodryrun() {
+    fake_install_self();
+    fake_install_all([
+        ("abc", "0.0.0", false),
+        ("def", "0.0.0", false),
+        ("ghi", "0.0.0", false),
+    ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+    write_user_config(&["[packages]", "[defaults.jettison]", "dry-run = false"]);
+
+    cargo_liner()
+        .env("CARGO_LINER_JETTISON_DRY_RUN", "true")
+        .args(["jettison", "--no-dry-run"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/jettison/validate_jettison_uninstall_multiple.stderr"
+        ]);
+    assert_not_installed_all(["abc", "def", "ghi"]);
+}
+
+#[cargo_test]
+fn validate_jettison_confignodryrun_envnodryrun_clinodryrun_isnodryrun() {
+    fake_install_self();
+    fake_install_all([
+        ("abc", "0.0.0", false),
+        ("def", "0.0.0", false),
+        ("ghi", "0.0.0", false),
+    ]);
+    assert_installed_all(["abc", "def", "ghi"]);
+    write_user_config(&["[packages]", "[defaults.jettison]", "dry-run = false"]);
+
+    cargo_liner()
+        .env("CARGO_LINER_JETTISON_DRY_RUN", "false")
+        .args(["jettison", "--no-dry-run"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/jettison/validate_jettison_uninstall_multiple.stderr"
+        ]);
+    assert_not_installed_all(["abc", "def", "ghi"]);
+}
