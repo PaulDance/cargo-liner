@@ -204,4 +204,41 @@ mod tests {
             remove_vars(&[(var, val)]);
         }
     }
+
+    #[test]
+    fn test_singlethreaded_jettison_flags_ok() {
+        let _lk = LOCK.lock().unwrap();
+        let var_vals = [
+            ("CARGO_LINER_JETTISON_NO_CONFIRM", "true"),
+            ("CARGO_LINER_JETTISON_NO_FAIL_FAST", "false"),
+        ];
+        set_vars(&var_vals);
+
+        assert_eq!(
+            jettison_env_args().unwrap(),
+            JettisonArgs {
+                no_confirm: Some(true),
+                no_fail_fast: Some(false),
+                ..Default::default()
+            }
+        );
+
+        remove_vars(&var_vals);
+    }
+
+    #[test]
+    fn test_singlethreaded_jettison_flags_errs() {
+        let _lk = LOCK.lock().unwrap();
+
+        for (var, val) in [
+            ("CARGO_LINER_JETTISON_NO_CONFIRM", ""),
+            ("CARGO_LINER_JETTISON_NO_FAIL_FAST", " "),
+            ("CARGO_LINER_JETTISON_DRY_RUN", "xyz"),
+        ] {
+            assert_eq!(jettison_env_args().unwrap(), JettisonArgs::default());
+            set_vars(&[(var, val)]);
+            assert!(jettison_env_args().is_err());
+            remove_vars(&[(var, val)]);
+        }
+    }
 }
