@@ -176,21 +176,21 @@ mod tests {
     use super::*;
     use crate::config::user_config::DefaultsSection;
 
+    /// HACK: exploit the `Debug` implementation in order to get the field
+    /// names. Use `Default` in order to get a value to feed into `Debug`.
+    fn debug_struct_fields<T: Debug + Default>() -> Vec<String> {
+        format!("{:#?}", T::default())
+            .lines()
+            .skip(1)
+            .filter(|line| line.starts_with("    "))
+            .map(|line| line.trim_start().split(':').next().unwrap().to_owned())
+            .collect()
+    }
+
     /// Refactor safe-guard: check that both [`crate::cli::ShipArgs`] and
     /// [`EffectiveShipArgs`] have the exact same fields.
     #[test]
     fn test_effectiveshipargs_haswholecli() {
-        // HACK: exploit the `Debug` implementation in order to get the field
-        // names. Use `Default` in order to get a value to feed into `Debug`.
-        fn debug_struct_fields<T: Debug + Default>() -> Vec<String> {
-            format!("{:#?}", T::default())
-                .lines()
-                .skip(1)
-                .filter(|line| line.starts_with("    "))
-                .map(|line| line.trim_start().split(':').next().unwrap().to_owned())
-                .collect()
-        }
-
         assert_eq!(
             debug_struct_fields::<crate::cli::ShipArgs>(),
             debug_struct_fields::<EffectiveShipArgs>()
@@ -527,6 +527,284 @@ mod tests {
                 only_self: true,
                 dry_run: false,
                 binstall: BinstallChoice::Always,
+                ..Default::default()
+            },
+        );
+    }
+
+    /// Refactor safe-guard: check that both [`crate::cli::JettisonArgs`] and
+    /// [`EffectiveJettisonArgs`] have the exact same fields.
+    #[test]
+    fn test_effectivejettisonargs_haswholecli() {
+        assert_eq!(
+            debug_struct_fields::<crate::cli::JettisonArgs>(),
+            debug_struct_fields::<EffectiveJettisonArgs>()
+        );
+    }
+
+    #[test]
+    fn test_effectivejettisonargs_allnone_isdefault() {
+        assert_eq!(
+            EffectiveJettisonArgs::new(
+                &UserConfig {
+                    packages: BTreeMap::new(),
+                    defaults: None,
+                },
+                JettisonArgs::default(),
+                JettisonArgs::default(),
+            ),
+            EffectiveJettisonArgs::default(),
+        );
+    }
+
+    #[test]
+    fn test_effectivejettisonargs_configempty_isdefault() {
+        assert_eq!(
+            EffectiveJettisonArgs::new(
+                &UserConfig {
+                    packages: BTreeMap::new(),
+                    defaults: Some(DefaultsSection {
+                        ship_cmd: ShipArgs::default(),
+                        jettison_cmd: JettisonArgs::default(),
+                    }),
+                },
+                JettisonArgs::default(),
+                JettisonArgs::default(),
+            ),
+            EffectiveJettisonArgs::default(),
+        );
+    }
+
+    #[test]
+    fn test_effectivejettisonargs_configset_noenv_noargs_isconfig() {
+        assert_eq!(
+            EffectiveJettisonArgs::new(
+                &UserConfig {
+                    packages: BTreeMap::new(),
+                    defaults: Some(DefaultsSection {
+                        ship_cmd: ShipArgs::default(),
+                        jettison_cmd: JettisonArgs {
+                            no_confirm: Some(true),
+                            no_fail_fast: Some(false),
+                            ..Default::default()
+                        },
+                    }),
+                },
+                JettisonArgs::default(),
+                JettisonArgs::default(),
+            ),
+            EffectiveJettisonArgs {
+                no_confirm: true,
+                no_fail_fast: false,
+                ..Default::default()
+            },
+        );
+    }
+
+    #[test]
+    fn test_effectivejettisonargs_noconfig_envset_noargs_isenv() {
+        assert_eq!(
+            EffectiveJettisonArgs::new(
+                &UserConfig {
+                    packages: BTreeMap::new(),
+                    defaults: Some(DefaultsSection {
+                        ship_cmd: ShipArgs::default(),
+                        jettison_cmd: JettisonArgs::default(),
+                    }),
+                },
+                JettisonArgs {
+                    no_confirm: Some(false),
+                    no_fail_fast: Some(true),
+                    ..Default::default()
+                },
+                JettisonArgs::default(),
+            ),
+            EffectiveJettisonArgs {
+                no_confirm: false,
+                no_fail_fast: true,
+                ..Default::default()
+            },
+        );
+    }
+
+    #[test]
+    fn test_effectivejettisonargs_noconfig_noenv_argsset_isargs() {
+        assert_eq!(
+            EffectiveJettisonArgs::new(
+                &UserConfig {
+                    packages: BTreeMap::new(),
+                    defaults: Some(DefaultsSection {
+                        ship_cmd: ShipArgs::default(),
+                        jettison_cmd: JettisonArgs::default(),
+                    }),
+                },
+                JettisonArgs::default(),
+                JettisonArgs {
+                    no_fail_fast: Some(true),
+                    dry_run: Some(true),
+                    ..Default::default()
+                },
+            ),
+            EffectiveJettisonArgs {
+                no_fail_fast: true,
+                dry_run: true,
+                ..Default::default()
+            },
+        );
+    }
+
+    #[test]
+    fn test_effectivejettisonargs_configset_envset_argsset_nointersection_isunion() {
+        assert_eq!(
+            EffectiveJettisonArgs::new(
+                &UserConfig {
+                    packages: BTreeMap::new(),
+                    defaults: Some(DefaultsSection {
+                        ship_cmd: ShipArgs::default(),
+                        jettison_cmd: JettisonArgs {
+                            dry_run: Some(true),
+                            ..Default::default()
+                        },
+                    }),
+                },
+                JettisonArgs {
+                    no_fail_fast: Some(true),
+                    ..Default::default()
+                },
+                JettisonArgs {
+                    no_confirm: Some(true),
+                    ..Default::default()
+                },
+            ),
+            EffectiveJettisonArgs {
+                no_confirm: true,
+                no_fail_fast: true,
+                dry_run: true,
+                ..Default::default()
+            },
+        );
+    }
+
+    #[test]
+    fn test_effectivejettisonargs_configset_envset_noargs_withintersection_envhasprecedence() {
+        assert_eq!(
+            EffectiveJettisonArgs::new(
+                &UserConfig {
+                    packages: BTreeMap::new(),
+                    defaults: Some(DefaultsSection {
+                        ship_cmd: ShipArgs::default(),
+                        jettison_cmd: JettisonArgs {
+                            no_confirm: Some(false),
+                            no_fail_fast: Some(false),
+                            ..Default::default()
+                        },
+                    }),
+                },
+                JettisonArgs {
+                    no_confirm: Some(true),
+                    dry_run: Some(true),
+                    ..Default::default()
+                },
+                JettisonArgs::default(),
+            ),
+            EffectiveJettisonArgs {
+                no_confirm: true,
+                no_fail_fast: false,
+                dry_run: true,
+                ..Default::default()
+            },
+        );
+    }
+
+    #[test]
+    fn test_effectivejettisonargs_noconfig_envset_argsset_withintersection_argshaveprecedence() {
+        assert_eq!(
+            EffectiveJettisonArgs::new(
+                &UserConfig {
+                    packages: BTreeMap::new(),
+                    defaults: None,
+                },
+                JettisonArgs {
+                    no_confirm: Some(true),
+                    no_fail_fast: Some(false),
+                    ..Default::default()
+                },
+                JettisonArgs {
+                    no_fail_fast: Some(true),
+                    dry_run: Some(false),
+                    ..Default::default()
+                },
+            ),
+            EffectiveJettisonArgs {
+                no_confirm: true,
+                no_fail_fast: true,
+                dry_run: false,
+                ..Default::default()
+            },
+        );
+    }
+
+    #[test]
+    fn test_effectivejettisonargs_configset_noenv_argsset_withintersection_argshaveprecedence() {
+        assert_eq!(
+            EffectiveJettisonArgs::new(
+                &UserConfig {
+                    packages: BTreeMap::new(),
+                    defaults: Some(DefaultsSection {
+                        ship_cmd: ShipArgs::default(),
+                        jettison_cmd: JettisonArgs {
+                            no_confirm: Some(false),
+                            no_fail_fast: Some(true),
+                            ..Default::default()
+                        },
+                    }),
+                },
+                JettisonArgs::default(),
+                JettisonArgs {
+                    no_confirm: Some(true),
+                    dry_run: Some(false),
+                    ..Default::default()
+                },
+            ),
+            EffectiveJettisonArgs {
+                no_confirm: true,
+                no_fail_fast: true,
+                dry_run: false,
+                ..Default::default()
+            },
+        );
+    }
+
+    #[test]
+    fn test_effectivejettisonargs_configset_envset_argsset_withintersection_argshaveprecedence() {
+        assert_eq!(
+            EffectiveJettisonArgs::new(
+                &UserConfig {
+                    packages: BTreeMap::new(),
+                    defaults: Some(DefaultsSection {
+                        ship_cmd: ShipArgs::default(),
+                        jettison_cmd: JettisonArgs {
+                            no_confirm: Some(false),
+                            ..Default::default()
+                        },
+                    }),
+                },
+                JettisonArgs {
+                    no_fail_fast: Some(false),
+                    dry_run: Some(true),
+                    ..Default::default()
+                },
+                JettisonArgs {
+                    no_confirm: Some(true),
+                    no_fail_fast: Some(true),
+                    dry_run: Some(false),
+                    ..Default::default()
+                },
+            ),
+            EffectiveJettisonArgs {
+                no_confirm: true,
+                no_fail_fast: true,
+                dry_run: false,
                 ..Default::default()
             },
         );
