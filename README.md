@@ -843,6 +843,12 @@ Options:
           for example be the case in CI or server environments where
           there is no tty setup, then the confirmaton is immediately
           passed. In any case, this flag always disables it entirely.
+          
+          [default: false]
+          
+          [env: `CARGO_LINER_JETTISON_NO_CONFIRM`]
+          
+          [config: `defaults.jettison.no-confirm`]
 
       --confirm
           Negation of `--no-confirm` that overrides it and restores
@@ -864,6 +870,12 @@ Options:
           the option is used, an error will still be reported at the
           end, containing an indication of all the packages that
           failed to uninstall.
+          
+          [default: false]
+          
+          [env: `CARGO_LINER_JETTISON_NO_FAIL_FAST`]
+          
+          [config: `defaults.jettison.no-fail-fast`]
 
       --fail-fast
           Negation of `--no-fail-fast` that overrides it and restores
@@ -878,6 +890,12 @@ Options:
           This may be useful in order to observe what would be
           performed without actually doing it. This implies
           `--no-confirm`.
+          
+          [default: false]
+          
+          [env: `CARGO_LINER_JETTISON_DRY_RUN`]
+          
+          [config: `defaults.jettison.dry-run`]
 
       --no-dry-run
           Negation of `--dry-run` that overrides it and restores the

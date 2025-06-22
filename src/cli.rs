@@ -476,6 +476,12 @@ pub struct JettisonArgs {
     /// available, which should for example be the case in CI or server
     /// environments where there is no tty setup, then the confirmaton is
     /// immediately passed. In any case, this flag always disables it entirely.
+    ///
+    /// [default: false]
+    ///
+    /// [env: `CARGO_LINER_JETTISON_NO_CONFIRM`]
+    ///
+    /// [config: `defaults.jettison.no-confirm`]
     #[arg(
         short = 'y',
         long,
@@ -497,6 +503,12 @@ pub struct JettisonArgs {
     /// case any of the packages fails to uninstall and the option is used, an
     /// error will still be reported at the end, containing an indication of all
     /// the packages that failed to uninstall.
+    ///
+    /// [default: false]
+    ///
+    /// [env: `CARGO_LINER_JETTISON_NO_FAIL_FAST`]
+    ///
+    /// [config: `defaults.jettison.no-fail-fast`]
     #[arg(
         short = 'k',
         long,
@@ -513,6 +525,12 @@ pub struct JettisonArgs {
     /// simulations, but retains all the remaining operations. This may be
     /// useful in order to observe what would be performed without actually
     /// doing it. This implies `--no-confirm`.
+    ///
+    /// [default: false]
+    ///
+    /// [env: `CARGO_LINER_JETTISON_DRY_RUN`]
+    ///
+    /// [config: `defaults.jettison.dry-run`]
     #[arg(
         short = 'n',
         long,
