@@ -30,33 +30,60 @@ include = [
 ]
 
 [dependencies]
-human-panic = { version = "~2.0" }
-clap = { version = "~4.5", features = [
-    "derive",
-    "cargo",
-    "wrap_help",
+human-panic = { version = "~2.0", default-features = false, features = [
     "color",
 ] }
-clap_complete = { version = "~4.5" }
-log = { version = "~0.4", features = ["std", "serde"] }
-pretty_env_logger = { version = "~0.5" }
-color-eyre = { version = "~0.6" }
-tabled = { version = "~0.20", features = ["ansi"] }
-serde = { version = "~1.0", features = ["derive"] }
-serde_with = { version = "~3.14" }
-semver = { version = "~1.0", features = ["serde"] }
-url = { version = "~2.5", features = ["serde"] }
-regex = { version = "~1.11" }
-toml = { version = "~0.9" }
-home = { version = "~0.5" }
+clap = { version = "~4.5", default-features = false, features = [
+    "std",
+    "derive",
+    "cargo",
+    "help",
+    "wrap_help",
+    "color",
+    "error-context",
+    "suggestions",
+    "usage",
+] }
+clap_complete = { version = "~4.5", default-features = false }
+log = { version = "~0.4", default-features = false, features = [
+    "std",
+    "serde",
+] }
+pretty_env_logger = { version = "~0.5", default-features = false }
+color-eyre = { version = "~0.6", default-features = false, features = [
+    "track-caller",
+    "capture-spantrace",
+] }
+tabled = { version = "~0.20", default-features = false, features = [
+    "derive",
+    "ansi",
+] }
+serde = { version = "~1.0", default-features = false, features = ["derive"] }
+serde_with = { version = "~3.14", default-features = false, features = [
+    "macros",
+] }
+semver = { version = "~1.0", default-features = false, features = [
+    "std",
+    "serde",
+] }
+url = { version = "~2.5", default-features = false, features = ["serde"] }
+regex = { version = "~1.11", default-features = false, features = [
+    "std",
+    "unicode-perl",
+] }
+toml = { version = "~0.9", default-features = false, features = [
+    "serde",
+    "parse",
+] }
+home = { version = "~0.5", default-features = false }
 
 [dev-dependencies]
-indoc = { version = "~2.0" }
-tempfile = { version = "~3.20" }
-trycmd = { version = "~0.15" }
-snapbox = { version = "~0.6" }
-cargo-test-macro = { version = "~0.4" }
-cargo-test-support = { version = "~0.7" }
+indoc = { version = "~2.0", default-features = false }
+tempfile = { version = "~3.20", default-features = false }
+trycmd = { version = "~0.15", default-features = false }
+snapbox = { version = "~0.6", default-features = false }
+cargo-test-macro = { version = "~0.4", default-features = false }
+cargo-test-support = { version = "~0.7", default-features = false }
 
 # See https://crates.io/crates/color-eyre: debug `backtrace` is slow.
 [profile.dev.package.backtrace]
