@@ -30,33 +30,33 @@ include = [
 ]
 
 [dependencies]
-human-panic = "~2.0"
+human-panic = { version = "~2.0" }
 clap = { version = "~4.5", features = [
     "derive",
     "cargo",
     "wrap_help",
     "color",
 ] }
-clap_complete = "~4.5"
+clap_complete = { version = "~4.5" }
 log = { version = "~0.4", features = ["std", "serde"] }
-pretty_env_logger = "~0.5"
-color-eyre = "~0.6"
+pretty_env_logger = { version = "~0.5" }
+color-eyre = { version = "~0.6" }
 tabled = { version = "~0.20", features = ["ansi"] }
 serde = { version = "~1.0", features = ["derive"] }
-serde_with = "~3.14"
+serde_with = { version = "~3.14" }
 semver = { version = "~1.0", features = ["serde"] }
 url = { version = "~2.5", features = ["serde"] }
-regex = "~1.11"
-toml = "~0.9"
-home = "~0.5"
+regex = { version = "~1.11" }
+toml = { version = "~0.9" }
+home = { version = "~0.5" }
 
 [dev-dependencies]
-indoc = "~2.0"
-tempfile = "~3.20"
-trycmd = "~0.15"
-snapbox = "~0.6"
-cargo-test-macro = "~0.4"
-cargo-test-support = "~0.7"
+indoc = { version = "~2.0" }
+tempfile = { version = "~3.20" }
+trycmd = { version = "~0.15" }
+snapbox = { version = "~0.6" }
+cargo-test-macro = { version = "~0.4" }
+cargo-test-support = { version = "~0.7" }
 
 # See https://crates.io/crates/color-eyre: debug `backtrace` is slow.
 [profile.dev.package.backtrace]
