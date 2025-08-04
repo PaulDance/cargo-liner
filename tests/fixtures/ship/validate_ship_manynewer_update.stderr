@@ -28,7 +28,7 @@ warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run 
    Compiling def v0.0.3
     Finished `release` profile [optimized] target(s) in [ELAPSED]s
    Replacing [ROOT]/home/.cargo/bin/def[EXE]
-    Replaced package `def v0.0.2 (/a/b/c)` with `def v0.0.3` (executable `def[EXE]`)
+    Replaced package `def v0.0.2 ([..]/a/b/c)` with `def v0.0.3` (executable `def[EXE]`)
 warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run the installed binaries
  INFO  cargo_liner::commands::ship > Installation report:
 ┌──────┬─────────────┬─────────────┬────────┐

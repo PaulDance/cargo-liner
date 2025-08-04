@@ -6,5 +6,5 @@
 │ abc  │ 0.0.0       │ ?           │ 🛈      │
 └──────┴─────────────┴─────────────┴────────┘
  INFO  cargo_liner::cargo          > Updating `abc`...
-error: `/a` is not a directory. --path must point to a directory containing a Cargo.toml file.
+error: `[..]/a` [..]. --path must point to a directory containing a Cargo.toml file.
 ...

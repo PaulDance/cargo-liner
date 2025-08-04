@@ -19,7 +19,7 @@
   Installing pkg v0.0.0
     Updating `dummy-registry` index
    Compiling pkg v0.0.0
-     Running `[..]rustc[EXE][..]`
+     Running `[..]
     Finished `release` profile [optimized] target(s) in [ELAPSED]s
   Installing [ROOT]/home/.cargo/bin/pkg[EXE]
    Installed package `pkg v0.0.0` (executable `pkg[EXE]`)

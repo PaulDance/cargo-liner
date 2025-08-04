@@ -1,2 +1,2 @@
-error: `/a/b/c` is not a directory. --path must point to a directory containing a Cargo.toml file.
+error: `[..]/a/b/c` is not a directory. --path must point to a directory containing a Cargo.toml file.
 ...
