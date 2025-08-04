@@ -11,49 +11,193 @@ on:
 env:
   CARGO_TERM_COLOR: always
 
+
+
 jobs:
-  checks:
+
+  vendor:
     runs-on: ubuntu-latest
 
-    # Only use stable for now.
+    steps:
+      - uses: actions/checkout@v4
+      - run: rustup update stable && rustup default stable
+
+      - name: Cache Cargo vendored dependencies
+        id: cache-cargo-vendor
+        uses: actions/cache@v4
+        with:
+          path: |
+            vendor/
+            .cargo/config.toml
+          key: cargo-vendor-${{ hashFiles('Cargo.lock') }}
+          enableCrossOsArchive: true
+
+      - if: ${{ steps.cache-cargo-vendor.outputs.cache-hit != 'true' }}
+        name: Fetch and vendor Cargo dependencies
+        run: mkdir -p .cargo/ && cargo vendor --verbose --locked >> .cargo/config.toml
+
+
+  # Could be done using cross-compilation instead, but that is bothersome, so
+  # just rely on the available runners to directly compile natively.
+  build:
     strategy:
       matrix:
-        toolchain:
-          - stable
-          #- beta
-          #- nightly
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+    runs-on: ${{ matrix.os }}
+    needs: vendor
 
     steps:
-    - uses: actions/checkout@v4
-    - run: rustup update ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
+      - uses: actions/checkout@v4
+      - name: Restore Cargo vendored dependencies cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            vendor/
+            .cargo/config.toml
+          key: cargo-vendor-${{ hashFiles('Cargo.lock') }}
+          enableCrossOsArchive: true
+          fail-on-cache-miss: true
+      - run: rustup update stable && rustup default stable
 
-    - name: Verify project manifest
-      run: cargo verify-project --verbose
+      - name: Build release
+        run: >
+          cargo build
+          --verbose
+          --all-targets
+          --all-features
+          --locked
+          --offline
+          --release
 
-    - name: Check build
-      run: cargo check --verbose --all-targets --all-features
 
-    - name: Build and run tests
-      run: cargo test --verbose --all-targets --all-features
+  test:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+    runs-on: ${{ matrix.os }}
+    needs: vendor
 
-    - name: Check correct rustfmt formatting
-      # HACK: pass all configuration items via CLI to circumvent unstability restriction.
-      run: >
-        cargo fmt --verbose --all --check
-        -- --config-path=/dev/null --config=$(
-          cat rustfmt.toml |
-          sed -E 's/\#.*$//g' |
-          sed '/^$/d' |
-          sed 's/ //g' |
-          sed -Ez 's/(\r)?\n/,/g' |
-          sed 's/,$//' |
-          sed 's/"//g'
-        )
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore Cargo vendored dependencies cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            vendor/
+            .cargo/config.toml
+          key: cargo-vendor-${{ hashFiles('Cargo.lock') }}
+          enableCrossOsArchive: true
+          fail-on-cache-miss: true
+      - run: rustup update stable && rustup default stable
 
-    - name: Check clippy warnings
-      run: cargo clippy --verbose --all-targets --all-features -- --deny warnings
+      - name: Build and run tests
+        run: >
+          cargo test
+          --verbose
+          --all-targets
+          --all-features
+          --locked
+          --offline
 
-    - name: Build documentation
-      run: cargo doc --verbose --all-features --no-deps --document-private-items
-      env:
-        RUSTDOCFLAGS: "-Dwarnings"
+
+  # Sadly, it seems to require cross-compilation as well.
+  lint:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+    runs-on: ${{ matrix.os }}
+    needs: vendor
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore Cargo vendored dependencies cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            vendor/
+            .cargo/config.toml
+          key: cargo-vendor-${{ hashFiles('Cargo.lock') }}
+          enableCrossOsArchive: true
+          fail-on-cache-miss: true
+      - run: rustup update stable && rustup default stable
+
+      - name: Check Clippy warnings
+        run: >
+          cargo clippy
+          --verbose
+          --all-targets
+          --all-features
+          --locked
+          --offline
+          --
+          --deny warnings
+
+
+  document:
+    runs-on: ubuntu-latest
+    needs: vendor
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore Cargo vendored dependencies cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            vendor/
+            .cargo/config.toml
+          key: cargo-vendor-${{ hashFiles('Cargo.lock') }}
+          enableCrossOsArchive: true
+          fail-on-cache-miss: true
+      - run: rustup update stable && rustup default stable
+      - run: >
+          rustup target add
+          x86_64-unknown-linux-gnu
+          x86_64-pc-windows-msvc
+          aarch64-apple-darwin
+
+      - name: Build documentation
+        env:
+          RUSTDOCFLAGS: "-Dwarnings"
+        run: >
+          cargo doc
+          --verbose
+          --all-features
+          --locked
+          --offline
+          --bins
+          --examples
+          --document-private-items
+          --target x86_64-unknown-linux-gnu
+          --target x86_64-pc-windows-msvc
+          --target aarch64-apple-darwin
+
+
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - run: rustup update stable && rustup default stable
+
+      - name: Check correct Rustfmt formatting
+        # HACK: pass all configuration items via CLI to circumvent unstability restriction.
+        run: >
+          cargo fmt --verbose --all --check
+          -- --config-path=/dev/null --config=$(
+            cat rustfmt.toml |
+            sed -E 's/\#.*$//g' |
+            sed '/^$/d' |
+            sed 's/ //g' |
+            sed -Ez 's/(\r)?\n/,/g' |
+            sed 's/,$//' |
+            sed 's/"//g'
+          )
