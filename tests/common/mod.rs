@@ -216,9 +216,11 @@ pub fn assert_user_config_eq_path(test_path: impl AsRef<Path>) {
 /// version.
 ///
 /// Creates the `$CARGO_HOME/bin` directory if it does not exist; adds an empty
-/// file of the package's name in it; adds the package's name and version to
-/// the `$CARGO_HOME/.crates.toml` file, creating it if it does not exist.
+/// file of the package's name in it with the adequate EXE suffix; adds the
+/// package's name and version to the `$CARGO_HOME/.crates.toml` file, creating
+/// it if it does not exist.
 pub fn fake_install(pkg: &str, ver: &str, locally_installed: bool) {
+    let pkg_bin = cargo_test_support::install::exe(pkg);
     let tmp_home = cargo_test_support::paths::home();
     let tmp_cargo_home = tmp_home.join(".cargo");
     let tmp_cargo_home_bin = tmp_cargo_home.join("bin");
@@ -229,7 +231,7 @@ pub fn fake_install(pkg: &str, ver: &str, locally_installed: bool) {
     File::options()
         .write(true)
         .create_new(true)
-        .open(tmp_cargo_home_bin.join(pkg))
+        .open(tmp_cargo_home_bin.join(&pkg_bin))
         .unwrap();
 
     // Initialize .crates.toml if not exist.
@@ -247,7 +249,7 @@ pub fn fake_install(pkg: &str, ver: &str, locally_installed: bool) {
             .append(true)
             .open(tmp_cargo_home_crates)
             .unwrap(),
-        "\"{pkg} {ver} ({source})\" = [\"{pkg}\"]",
+        "\"{pkg} {ver} ({source})\" = [\"{pkg_bin}\"]",
         source = if locally_installed {
             "path+file:///a/b/c"
         } else {
@@ -329,7 +331,7 @@ pub fn break_fake_installation(pkg: &str) {
     fs::remove_file(
         cargo_test_support::paths::home()
             .join(".cargo/bin")
-            .join(pkg),
+            .join(cargo_test_support::install::exe(pkg)),
     )
     .unwrap();
 }
