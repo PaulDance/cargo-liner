@@ -193,18 +193,21 @@ pub fn fixture_write_user_config() {
 }
 
 /// Asserts the user configuration does not exist.
+#[track_caller]
 pub fn assert_user_config_absent() {
     assert!(!user_config_path().exists());
 }
 
 /// Asserts the user configuration file's contents are exactly equal to the
 /// given string.
+#[track_caller]
 pub fn assert_user_config_eq(test_str: &str) {
     assert_eq!(read_user_config(), test_str);
 }
 
 /// Asserts the user configuration file's contents are exactly equal to the
 /// given one's.
+#[track_caller]
 pub fn assert_user_config_eq_path(test_path: impl AsRef<Path>) {
     assert_user_config_eq(&fs::read_to_string(test_path).unwrap());
 }
@@ -275,6 +278,7 @@ pub fn fixture_fake_install() {
 }
 
 /// Asserts that the given package is installed in the testing environment.
+#[track_caller]
 pub fn assert_installed(pkg: &'static str) {
     cargo_test_support::install::assert_has_installed_exe(
         cargo_test_support::paths::cargo_home(),
@@ -283,11 +287,13 @@ pub fn assert_installed(pkg: &'static str) {
 }
 
 /// Asserts that the current package is installed.
+#[track_caller]
 pub fn assert_installed_self() {
     assert_installed(clap::crate_name!());
 }
 
 /// Runs [`assert_installed`] on all the packages yielded by the given iterator.
+#[track_caller]
 pub fn assert_installed_all(pkgs: impl IntoIterator<Item = &'static str>) {
     for pkg in pkgs {
         assert_installed(pkg);
@@ -295,11 +301,13 @@ pub fn assert_installed_all(pkgs: impl IntoIterator<Item = &'static str>) {
 }
 
 /// Runs [`assert_installed_all`] on some example packages, self included.
+#[track_caller]
 pub fn fixture_assert_installed() {
     assert_installed_all(FIXTURE_PACKAGES.into_iter().map(|(pkg, _, _)| pkg));
 }
 
 /// Asserts that the given package is not installed in the testing environment.
+#[track_caller]
 pub fn assert_not_installed(pkg: &'static str) {
     cargo_test_support::install::assert_has_not_installed_exe(
         cargo_test_support::paths::cargo_home(),
@@ -309,6 +317,7 @@ pub fn assert_not_installed(pkg: &'static str) {
 
 /// Runs [`assert_not_installed`] on all the packages yielded by the given
 /// iterator.
+#[track_caller]
 pub fn assert_not_installed_all(pkgs: impl IntoIterator<Item = &'static str>) {
     for pkg in pkgs {
         assert_not_installed(pkg);
