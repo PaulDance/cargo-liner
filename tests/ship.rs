@@ -1017,7 +1017,13 @@ fn validate_ship_cargoinstallroot_supported() {
         .stderr_eq(snapbox::file![
             "fixtures/ship/validate_ship_cargoinstallroot_supported.stderr"
         ]);
-    assert!(tmp_dir.path().join("bin/pkg").is_file());
+    assert!(
+        tmp_dir
+            .path()
+            .join("bin")
+            .join(cargo_test_support::install::exe("pkg"))
+            .is_file()
+    );
 }
 
 /// See #6
