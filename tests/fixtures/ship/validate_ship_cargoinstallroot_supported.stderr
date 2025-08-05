@@ -15,8 +15,8 @@ note: to learn more about a package, run `cargo info <name>`
     Updating `dummy-registry` index
    Compiling pkg v0.0.0
     Finished `release` profile [optimized] target(s) in [ELAPSED]s
-  Installing /tmp/[..]/bin/pkg
-   Installed package `pkg v0.0.0` (executable `pkg`)
+  Installing /tmp/[..]/bin/pkg[EXE]
+   Installed package `pkg v0.0.0` (executable `pkg[EXE]`)
 warning: be sure to add `/tmp/[..]/bin` to your PATH to be able to run the installed binaries
  INFO  cargo_liner::commands::ship > Installation report:
 ┌──────┬─────────────┬─────────────┬────────┐

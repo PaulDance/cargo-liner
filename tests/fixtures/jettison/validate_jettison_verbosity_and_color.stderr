@@ -1,7 +1,7 @@
 ...
  INFO  cargo_liner::cargo                     > Uninstalling "abc"...
  TRACE cargo_liner::cargo                     > `-vv` arg added.
- DEBUG cargo_liner::cargo                     > Running "[..]/bin/cargo" with arguments [
+ DEBUG cargo_liner::cargo                     > Running "[..]/bin/cargo[EXE]" with arguments [
     "--color",
     "never",
     "-vv",
@@ -9,5 +9,5 @@
     "--",
     "abc",
 ]...
-    Removing [ROOT]/home/.cargo/bin/abc
+    Removing [ROOT]/home/.cargo/bin/abc[EXE]
  INFO  cargo_liner                            > Done.

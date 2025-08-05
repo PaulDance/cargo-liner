@@ -9,5 +9,5 @@
  WARN  cargo_liner::commands::jettison > This will remove all the packages listed above: do you confirm? [Y/n]
  WARN  cargo_liner::commands::jettison > This will remove all the packages listed above: do you confirm? [Y/n]
  INFO  cargo_liner::cargo              > Uninstalling "abc"...
-    Removing [ROOT]/home/.cargo/bin/abc
+    Removing [ROOT]/home/.cargo/bin/abc[EXE]
  INFO  cargo_liner                     > Done.

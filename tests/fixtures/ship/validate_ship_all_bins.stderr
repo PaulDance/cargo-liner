@@ -15,10 +15,10 @@ note: to learn more about a package, run `cargo info <name>`
     Updating `dummy-registry` index
    Compiling abc v0.0.0
     Finished `release` profile [optimized] target(s) in [ELAPSED]s
-  Installing [ROOT]/home/.cargo/bin/b1
-  Installing [ROOT]/home/.cargo/bin/b2
-  Installing [ROOT]/home/.cargo/bin/b3
-   Installed package `abc v0.0.0` (executables `b1`, `b2`, `b3`)
+  Installing [ROOT]/home/.cargo/bin/b1[EXE]
+  Installing [ROOT]/home/.cargo/bin/b2[EXE]
+  Installing [ROOT]/home/.cargo/bin/b3[EXE]
+   Installed package `abc v0.0.0` (executables `b1[EXE]`, `b2[EXE]`, `b3[EXE]`)
 warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run the installed binaries
  INFO  cargo_liner::commands::ship > Installation report:
 ┌──────┬─────────────┬─────────────┬────────┐

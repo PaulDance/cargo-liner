@@ -529,8 +529,8 @@ $ cargo liner
 ...
    Compiling bat v0.24.0
     Finished `release` profile [optimized] target(s) in [..]s
-  Installing [..]/.cargo/bin/bat
-   Installed package `bat v0.24.0` (executable `bat`)
+  Installing [..]/.cargo/bin/bat[EXE]
+   Installed package `bat v0.24.0` (executable `bat[EXE]`)
 ...
  INFO  cargo_liner::cargo          > Updating `cargo-expand`...
     Updating [..] index
@@ -541,8 +541,8 @@ $ cargo liner
 ...
    Compiling cargo-expand v1.0.79
     Finished `release` profile [optimized] target(s) in [..]s
-   Replacing [..]/.cargo/bin/cargo-expand
-    Replaced package `cargo-expand v1.0.78` with `cargo-expand v1.0.79` (executable `cargo-expand`)
+   Replacing [..]/.cargo/bin/cargo-expand[EXE]
+    Replaced package `cargo-expand v1.0.78` with `cargo-expand v1.0.79` (executable `cargo-expand[EXE]`)
 ...
  INFO  cargo_liner::commands::ship > Installation report:
 ┌──────────────┬─────────────┬─────────────┬────────┐

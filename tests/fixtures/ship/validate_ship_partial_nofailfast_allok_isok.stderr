@@ -6,8 +6,8 @@
     Updating `dummy-registry` index
    Compiling p1 v0.0.0
     Finished `release` profile [optimized] target(s) in [ELAPSED]s
-  Installing [ROOT]/home/.cargo/bin/p1
-   Installed package `p1 v0.0.0` (executable `p1`)
+  Installing [ROOT]/home/.cargo/bin/p1[EXE]
+   Installed package `p1 v0.0.0` (executable `p1[EXE]`)
 warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run the installed binaries
  INFO  cargo_liner::cargo > Installing `p2`...
     Updating `dummy-registry` index
@@ -17,8 +17,8 @@ warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run 
     Updating `dummy-registry` index
    Compiling p2 v0.0.0
     Finished `release` profile [optimized] target(s) in [ELAPSED]s
-  Installing [ROOT]/home/.cargo/bin/p2
-   Installed package `p2 v0.0.0` (executable `p2`)
+  Installing [ROOT]/home/.cargo/bin/p2[EXE]
+   Installed package `p2 v0.0.0` (executable `p2[EXE]`)
 warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run the installed binaries
  INFO  cargo_liner::cargo > Installing `p3`...
     Updating `dummy-registry` index
@@ -28,8 +28,8 @@ warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run 
     Updating `dummy-registry` index
    Compiling p3 v0.0.0
     Finished `release` profile [optimized] target(s) in [ELAPSED]s
-  Installing [ROOT]/home/.cargo/bin/p3
-   Installed package `p3 v0.0.0` (executable `p3`)
+  Installing [ROOT]/home/.cargo/bin/p3[EXE]
+   Installed package `p3 v0.0.0` (executable `p3[EXE]`)
 warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run the installed binaries
  INFO  cargo_liner::cargo > Installing `p4`...
     Updating `dummy-registry` index
@@ -39,8 +39,8 @@ warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run 
     Updating `dummy-registry` index
    Compiling p4 v0.0.0
     Finished `release` profile [optimized] target(s) in [ELAPSED]s
-  Installing [ROOT]/home/.cargo/bin/p4
-   Installed package `p4 v0.0.0` (executable `p4`)
+  Installing [ROOT]/home/.cargo/bin/p4[EXE]
+   Installed package `p4 v0.0.0` (executable `p4[EXE]`)
 warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run the installed binaries
  INFO  cargo_liner::cargo > Installing `p5`...
     Updating `dummy-registry` index
@@ -50,8 +50,8 @@ warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run 
     Updating `dummy-registry` index
    Compiling p5 v0.0.0
     Finished `release` profile [optimized] target(s) in [ELAPSED]s
-  Installing [ROOT]/home/.cargo/bin/p5
-   Installed package `p5 v0.0.0` (executable `p5`)
+  Installing [ROOT]/home/.cargo/bin/p5[EXE]
+   Installed package `p5 v0.0.0` (executable `p5[EXE]`)
 warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run the installed binaries
  INFO  cargo_liner::commands::ship > Installation report:
 ┌──────┬─────────────┬─────────────┬────────┐

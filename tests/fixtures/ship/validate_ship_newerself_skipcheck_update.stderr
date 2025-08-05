@@ -6,8 +6,8 @@
     Updating `dummy-registry` index
    Compiling cargo-liner v0.0.4
     Finished `release` profile [optimized] target(s) in [ELAPSED]s
-   Replacing [ROOT]/home/.cargo/bin/cargo-liner
-    Replaced package `cargo-liner v0.0.3` with `cargo-liner v0.0.4` (executable `cargo-liner`)
+   Replacing [ROOT]/home/.cargo/bin/cargo-liner[EXE]
+    Replaced package `cargo-liner v0.0.3` with `cargo-liner v0.0.4` (executable `cargo-liner[EXE]`)
 warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run the installed binaries
  INFO  cargo_liner::commands::ship > Installation report:
 ┌─────────────┬─────────────┬─────────────┬────────┐

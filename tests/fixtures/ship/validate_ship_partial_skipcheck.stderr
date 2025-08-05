@@ -19,8 +19,8 @@
     Updating `dummy-registry` index
    Compiling p1 v0.0.0
     Finished `release` profile [optimized] target(s) in [ELAPSED]s
-  Installing [ROOT]/home/.cargo/bin/p1
-   Installed package `p1 v0.0.0` (executable `p1`)
+  Installing [ROOT]/home/.cargo/bin/p1[EXE]
+   Installed package `p1 v0.0.0` (executable `p1[EXE]`)
 warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run the installed binaries
  INFO  cargo_liner::cargo          > Updating `p3`...
     Updating `dummy-registry` index
@@ -30,8 +30,8 @@ warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run 
     Updating `dummy-registry` index
    Compiling p3 v0.0.1
     Finished `release` profile [optimized] target(s) in [ELAPSED]s
-   Replacing [ROOT]/home/.cargo/bin/p3
-    Replaced package `p3 v0.0.0` with `p3 v0.0.1` (executable `p3`)
+   Replacing [ROOT]/home/.cargo/bin/p3[EXE]
+    Replaced package `p3 v0.0.0` with `p3 v0.0.1` (executable `p3[EXE]`)
 warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run the installed binaries
  INFO  cargo_liner::cargo          > Installing `p4`...
     Updating `dummy-registry` index
@@ -41,8 +41,8 @@ warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run 
     Updating `dummy-registry` index
    Compiling p4 v0.0.0
     Finished `release` profile [optimized] target(s) in [ELAPSED]s
-  Installing [ROOT]/home/.cargo/bin/p4
-   Installed package `p4 v0.0.0` (executable `p4`)
+  Installing [ROOT]/home/.cargo/bin/p4[EXE]
+   Installed package `p4 v0.0.0` (executable `p4[EXE]`)
 warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run the installed binaries
  INFO  cargo_liner::cargo          > Updating `p5`...
     Updating `dummy-registry` index
@@ -58,8 +58,8 @@ warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run 
     Updating `dummy-registry` index
    Compiling p6 v0.0.1
     Finished `release` profile [optimized] target(s) in [ELAPSED]s
-   Replacing [ROOT]/home/.cargo/bin/p6
-    Replaced package `p6 v0.0.0` with `p6 v0.0.1` (executable `p6`)
+   Replacing [ROOT]/home/.cargo/bin/p6[EXE]
+    Replaced package `p6 v0.0.0` with `p6 v0.0.1` (executable `p6[EXE]`)
 warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run the installed binaries
  INFO  cargo_liner::commands::ship > Installation report:
 ┌──────┬─────────────┬─────────────┬────────┐

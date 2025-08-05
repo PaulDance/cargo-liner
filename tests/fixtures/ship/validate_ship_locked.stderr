@@ -9,6 +9,6 @@ warning: no Cargo.lock file published in abc v0.0.0
    Compiling def v0.0.0
    Compiling abc v0.0.0
     Finished `release` profile [optimized] target(s) in [ELAPSED]s
-  Installing [ROOT]/home/.cargo/bin/abc
-   Installed package `abc v0.0.0` (executable `abc`)
+  Installing [ROOT]/home/.cargo/bin/abc[EXE]
+   Installed package `abc v0.0.0` (executable `abc[EXE]`)
 warning: be sure to add `[ROOT]/home/.cargo/bin` to your PATH to be able to run the installed binaries
