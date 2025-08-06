@@ -191,13 +191,18 @@ jobs:
       - name: Check correct Rustfmt formatting
         # HACK: pass all configuration items via CLI to circumvent unstability restriction.
         run: >
-          cargo fmt --verbose --all --check
-          -- --config-path=/dev/null --config=$(
+          cargo fmt
+          --verbose
+          --all
+          --check
+          --
+          --config-path=/dev/null
+          --config=$(
             cat rustfmt.toml |
-            sed -E 's/\#.*$//g' |
-            sed '/^$/d' |
-            sed 's/ //g' |
-            sed -Ez 's/(\r)?\n/,/g' |
-            sed 's/,$//' |
-            sed 's/"//g'
+              sed -E 's/\#.*$//g' |
+              sed '/^$/d' |
+              sed 's/ //g' |
+              sed -Ez 's/(\r)?\n/,/g' |
+              sed 's/,$//' |
+              sed 's/"//g'
           )
