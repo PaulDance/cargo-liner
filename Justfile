@@ -36,7 +36,12 @@ clippy *args:
 alias d := doc
 # Runs `cargo doc` with some default flags.
 doc *args:
-    cargo doc --all-features --document-private-items {{ args }}
+    cargo doc \
+        --bins \
+        --examples \
+        --all-features \
+        --document-private-items \
+        {{ args }}
 
 alias f := fmt
 # Alias for `fmt --check`.
@@ -47,7 +52,7 @@ fmt *args:
 
 alias ca := check-all
 # Runs all checks in sequence.
-check-all: check build test clippy doc fc
+check-all: build test clippy doc fc
 
 alias ur := update-readme
 # Instructs Trycmd to overwrite any out-of-date `console` code blocks in the `README.md`.
