@@ -2,7 +2,7 @@
 name = "cargo-liner"
 version = "0.10.0"
 edition = "2024"
-rust-version = "1.86"
+rust-version = "1.87"
 description = """
 Cargo subcommand to install and update binary packages listed in configuration.
 """
