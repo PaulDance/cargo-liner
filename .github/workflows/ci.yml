@@ -40,6 +40,48 @@ jobs:
         run: mkdir -p .cargo/ && cargo vendor --verbose --locked >> .cargo/config.toml
 
 
+  # Only under Linux for now, as it should cover most cases.
+  check-msrv:
+    runs-on: ubuntu-latest
+    needs: vendor
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore Cargo vendored dependencies cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            vendor/
+            .cargo/config.toml
+          key: cargo-vendor-${{ hashFiles('Cargo.lock') }}
+          enableCrossOsArchive: true
+          fail-on-cache-miss: true
+      - run: rustup update stable && rustup default stable
+
+      - name: Get the configured MSRV
+        run: >
+          cargo metadata
+          --all-features
+          --locked
+          --offline
+          --format-version 1
+          | jq --raw-output '.packages[] | select(.name == "cargo-liner") | .rust_version'
+          | sed 's/^/CONFIGURED_MSRV=/'
+          >> "$GITHUB_ENV"
+      - run: echo "$CONFIGURED_MSRV"
+      - name: Apply the MSRV
+        run: rustup toolchain install "$CONFIGURED_MSRV" && rustup default "$CONFIGURED_MSRV"
+
+      - name: Run the check
+        run: >
+          cargo check
+          --verbose
+          --all-targets
+          --all-features
+          --locked
+          --offline
+
+
   # Could be done using cross-compilation instead, but that is bothersome, so
   # just rely on the available runners to directly compile natively.
   build:
