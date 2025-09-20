@@ -39,7 +39,7 @@ The current development environment is relatively standard.
  3. Add as much tests as possible. Unit tests are directly in modules.
     Integration tests are in the `tests` directory. Add feature tests when
     adding new functionalities. Add regression tests when fixing bugs.
- 4. Update the `README.md` with details of changes to the interface, this
+ 4. Update the `README.md` with details of changes to the interface. This
     includes new environment variables, exposed CLI options, useful file
     locations and configuration options.
  5. After a validating review, a maintainer is charge of merging the PR.
