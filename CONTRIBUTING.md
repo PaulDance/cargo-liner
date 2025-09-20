@@ -13,8 +13,8 @@ in all your interactions with the project.
 
 The current development environment is relatively standard.
 
-* The used toolchain and target is stable Rust for x86_64 GNU/Linux, as checked
-  in CI at least.
+* The toolchain used in CI is stable Rust. The supported targets are x86_64
+  GNU/Linux, x86_64 Windows and ARM64 macOS.
 * Integration tests are mostly based on [Trycmd] for the README check and
   [Snapbox] with [`cargo-test-support`] for the rest. In particular, most
   outputs are exported in separate files living in the [`tests/fixtures/`]
