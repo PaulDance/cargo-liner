@@ -16,7 +16,6 @@ error: invalid character `-` in package name: `--pkg`, the first character must 
   |
 [..] |[..]name = "--pkg"
   |[..]^^^^^^^
-  |
 error: failed to download replaced source registry `crates-io`
 Error: 
    0: Failed to install or update one of the configured packages.
