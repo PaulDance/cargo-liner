@@ -25,19 +25,18 @@ fn validate_shell(shell: &str, run: bool) {
 
     // Actually run the script to see what happens, but only if asked to and
     // the given shell is available from the current environment.
-    if run {
-        if let Ok(status) = process::Command::new(shell).arg("--version").status() {
-            if status.success() {
-                Command::new(shell)
-                    .arg(format!(
-                        "tests/fixtures/completions/validate_{shell}.stdout"
-                    ))
-                    .assert()
-                    .success()
-                    .stdout_eq("".into_data().raw())
-                    .stderr_eq("".into_data().raw());
-            }
-        }
+    if run
+        && let Ok(status) = process::Command::new(shell).arg("--version").status()
+        && status.success()
+    {
+        Command::new(shell)
+            .arg(format!(
+                "tests/fixtures/completions/validate_{shell}.stdout"
+            ))
+            .assert()
+            .success()
+            .stdout_eq("".into_data().raw())
+            .stderr_eq("".into_data().raw());
     }
 }
 
