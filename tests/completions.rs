@@ -6,10 +6,9 @@ use snapbox::data::DataFormat;
 use snapbox::{Data, IntoData};
 
 mod common;
-use common::*;
 
 fn validate_shell(shell: &str, run: bool) {
-    cargo_liner()
+    cargo_liner!()
         .args(["completions", shell])
         .assert()
         .success()

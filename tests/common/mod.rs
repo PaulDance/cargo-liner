@@ -10,12 +10,11 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::{env, io, iter};
 
+use cargo_test_support::TestEnvCommandExt;
 use cargo_test_support::registry::{
     HttpServer, Package, RegistryBuilder, Request, Response, TestRegistry,
 };
-use cargo_test_support::{TestEnvCommandExt, compare};
 use semver::Version;
-use snapbox::cmd::Command;
 
 /// List of example packages, their respective versions and if they are locally
 /// installed, including self.
@@ -25,14 +24,19 @@ pub const FIXTURE_PACKAGES: [(&str, &str, bool); 3] = [
     ("cargo-liner", "0.0.3", false),
 ];
 
-/// Invoke `cargo-liner liner` with the test environment.
-#[must_use]
-pub fn cargo_liner() -> Command {
-    Command::new(snapbox::cmd::cargo_bin(clap::crate_name!()))
-        .with_assert(compare::assert_ui())
-        .test_env()
-        .arg("liner")
-        .arg("--color=never")
+/// Yields a [`Command`] invoking `cargo-liner liner` with the test environment.
+///
+/// [`Command`]: ::snapbox::cmd::Command
+#[macro_export]
+macro_rules! cargo_liner {
+    () => {{
+        use ::cargo_test_support::TestEnvCommandExt;
+        ::snapbox::cmd::Command::new(::snapbox::cmd::cargo_bin!())
+            .with_assert(::cargo_test_support::compare::assert_ui())
+            .test_env()
+            .arg("liner")
+            .arg("--color=never")
+    }};
 }
 
 /// Initializes the registry without a token, with an HTTP index and API, and

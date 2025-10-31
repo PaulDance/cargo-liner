@@ -9,7 +9,7 @@ fn validate_jettison_selfstays() {
     fake_install_self();
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .arg("jettison")
         .assert()
         .success()
@@ -25,7 +25,7 @@ fn validate_jettison_uninstall_one() {
     assert_installed("abc");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .arg("jettison")
         .assert()
         .success()
@@ -44,11 +44,14 @@ fn validate_jettison_install_then_uninstall_one() {
     assert_not_installed("abc");
 
     write_user_config(&["[packages]", "abc = '*'"]);
-    cargo_liner().args(["ship", "--no-self"]).assert().success();
+    cargo_liner!()
+        .args(["ship", "--no-self"])
+        .assert()
+        .success();
     assert_installed("abc");
 
     write_user_config(&["[packages]"]);
-    cargo_liner()
+    cargo_liner!()
         .arg("jettison")
         .assert()
         .success()
@@ -70,7 +73,7 @@ fn validate_jettison_uninstall_all() {
     assert_installed_all(["abc", "def", "ghi"]);
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .arg("jettison")
         .assert()
         .success()
@@ -95,7 +98,7 @@ fn validate_jettison_uninstall_some() {
     assert_installed_all(["abc", "def", "ghi", "jkl", "mno", "pqr"]);
     write_user_config(&["[packages]", "jkl = '*'", "mno = '*'", "pqr = '*'"]);
 
-    cargo_liner()
+    cargo_liner!()
         .arg("jettison")
         .assert()
         .success()
@@ -115,7 +118,7 @@ fn validate_jettison_verbosity_and_color() {
     write_user_config(&["[packages]"]);
 
     // HACK: use the debug output to observe their being passed down.
-    cargo_liner()
+    cargo_liner!()
         .args(["jettison", "-vvv", "--color=never"])
         .assert()
         .success()
@@ -133,7 +136,7 @@ fn validate_jettison_confirm_continue_y() {
     assert_installed("abc");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .arg("jettison")
         .stdin("y")
         .assert()
@@ -152,7 +155,7 @@ fn validate_jettison_confirm_continue_lf() {
     assert_installed("abc");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .arg("jettison")
         .stdin("")
         .assert()
@@ -171,7 +174,7 @@ fn validate_jettison_confirm_abort() {
     assert_installed("abc");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .arg("jettison")
         .stdin("n")
         .assert()
@@ -190,7 +193,7 @@ fn validate_jettison_confirm_retry_continue() {
     assert_installed("abc");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .arg("jettison")
         .stdin("a\nb\nc\ny")
         .assert()
@@ -209,7 +212,7 @@ fn validate_jettison_confirm_retry_abort() {
     assert_installed("abc");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .arg("jettison")
         .stdin("a\nb\nc\nn")
         .assert()
@@ -228,7 +231,7 @@ fn validate_jettison_noconfirm() {
     assert_installed("abc");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["jettison", "--no-confirm"])
         .assert()
         .success()
@@ -250,7 +253,7 @@ fn validate_jettison_dryrun() {
     assert_installed_all(["abc", "def", "ghi"]);
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["jettison", "--dry-run"])
         .assert()
         .success()
@@ -273,7 +276,7 @@ fn validate_jettison_failfast() {
     write_user_config(&["[packages]"]);
     break_fake_installation("def");
 
-    cargo_liner()
+    cargo_liner!()
         .arg("jettison")
         .assert()
         .failure()
@@ -300,7 +303,7 @@ fn validate_jettison_nofailfast_err_iserr() {
     write_user_config(&["[packages]"]);
     break_fake_installation_all(["def", "jkl"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["jettison", "--no-fail-fast"])
         .assert()
         .failure()
@@ -322,7 +325,7 @@ fn validate_jettison_nofailfast_ok_isok() {
     assert_installed_all(["abc", "def", "ghi"]);
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["jettison", "--no-fail-fast"])
         .assert()
         .success()
@@ -346,7 +349,7 @@ fn validate_jettison_configdryrun_isdryrun() {
     assert_installed_all(["abc", "def", "ghi"]);
     write_user_config(&["[packages]", "[defaults.jettison]", "dry-run = true"]);
 
-    cargo_liner()
+    cargo_liner!()
         .arg("jettison")
         .assert()
         .success()
@@ -368,7 +371,7 @@ fn validate_jettison_envdryrun_isdryrun() {
     assert_installed_all(["abc", "def", "ghi"]);
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .env("CARGO_LINER_JETTISON_DRY_RUN", "true")
         .arg("jettison")
         .assert()
@@ -391,7 +394,7 @@ fn validate_jettison_clidryrun_isdryrun() {
     assert_installed_all(["abc", "def", "ghi"]);
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["jettison", "--dry-run"])
         .assert()
         .success()
@@ -413,7 +416,7 @@ fn validate_jettison_confignodryrun_envdryrun_isdryrun() {
     assert_installed_all(["abc", "def", "ghi"]);
     write_user_config(&["[packages]", "[defaults.jettison]", "dry-run = false"]);
 
-    cargo_liner()
+    cargo_liner!()
         .env("CARGO_LINER_JETTISON_DRY_RUN", "true")
         .arg("jettison")
         .assert()
@@ -436,7 +439,7 @@ fn validate_jettison_confignodryrun_clidryrun_isdryrun() {
     assert_installed_all(["abc", "def", "ghi"]);
     write_user_config(&["[packages]", "[defaults.jettison]", "dry-run = false"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["jettison", "--dry-run"])
         .assert()
         .success()
@@ -458,7 +461,7 @@ fn validate_jettison_envnodryrun_clidryrun_isdryrun() {
     assert_installed_all(["abc", "def", "ghi"]);
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .env("CARGO_LINER_JETTISON_DRY_RUN", "false")
         .args(["jettison", "--dry-run"])
         .assert()
@@ -481,7 +484,7 @@ fn validate_jettison_confignodryrun_envnodryrun_clidryrun_isdryrun() {
     assert_installed_all(["abc", "def", "ghi"]);
     write_user_config(&["[packages]", "[defaults.jettison]", "dry-run = false"]);
 
-    cargo_liner()
+    cargo_liner!()
         .env("CARGO_LINER_JETTISON_DRY_RUN", "false")
         .args(["jettison", "--dry-run"])
         .assert()
@@ -504,7 +507,7 @@ fn validate_jettison_configdryrun_envnodryrun_clidryrun_isdryrun() {
     assert_installed_all(["abc", "def", "ghi"]);
     write_user_config(&["[packages]", "[defaults.jettison]", "dry-run = true"]);
 
-    cargo_liner()
+    cargo_liner!()
         .env("CARGO_LINER_JETTISON_DRY_RUN", "false")
         .args(["jettison", "--dry-run"])
         .assert()
@@ -527,7 +530,7 @@ fn validate_jettison_configdryrun_envdryrun_clidryrun_isdryrun() {
     assert_installed_all(["abc", "def", "ghi"]);
     write_user_config(&["[packages]", "[defaults.jettison]", "dry-run = true"]);
 
-    cargo_liner()
+    cargo_liner!()
         .env("CARGO_LINER_JETTISON_DRY_RUN", "true")
         .args(["jettison", "--dry-run"])
         .assert()
@@ -550,7 +553,7 @@ fn validate_jettison_configdryrun_envdryrun_clinodryrun_isnodryrun() {
     assert_installed_all(["abc", "def", "ghi"]);
     write_user_config(&["[packages]", "[defaults.jettison]", "dry-run = true"]);
 
-    cargo_liner()
+    cargo_liner!()
         .env("CARGO_LINER_JETTISON_DRY_RUN", "true")
         .args(["jettison", "--no-dry-run"])
         .assert()
@@ -573,7 +576,7 @@ fn validate_jettison_confignodryrun_envdryrun_clinodryrun_isnodryrun() {
     assert_installed_all(["abc", "def", "ghi"]);
     write_user_config(&["[packages]", "[defaults.jettison]", "dry-run = false"]);
 
-    cargo_liner()
+    cargo_liner!()
         .env("CARGO_LINER_JETTISON_DRY_RUN", "true")
         .args(["jettison", "--no-dry-run"])
         .assert()
@@ -596,7 +599,7 @@ fn validate_jettison_confignodryrun_envnodryrun_clinodryrun_isnodryrun() {
     assert_installed_all(["abc", "def", "ghi"]);
     write_user_config(&["[packages]", "[defaults.jettison]", "dry-run = false"]);
 
-    cargo_liner()
+    cargo_liner!()
         .env("CARGO_LINER_JETTISON_DRY_RUN", "false")
         .args(["jettison", "--no-dry-run"])
         .assert()

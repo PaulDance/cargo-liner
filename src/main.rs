@@ -11,9 +11,7 @@ use color_eyre::eyre::{Result, WrapErr};
 use log::LevelFilter;
 use pretty_env_logger::env_logger::WriteStyle;
 #[cfg(test)]
-use tempfile as _;
-#[cfg(test)]
-use trycmd as _;
+use {snapbox as _, tempfile as _, trycmd as _};
 
 mod cargo;
 mod cli;

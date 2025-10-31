@@ -15,7 +15,7 @@ fn validate_ship_noupdate() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .arg("ship")
         .assert()
         .success()
@@ -32,7 +32,7 @@ fn validate_ship_onlyself_noupdate() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--only-self"])
         .assert()
         .success()
@@ -48,7 +48,7 @@ fn validate_ship_noself_nothing() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .success()
@@ -65,7 +65,7 @@ fn validate_ship_skipcheck_noupdate() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--skip-check"])
         .assert()
         .success()
@@ -84,7 +84,7 @@ fn validate_ship_skipcheck_onlyself_noupdate() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--skip-check", "--only-self"])
         .assert()
         .success()
@@ -102,7 +102,7 @@ fn validate_ship_skipcheck_noself_nothing() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--skip-check", "--no-self"])
         .assert()
         .success()
@@ -121,7 +121,7 @@ fn validate_ship_force_noupdate() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--force"])
         .assert()
         .success()
@@ -138,7 +138,7 @@ fn validate_ship_onlyself_force_noupdate() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--only-self", "--force"])
         .assert()
         .success()
@@ -154,7 +154,7 @@ fn validate_ship_noself_force_nothing() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self", "--force"])
         .assert()
         .success()
@@ -171,7 +171,7 @@ fn validate_ship_skipcheck_force_update() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--skip-check", "--force"])
         .assert()
         .success()
@@ -190,7 +190,7 @@ fn validate_ship_skipcheck_onlyself_force_update() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--skip-check", "--only-self", "--force"])
         .assert()
         .success()
@@ -208,7 +208,7 @@ fn validate_ship_skipcheck_noself_force_nothing() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--skip-check", "--no-self", "--force"])
         .assert()
         .success()
@@ -227,7 +227,7 @@ fn validate_ship_newerself_update() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .arg("ship")
         .assert()
         .success()
@@ -246,7 +246,7 @@ fn validate_ship_newerself_onlyself_update() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--only-self"])
         .assert()
         .success()
@@ -265,7 +265,7 @@ fn validate_ship_newerself_noself_nothing() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .success()
@@ -282,7 +282,7 @@ fn validate_ship_newerself_skipcheck_update() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--skip-check"])
         .assert()
         .success()
@@ -301,7 +301,7 @@ fn validate_ship_newerself_skipcheck_onlyself_update() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--skip-check", "--only-self"])
         .assert()
         .success()
@@ -320,7 +320,7 @@ fn validate_ship_newerself_skipcheck_noself_nothing() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--skip-check", "--no-self"])
         .assert()
         .success()
@@ -339,7 +339,7 @@ fn validate_ship_manynotinstalled_install() {
     assert_installed("cargo-liner");
     fixture_write_user_config();
 
-    cargo_liner()
+    cargo_liner!()
         .arg("ship")
         .assert()
         .success()
@@ -358,7 +358,7 @@ fn validate_ship_manyinstalled_noupdate() {
     fixture_fake_publish();
     fixture_write_user_config();
 
-    cargo_liner()
+    cargo_liner!()
         .arg("ship")
         .assert()
         .success()
@@ -378,7 +378,7 @@ fn validate_ship_manynewer_update() {
     fixture_fake_publish_newer_others();
     fixture_write_user_config();
 
-    cargo_liner()
+    cargo_liner!()
         .arg("ship")
         .assert()
         .success()
@@ -402,7 +402,7 @@ fn validate_ship_selfupdate_customization() {
         "cargo-liner = { version = '*', force = true }",
     ]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--skip-check", "--only-self"])
         .assert()
         .success()
@@ -430,7 +430,7 @@ fn validate_ship_features_simple_none() {
         .publish();
     write_user_config(&["[packages]", "pkg = '*'"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .success()
@@ -459,7 +459,7 @@ fn validate_ship_features_simple_default() {
         .publish();
     write_user_config(&["[packages]", "pkg = '*'"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .success()
@@ -487,7 +487,7 @@ fn validate_ship_features_detailed_none() {
         .publish();
     write_user_config(&["[packages]", "pkg = { version = '*' }"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .success()
@@ -515,7 +515,7 @@ fn validate_ship_features_detailed_one() {
         .publish();
     write_user_config(&["[packages]", "pkg = { version = '*', features = ['feat'] }"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .success()
@@ -544,7 +544,7 @@ fn validate_ship_features_detailed_default() {
         .publish();
     write_user_config(&["[packages]", "pkg = { version = '*' }"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .success()
@@ -576,7 +576,7 @@ fn validate_ship_features_detailed_nodefault() {
         "pkg = { version = '*', default-features = false }",
     ]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .success()
@@ -612,7 +612,7 @@ fn validate_ship_features_detailed_nodefault_one() {
         "pkg = { version = '*', default-features = false, features = ['feat2'] }",
     ]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .success()
@@ -644,7 +644,7 @@ fn validate_ship_features_detailed_all() {
         .publish();
     write_user_config(&["[packages]", "pkg = { version = '*', all-features = true }"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .success()
@@ -679,7 +679,7 @@ fn validate_ship_features_detailed_all_one() {
         "pkg = { version = '*', all-features = true, features = ['feat1'] }",
     ]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .success()
@@ -715,7 +715,7 @@ fn validate_ship_features_detailed_all_default() {
         "pkg = { version = '*', all-features = true, default-features = true }",
     ]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .success()
@@ -751,7 +751,7 @@ fn validate_ship_features_detailed_all_nodefault() {
         "pkg = { version = '*', all-features = true, default-features = false }",
     ]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .success()
@@ -789,7 +789,7 @@ fn validate_ship_features_detailed_all_default_one() {
         "default-features = true",
         "features = ['feat2']",
     ]);
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .success()
@@ -827,7 +827,7 @@ fn validate_ship_features_detailed_all_nodefault_one() {
         "default-features = false",
         "features = ['feat2']",
     ]);
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .success()
@@ -845,7 +845,7 @@ fn validate_ship_verbosity_v() {
     fake_publish("pkg", "0.0.0");
     write_user_config(&["[packages]", "pkg = '*'"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["-v", "ship", "--no-self"])
         .assert()
         .success()
@@ -863,7 +863,7 @@ fn validate_ship_verbosity_vv() {
     fake_publish("pkg", "0.0.0");
     write_user_config(&["[packages]", "pkg = '*'"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["-vv", "ship", "--no-self"])
         .assert()
         .success()
@@ -881,7 +881,7 @@ fn validate_ship_verbosity_vvv() {
     fake_publish("pkg", "0.0.0");
     write_user_config(&["[packages]", "pkg = '*'"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["-vvv", "ship", "--no-self"])
         .assert()
         .success()
@@ -899,7 +899,7 @@ fn validate_ship_verbosity_q() {
     fake_publish("pkg", "0.0.0");
     write_user_config(&["[packages]", "pkg = '*'"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["-q", "ship", "--no-self"])
         .assert()
         .success()
@@ -917,7 +917,7 @@ fn validate_ship_verbosity_qq() {
     fake_publish("pkg", "0.0.0");
     write_user_config(&["[packages]", "pkg = '*'"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["-qq", "ship", "--no-self"])
         .assert()
         .success()
@@ -935,7 +935,7 @@ fn validate_ship_verbosity_qqq() {
     fake_publish("pkg", "0.0.0");
     write_user_config(&["[packages]", "pkg = '*'"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["-qqq", "ship", "--no-self"])
         .assert()
         .success()
@@ -957,7 +957,7 @@ fn validate_ship_noconfig_iserr() {
     let _reg = init_registry();
     fake_install_self();
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .failure()
@@ -973,7 +973,7 @@ fn validate_ship_nocratestoml_iserr() {
     let _reg = init_registry();
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .failure()
@@ -989,7 +989,7 @@ fn validate_ship_nocratestoml_skipcheck_isok() {
     let _reg = init_registry();
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self", "--skip-check"])
         .assert()
         .success()
@@ -1008,7 +1008,7 @@ fn validate_ship_cargoinstallroot_supported() {
     write_user_config(&["[packages]", "pkg = '*'"]);
 
     let tmp_dir = TempDir::new().unwrap();
-    cargo_liner()
+    cargo_liner!()
         .env("CARGO_INSTALL_ROOT", tmp_dir.path())
         .args(["ship", "--no-self", "--force"])
         .assert()
@@ -1034,7 +1034,7 @@ fn validate_ship_weirdversions_supported() {
     fake_publish("pkg", "1.0.0+meta123");
     write_user_config(&["[packages]", "pkg = '*'"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .success()
@@ -1053,7 +1053,7 @@ fn validate_ship_weirdpackagenames_supported() {
     fake_publish("--pkg", "0.0.0");
     write_user_config(&["[packages]", "--pkg = '*'"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .failure()
@@ -1072,7 +1072,7 @@ fn validate_ship_cargotermcolor_supported() {
     fake_publish("pkg", "0.0.0");
     write_user_config(&["[packages]", "pkg = '*'"]);
 
-    cargo_liner()
+    cargo_liner!()
         .env("CARGO_TERM_COLOR", "always")
         .args(["ship", "--no-self"])
         .assert()
@@ -1092,7 +1092,7 @@ fn validate_ship_install_failfast() {
     fake_publish("def", "0.0.0");
     write_user_config(&["[packages]", "abc = '*'", "def = '*'"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--skip-check", "--no-self"])
         .assert()
         .failure()
@@ -1110,7 +1110,7 @@ fn validate_ship_install_nofailfast_err_iserr() {
     fake_publish("def", "0.0.0");
     write_user_config(&["[packages]", "abc = '*'", "def = '*'"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--skip-check", "--no-self", "--no-fail-fast"])
         .assert()
         .failure()
@@ -1129,7 +1129,7 @@ fn validate_ship_install_nofailfast_ok_isok() {
     fake_publish_all([("abc", "0.0.0"), ("def", "0.0.0")]);
     write_user_config(&["[packages]", "abc = '*'", "def = '*'"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--skip-check", "--no-self", "--no-fail-fast"])
         .assert()
         .success()
@@ -1154,7 +1154,7 @@ fn validate_ship_extrargs_list() {
         "abc = { version = '*', extra-arguments = ['--list'] }",
     ]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--skip-check", "--no-self"])
         .assert()
         .success()
@@ -1176,7 +1176,7 @@ fn validate_ship_environment_list() {
         "abc = { version = '*', environment = { CARGO_TERM_QUIET = 'true' } }",
     ]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--skip-check", "--no-self"])
         .assert()
         .success()
@@ -1193,7 +1193,7 @@ fn validate_ship_index() {
     // HACK: observe the error to confirm the argument is passed.
     write_user_config(&["[packages]", "abc = { version = '*', index = '' }"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["-q", "ship", "--skip-check", "--no-self"])
         .assert()
         .failure()
@@ -1210,7 +1210,7 @@ fn validate_ship_registry() {
     // HACK: observe the error to confirm the argument is passed.
     write_user_config(&["[packages]", "abc = { version = '*', registry = '' }"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["-q", "ship", "--skip-check", "--no-self"])
         .assert()
         .failure()
@@ -1229,7 +1229,7 @@ fn validate_ship_git() {
     // HACK: observe the error to confirm the argument is passed.
     write_user_config(&["[packages]", "abc = { version = '*', git = '' }"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["-q", "ship", "--skip-check", "--no-self"])
         .assert()
         .failure()
@@ -1247,7 +1247,7 @@ fn validate_ship_branch() {
     // HACK: observe the error to confirm the argument is passed.
     write_user_config(&["[packages]", "abc = { version = '*', branch = '' }"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["-q", "ship", "--skip-check", "--no-self"])
         .assert()
         .failure()
@@ -1264,7 +1264,7 @@ fn validate_ship_tag() {
     // HACK: observe the error to confirm the argument is passed.
     write_user_config(&["[packages]", "abc = { version = '*', tag = '' }"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["-q", "ship", "--skip-check", "--no-self"])
         .assert()
         .failure()
@@ -1281,7 +1281,7 @@ fn validate_ship_rev() {
     // HACK: observe the error to confirm the argument is passed.
     write_user_config(&["[packages]", "abc = { version = '*', rev = '' }"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["-q", "ship", "--skip-check", "--no-self"])
         .assert()
         .failure()
@@ -1298,7 +1298,7 @@ fn validate_ship_path() {
     // HACK: observe the error to confirm the argument is passed.
     write_user_config(&["[packages]", "abc = { version = '*', path = '/a/b/c' }"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["-q", "ship", "--skip-check", "--no-self"])
         .assert()
         .failure()
@@ -1318,7 +1318,7 @@ fn validate_ship_bins() {
         .publish();
     write_user_config(&["[packages]", "abc = { version = '*', bins = ['b1', 'b2'] }"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .success()
@@ -1339,7 +1339,7 @@ fn validate_ship_all_bins() {
         .publish();
     write_user_config(&["[packages]", "abc = { version = '*', all-bins = true }"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .success()
@@ -1365,7 +1365,7 @@ fn validate_ship_examples() {
         "abc = { version = '*', examples = ['ex1', 'ex2'] }",
     ]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .success()
@@ -1389,7 +1389,7 @@ fn validate_ship_all_examples() {
         .publish();
     write_user_config(&["[packages]", "abc = { version = '*', all-examples = true }"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .success()
@@ -1409,7 +1409,7 @@ fn validate_ship_skipcheck_configforce() {
     assert_installed("abc");
     write_user_config(&["[packages]", "abc = { version = '*', force = true }"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self", "--skip-check"])
         .assert()
         .success()
@@ -1434,7 +1434,7 @@ fn validate_ship_ignorerustversion() {
         "abc = { version = '*', ignore-rust-version = true }",
     ]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .success()
@@ -1455,7 +1455,7 @@ fn validate_ship_frozen() {
     // the package as if it did not exist because it will not download info.
     write_user_config(&["[packages]", "abc = { version = '*', frozen = true }"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["-q", "ship", "--skip-check", "--no-self"])
         .assert()
         .failure()
@@ -1478,7 +1478,7 @@ fn validate_ship_locked() {
     // HACK: observe the warning to confirm the argument is passed.
     write_user_config(&["[packages]", "abc = { version = '*', locked = true }"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["-q", "ship", "--skip-check", "--no-self"])
         .assert()
         .success()
@@ -1495,7 +1495,7 @@ fn validate_ship_offline() {
     // HACK: observe the error to confirm the argument is passed.
     write_user_config(&["[packages]", "abc = { version = '*', offline = true }"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["-q", "ship", "--skip-check", "--no-self"])
         .assert()
         .failure()
@@ -1538,7 +1538,7 @@ fn validate_ship_partial_skipcheck() {
         "p6 = { version = '*', skip-check = true }",
     ]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .success()
@@ -1585,7 +1585,7 @@ fn validate_ship_partialandglobal_skipcheck() {
         "p6 = { version = '*', skip-check = true }",
     ]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self", "--skip-check"])
         .assert()
         .success()
@@ -1610,7 +1610,7 @@ fn validate_ship_partial_nofailfast_allerrnoff_isenderr() {
         "p5 = '*'",
     ]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self", "--skip-check"])
         .assert()
         .failure()
@@ -1636,7 +1636,7 @@ fn validate_ship_partial_nofailfast_oneerrnoff_oneerrff_isfasterr() {
         "p5 = '*'",
     ]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self", "--skip-check"])
         .assert()
         .failure()
@@ -1668,7 +1668,7 @@ fn validate_ship_partial_nofailfast_allok_isok() {
         "p5 = '*'",
     ]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self", "--skip-check"])
         .assert()
         .success()
@@ -1695,7 +1695,7 @@ fn validate_ship_partialandglobal_nofailfast_allerrnoff_isenderr() {
         "p5 = '*'",
     ]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self", "--skip-check", "--no-fail-fast"])
         .assert()
         .failure()
@@ -1721,7 +1721,7 @@ fn validate_ship_partialandglobal_nofailfast_oneerrnoff_oneerrff_isenderr() {
         "p5 = '*'",
     ]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self", "--skip-check", "--no-fail-fast"])
         .assert()
         .failure()
@@ -1753,7 +1753,7 @@ fn validate_ship_partialandglobal_nofailfast_allok_isok() {
         "p5 = '*'",
     ]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self", "--skip-check", "--no-fail-fast"])
         .assert()
         .success()
@@ -1773,7 +1773,7 @@ fn validate_ship_cliwithself_noupdate() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--with-self"])
         .assert()
         .success()
@@ -1791,7 +1791,7 @@ fn validate_ship_envnoself_nothing() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .env("CARGO_LINER_SHIP_NO_SELF", "true")
         .arg("ship")
         .assert()
@@ -1810,7 +1810,7 @@ fn validate_ship_envnoself_cliwithself_noupdate() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .env("CARGO_LINER_SHIP_NO_SELF", "true")
         .args(["ship", "--with-self"])
         .assert()
@@ -1829,7 +1829,7 @@ fn validate_ship_confignoself_nothing() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]", "[defaults]", "ship.no-self = true"]);
 
-    cargo_liner()
+    cargo_liner!()
         .arg("ship")
         .assert()
         .success()
@@ -1847,7 +1847,7 @@ fn validate_ship_confignoself_envwithself_noupdate() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]", "[defaults]", "ship.no-self = true"]);
 
-    cargo_liner()
+    cargo_liner!()
         .env("CARGO_LINER_SHIP_NO_SELF", "false")
         .arg("ship")
         .assert()
@@ -1866,7 +1866,7 @@ fn validate_ship_confignoself_cliwithself_noupdate() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]", "[defaults]", "ship.no-self = true"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--with-self"])
         .assert()
         .success()
@@ -1884,7 +1884,7 @@ fn validate_ship_confignoself_envnoself_cliwithself_noupdate() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]", "[defaults]", "ship.no-self = true"]);
 
-    cargo_liner()
+    cargo_liner!()
         .env("CARGO_LINER_SHIP_NO_SELF", "true")
         .args(["ship", "--with-self"])
         .assert()
@@ -1903,7 +1903,7 @@ fn validate_ship_confignoself_envnoself_clinoself_nothing() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]", "[defaults]", "ship.no-self = true"]);
 
-    cargo_liner()
+    cargo_liner!()
         .env("CARGO_LINER_SHIP_NO_SELF", "true")
         .args(["ship", "--no-self"])
         .assert()
@@ -1922,7 +1922,7 @@ fn validate_ship_configwithself_envnoself_clinoself_nothing() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]", "[defaults]", "ship.no-self = false"]);
 
-    cargo_liner()
+    cargo_liner!()
         .env("CARGO_LINER_SHIP_NO_SELF", "true")
         .args(["ship", "--no-self"])
         .assert()
@@ -1941,7 +1941,7 @@ fn validate_ship_configwithself_envwithself_clinoself_nothing() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]", "[defaults]", "ship.no-self = false"]);
 
-    cargo_liner()
+    cargo_liner!()
         .env("CARGO_LINER_SHIP_NO_SELF", "false")
         .args(["ship", "--no-self"])
         .assert()
@@ -1960,7 +1960,7 @@ fn validate_ship_confignoself_envwithself_clinoself_noupdate() {
     assert_installed("cargo-liner");
     write_user_config(&["[packages]", "[defaults]", "ship.no-self = true"]);
 
-    cargo_liner()
+    cargo_liner!()
         .env("CARGO_LINER_SHIP_NO_SELF", "false")
         .args(["ship", "--no-self"])
         .assert()
@@ -1979,7 +1979,7 @@ fn validate_ship_install_dryrun() {
     fake_publish("abc", "0.0.0");
     write_user_config(&["[packages]", "abc = '*'"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self", "--dry-run"])
         .assert()
         .success()
@@ -1999,7 +1999,7 @@ fn validate_ship_path_is_skipcheck() {
     write_user_config(&["[packages]", "abc = { version = '*', path = '/a' }"]);
 
     // HACK: validate that the error reveals the intended behavior.
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .failure()
@@ -2022,7 +2022,7 @@ fn validate_ship_git_is_skipcheck() {
     ]);
 
     // HACK: validate that the error reveals the intended behavior.
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .failure()
@@ -2053,7 +2053,7 @@ fn validate_ship_binstall_globalalways_isused() {
         "abc = { version = '*', registry = 'dummy-registry' }",
     ]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .failure()
@@ -2080,7 +2080,7 @@ fn validate_ship_binstall_globalnever_isunused() {
         "abc = { version = '*', registry = 'dummy-registry' }",
     ]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .success()
@@ -2105,7 +2105,7 @@ fn validate_ship_binstall_globalnever_localalways_isused() {
         "abc = { version = '*', binstall = 'always', registry = 'dummy-registry' }",
     ]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .failure()
@@ -2131,7 +2131,7 @@ fn validate_ship_binstall_globalalways_localnever_isunused() {
         "abc = { version = '*', binstall = 'never', registry = 'dummy-registry' }",
     ]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self"])
         .assert()
         .success()
@@ -2158,7 +2158,7 @@ fn validate_ship_binstall_dryrun() {
     ]);
 
     // It fails here, but the logs show the option is passed.
-    cargo_liner()
+    cargo_liner!()
         .args(["ship", "--no-self", "--dry-run"])
         .assert()
         .failure()

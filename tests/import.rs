@@ -7,7 +7,7 @@ use common::*;
 #[cargo_test]
 fn validate_import() {
     fixture_fake_install();
-    cargo_liner()
+    cargo_liner!()
         .arg("import")
         .assert()
         .success()
@@ -19,7 +19,7 @@ fn validate_import() {
 #[cargo_test]
 fn validate_import_keepself() {
     fixture_fake_install();
-    cargo_liner()
+    cargo_liner!()
         .args(["import", "--keep-self"])
         .assert()
         .success()
@@ -31,7 +31,7 @@ fn validate_import_keepself() {
 #[cargo_test]
 fn validate_import_keeplocal() {
     fixture_fake_install();
-    cargo_liner()
+    cargo_liner!()
         .args(["import", "--keep-local"])
         .assert()
         .success()
@@ -43,7 +43,7 @@ fn validate_import_keeplocal() {
 #[cargo_test]
 fn validate_import_keepself_keeplocal() {
     fixture_fake_install();
-    cargo_liner()
+    cargo_liner!()
         .args(["import", "--keep-local", "--keep-self"])
         .assert()
         .success()
@@ -57,7 +57,7 @@ fn validate_import_keepself_keeplocal() {
 #[cargo_test]
 fn validate_import_exact() {
     fixture_fake_install();
-    cargo_liner()
+    cargo_liner!()
         .args(["import", "--exact"])
         .assert()
         .success()
@@ -69,7 +69,7 @@ fn validate_import_exact() {
 #[cargo_test]
 fn validate_import_exact_keepself() {
     fixture_fake_install();
-    cargo_liner()
+    cargo_liner!()
         .args(["import", "--exact", "--keep-self"])
         .assert()
         .success()
@@ -81,7 +81,7 @@ fn validate_import_exact_keepself() {
 #[cargo_test]
 fn validate_import_compatible() {
     fixture_fake_install();
-    cargo_liner()
+    cargo_liner!()
         .args(["import", "--compatible"])
         .assert()
         .success()
@@ -93,7 +93,7 @@ fn validate_import_compatible() {
 #[cargo_test]
 fn validate_import_compatible_keepself() {
     fixture_fake_install();
-    cargo_liner()
+    cargo_liner!()
         .args(["import", "--compatible", "--keep-self"])
         .assert()
         .success()
@@ -107,7 +107,7 @@ fn validate_import_compatible_keepself() {
 #[cargo_test]
 fn validate_import_patch() {
     fixture_fake_install();
-    cargo_liner()
+    cargo_liner!()
         .args(["import", "--patch"])
         .assert()
         .success()
@@ -119,7 +119,7 @@ fn validate_import_patch() {
 #[cargo_test]
 fn validate_import_patch_keepself() {
     fixture_fake_install();
-    cargo_liner()
+    cargo_liner!()
         .args(["import", "--patch", "--keep-self"])
         .assert()
         .success()
@@ -131,7 +131,7 @@ fn validate_import_patch_keepself() {
 #[cargo_test]
 fn validate_import_force_nofile_isok() {
     fixture_fake_install();
-    cargo_liner()
+    cargo_liner!()
         .args(["import", "--force"])
         .assert()
         .success()
@@ -145,7 +145,7 @@ fn validate_import_force_withfile_iswarn() {
     fixture_fake_install();
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["import", "--force"])
         .assert()
         .success()
@@ -159,7 +159,7 @@ fn validate_import_noforce_withfile_iserr() {
     fixture_fake_install();
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .arg("import")
         .assert()
         .failure()
@@ -172,7 +172,7 @@ fn validate_import_noforce_withfile_iserr() {
 
 #[cargo_test]
 fn validate_import_nofile_iserr() {
-    cargo_liner()
+    cargo_liner!()
         .arg("import")
         .assert()
         .failure()
@@ -187,7 +187,7 @@ fn validate_import_nofile_iserr() {
 fn validate_import_verbosity_v() {
     fixture_fake_install();
 
-    cargo_liner()
+    cargo_liner!()
         .args(["-v", "import"])
         .assert()
         .success()
@@ -202,7 +202,7 @@ fn validate_import_verbosity_v() {
 fn validate_import_verbosity_vv() {
     fixture_fake_install();
 
-    cargo_liner()
+    cargo_liner!()
         .args(["-vv", "import"])
         .assert()
         .success()
@@ -217,7 +217,7 @@ fn validate_import_verbosity_vv() {
 fn validate_import_verbosity_vvv() {
     fixture_fake_install();
 
-    cargo_liner()
+    cargo_liner!()
         .args(["-vvv", "import"])
         .assert()
         .success()
@@ -230,7 +230,7 @@ fn validate_import_verbosity_vvv() {
 
 #[cargo_test]
 fn validate_import_verbosity_v_nofile_iserr() {
-    cargo_liner()
+    cargo_liner!()
         .args(["-v", "import"])
         .assert()
         .failure()
@@ -243,7 +243,7 @@ fn validate_import_verbosity_v_nofile_iserr() {
 
 #[cargo_test]
 fn validate_import_verbosity_vv_nofile_iserr() {
-    cargo_liner()
+    cargo_liner!()
         .args(["-vv", "import"])
         .assert()
         .failure()
@@ -256,7 +256,7 @@ fn validate_import_verbosity_vv_nofile_iserr() {
 
 #[cargo_test]
 fn validate_import_verbosity_vvv_nofile_iserr() {
-    cargo_liner()
+    cargo_liner!()
         .args(["-vvv", "import"])
         .assert()
         .failure()
@@ -273,7 +273,7 @@ fn validate_import_verbosity_q_force() {
     fixture_fake_install();
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["-q", "import", "--force"])
         .assert()
         .success()
@@ -289,7 +289,7 @@ fn validate_import_verbosity_qq_force() {
     fixture_fake_install();
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["-qq", "import", "--force"])
         .assert()
         .success()
@@ -303,7 +303,7 @@ fn validate_import_verbosity_qq_noforce() {
     fixture_fake_install();
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["-qq", "import"])
         .assert()
         .failure()
@@ -319,7 +319,7 @@ fn validate_import_verbosity_qqq_noforce() {
     fixture_fake_install();
     write_user_config(&["[packages]"]);
 
-    cargo_liner()
+    cargo_liner!()
         .args(["-qqq", "import"])
         .assert()
         .failure()
