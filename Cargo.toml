@@ -83,7 +83,7 @@ tempfile = { version = "~3.22", default-features = false }
 trycmd = { version = "~0.15", default-features = false }
 snapbox = { version = "~0.6", default-features = false }
 cargo-test-macro = { version = "~0.4", default-features = false }
-cargo-test-support = { version = "~0.7", default-features = false }
+cargo-test-support = { version = "~0.8", default-features = false }
 
 # See https://crates.io/crates/color-eyre: debug `backtrace` is slow.
 [profile.dev.package.backtrace]
