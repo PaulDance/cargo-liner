@@ -59,7 +59,7 @@ tabled = { version = "~0.20", default-features = false, features = [
     "ansi",
 ] }
 serde = { version = "~1.0", default-features = false, features = ["derive"] }
-serde_with = { version = "~3.14", default-features = false, features = [
+serde_with = { version = "~3.15", default-features = false, features = [
     "macros",
 ] }
 semver = { version = "~1.0", default-features = false, features = [
