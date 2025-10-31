@@ -99,7 +99,6 @@ dbg-macro = { level = "warn", priority = 2 }
 print-stdout = { level = "warn", priority = 2 }
 print-stderr = { level = "warn", priority = 2 }
 str-to-string = { level = "warn", priority = 2 }
-string-to-string = { level = "warn", priority = 2 }
 multiple-unsafe-ops-per-block = { level = "warn", priority = 2 }
 undocumented-unsafe-blocks = { level = "warn", priority = 2 }
 unnecessary-safety-comment = { level = "warn", priority = 2 }
