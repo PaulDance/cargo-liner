@@ -1,5 +1,8 @@
 set fallback := true
 
+export RUST_BACKTRACE := "full"
+export CARGO_TARGET_TMPDIR := `realpath target/tmp`
+
 # Lists available recipes.
 default:
     @just --list
