@@ -248,7 +248,7 @@ package-name-2 = "version-req-2"
     no-fail-fast = false
     force = true
     dry-run = false
-    binstall = true
+    binstall = "always"
 ```
 
 where:
