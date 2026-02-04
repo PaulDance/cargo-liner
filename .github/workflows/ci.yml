@@ -13,9 +13,7 @@ on:
       - master
 
 env:
-  RUST_BACKTRACE: full
   CARGO_TERM_COLOR: always
-  CARGO_TARGET_TMPDIR: "${{ github.workspace }}/target/tmp"
 
 
 
@@ -35,12 +33,12 @@ jobs:
           path: |
             vendor/
             .cargo/config.toml
-          key: cargo-vendor-${{ hashFiles('Cargo.lock') }}
+          key: cargo-vendor-${{ hashFiles('Cargo.lock', '.cargo/config.toml') }}
           enableCrossOsArchive: true
 
       - if: ${{ steps.cache-cargo-vendor.outputs.cache-hit != 'true' }}
         name: Fetch and vendor Cargo dependencies
-        run: mkdir -p .cargo/ && cargo vendor --verbose --locked >> .cargo/config.toml
+        run: cargo vendor --verbose --locked >> .cargo/config.toml
 
 
   # Only under Linux for now, as it should cover most cases.
@@ -56,7 +54,7 @@ jobs:
           path: |
             vendor/
             .cargo/config.toml
-          key: cargo-vendor-${{ hashFiles('Cargo.lock') }}
+          key: cargo-vendor-${{ hashFiles('Cargo.lock', '.cargo/config.toml') }}
           enableCrossOsArchive: true
           fail-on-cache-miss: true
       - run: rustup update stable && rustup default stable
@@ -105,7 +103,7 @@ jobs:
           path: |
             vendor/
             .cargo/config.toml
-          key: cargo-vendor-${{ hashFiles('Cargo.lock') }}
+          key: cargo-vendor-${{ hashFiles('Cargo.lock', '.cargo/config.toml') }}
           enableCrossOsArchive: true
           fail-on-cache-miss: true
       - run: rustup update stable && rustup default stable
@@ -139,7 +137,7 @@ jobs:
           path: |
             vendor/
             .cargo/config.toml
-          key: cargo-vendor-${{ hashFiles('Cargo.lock') }}
+          key: cargo-vendor-${{ hashFiles('Cargo.lock', '.cargo/config.toml') }}
           enableCrossOsArchive: true
           fail-on-cache-miss: true
       - run: rustup update stable && rustup default stable
@@ -173,7 +171,7 @@ jobs:
           path: |
             vendor/
             .cargo/config.toml
-          key: cargo-vendor-${{ hashFiles('Cargo.lock') }}
+          key: cargo-vendor-${{ hashFiles('Cargo.lock', '.cargo/config.toml') }}
           enableCrossOsArchive: true
           fail-on-cache-miss: true
       - run: rustup update stable && rustup default stable
@@ -202,7 +200,7 @@ jobs:
           path: |
             vendor/
             .cargo/config.toml
-          key: cargo-vendor-${{ hashFiles('Cargo.lock') }}
+          key: cargo-vendor-${{ hashFiles('Cargo.lock', '.cargo/config.toml') }}
           enableCrossOsArchive: true
           fail-on-cache-miss: true
       - run: rustup update stable && rustup default stable

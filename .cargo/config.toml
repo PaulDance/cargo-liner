@@ -1,0 +1,6 @@
+[env]
+# Hack around `cargo_test_macro::cargo_test`'s requirement of only being used
+# from an integration test module due to this environment variable's not being
+# set otherwise by always setting it for every Cargo and rustc call.
+CARGO_TARGET_TMPDIR = { value = "target/tmp", relative = true, force = true }
+RUST_BACKTRACE = "full"

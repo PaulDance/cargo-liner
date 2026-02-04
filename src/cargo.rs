@@ -737,9 +737,6 @@ mod tests {
     const NONE: &str = "azertyuiop-qsdfghjklm_wxcvbn";
     static LOCK: LazyLock<Mutex<()>> = LazyLock::new(|| Mutex::new(()));
 
-    // If this fails to compile, set `CARGO_TARGET_TMPDIR="$(realpath target/tmp)"`
-    // in your environment and build again. The `Justfile` already does this.
-
     #[cargo_test]
     fn test_singlethreaded_searchspawn_self_isok() -> Result<()> {
         let _lk = LOCK.lock();
