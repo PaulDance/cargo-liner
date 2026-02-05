@@ -1,16 +1,15 @@
  INFO  cargo_liner::cargo > Fetching latest package versions...
     Updating `dummy-registry` index
 note: to learn more about a package, run `cargo info <name>`
- INFO  cargo_liner        > Results:
+ INFO  cargo_liner::commands::ship > Results:
 ┌──────┬─────────────┬─────────────┬────────┐
 │ Name │ Old version │ New version │ Status │
 ├──────┼─────────────┼─────────────┼────────┤
 │ abc  │ ø           │ 0.0.0       │ 🛈      │
 └──────┴─────────────┴─────────────┴────────┘
- INFO  cargo_liner::cargo > Installing `abc`...
- INFO resolve: Resolving package: 'abc'
+ INFO  cargo_liner::cargo          > Installing `abc`...
+ INFO resolve: Resolving package: 'abc@*'
 ERROR Fatal error:
-
   × For crate abc: could not GET http://127.0.0.1:[..]/index/config.json:
   │ builder error for url (http://127.0.0.1:[..]/index/config.json)
   ├─▶ could not GET http://127.0.0.1:[..]/index/config.json: builder error
@@ -21,13 +20,13 @@ ERROR Fatal error:
 Error: 
    0: Failed to install or update one of the configured packages.
    1: Failed to install "abc".
-   2: Cargo process finished unsuccessfully: [EXIT_STATUS]: 76
+   2: Cargo-Binstall process finished unsuccessfully: [EXIT_STATUS]: 76
 
 Location:
    src/[..].rs:[..]
 
 Note: This can happen for many reasons.
-Suggestion: Read Cargo's output.
+Suggestion: Read Cargo-Binstall's output.
 Suggestion: Use `ship --no-fail-fast` to ignore this and continue on with other packages.
 
 Backtrace omitted. Run with RUST_BACKTRACE=1 environment variable to display it.
