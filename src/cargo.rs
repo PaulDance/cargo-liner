@@ -276,6 +276,8 @@ fn binstall(
         log::trace!("Extra arguments added: {:#?}", pkg_req.extra_arguments);
     }
 
+    // Synchronize any new arguments added here with the
+    // `pkg_req_is_compatible_with_binstall` function below.
     cmd.args(["--", pkg_name]);
     log_cmd(&cmd);
 
@@ -289,6 +291,58 @@ fn binstall(
             .note("This can happen for many reasons.")
             .suggestion("Read Cargo-Binstall's output.")
     })
+}
+
+/// Returns whether all of the given package requirement's set options will
+/// indeed be passed onto `cargo-binstall` or if some of them will be ignored.
+///
+///  * `true`: fully compatible, all options passed;
+///  * `false`: some options would be skipped;
+fn pkg_req_is_compatible_with_binstall(pkg_req: &DetailedPackageReq) -> bool {
+    // Full destructuring to avoid forgetting to update this function.
+    let DetailedPackageReq {
+        version: _,
+        default_features,
+        all_features,
+        features,
+        index: _,
+        registry: _,
+        git: _,
+        branch,
+        tag,
+        rev,
+        path,
+        // TODO: stop considering this incompatible and pass it along.
+        bins,
+        all_bins,
+        examples,
+        all_examples,
+        force: _,
+        ignore_rust_version,
+        frozen,
+        locked: _,
+        offline,
+        extra_arguments: _,
+        environment: _,
+        skip_check: _,
+        no_fail_fast: _,
+        binstall: _,
+    } = pkg_req;
+    // Work by double negation: not incompatible.
+    !(!*default_features
+        || *all_features
+        || !features.is_empty()
+        || branch.is_some()
+        || tag.is_some()
+        || rev.is_some()
+        || path.is_some()
+        || !bins.is_empty()
+        || *all_bins
+        || !examples.is_empty()
+        || *all_examples
+        || *ignore_rust_version
+        || *frozen
+        || *offline)
 }
 
 /// Heuristically determines whether `cargo-binstall` is installed or not.
@@ -367,12 +421,21 @@ fn install_one(
             && !context_seems_testing()
             && binstall_is_available(installed)
     {
-        log::debug!("Using `cargo-binstall` as the installation method.");
-        self::binstall(pkg_name, pkg_req, force, dry_run, verbosity)
-    } else {
-        log::debug!("Using `cargo install` as the installation method.");
-        install(pkg_name, pkg_req, force, dry_run, color, verbosity)
+        // See #31: avoid using Binstall in cases where incompatible arguments
+        // would not be forwarded but still be important for overall success.
+        if binstall == BinstallChoice::Always || pkg_req_is_compatible_with_binstall(pkg_req) {
+            log::debug!("Using `cargo-binstall` as the installation method.");
+            return self::binstall(pkg_name, pkg_req, force, dry_run, verbosity);
+        }
+
+        log::warn!(
+            "`{pkg_name}` has some ignored incompatible options set, not using \
+             `cargo-binstall` for it; see the documentation for more details.",
+        );
     }
+
+    log::debug!("Using `cargo install` as the installation method.");
+    install(pkg_name, pkg_req, force, dry_run, color, verbosity)
 }
 
 /// Runs `cargo install` or `binstall` for all packages listed in the given
