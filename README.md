@@ -188,6 +188,19 @@ configure it as the first package of the list: it will be either installed or
 updated first and all the following installations should automatically use it
 if configured as such, even when it was installed during this execution.
 
+Something important to note: in order to fix #31, it was decided that
+incompatible options set for a given configured package should not just be
+ignored, but make the package not be handled through Binstall at all by
+default. Indeed, only a select few configuration options are explicitly
+forwarded to Binstall, while most are not as they are incompatible with it and
+would just make it fail. However, some of these options can be important as not
+setting them could lead to unintended behavior such as missing features or
+build failures. `cargo install` will therefore be used instead in these cases
+by default, with a warning emitted. Specify the `binstall` configuration key at
+least for the concerned package with any value other than `"auto"` in order to
+silence this warning; using `"never"` will force `cargo install`; using
+`"always"` will on the contrary force `cargo-binstall`.
+
 Currently, this integration is on a somewhat best-effort basis. Indeed, it has
 only been tested during development and automated tests for it are not included
 in CI, contrary to the rest of the features. However, a good part of the logic
