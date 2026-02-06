@@ -1232,16 +1232,17 @@ inspecting the `Cargo.toml` that is regularly updated accordingly. For now, its
 update policy is rather fluctuating, but there are still some important
 elements that should stay valid in the near future:
 
- * It is not yet tested in CI, so could get broken out of nowhere from
-   oversight without an adequate prior notice. Stable Rust is really what is
-   targeted here.
+ * It is tested in CI, but only by checking the crate's compilation when using
+   the older toolchain version as specified by the MSRV.
 
  * It is updated whenever a new Rust or Cargo feature is used, meaning it
-   should also be a good indication of the minimum supported Cargo version, as
-   any backwards compatibility is not maintained.
+   can be an indication of the minimum supported Cargo version, as any
+   backwards compatibility is not maintained, but it still remains mostly about
+   compilation and dependency updates.
 
  * In case it is not bumped for a new specific feature soon enough, then it
-   will be bumped to be at most five releases behind stable Rust.
+   will be bumped to be at most five but at least two releases behind stable
+   Rust. Generally though, it will be closer to two releases behind.
 
 
 ## Contributing
