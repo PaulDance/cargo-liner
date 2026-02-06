@@ -7,6 +7,53 @@
 ## Miscellaneous
 -->
 
+# [Version 0.10.1 (06/02/2026)](https://crates.io/crates/cargo-liner/0.10.1)
+## Fixes
+
+ * Fixed #31: when using the Binstall integration with some options specified
+   in the configuration that are not passed to the tool as they are incompatible
+   with it but are still important for the overall success, then the installation
+   could end up in unintended behavior, build or runtime failures; in order to
+   fix this, now the tool is avoided whenever an incompatible option set in the
+   configuration for a given package would be ignored when calling the tool for
+   it and the standard but correct `cargo install` is used instead. In this case,
+   a warning is emitted, but options exist in order to silence it: see the docs.
+
+## Testing
+
+ * The CI has been overhauled in order to cover Windows and macOS as well.
+   Indeed, only Linux was previously used for all operations, including
+   compilation and running tests. While it was mostly fine for this project
+   that has very little direct OS interaction, all three platforms are still
+   meant to be officially supported, so it remained kind of ugly. Now, all
+   three targets are checked for compilation, linting, and testing. In doing
+   so, no particular issue was raised other than test-porting chores.
+
+ * The `Justfile` has been adapted in order to reflect the CI changes.
+
+ * The build MSRV is now checked in CI as well. It is not used in order to run
+   the tests with a previous version of Cargo and it will probably never be.
+
+ * Coverage for #31.
+
+## Documentation
+
+ * The `CONTRIBUTING.md` documentation has been updated to be more consistent
+   with the actual practices in place and the used development environment.
+ * The example value for the `defaults.ship.binstall` configuration key has
+   been fixed: it previously was a boolean that cannot work with it.
+ * The MSRV policy has been updated in order to reflect the CI changes.
+ * A new paragraph to the Binstall integration section has been added in order
+   to cover the changes introduced for fixing #31.
+
+## Miscellaneous
+
+ * The dependencies have been updated to their latest versions.
+ * The MSRV has been bumped a few times, mostly for dependency updates.
+ * Some unused features have been disabled in some dependencies, thus
+   lightening the dependency graph and therefore the overall build time.
+
+
 # [Version 0.10.0 (22/06/2025)](https://crates.io/crates/cargo-liner/0.10.0)
 ## Features
 
