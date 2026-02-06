@@ -418,7 +418,7 @@ fn install_one(
     // to explicitly enable the feature through the `always` setting.
     if binstall == BinstallChoice::Always
         || binstall == BinstallChoice::Auto
-            && !context_seems_testing()
+            && !context_seems_testing(false)
             && binstall_is_available(installed)
     {
         // See #31: avoid using Binstall in cases where incompatible arguments
@@ -602,7 +602,7 @@ pub fn uninstall_all(
 /// [`finish_search_exact`].
 fn spawn_search_exact(pkg: &str) -> Result<Child> {
     // HACK: detect the test context in order to adapt the execution to it.
-    let is_test = context_seems_testing();
+    let is_test = context_seems_testing(true);
     let mut cmd = Command::new(env_var()?);
 
     cmd.stdin(Stdio::null());
@@ -768,12 +768,16 @@ fn env_var() -> Result<String> {
 /// testing one or not.
 ///
 /// It currently uses some environment variable that `cargo-test-support`'s
-/// `cargo_test` macro sets for invoked Cargo instances.
-fn context_seems_testing() -> bool {
-    env::var_os("__CARGO_TEST_ROOT").is_some_and(|var| {
-        let path = PathBuf::from(var);
-        path.is_absolute() && path.is_dir()
-    })
+/// `cargo_test` macro sets for invoked Cargo instances. Set
+/// `__THIS_IS_REALLY_TESTING_BUT_HUSH` to any value to make this always return
+/// `false`. `version_checking` should be `true` when calling this from the
+/// `cargo search` version checking.
+fn context_seems_testing(version_checking: bool) -> bool {
+    (version_checking || env::var_os("__THIS_IS_REALLY_TESTING_BUT_HUSH").is_none())
+        && env::var_os("__CARGO_TEST_ROOT").is_some_and(|var| {
+            let path = PathBuf::from(var);
+            path.is_absolute() && path.is_dir()
+        })
 }
 
 /// Logs the program and arguments of the given command to DEBUG.

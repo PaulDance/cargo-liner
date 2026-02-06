@@ -2168,3 +2168,129 @@ fn validate_ship_binstall_dryrun() {
         ]);
     assert_not_installed("abc");
 }
+
+/// See #31: covers the no-binstall mechanism in case of incompatibility.
+#[ignore = "cargo-binstall is not made available to CI yet."]
+#[cargo_test]
+fn validate_ship_binstall_auto_incompatible_option_disables() {
+    let _reg = init_registry();
+    fake_install_self();
+    Package::new("abc", "0.0.0")
+        .feature("default", &[])
+        .feature("a", &[])
+        .feature("b", &[])
+        .feature("c", &[])
+        .file(
+            "src/main.rs",
+            r#"
+                #[cfg(not(all(feature = "a", feature = "b", feature = "c")))]
+                compile_error!("");
+                fn main() {}
+            "#,
+        )
+        .publish();
+    write_user_config(&[
+        "[defaults]",
+        "ship.binstall = 'auto'",
+        "[packages.abc]",
+        "registry = 'dummy-registry'",
+        "version = '*'",
+        "features = ['a', 'b', 'c']",
+    ]);
+
+    cargo_liner!()
+        .env("__THIS_IS_REALLY_TESTING_BUT_HUSH", "plz")
+        .args(["ship", "--no-self", "--skip-check"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_binstall_auto_incompatible_option_disables.stderr"
+        ]);
+    assert_installed("abc");
+}
+
+/// When set to `"never"`, the warning should this time not be emitted and
+/// Binstall should still not be used.
+#[ignore = "cargo-binstall is not made available to CI yet."]
+#[cargo_test]
+fn validate_ship_binstall_never_incompatible_option_nowarning() {
+    let _reg = init_registry();
+    fake_install_self();
+    Package::new("abc", "0.0.0")
+        .feature("default", &[])
+        .feature("a", &[])
+        .feature("b", &[])
+        .feature("c", &[])
+        .file(
+            "src/main.rs",
+            r#"
+                #[cfg(not(all(feature = "a", feature = "b", feature = "c")))]
+                compile_error!("");
+                fn main() {}
+            "#,
+        )
+        .publish();
+    write_user_config(&[
+        "[defaults]",
+        "ship.binstall = 'never'",
+        "[packages.abc]",
+        "registry = 'dummy-registry'",
+        "version = '*'",
+        "features = ['a', 'b', 'c']",
+    ]);
+
+    cargo_liner!()
+        .env("__THIS_IS_REALLY_TESTING_BUT_HUSH", "plz")
+        .args(["ship", "--no-self", "--skip-check"])
+        .assert()
+        .success()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_binstall_never_incompatible_option_nowarning.stderr"
+        ]);
+    assert_installed("abc");
+}
+
+/// When `"always"`, the warning should also not be emitted, but Binstall should
+/// this time be actually used.
+#[ignore = "cargo-binstall is not made available to CI yet."]
+#[cargo_test]
+fn validate_ship_binstall_always_incompatible_option_nowarning() {
+    let _reg = init_registry();
+    fake_install_self();
+    Package::new("abc", "0.0.0")
+        .feature("default", &[])
+        .feature("a", &[])
+        .feature("b", &[])
+        .feature("c", &[])
+        .file(
+            "src/main.rs",
+            r#"
+                #[cfg(not(all(feature = "a", feature = "b", feature = "c")))]
+                compile_error!("");
+                fn main() {}
+            "#,
+        )
+        .publish();
+    write_user_config(&[
+        "[defaults]",
+        "ship.binstall = 'always'",
+        "[packages.abc]",
+        "registry = 'dummy-registry'",
+        "version = '*'",
+        "features = ['a', 'b', 'c']",
+    ]);
+
+    // Also fails here similarly, but still confirms Binstall is used directly.
+    cargo_liner!()
+        .env("__THIS_IS_REALLY_TESTING_BUT_HUSH", "plz")
+        .args(["ship", "--no-self"])
+        .assert()
+        .failure()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_binstall_globalalways_isused.stderr"
+        ]);
+    assert_not_installed("abc");
+}
