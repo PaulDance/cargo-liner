@@ -17,34 +17,34 @@ _cargo-liner() {
                 cmd="cargo__liner"
                 ;;
             cargo__liner,completions)
-                cmd="cargo__liner__completions"
+                cmd="cargo__liner__subcmd__completions"
                 ;;
             cargo__liner,help)
-                cmd="cargo__liner__help"
+                cmd="cargo__liner__subcmd__help"
                 ;;
             cargo__liner,import)
-                cmd="cargo__liner__import"
+                cmd="cargo__liner__subcmd__import"
                 ;;
             cargo__liner,jettison)
-                cmd="cargo__liner__jettison"
+                cmd="cargo__liner__subcmd__jettison"
                 ;;
             cargo__liner,ship)
-                cmd="cargo__liner__ship"
+                cmd="cargo__liner__subcmd__ship"
                 ;;
-            cargo__liner__help,completions)
-                cmd="cargo__liner__help__completions"
+            cargo__liner__subcmd__help,completions)
+                cmd="cargo__liner__subcmd__help__subcmd__completions"
                 ;;
-            cargo__liner__help,help)
-                cmd="cargo__liner__help__help"
+            cargo__liner__subcmd__help,help)
+                cmd="cargo__liner__subcmd__help__subcmd__help"
                 ;;
-            cargo__liner__help,import)
-                cmd="cargo__liner__help__import"
+            cargo__liner__subcmd__help,import)
+                cmd="cargo__liner__subcmd__help__subcmd__import"
                 ;;
-            cargo__liner__help,jettison)
-                cmd="cargo__liner__help__jettison"
+            cargo__liner__subcmd__help,jettison)
+                cmd="cargo__liner__subcmd__help__subcmd__jettison"
                 ;;
-            cargo__liner__help,ship)
-                cmd="cargo__liner__help__ship"
+            cargo__liner__subcmd__help,ship)
+                cmd="cargo__liner__subcmd__help__subcmd__ship"
                 ;;
             *)
                 ;;
@@ -70,7 +70,7 @@ _cargo-liner() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        cargo__liner__completions)
+        cargo__subcmd__liner__subcmd__completions)
             opts="-v -q -h --verbose --quiet --color --help bash elvish fish powershell zsh"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -88,7 +88,7 @@ _cargo-liner() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        cargo__liner__help)
+        cargo__subcmd__liner__subcmd__help)
             opts="ship jettison import completions help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -102,7 +102,7 @@ _cargo-liner() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        cargo__liner__help__completions)
+        cargo__subcmd__liner__subcmd__help__subcmd__completions)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -116,7 +116,7 @@ _cargo-liner() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        cargo__liner__help__help)
+        cargo__subcmd__liner__subcmd__help__subcmd__help)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -130,7 +130,7 @@ _cargo-liner() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        cargo__liner__help__import)
+        cargo__subcmd__liner__subcmd__help__subcmd__import)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -144,7 +144,7 @@ _cargo-liner() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        cargo__liner__help__jettison)
+        cargo__subcmd__liner__subcmd__help__subcmd__jettison)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -158,7 +158,7 @@ _cargo-liner() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        cargo__liner__help__ship)
+        cargo__subcmd__liner__subcmd__help__subcmd__ship)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -172,7 +172,7 @@ _cargo-liner() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        cargo__liner__import)
+        cargo__subcmd__liner__subcmd__import)
             opts="-e -c -p -f -s -l -v -q -h --exact --compatible --patch --force --keep-self --keep-local --verbose --quiet --color --help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -190,7 +190,7 @@ _cargo-liner() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        cargo__liner__jettison)
+        cargo__subcmd__liner__subcmd__jettison)
             opts="-y -k -n -v -q -h --no-confirm --no-fail-fast --dry-run --confirm --fail-fast --no-dry-run --verbose --quiet --color --help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -208,7 +208,7 @@ _cargo-liner() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        cargo__liner__ship)
+        cargo__subcmd__liner__subcmd__ship)
             opts="-n -s -c -k -f -d -b -v -q -h --no-self --only-self --skip-check --no-fail-fast --force --dry-run --binstall --with-self --no-only-self --no-skip-check --fail-fast --no-force --no-dry-run --verbose --quiet --color --help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )

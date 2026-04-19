@@ -125,7 +125,7 @@ _arguments "${_arguments_options[@]}" : \
 ;;
 (help)
 _arguments "${_arguments_options[@]}" : \
-":: :_cargo-liner__help_commands" \
+":: :_cargo-liner__subcmd__help_commands" \
 "*::: :->help" \
 && ret=0
 
@@ -175,13 +175,13 @@ _cargo-liner_commands() {
     )
     _describe -t commands 'cargo-liner commands' commands "$@"
 }
-(( $+functions[_cargo-liner__completions_commands] )) ||
-_cargo-liner__completions_commands() {
+(( $+functions[_cargo-liner__subcmd__completions_commands] )) ||
+_cargo-liner__subcmd__completions_commands() {
     local commands; commands=()
     _describe -t commands 'cargo-liner completions commands' commands "$@"
 }
-(( $+functions[_cargo-liner__help_commands] )) ||
-_cargo-liner__help_commands() {
+(( $+functions[_cargo-liner__subcmd__help_commands] )) ||
+_cargo-liner__subcmd__help_commands() {
     local commands; commands=(
 'ship:The default command if omitted\: install and update configured packages' \
 'jettison:Uninstall not-configured packages' \
@@ -191,43 +191,43 @@ _cargo-liner__help_commands() {
     )
     _describe -t commands 'cargo-liner help commands' commands "$@"
 }
-(( $+functions[_cargo-liner__help__completions_commands] )) ||
-_cargo-liner__help__completions_commands() {
+(( $+functions[_cargo-liner__subcmd__help__subcmd__completions_commands] )) ||
+_cargo-liner__subcmd__help__subcmd__completions_commands() {
     local commands; commands=()
     _describe -t commands 'cargo-liner help completions commands' commands "$@"
 }
-(( $+functions[_cargo-liner__help__help_commands] )) ||
-_cargo-liner__help__help_commands() {
+(( $+functions[_cargo-liner__subcmd__help__subcmd__help_commands] )) ||
+_cargo-liner__subcmd__help__subcmd__help_commands() {
     local commands; commands=()
     _describe -t commands 'cargo-liner help help commands' commands "$@"
 }
-(( $+functions[_cargo-liner__help__import_commands] )) ||
-_cargo-liner__help__import_commands() {
+(( $+functions[_cargo-liner__subcmd__help__subcmd__import_commands] )) ||
+_cargo-liner__subcmd__help__subcmd__import_commands() {
     local commands; commands=()
     _describe -t commands 'cargo-liner help import commands' commands "$@"
 }
-(( $+functions[_cargo-liner__help__jettison_commands] )) ||
-_cargo-liner__help__jettison_commands() {
+(( $+functions[_cargo-liner__subcmd__help__subcmd__jettison_commands] )) ||
+_cargo-liner__subcmd__help__subcmd__jettison_commands() {
     local commands; commands=()
     _describe -t commands 'cargo-liner help jettison commands' commands "$@"
 }
-(( $+functions[_cargo-liner__help__ship_commands] )) ||
-_cargo-liner__help__ship_commands() {
+(( $+functions[_cargo-liner__subcmd__help__subcmd__ship_commands] )) ||
+_cargo-liner__subcmd__help__subcmd__ship_commands() {
     local commands; commands=()
     _describe -t commands 'cargo-liner help ship commands' commands "$@"
 }
-(( $+functions[_cargo-liner__import_commands] )) ||
-_cargo-liner__import_commands() {
+(( $+functions[_cargo-liner__subcmd__import_commands] )) ||
+_cargo-liner__subcmd__import_commands() {
     local commands; commands=()
     _describe -t commands 'cargo-liner import commands' commands "$@"
 }
-(( $+functions[_cargo-liner__jettison_commands] )) ||
-_cargo-liner__jettison_commands() {
+(( $+functions[_cargo-liner__subcmd__jettison_commands] )) ||
+_cargo-liner__subcmd__jettison_commands() {
     local commands; commands=()
     _describe -t commands 'cargo-liner jettison commands' commands "$@"
 }
-(( $+functions[_cargo-liner__ship_commands] )) ||
-_cargo-liner__ship_commands() {
+(( $+functions[_cargo-liner__subcmd__ship_commands] )) ||
+_cargo-liner__subcmd__ship_commands() {
     local commands; commands=()
     _describe -t commands 'cargo-liner ship commands' commands "$@"
 }
