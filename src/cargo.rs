@@ -699,7 +699,7 @@ pub fn search_exact_all(pkgs: &[impl AsRef<str>]) -> Result<BTreeMap<String, Ver
     }
 
     log::debug!("Waiting for each search child processes to finish...");
-    for (pkg, proc) in pkgs.iter().map(AsRef::as_ref).zip(procs.into_iter()) {
+    for (pkg, proc) in pkgs.iter().map(AsRef::as_ref).zip(procs) {
         vers.insert(
             pkg.to_owned(),
             finish_search_exact(pkg, proc)
