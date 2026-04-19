@@ -232,15 +232,15 @@ dependencies = [
 
 [[package]]
 name = "cargo-test-macro"
-version = "0.4.8"
+version = "0.4.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4d56849ceb85ea41c8afa082bd1b9d95ebdbddaae84ca728b09388d757774a53"
+checksum = "451fa9aadc87b4ee4b2b477cf8491822e759c4bf0620bb951c1a7ca076900fe8"
 
 [[package]]
 name = "cargo-test-support"
-version = "0.9.1"
+version = "0.11.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0c3fb4fd0d68cb7aaf9e6819e6a865955995e79a883c3621a5fd01add3202ea4"
+checksum = "6024b43417ff6c6e0c5c624fd673ff82d8a07de29fc265748200a3a674960e75"
 dependencies = [
  "anstream",
  "anstyle",
@@ -268,9 +268,9 @@ dependencies = [
 
 [[package]]
 name = "cargo-util"
-version = "0.2.26"
+version = "0.2.28"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f70b0c7772872ac3234e46a6591091d4da57f0c3aa24c381776ed1550624a14b"
+checksum = "a4162900cab52029d1e29a44ba98277ec9936948b8cefbd7a2269c990ac7d58a"
 dependencies = [
  "anyhow",
  "core-foundation",
@@ -432,9 +432,9 @@ dependencies = [
 
 [[package]]
 name = "crates-io"
-version = "0.40.16"
+version = "0.40.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0f7f333ded3737da5d7ba014b465470cec2c77572f5a4bc56e1a6432cf0a9207"
+checksum = "77ba15a8fb280fc0913c21098c1801c274da7852f0665684fbdf1fcc2dc97cb5"
 dependencies = [
  "curl",
  "percent-encoding",
