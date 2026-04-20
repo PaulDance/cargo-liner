@@ -28,7 +28,7 @@ jobs:
 
       - name: Cache Cargo vendored dependencies
         id: cache-cargo-vendor
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             vendor/
@@ -49,7 +49,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Restore Cargo vendored dependencies cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             vendor/
@@ -98,7 +98,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Restore Cargo vendored dependencies cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             vendor/
@@ -132,7 +132,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Restore Cargo vendored dependencies cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             vendor/
@@ -166,7 +166,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Restore Cargo vendored dependencies cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             vendor/
@@ -195,7 +195,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Restore Cargo vendored dependencies cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             vendor/
