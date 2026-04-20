@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: rustup update stable && rustup default stable
 
       - name: Cache Cargo vendored dependencies
@@ -47,7 +47,7 @@ jobs:
     needs: vendor
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Restore Cargo vendored dependencies cache
         uses: actions/cache@v4
         with:
@@ -96,7 +96,7 @@ jobs:
     needs: vendor
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Restore Cargo vendored dependencies cache
         uses: actions/cache@v4
         with:
@@ -130,7 +130,7 @@ jobs:
     needs: vendor
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Restore Cargo vendored dependencies cache
         uses: actions/cache@v4
         with:
@@ -164,7 +164,7 @@ jobs:
     needs: vendor
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Restore Cargo vendored dependencies cache
         uses: actions/cache@v4
         with:
@@ -193,7 +193,7 @@ jobs:
     needs: vendor
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Restore Cargo vendored dependencies cache
         uses: actions/cache@v4
         with:
@@ -231,7 +231,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: rustup update stable && rustup default stable
 
       - name: Check correct Rustfmt formatting
