@@ -416,6 +416,29 @@ any other package, which it is after the configuration is parsed. Therefore,
 simply add an entry under `cargo-liner` in order to pass non-default options to
 `cargo install` or `cargo binstall` when self-updating.
 
+If one would want to integrate a local package to the configuration, then know
+that doing so with the `path` key will make Cargo recompile and reinstall it on
+every run as it does not track the state of the sources, which could be
+undesirable. Instead, a good way to avoid this is to commit the sources in a
+Git repository, even if only local, and then specify its URL through the `git`
+key, which also works for local packages using the `file://` scheme, so for
+example `file:///path/to/repo` under UNIX-like OSes. This will make Cargo clone
+and check the repository out as if downloaded from somewhere else, and then
+track the commit it last built the package with, so will avoid recompiling it
+if nothing changed when re-evaluating the reference specified through either
+the `branch`, `tag`, or `rev` keys, which can lower the minimum run time quite
+a bit. Changes that are not committed are probably not taken into account and
+so would not trigger a re-installation. Something else to keep in mind: if the
+repository contains multiple packages accessible from its root, then the `git`
+URL should point to that root instead of the package's path; from the package's
+name, Cargo will locate a corresponding crate from the root. Also, if Binstall
+is used, then it should probably be force-disabled for the concerned package
+using `binstall = "never"`, as otherwise its integration will use the `git` URL
+as its `--git` option, which will make it use the `Cargo.toml` file from the
+repository pointed to by that URL in order to figure out from where a pre-built
+version of the binaries should be downloaded, which is most probably not what
+would be desired in such cases.
+
 [package name]: https://doc.rust-lang.org/cargo/reference/manifest.html#the-name-field
 [SemVer]: https://semver.org/
 [Cargo style]: https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html
