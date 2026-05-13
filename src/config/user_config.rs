@@ -170,7 +170,9 @@ mod tests {
         clippy::too_many_lines,
         reason = "Some tests here explicitly detail all tested cases, which can be long."
     )]
-    use std::iter;
+    use std::io::{BufRead, BufReader};
+    use std::path::Path;
+    use std::{env, iter};
 
     use indoc::indoc;
     use semver::VersionReq;
@@ -1110,6 +1112,167 @@ mod tests {
         .collect::<Vec<_>>();
 
         assert_eq!(packages, expected);
+    }
+
+    /// Checks that all the `toml` code blocks included in this project's
+    /// `README.md` file are properly kept in-sync with the actual parser.
+    #[test]
+    fn test_deser_readme_configs() {
+        let readme_path = Path::new(env!("CARGO_MANIFEST_DIR")).join("README.md");
+        let readme_reader = BufReader::new(File::open(&readme_path).unwrap());
+
+        let mut configs = Vec::new();
+        let mut cur_block = String::new();
+        let mut in_block = false;
+
+        for line in readme_reader.lines().map(Result::unwrap) {
+            match line.trim() {
+                "```toml" => in_block = true,
+                "```" if in_block => {
+                    in_block = false;
+                    configs.push(toml::from_str::<UserConfig>(&cur_block).unwrap());
+                    cur_block.clear();
+                }
+                _ if in_block => {
+                    // HACK: make some invalid requirements valid, as the main
+                    // example uses that to specify their expectations further.
+                    cur_block.push_str(&line.replace("version-req-", ""));
+                    cur_block.push('\n');
+                }
+                _ => (),
+            }
+        }
+
+        assert_eq!(
+            dbg!(configs),
+            [
+                UserConfig {
+                    packages: [
+                        ("cargo-expand".to_owned(), PackageRequirement::SIMPLE_STAR),
+                        (
+                            "cargo-tarpaulin".to_owned(),
+                            PackageRequirement::Simple("~0.22".parse().unwrap()),
+                        ),
+                        (
+                            "nu".to_owned(),
+                            PackageRequirement::Simple("=0.71.0".parse().unwrap()),
+                        ),
+                        (
+                            "ripgrep".to_owned(),
+                            PackageRequirement::Detailed(Box::new(DetailedPackageReq {
+                                version: "13.0.0".parse().unwrap(),
+                                all_features: true,
+                                ..Default::default()
+                            })),
+                        ),
+                        (
+                            "sqlx-cli".to_owned(),
+                            PackageRequirement::Detailed(Box::new(DetailedPackageReq {
+                                version: "0.6.2".parse().unwrap(),
+                                default_features: false,
+                                features: vec!["native-tls".to_owned(), "postgres".to_owned()],
+                                ..Default::default()
+                            })),
+                        ),
+                    ]
+                    .into_iter()
+                    .collect(),
+                    ..Default::default()
+                },
+                UserConfig {
+                    packages: [
+                        (
+                            "package-name-1".to_owned(),
+                            PackageRequirement::Simple("1".parse().unwrap()),
+                        ),
+                        (
+                            "package-name-2".to_owned(),
+                            PackageRequirement::Simple("2".parse().unwrap()),
+                        ),
+                        (
+                            // This one is forced to have every value in order
+                            // to show a complete example documented further.
+                            "package-name-3".to_owned(),
+                            PackageRequirement::Detailed(Box::new(DetailedPackageReq {
+                                version: "3".parse().unwrap(),
+                                all_features: true,
+                                default_features: false,
+                                features: vec!["feature-1".to_owned(), "feature-2".to_owned()],
+                                index: Some("http://example.com/".to_owned()),
+                                registry: Some("example-registry".to_owned()),
+                                git: Some("http://example.com/exa/mple.git".to_owned()),
+                                branch: Some("branch".to_owned()),
+                                tag: Some("tag".to_owned()),
+                                rev: Some("SHA1".to_owned()),
+                                path: Some("/a/b/c".to_owned()),
+                                bins: vec!["bin1".to_owned(), "bin2".to_owned()],
+                                all_bins: true,
+                                examples: vec!["ex1".to_owned(), "ex2".to_owned()],
+                                all_examples: false,
+                                force: true,
+                                ignore_rust_version: false,
+                                frozen: true,
+                                locked: false,
+                                offline: true,
+                                extra_arguments: vec!["--arg1".to_owned(), "--arg2".to_owned()],
+                                environment: [
+                                    ("ENV1".to_owned(), "abc".to_owned()),
+                                    ("ENV2".to_owned(), "def".to_owned()),
+                                ]
+                                .into_iter()
+                                .collect(),
+                                skip_check: false,
+                                no_fail_fast: true,
+                                binstall: Some(BinstallChoice::Never),
+                            })),
+                        ),
+                    ]
+                    .into_iter()
+                    .collect(),
+                    defaults: Some(DefaultsSection {
+                        ship_cmd: ShipArgs {
+                            no_self: Some(true),
+                            only_self: Some(false),
+                            skip_check: Some(true),
+                            no_fail_fast: Some(false),
+                            force: Some(true),
+                            dry_run: Some(false),
+                            binstall: Some(BinstallChoice::Always),
+                        },
+                        ..Default::default()
+                    }),
+                },
+                UserConfig {
+                    packages: [
+                        ("bat".to_owned(), PackageRequirement::SIMPLE_STAR),
+                        ("cargo-make".to_owned(), PackageRequirement::SIMPLE_STAR),
+                        ("cargo-outdated".to_owned(), PackageRequirement::SIMPLE_STAR),
+                    ]
+                    .into_iter()
+                    .collect(),
+                    ..Default::default()
+                },
+                UserConfig {
+                    packages: [
+                        (
+                            "bat".to_owned(),
+                            PackageRequirement::Simple("~0.22.1".parse().unwrap()),
+                        ),
+                        (
+                            "cargo-make".to_owned(),
+                            PackageRequirement::Simple("~0.36.3".parse().unwrap()),
+                        ),
+                        (
+                            "cargo-outdated".to_owned(),
+                            PackageRequirement::Simple("~0.11.1".parse().unwrap()),
+                        ),
+                    ]
+                    .into_iter()
+                    .collect(),
+                    ..Default::default()
+                },
+            ],
+        );
     }
 
     #[test]
