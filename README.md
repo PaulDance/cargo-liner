@@ -250,7 +250,7 @@ package-name-2 = "version-req-2"
     environment = { ENV1 = "abc", ENV2 = "def" }
     skip-check = false
     no-fail-fast = true
-    binstall = false
+    binstall = "never"
 #...
 
 [defaults]
