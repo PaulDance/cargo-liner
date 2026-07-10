@@ -54,7 +54,7 @@ color-eyre = { version = "~0.6", default-features = false, features = [
     "track-caller",
     "capture-spantrace",
 ] }
-tabled = { version = "~0.20", default-features = false, features = [
+tabled = { version = "~0.21", default-features = false, features = [
     "derive",
     "ansi",
 ] }
