@@ -105,6 +105,10 @@ pub struct DetailedPackageReq {
     #[serde(default)]
     pub no_fail_fast: bool,
 
+    /// Do the same as the global `--target` but only for this package.
+    #[serde(default)]
+    pub target: Option<String>,
+
     /// Do the same as the global `--binstall` but only for this package.
     #[serde(default)]
     pub binstall: Option<BinstallChoice>,
@@ -140,6 +144,7 @@ impl Default for DetailedPackageReq {
             environment: BTreeMap::default(),
             skip_check: bool::default(),
             no_fail_fast: bool::default(),
+            target: Option::default(),
             binstall: Option::default(),
         }
     }

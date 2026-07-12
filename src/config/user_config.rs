@@ -319,6 +319,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -346,6 +347,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -373,6 +375,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -400,6 +403,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -427,6 +431,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -454,6 +459,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -481,6 +487,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -508,6 +515,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -538,6 +546,7 @@ mod tests {
                     .collect(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -565,6 +574,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -592,6 +602,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -619,6 +630,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -646,6 +658,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -673,6 +686,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -700,6 +714,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -727,6 +742,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -754,6 +770,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -781,6 +798,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -808,6 +826,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -835,6 +854,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -862,6 +882,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -889,6 +910,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -916,6 +938,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -943,6 +966,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -970,6 +994,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -997,6 +1022,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: true,
                 no_fail_fast: false,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -1024,6 +1050,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: true,
+                target: None,
                 binstall: None,
             },
             DetailedPackageReq {
@@ -1051,6 +1078,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: Some(BinstallChoice::Auto),
             },
             DetailedPackageReq {
@@ -1078,6 +1106,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: Some(BinstallChoice::Always),
             },
             DetailedPackageReq {
@@ -1105,6 +1134,7 @@ mod tests {
                 environment: BTreeMap::new(),
                 skip_check: false,
                 no_fail_fast: false,
+                target: None,
                 binstall: Some(BinstallChoice::Never),
             },
         ]

@@ -332,6 +332,8 @@ fn pkg_req_is_compatible_with_binstall(pkg_req: &DetailedPackageReq) -> bool {
         environment: _,
         skip_check: _,
         no_fail_fast: _,
+        // TODO: same.
+        target,
         binstall: _,
     } = pkg_req;
     // Work by double negation: not incompatible.
@@ -348,7 +350,8 @@ fn pkg_req_is_compatible_with_binstall(pkg_req: &DetailedPackageReq) -> bool {
         || *all_examples
         || *ignore_rust_version
         || *frozen
-        || *offline)
+        || *offline
+        || target.is_some())
 }
 
 /// Heuristically determines whether `cargo-binstall` is installed or not.
