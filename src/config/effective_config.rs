@@ -50,14 +50,11 @@ pub struct EffectiveShipArgs {
     pub no_fail_fast: bool,
     pub force: bool,
     pub dry_run: bool,
+    pub target: Option<String>,
     pub binstall: BinstallChoice,
 }
 
 impl EffectiveShipArgs {
-    #[expect(
-        clippy::needless_pass_by_value,
-        reason = "Ensures the original arguments cannot be used by mistake anymore by consuming them."
-    )]
     fn new(user_config: &UserConfig, env_args: ShipArgs, cli_args: ShipArgs) -> Self {
         let cfg_defs = user_config.defaults.as_ref();
         Self {
@@ -91,6 +88,10 @@ impl EffectiveShipArgs {
                 .or(env_args.dry_run)
                 .or_else(|| cfg_defs.and_then(|defs| defs.ship_cmd.dry_run.as_ref().copied()))
                 .unwrap_or_default(),
+            target: cli_args
+                .target
+                .or(env_args.target)
+                .or_else(|| cfg_defs.and_then(|defs| defs.ship_cmd.target.clone())),
             binstall: cli_args
                 .binstall
                 .or(env_args.binstall)
