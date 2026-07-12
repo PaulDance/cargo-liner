@@ -765,6 +765,18 @@ Options:
           default behavior as if absent, i.e. perform the
           installations as per the usual
 
+  -t, --target <TARGET>
+          The target triple to use when compiling and installing.
+          
+          See the documentation of `cargo install --target` for more
+          details.
+          
+          [default: not set, i.e. the host architecture]
+          
+          [env: `CARGO_LINER_SHIP_TARGET`]
+          
+          [config: `defaults.ship.target`]
+
   -b, --binstall <BINSTALL_WHEN>
           Control the usage of `cargo-binstall`.
           

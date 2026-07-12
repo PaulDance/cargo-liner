@@ -35,6 +35,8 @@ _cargo-liner() {
         case $line[1] in
             (ship)
 _arguments "${_arguments_options[@]}" : \
+'-t+[The target triple to use when compiling and installing]:TARGET:_default' \
+'--target=[The target triple to use when compiling and installing]:TARGET:_default' \
 '-b+[Control the usage of \`cargo-binstall\`]:BINSTALL_WHEN:((auto\:"The tool is heuristically detected and used if available"
 always\:"Always attempt to use it without trying to detect it first"
 never\:"Completely disable the feature and only rely on Cargo"))' \

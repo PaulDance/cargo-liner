@@ -320,6 +320,18 @@ pub struct ShipArgs {
     )]
     pub dry_run: Option<bool>,
 
+    /// The target triple to use when compiling and installing.
+    ///
+    /// See the documentation of `cargo install --target` for more details.
+    ///
+    /// [default: not set, i.e. the host architecture]
+    ///
+    /// [env: `CARGO_LINER_SHIP_TARGET`]
+    ///
+    /// [config: `defaults.ship.target`]
+    #[arg(short, long, required = false, display_order = 13)]
+    pub target: Option<String>,
+
     /// Control the usage of `cargo-binstall`.
     ///
     /// This third-party tool has dedicated support here. It is meant to be
@@ -772,6 +784,7 @@ mod tests {
                         no_fail_fast: None,
                         force: None,
                         dry_run: None,
+                        target: None,
                         binstall: None,
                     },
                     _with_self: (),
@@ -801,6 +814,7 @@ mod tests {
                         no_fail_fast: None,
                         force: None,
                         dry_run: None,
+                        target: None,
                         binstall: None,
                     },
                     _with_self: (),
@@ -831,6 +845,7 @@ mod tests {
                         no_fail_fast: None,
                         force: None,
                         dry_run: None,
+                        target: None,
                         binstall: None,
                     },
                     _with_self: (),
@@ -860,6 +875,7 @@ mod tests {
                         no_fail_fast: None,
                         force: None,
                         dry_run: None,
+                        target: None,
                         binstall: None,
                     },
                     _with_self: (),
@@ -890,6 +906,7 @@ mod tests {
                         no_fail_fast: None,
                         force: None,
                         dry_run: None,
+                        target: None,
                         binstall: None,
                     },
                     _with_self: (),
@@ -919,6 +936,7 @@ mod tests {
                         no_fail_fast: None,
                         force: None,
                         dry_run: None,
+                        target: None,
                         binstall: None,
                     },
                     _with_self: (),
@@ -955,6 +973,7 @@ mod tests {
                         no_fail_fast: None,
                         force: None,
                         dry_run: None,
+                        target: None,
                         binstall: None,
                     },
                     _with_self: (),
@@ -984,6 +1003,7 @@ mod tests {
                         no_fail_fast: Some(true),
                         force: None,
                         dry_run: None,
+                        target: None,
                         binstall: None,
                     },
                     _with_self: (),
@@ -1014,6 +1034,7 @@ mod tests {
                         no_fail_fast: Some(false),
                         force: None,
                         dry_run: None,
+                        target: None,
                         binstall: None,
                     },
                     _with_self: (),
@@ -1043,6 +1064,7 @@ mod tests {
                         no_fail_fast: None,
                         force: Some(true),
                         dry_run: None,
+                        target: None,
                         binstall: None,
                     },
                     _with_self: (),
@@ -1072,6 +1094,7 @@ mod tests {
                         no_fail_fast: None,
                         force: Some(false),
                         dry_run: None,
+                        target: None,
                         binstall: None,
                     },
                     _with_self: (),
@@ -1101,6 +1124,7 @@ mod tests {
                         no_fail_fast: None,
                         force: None,
                         dry_run: Some(true),
+                        target: None,
                         binstall: None,
                     },
                     _with_self: (),
@@ -1131,6 +1155,7 @@ mod tests {
                         no_fail_fast: None,
                         force: None,
                         dry_run: Some(false),
+                        target: None,
                         binstall: None,
                     },
                     _with_self: (),
@@ -1160,6 +1185,7 @@ mod tests {
                         no_fail_fast: None,
                         force: None,
                         dry_run: None,
+                        target: None,
                         binstall: Some(BinstallChoice::Auto),
                     },
                     _with_self: (),
@@ -1189,6 +1215,7 @@ mod tests {
                         no_fail_fast: None,
                         force: None,
                         dry_run: None,
+                        target: None,
                         binstall: Some(BinstallChoice::Always),
                     },
                     _with_self: (),
@@ -1218,6 +1245,7 @@ mod tests {
                         no_fail_fast: None,
                         force: None,
                         dry_run: None,
+                        target: None,
                         binstall: Some(BinstallChoice::Never),
                     },
                     _with_self: (),
