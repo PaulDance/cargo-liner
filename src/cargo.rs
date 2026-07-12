@@ -36,6 +36,7 @@ fn install(
     pkg_req: &DetailedPackageReq,
     force: bool,
     dry_run: bool,
+    target: Option<&str>,
     color: ColorChoice,
     verbosity: i8,
 ) -> Result<()> {
@@ -63,6 +64,11 @@ fn install(
     if !pkg_req.features.is_empty() {
         cmd.arg("--features").arg(pkg_req.features.join(","));
         log::trace!("`--features` arg added.");
+    }
+
+    if let Some(target) = target {
+        cmd.args(["--target", target]);
+        log::trace!("`--target {target}` args added.");
     }
 
     if let Some(index) = pkg_req.index.as_deref() {
@@ -408,6 +414,7 @@ fn install_one(
     pkg_req: &DetailedPackageReq,
     force: bool,
     dry_run: bool,
+    target: Option<&str>,
     binstall: BinstallChoice,
     color: ColorChoice,
     verbosity: i8,
@@ -435,7 +442,7 @@ fn install_one(
     }
 
     log::debug!("Using `cargo install` as the installation method.");
-    install(pkg_name, pkg_req, force, dry_run, color, verbosity)
+    install(pkg_name, pkg_req, force, dry_run, target, color, verbosity)
 }
 
 /// Runs `cargo install` or `binstall` for all packages listed in the given
@@ -450,6 +457,7 @@ pub fn install_all(
     no_fail_fast: bool,
     force: bool,
     dry_run: bool,
+    target: Option<&str>,
     binstall: BinstallChoice,
     color: ColorChoice,
     verbosity: i8,
@@ -472,6 +480,7 @@ pub fn install_all(
             pkg,
             force || pkg.force,
             dry_run,
+            target,
             // FIXME: this lets the per-package configuration have precedence
             // over the global defaults, but over the CLI as well; optionals
             // should be introduced in order to re-order things properly instead.
