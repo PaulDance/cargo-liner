@@ -1173,6 +1173,43 @@ mod tests {
     }
 
     #[test]
+    fn test_ship_target() {
+        assert_eq!(
+            CargoArgs::try_parse_from([
+                "cargo",
+                "liner",
+                "ship",
+                "--target",
+                "reallyloongarch256-unknown-linux-musl",
+            ])
+            .unwrap(),
+            CargoArgs::Liner(LinerArgs {
+                command: Some(LinerCommands::Ship(ShipArgsWithNegations {
+                    inner: ShipArgs {
+                        no_self: None,
+                        only_self: None,
+                        skip_check: None,
+                        no_fail_fast: None,
+                        force: None,
+                        dry_run: None,
+                        target: Some("reallyloongarch256-unknown-linux-musl".to_owned()),
+                        binstall: None,
+                    },
+                    _with_self: (),
+                    _no_only_self: (),
+                    _no_skip_check: (),
+                    _fail_fast: (),
+                    _no_force: (),
+                    _no_dry_run: (),
+                })),
+                verbose: 0,
+                quiet: 0,
+                color: ColorChoice::Auto,
+            }),
+        );
+    }
+
+    #[test]
     fn test_ship_binstall_auto() {
         assert_eq!(
             CargoArgs::try_parse_from(["cargo", "liner", "ship", "--binstall", "auto"]).unwrap(),
