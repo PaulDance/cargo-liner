@@ -1,0 +1,41 @@
+ INFO  cargo_liner::cargo > Fetching latest package versions...
+    Updating `dummy-registry` index
+note: to learn more about a package, run `cargo info <name>`
+ INFO  cargo_liner::commands::ship > Results:
+┌──────┬─────────────┬─────────────┬────────┐
+│ Name │ Old version │ New version │ Status │
+├──────┼─────────────┼─────────────┼────────┤
+│ abc  │ ø           │ 0.0.0       │ 🛈      │
+└──────┴─────────────┴─────────────┴────────┘
+ INFO  cargo_liner::cargo          > Installing `abc`...
+    Updating `dummy-registry` index
+ Downloading crates ...
+  Downloaded abc v0.0.0 (registry `dummy-registry`)
+  Installing abc v0.0.0
+error: failed to compile `abc v0.0.0`, intermediate artifacts can be found at `[..]cargo-install[..]`.
+To reuse those artifacts with a future compilation, set the environment variable `CARGO_BUILD_BUILD_DIR` to that path.
+
+Caused by:
+  failed to run `rustc` to learn about target-specific information
+
+Caused by:
+  process didn't exit successfully: `rustc - --crate-name ___ --print=file-names --target noarch-novendor-nonexistingsys-noabi --crate-type bin --crate-type rlib --crate-type dylib --crate-type cdylib --crate-type staticlib --crate-type proc-macro --print=sysroot --print=split-debuginfo --print=crate-name --print=cfg -Wwarnings` ([EXIT_STATUS]: 1)
+  --- stderr
+  error: error loading target specification: could not find specification for target "noarch-novendor-nonexistingsys-noabi"
+    |
+    = help: run `rustc --print target-list` for a list of built-in targets
+
+Error: 
+   0: Failed to install or update one of the configured packages.
+   1: Failed to install "abc".
+   2: Cargo process finished unsuccessfully: [EXIT_STATUS]: 101
+
+Location:
+   src/cargo.rs:179
+
+Note: This can happen for many reasons.
+Suggestion: Read Cargo's output.
+Suggestion: Use `ship --no-fail-fast` to ignore this and continue on with other packages.
+
+Backtrace omitted. Run with RUST_BACKTRACE=1 environment variable to display it.
+Run with RUST_BACKTRACE=full to include source snippets.

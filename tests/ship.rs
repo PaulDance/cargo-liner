@@ -1990,6 +1990,30 @@ fn validate_ship_install_dryrun() {
     assert_not_installed("abc");
 }
 
+#[cargo_test]
+fn validate_ship_install_target_cli() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish("abc", "0.0.0");
+    write_user_config(&["[packages]", "abc = '*'"]);
+
+    // HACK: make it fail to display the successfully-passed argument.
+    cargo_liner!()
+        .args([
+            "ship",
+            "--no-self",
+            "--target",
+            "noarch-novendor-nonexistingsys-noabi",
+        ])
+        .assert()
+        .failure()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_install_target.stderr"
+        ]);
+    assert_not_installed("abc");
+}
+
 /// See #27.
 #[cargo_test]
 fn validate_ship_path_is_skipcheck() {
