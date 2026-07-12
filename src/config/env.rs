@@ -132,6 +132,7 @@ mod tests {
             ("CARGO_LINER_SHIP_NO_SELF", "true"),
             ("CARGO_LINER_SHIP_FORCE", "false"),
             ("CARGO_LINER_SHIP_DRY_RUN", "true"),
+            ("CARGO_LINER_SHIP_TARGET", "abcdef"),
         ];
         set_vars(&var_vals);
 
@@ -141,6 +142,7 @@ mod tests {
                 no_self: Some(true),
                 force: Some(false),
                 dry_run: Some(true),
+                target: Some("abcdef".to_owned()),
                 ..Default::default()
             }
         );
