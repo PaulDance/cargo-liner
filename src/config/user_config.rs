@@ -1237,6 +1237,7 @@ mod tests {
                             no_fail_fast: Some(false),
                             force: Some(true),
                             dry_run: Some(false),
+                            target: Some("example-target-triple-string".to_owned()),
                             binstall: Some(BinstallChoice::Always),
                         },
                         ..Default::default()
