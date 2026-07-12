@@ -1339,6 +1339,7 @@ mod tests {
                     skip-check = true
                     force = false
                     dry-run = true
+                    target = "helloarch128-yes-linux-nosql"
                 "#
             )
             .unwrap()
@@ -1352,6 +1353,7 @@ mod tests {
                 skip_check: Some(true),
                 force: Some(false),
                 dry_run: Some(true),
+                target: Some("helloarch128-yes-linux-nosql".to_owned()),
                 binstall: None,
             }
         );
