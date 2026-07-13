@@ -1282,6 +1282,7 @@ mod tests {
                                 .collect(),
                                 skip_check: false,
                                 no_fail_fast: true,
+                                target: Some("example-target-triple-string".to_owned()),
                                 binstall: Some(BinstallChoice::Never),
                             })),
                         ),

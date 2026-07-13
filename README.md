@@ -250,6 +250,7 @@ package-name-2 = "version-req-2"
     environment = { ENV1 = "abc", ENV2 = "def" }
     skip-check = false
     no-fail-fast = true
+    target = "example-target-triple-string"
     binstall = "never"
 #...
 
@@ -353,6 +354,12 @@ where:
      operation will still abruptly fail there. The CLI option keeps the
      priority: if set, it is as though the configuration option was set for all
      listed packages.
+   * `target` (optional, `cargo-binstall`-compatible: no): string that, when
+     set, is passed as the value of `cargo install --target`, i.e. selects the
+     target triple to compile and install the package with. This is the direct
+     equivalent of the CLI's `--target`, except only for the current package.
+     The CLI option keeps precedence: if set, it is as though the configuration
+     option was set for all listed packages.
    * `binstall` (optional, `cargo-binstall`-compatible: yes): choice
      enumeration that, when set to a supported value, controls the use of the
      optional tool. This is the per-package equivalent of the global option
