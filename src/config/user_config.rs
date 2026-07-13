@@ -283,6 +283,7 @@ mod tests {
                 d1 = { version = "1.2", binstall = "auto" }
                 d2 = { version = "1.2", binstall = "always" }
                 d3 = { version = "1.2", binstall = "never" }
+                d4 = { version = "1.2", target = "some-random-target-triple" }
             "#,
         )
         .unwrap()
@@ -1136,6 +1137,34 @@ mod tests {
                 no_fail_fast: false,
                 target: None,
                 binstall: Some(BinstallChoice::Never),
+            },
+            DetailedPackageReq {
+                version: "^1.2".parse().unwrap(),
+                features: vec![],
+                all_features: false,
+                default_features: true,
+                index: None,
+                registry: None,
+                git: None,
+                branch: None,
+                tag: None,
+                rev: None,
+                path: None,
+                bins: vec![],
+                all_bins: false,
+                examples: vec![],
+                all_examples: false,
+                force: false,
+                ignore_rust_version: false,
+                frozen: false,
+                locked: false,
+                offline: false,
+                extra_arguments: vec![],
+                environment: BTreeMap::new(),
+                skip_check: false,
+                no_fail_fast: false,
+                target: Some("some-random-target-triple".to_owned()),
+                binstall: None,
             },
         ]
         .into_iter()
