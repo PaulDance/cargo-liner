@@ -483,7 +483,7 @@ pub fn install_all(
             pkg,
             force || pkg.force,
             dry_run,
-            target,
+            pkg.target.as_deref().or(target),
             // FIXME: this lets the per-package configuration have precedence
             // over the global defaults, but over the CLI as well; optionals
             // should be introduced in order to re-order things properly instead.
