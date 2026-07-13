@@ -141,6 +141,10 @@ jobs:
           enableCrossOsArchive: true
           fail-on-cache-miss: true
       - run: rustup update stable && rustup default stable
+      - name: Install cargo-binstall
+        uses: cargo-bins/cargo-binstall@main
+        with:
+          version: "1.20.1"
 
       - name: Build and run tests
         run: >
