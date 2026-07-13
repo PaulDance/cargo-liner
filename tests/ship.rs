@@ -2084,8 +2084,7 @@ fn validate_ship_git_is_skipcheck() {
 /// Binstall seems to outright refuse http URLs, so it is rather incompatible
 /// with the execution context used here. Just at least validating the tool is
 /// indeed called seems to be the only possibility here.
-#[ignore = "cargo-binstall is not made available to CI yet."]
-#[cargo_test]
+#[cargo_test(requires = "cargo-binstall")]
 fn validate_ship_binstall_globalalways_isused() {
     let _reg = init_registry();
     fake_install_self();
@@ -2113,8 +2112,7 @@ fn validate_ship_binstall_globalalways_isused() {
 /// Test that the tool is not used when using `never` globally.
 ///
 /// This is the same as if only letting `auto` since it is disabled under tests.
-#[ignore = "cargo-binstall is not made available to CI yet."]
-#[cargo_test]
+#[cargo_test(requires = "cargo-binstall")]
 fn validate_ship_binstall_globalnever_isunused() {
     let _reg = init_registry();
     fake_install_self();
@@ -2138,8 +2136,7 @@ fn validate_ship_binstall_globalnever_isunused() {
 }
 
 /// Test that the per-package configuration has precedence over the global one.
-#[ignore = "cargo-binstall is not made available to CI yet."]
-#[cargo_test]
+#[cargo_test(requires = "cargo-binstall")]
 fn validate_ship_binstall_globalnever_localalways_isused() {
     let _reg = init_registry();
     fake_install_self();
@@ -2164,8 +2161,7 @@ fn validate_ship_binstall_globalnever_localalways_isused() {
 }
 
 /// Test that the per-package configuration has precedence over the global one.
-#[ignore = "cargo-binstall is not made available to CI yet."]
-#[cargo_test]
+#[cargo_test(requires = "cargo-binstall")]
 fn validate_ship_binstall_globalalways_localnever_isunused() {
     let _reg = init_registry();
     fake_install_self();
@@ -2190,8 +2186,7 @@ fn validate_ship_binstall_globalalways_localnever_isunused() {
 }
 
 /// Test `--dry-run` for the Binstall method.
-#[ignore = "cargo-binstall is not made available to CI yet."]
-#[cargo_test]
+#[cargo_test(requires = "cargo-binstall")]
 fn validate_ship_binstall_dryrun() {
     let _reg = init_registry();
     fake_install_self();
@@ -2216,8 +2211,7 @@ fn validate_ship_binstall_dryrun() {
 }
 
 /// See #31: covers the no-binstall mechanism in case of incompatibility.
-#[ignore = "cargo-binstall is not made available to CI yet."]
-#[cargo_test]
+#[cargo_test(requires = "cargo-binstall")]
 fn validate_ship_binstall_auto_incompatible_option_disables() {
     let _reg = init_registry();
     fake_install_self();
@@ -2258,8 +2252,7 @@ fn validate_ship_binstall_auto_incompatible_option_disables() {
 
 /// When set to `"never"`, the warning should this time not be emitted and
 /// Binstall should still not be used.
-#[ignore = "cargo-binstall is not made available to CI yet."]
-#[cargo_test]
+#[cargo_test(requires = "cargo-binstall")]
 fn validate_ship_binstall_never_incompatible_option_nowarning() {
     let _reg = init_registry();
     fake_install_self();
@@ -2300,8 +2293,7 @@ fn validate_ship_binstall_never_incompatible_option_nowarning() {
 
 /// When `"always"`, the warning should also not be emitted, but Binstall should
 /// this time be actually used.
-#[ignore = "cargo-binstall is not made available to CI yet."]
-#[cargo_test]
+#[cargo_test(requires = "cargo-binstall")]
 fn validate_ship_binstall_always_incompatible_option_nowarning() {
     let _reg = init_registry();
     fake_install_self();
