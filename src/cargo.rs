@@ -916,8 +916,7 @@ mod tests {
         assert!(search_exact_all(&[NONE]).is_err());
     }
 
-    #[ignore = "Long and online test."]
-    #[cargo_test]
+    #[cargo_test(public_network_test)]
     fn test_singlethreaded_binstall() {
         let _lk = LOCK.lock();
         let _reg = testing::init_registry();
@@ -952,8 +951,7 @@ mod tests {
         ));
     }
 
-    #[ignore = "Fails if not actually installed."]
-    #[cargo_test]
+    #[cargo_test(requires = "cargo-binstall")]
     fn test_singlethreaded_binstallisavailable_emptyset_yes() {
         let _lk = LOCK.lock();
         testing::fake_install("cargo-binstall", "0.0.0", false);
@@ -973,8 +971,12 @@ mod tests {
         ));
     }
 
-    #[ignore = "Fails if actually installed."]
-    #[cargo_test]
+    // HACK: this effectively disables it all the time unless the tool is
+    // temporarily renamed as such.
+    #[cargo_test(
+        requires = "cargo-binstall.bak",
+        ignore_windows = "The previous attribute is not respected there for some reason?"
+    )]
     fn test_singlethreaded_binstallisavailable_emptyset_no() {
         let _lk = LOCK.lock();
         testing::fake_install("abc", "0.0.0", false);
@@ -983,14 +985,14 @@ mod tests {
         assert!(!binstall_is_available(&BTreeSet::new()));
     }
 
-    #[ignore = "Fails if not actually installed in the precise version."]
-    #[cargo_test]
+    // To synchronize with the version installed in CI.
+    #[cargo_test(requires = "cargo-binstall")]
     fn test_singlethreaded_binstallversion() {
         let _lk = LOCK.lock();
-        testing::fake_install("cargo-binstall", "1.10.17", false);
+        testing::fake_install("cargo-binstall", "1.20.1", false);
         testing::set_env();
 
-        assert_eq!(binstall_version().unwrap(), "1.10.17".parse().unwrap());
+        assert_eq!(binstall_version().unwrap(), "1.20.1".parse().unwrap());
     }
 
     #[test]
