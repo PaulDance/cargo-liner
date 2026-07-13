@@ -154,6 +154,8 @@ jobs:
           --all-features
           --locked
           --offline
+        env:
+          CARGO_PUBLIC_NETWORK_TESTS: 1
 
 
   # Sadly, it seems to require cross-compilation as well.
