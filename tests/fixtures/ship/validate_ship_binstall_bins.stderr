@@ -1,0 +1,22 @@
+...
+ INFO  cargo_liner::cargo                     > Installing `abc`...
+ DEBUG cargo_liner::cargo                     > Using `cargo-binstall` as the installation method.
+ DEBUG cargo_liner::cargo                     > Running "[..]cargo[EXE]" with arguments [
+    "binstall",
+    "--disable-telemetry",
+    "--no-confirm",
+    "--log-level",
+    "info",
+    "--version",
+    "*",
+    "--bin",
+    "yo",
+    "--bin",
+    "watup",
+    "--registry",
+    "dummy-registry",
+    "--",
+    "abc",
+]...
+ INFO resolve: Resolving package: 'abc@*'
+...
