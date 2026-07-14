@@ -296,7 +296,7 @@ where:
      commit to use when installing from Git. This implies `skip-check`.
    * `path` (optional, `cargo-binstall`-compatible: no): string specifying the
      filesystem path to local crate to install from. This implies `skip-check`.
-   * `bins` (optional, `cargo-binstall`-compatible: no): list of strings
+   * `bins` (optional, `cargo-binstall`-compatible: yes): list of strings
      specifying the binaries to install among the targeted crate's binary
      targets, passed onto Cargo as a repetition of its `--bin` option.
    * `all-bins` (optional, `cargo-binstall`-compatible: no): boolean that, when
