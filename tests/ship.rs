@@ -2210,6 +2210,32 @@ fn validate_ship_binstall_dryrun() {
     assert_not_installed("abc");
 }
 
+/// Tests `target` for the Binstall method.
+#[cargo_test(requires = "cargo-binstall")]
+fn validate_ship_binstall_target() {
+    let _reg = init_registry();
+    fake_install_self();
+    fake_publish("abc", "0.0.0");
+    write_user_config(&[
+        "[defaults]",
+        "ship.binstall = 'always'",
+        "[packages]",
+        "abc = { version = '*', registry = 'dummy-registry', target = 'hello' }",
+    ]);
+
+    // It fails here, but use verbose logs to show the option is passed.
+    // See https://github.com/cargo-bins/cargo-binstall/issues/2606.
+    cargo_liner!()
+        .args(["ship", "--no-self", "-v"])
+        .assert()
+        .failure()
+        .stdout_eq("".into_data().raw())
+        .stderr_eq(snapbox::file![
+            "fixtures/ship/validate_ship_binstall_target.stderr"
+        ]);
+    assert_not_installed("abc");
+}
+
 /// See #31: covers the no-binstall mechanism in case of incompatibility.
 #[cargo_test(requires = "cargo-binstall")]
 fn validate_ship_binstall_auto_incompatible_option_disables() {
