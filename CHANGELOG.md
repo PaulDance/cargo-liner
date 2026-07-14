@@ -7,6 +7,39 @@
 ## Miscellaneous
 -->
 
+# [Version 0.11.0 (14/07/2026)](https://crates.io/crates/cargo-liner/0.11.0)
+## Features
+
+ * A new `target` option has been added to the CLI, environment, and
+   configuration inputs in order to support the `cargo install --target`
+   option. It has been made available at the package and global level as well.
+   It is also passed onto Binstall as a single value of its `--targets`.
+ * The `bins` option has been added to the Binstall integration where it was
+   missing from while the tool supports it through a repetition of its `--bin`.
+
+## Testing
+
+ * Example configurations presented in the `README.md` are now covered with
+   unit tests. This ensures they all parse with expected values.
+ * `cargo-binstall` has been made available to CI, allowing to re-enable the
+   tests that cover its integration and thus ensure its good operation.
+ * The new features have been covered as well.
+
+## Documentation
+
+ * `README.md`:
+   * #34: some tips were added to help with installing local packages.
+   * The main example configuration's Binstall entry was fixed to be updated to
+     use `"never"` instead of the previous `false`.
+   * The new features have been covered as well.
+ * `CHANGELOG.md`: these new update notes.
+
+## Miscellaneous
+
+ * The dependencies have been updated to their latest versions.
+ * The MSRV has been bumped a few times, mostly for dependency updates.
+
+
 # [Version 0.10.1 (06/02/2026)](https://crates.io/crates/cargo-liner/0.10.1)
 ## Fixes
 
