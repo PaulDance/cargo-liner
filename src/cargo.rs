@@ -207,6 +207,7 @@ fn binstall(
     pkg_req: &DetailedPackageReq,
     force: bool,
     dry_run: bool,
+    target: Option<&str>,
     verbosity: i8,
 ) -> Result<()> {
     let mut cmd = Command::new(env_var()?);
@@ -243,6 +244,11 @@ fn binstall(
         "--version",
         &pkg_req.version.to_string(),
     ]);
+
+    if let Some(target) = target {
+        cmd.args(["--targets", target]);
+        log::trace!("`--targets {target}` args added.");
+    }
 
     if let Some(index) = pkg_req.index.as_deref() {
         cmd.args(["--index", index]);
@@ -332,8 +338,7 @@ fn pkg_req_is_compatible_with_binstall(pkg_req: &DetailedPackageReq) -> bool {
         environment: _,
         skip_check: _,
         no_fail_fast: _,
-        // TODO: same.
-        target,
+        target: _,
         binstall: _,
     } = pkg_req;
     // Work by double negation: not incompatible.
@@ -350,8 +355,7 @@ fn pkg_req_is_compatible_with_binstall(pkg_req: &DetailedPackageReq) -> bool {
         || *all_examples
         || *ignore_rust_version
         || *frozen
-        || *offline
-        || target.is_some())
+        || *offline)
 }
 
 /// Heuristically determines whether `cargo-binstall` is installed or not.
@@ -435,7 +439,7 @@ fn install_one(
         // would not be forwarded but still be important for overall success.
         if binstall == BinstallChoice::Always || pkg_req_is_compatible_with_binstall(pkg_req) {
             log::debug!("Using `cargo-binstall` as the installation method.");
-            return self::binstall(pkg_name, pkg_req, force, dry_run, verbosity);
+            return self::binstall(pkg_name, pkg_req, force, dry_run, target, verbosity);
         }
 
         log::warn!(
@@ -935,6 +939,7 @@ mod tests {
             },
             false,
             false,
+            None,
             0,
         )
         .unwrap();
