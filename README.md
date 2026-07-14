@@ -354,7 +354,7 @@ where:
      operation will still abruptly fail there. The CLI option keeps the
      priority: if set, it is as though the configuration option was set for all
      listed packages.
-   * `target` (optional, `cargo-binstall`-compatible: no): string that, when
+   * `target` (optional, `cargo-binstall`-compatible: yes): string that, when
      set, is passed as the value of `cargo install --target`, i.e. selects the
      target triple to compile and install the package with. This is the direct
      equivalent of the CLI's `--target`, except only for the current package.
@@ -382,8 +382,8 @@ where:
         when `true`, enables the `--force` flag by default.
       * `dry-run` (optional, `cargo-binstall`-compatible: yes): boolean that,
         when `true`, enables the `--dry-run` flag by default.
-      * `target` (optional, `cargo-binstall`-compatible: no): string that, when
-        set, acts as the `--target` option by default for all packages.
+      * `target` (optional, `cargo-binstall`-compatible: yes): string that,
+        when set, acts as the `--target` option by default for all packages.
       * `binstall` (optional, `cargo-binstall`-compatible: yes): choice
         enumeration that, when set to a supported value, controls the use of
         the optional tool. This is the global configuration equivalent of the
