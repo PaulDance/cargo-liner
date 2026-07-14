@@ -250,6 +250,11 @@ fn binstall(
         log::trace!("`--targets {target}` args added.");
     }
 
+    for bin in &pkg_req.bins {
+        cmd.args(["--bin", bin]);
+        log::trace!("`--bin {bin}` args added.");
+    }
+
     if let Some(index) = pkg_req.index.as_deref() {
         cmd.args(["--index", index]);
         log::trace!("`--index {index}` args added.");
@@ -324,8 +329,7 @@ fn pkg_req_is_compatible_with_binstall(pkg_req: &DetailedPackageReq) -> bool {
         tag,
         rev,
         path,
-        // TODO: stop considering this incompatible and pass it along.
-        bins,
+        bins: _,
         all_bins,
         examples,
         all_examples,
@@ -349,7 +353,6 @@ fn pkg_req_is_compatible_with_binstall(pkg_req: &DetailedPackageReq) -> bool {
         || tag.is_some()
         || rev.is_some()
         || path.is_some()
-        || !bins.is_empty()
         || *all_bins
         || !examples.is_empty()
         || *all_examples
