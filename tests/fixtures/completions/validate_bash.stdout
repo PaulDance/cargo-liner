@@ -1,4 +1,4 @@
-_cargo-liner() {
+_cargo__liner() {
     local i cur prev opts cmd
     COMPREPLY=()
     if [[ "${BASH_VERSINFO[0]}" -ge 4 ]]; then
@@ -246,7 +246,7 @@ _cargo-liner() {
 }
 
 if [[ "${BASH_VERSINFO[0]}" -eq 4 && "${BASH_VERSINFO[1]}" -ge 4 || "${BASH_VERSINFO[0]}" -gt 4 ]]; then
-    complete -F _cargo-liner -o nosort -o bashdefault -o default cargo-liner
+    complete -F _cargo__liner -o nosort -o bashdefault -o default cargo-liner
 else
-    complete -F _cargo-liner -o bashdefault -o default cargo-liner
+    complete -F _cargo__liner -o bashdefault -o default cargo-liner
 fi
