@@ -113,14 +113,14 @@ mod tests {
 
     fn set_vars<'a>(var_vals: impl IntoIterator<Item = &'a (&'static str, &'static str)>) {
         for (var, val) in var_vals {
-            // SAFETY: all tests are mutually exclusive at runtime due to the lock.
+            // SAFETY: all tests are mutually exclusive due to the lock.
             unsafe { env::set_var(var, val) };
         }
     }
 
     fn remove_vars<'a>(var_vals: impl IntoIterator<Item = &'a (&'static str, &'static str)>) {
         for (var, _val) in var_vals {
-            // SAFETY: all tests are mutually exclusive at runtime due to the lock.
+            // SAFETY: all tests are mutually exclusive due to the lock.
             unsafe { env::remove_var(var) };
         }
     }

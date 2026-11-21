@@ -136,8 +136,9 @@ fn log_version_check_summary(
                     name: pkg_name.clone(),
                     old_ver: old_ver
                         .map_or_else(|| colorizer.none_icon().to_string(), ToString::to_string),
-                    // This should be equivalent to checking `effective_skip_check`:
-                    // a new version is unavailable only if not fetched.
+                    // This should be equivalent to checking
+                    // `effective_skip_check`: a new version is unavailable only
+                    // if not fetched.
                     new_ver: new_ver.map_or_else(
                         || colorizer.unknown_icon().to_string(),
                         |new_ver| {
