@@ -93,15 +93,15 @@ opt-level = 3
 all = { level = "warn", priority = 0 }
 pedantic = { level = "warn", priority = 1 }
 
-allow-attributes = { level = "warn", priority = 2 }
-allow-attributes-without-reason = { level = "warn", priority = 2 }
-dbg-macro = { level = "warn", priority = 2 }
-print-stdout = { level = "warn", priority = 2 }
-print-stderr = { level = "warn", priority = 2 }
-str-to-string = { level = "warn", priority = 2 }
-multiple-unsafe-ops-per-block = { level = "warn", priority = 2 }
-undocumented-unsafe-blocks = { level = "warn", priority = 2 }
-unnecessary-safety-comment = { level = "warn", priority = 2 }
-unnecessary-safety-doc = { level = "warn", priority = 2 }
+allow_attributes = { level = "warn", priority = 2 }
+allow_attributes_without_reason = { level = "warn", priority = 2 }
+dbg_macro = { level = "warn", priority = 2 }
+print_stdout = { level = "warn", priority = 2 }
+print_stderr = { level = "warn", priority = 2 }
+str_to_string = { level = "warn", priority = 2 }
+multiple_unsafe_ops_per_block = { level = "warn", priority = 2 }
+undocumented_unsafe_blocks = { level = "warn", priority = 2 }
+unnecessary_safety_comment = { level = "warn", priority = 2 }
+unnecessary_safety_doc = { level = "warn", priority = 2 }
 
-unnecessary-debug-formatting = { level = "allow", priority = 3 }
+unnecessary_debug_formatting = { level = "allow", priority = 3 }
