@@ -70,7 +70,7 @@ regex = { version = "~1.13", default-features = false, features = [
     "std",
     "unicode-perl",
 ] }
-toml = { version = "~1.1", default-features = false, features = [
+toml = { version = "~1.2", default-features = false, features = [
     "serde",
     "parse",
     "display",
