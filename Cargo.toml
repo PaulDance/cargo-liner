@@ -15,7 +15,6 @@ keywords = ["cargo", "subcommand", "plugin", "install", "update"]
 license = "GPL-3.0-only"
 authors = ["Paul Mabileau <paulmabileau@hotmail.fr>"]
 repository = "https://github.com/PaulDance/cargo-liner"
-homepage = "https://github.com/PaulDance/cargo-liner"
 documentation = "https://docs.rs/cargo-liner"
 include = [
     "/Cargo.toml",
